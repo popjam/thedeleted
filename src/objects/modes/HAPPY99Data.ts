@@ -1,6 +1,6 @@
-import { CharacterType } from "../../enums/CharacterType";
-import { CollectibleTypeCustom } from "../../enums/CollectibleTypeCustom";
-import { ModeData } from "../../interfaces/corruption/ModeData";
+import { CharacterType } from "../../enums/general/CharacterType";
+import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
+import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about HAPPY99. */
 export const HAPPY99Data: ModeData = {
@@ -8,7 +8,7 @@ export const HAPPY99Data: ModeData = {
   birthright: "This is HAPPY99's birthright description",
   characterType: CharacterType.NORMAL,
   startingPocket: CollectibleTypeCustom.BITFLIP,
-  settings: {
-    startingBombs: 10,
-  },
+  startingBombs: 1,
+  startingKeys: 0,
+  startingCoins: 0,
 } as const;

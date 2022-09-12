@@ -1,4 +1,4 @@
-import { PlayerTypeCustom } from "../../enums/PlayerTypeCustom";
+import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 
 /** Determines if the player is of type Deleted or Tainted Deleted. */
 export function isPlayerDeleted(player: EntityPlayer): boolean {

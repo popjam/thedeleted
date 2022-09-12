@@ -1,5 +1,5 @@
 import { getPlayerIndex, saveDataManager } from "isaacscript-common";
-import { CollectibleTypeCustom } from "../../../enums/CollectibleTypeCustom";
+import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
 import { Mode } from "../../../enums/modes/Mode";
 import { fprint } from "../../../helper/printHelper";
 import { HAPPY99Data } from "../../../objects/modes/HAPPY99Data";

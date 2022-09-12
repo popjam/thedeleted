@@ -1,13 +1,18 @@
-/** Settings are a group of gears unique to each player. */
+/** A group of settings unique to each player. */
 
 import { PlayerSettings } from "../../interfaces/PlayerSettings";
-import { setStartingBombsSetting } from "./consumableSettings";
+import { setCorruptionDNASetting } from "./corruptionSettings";
 
+/**
+ * Modify any amount of settings for the player by passing in PlayerSettings option with desired
+ * values.
+ */
 export function addSettingsToPlayer(
   player: EntityPlayer,
   settings: PlayerSettings,
 ): void {
-  if (settings.startingBombs !== undefined) {
-    setStartingBombsSetting(player, settings.startingBombs);
+  // Corruption DNA.
+  if (settings.corruptionDNA !== undefined) {
+    setCorruptionDNASetting(player, settings.corruptionDNA);
   }
 }

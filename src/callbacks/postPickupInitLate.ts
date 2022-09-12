@@ -1,6 +1,6 @@
 import { PickupVariant } from "isaac-typescript-definitions";
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { corruptItemsPostPickupInitLate } from "../features/corruption/pickupInversion";
+import { pickupInversionPostPickupInitLate } from "../features/corruption/inversion/pickupInversion";
 
 export function postPickupInitLate(mod: ModUpgraded): void {
   mod.AddCallbackCustom(
@@ -11,5 +11,5 @@ export function postPickupInitLate(mod: ModUpgraded): void {
 }
 
 function main(pickup: EntityPickup) {
-  corruptItemsPostPickupInitLate(pickup as EntityPickupCollectible);
+  pickupInversionPostPickupInitLate(pickup as EntityPickupCollectible);
 }

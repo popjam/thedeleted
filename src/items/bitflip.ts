@@ -1,11 +1,11 @@
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { getPlayerIndex } from "isaacscript-common";
-import { SoundEffectCustom } from "../enums/SoundEffectCustom";
+import { SoundEffectCustom } from "../enums/general/SoundEffectCustom";
+import { setAllItemsOnLevelInversion } from "../features/corruption/inversion/pickupInversion";
 import {
   isPlayerInverted,
   setPlayerInversion,
-} from "../features/corruption/inversion";
-import { setAllItemsOnLevelInversion } from "../features/corruption/pickupInversion";
+} from "../features/corruption/inversion/playerInversion";
 import { fprint } from "../helper/printHelper";
 
 const BITFLIP_TO_CORRUPTED_SFX = SoundEffectCustom.BITFLIP_IN;

@@ -3,7 +3,7 @@ import {
   ModCallback,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { corruptItemsPreGetPedestalCollectible } from "../features/corruption/pickupInversion";
+import { pickupInversionPreGetPedestalCollectible } from "../features/corruption/inversion/pickupInversion";
 
 const NULL_COLLECTIBLE_SUBTYPE = CollectibleType.NULL as number;
 const PLAYER_CAN_PICKUP_ITEM_ITEM_HOLD_COOLDOWN_VALUE = 0;
@@ -67,5 +67,5 @@ function main(
   player: EntityPlayer,
   collectible: EntityPickupCollectible,
 ): boolean | undefined {
-  return corruptItemsPreGetPedestalCollectible(player, collectible);
+  return pickupInversionPreGetPedestalCollectible(player, collectible);
 }

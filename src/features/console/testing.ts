@@ -1,16 +1,18 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import { getRandomInt } from "isaacscript-common";
-import { ActionType } from "../../enums/corruption/ActionType";
-import { ResponseType } from "../../enums/corruption/ResponseType";
-import { OnRoomAction } from "../../interfaces/corruption/Action";
-import { UseActiveItemResponse } from "../../interfaces/corruption/Response";
+import { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
 import {
-  ComplexSpreadOrType,
-  createComplexType,
-  isComplexType,
-  simplifyComplexType,
-} from "../../types/ComplexStructure";
-import { spread } from "../../types/Spread";
+  getRandomInt,
+  playerAddCollectible,
+  removeAllActiveItems,
+  setActiveItem,
+} from "isaacscript-common";
+import { ActionType } from "../../enums/corruption/actions/ActionType";
+import { ResponseType } from "../../enums/corruption/responses/ResponseType";
+import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
+import { Mode } from "../../enums/modes/Mode";
+import { OnRoomAction } from "../../interfaces/corruption/actions/Action";
+import { UseActiveItemResponse } from "../../interfaces/corruption/responses/Response";
+import { validifyRange } from "../../types/general/Range";
+import { setCurrentMode } from "../modes/mode";
 
 const testResponse: UseActiveItemResponse = {
   responseType: ResponseType.USE_ACTIVE_ITEM,
@@ -33,31 +35,14 @@ const testAction2: OnRoomAction = {
   responses: testResponse,
 };
 
-const ex: ComplexSpreadOrType<number> = createComplexType(
-  createComplexType(
-    [
-      [1, 1],
-      [2, 1],
-    ],
-    "ComplexSpread",
-  ),
-  "ComplexSpreadOrType",
-);
-
 /** Test stuff as the developer with command 'del'. */
 export function testingFunctionA(): void {
-  let spreadOrType = simplifyComplexType(ex);
-  if (isComplexType(spreadOrType, "ComplexSpread")) {
-    const s = spread(simplifyComplexType(spreadOrType));
-    if (s === undefined) {
-      return;
-    }
-    spreadOrType = s;
-  }
-  print(spreadOrType);
+  setCurrentMode(Isaac.GetPlayer(0), Mode.HAPPY99);
 }
 
-/** Test stuff as the developer with command 'del'. */
+/** Test stuff as the developer with command 'eted'. */
 export function testingFunctionB(): void {
-  print("hieeeeii");
+  Isaac.GetPlayer(0).RemoveCollectible(
+    Isaac.GetPlayer(0).GetActiveItem(ActiveSlot.POCKET),
+  );
 }

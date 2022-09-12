@@ -4,7 +4,7 @@ import {
   UseFlag,
 } from "isaac-typescript-definitions";
 import { ModUpgraded } from "isaacscript-common";
-import { CollectibleTypeCustom } from "../enums/CollectibleTypeCustom";
+import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 import { bitflipPostUseItem } from "../items/bitflip";
 import { d14PostUseItem } from "../items/d14";
 

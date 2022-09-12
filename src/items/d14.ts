@@ -1,6 +1,6 @@
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
-import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import { setAllItemsInRoomInversion } from "../features/corruption/pickupInversion";
+import { SoundEffectCustom } from "../enums/general/SoundEffectCustom";
+import { setAllItemsInRoomInversion } from "../features/corruption/inversion/pickupInversion";
 
 const D14_SFX = SoundEffectCustom.ROLL_DICE;
 

@@ -18,10 +18,10 @@ import { postUseItemInit } from "./callbacks/postUseItem";
 import { preGetPedestalCollectibleInit } from "./callbacks/preGetPedestalCollectible";
 import { postItemPickupInit } from "./callbacks/preItemPickup";
 import { testingFunctionA, testingFunctionB } from "./features/console/testing";
-import { inversionInit } from "./features/corruption/inversion";
-import { itemActionSetsInit } from "./features/corruption/itemActionSets";
-import { corruptItemsInit } from "./features/corruption/pickupInversion";
-import { corruptPlayersInit } from "./features/corruption/playerActions";
+import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
+import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
+import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
+import { inversionInit } from "./features/corruption/inversion/playerInversion";
 import { happy99Init } from "./features/modes/HAPPY99/HAPPY99";
 import { modeInit } from "./features/modes/mode";
 import { mainPCInit } from "./features/pc/mainPC";
@@ -53,9 +53,10 @@ function init(mod: ModUpgraded) {
   modeInit();
   registerCallbacks(mod);
   happy99Init();
-  corruptItemsInit();
-  corruptPlayersInit();
-  itemActionSetsInit();
+  pickupInversionInit();
+  playerEffectsInit();
+  itemEffectsInit();
+  corruptionDNASetting();
 }
 
 /** Initialize mod features for dev. */
@@ -84,4 +85,7 @@ function registerCallbacks(mod: ModUpgraded) {
   postPickupInitLate(mod);
   postItemPickupInit(mod);
   preGetPedestalCollectibleInit(mod);
+}
+function corruptionDNASetting() {
+  throw new Error("Function not implemented.");
 }

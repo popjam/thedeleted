@@ -7,7 +7,7 @@ import {
   PickingUpItemCollectible,
   PickingUpItemTrinket,
 } from "isaacscript-common";
-import { corruptItemsPreItemPickupCollectible } from "../features/corruption/pickupInversion";
+import { corruptItemsPreItemPickupCollectible } from "../features/corruption/inversion/pickupInversion";
 import { fprint } from "../helper/printHelper";
 
 export function postItemPickupInit(mod: ModUpgraded): void {
