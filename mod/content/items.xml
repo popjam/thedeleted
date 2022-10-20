@@ -1,0 +1,65 @@
+<items gfxroot="gfx/Items/" version="1">
+  <!-- BitFlip !-->
+  <active description="Ones and Zeros" gfx="bitflip.png" maxcharges="0" name="Bitflip" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Bitshift !-->
+  <active description="Ones and Zeros" gfx="thedeleted_bitshift.png" maxcharges="0" name="Bitshift" chargetype="normal" hidden="true" tags="quest" />
+  <!-- D-1 !-->
+  <active description="128.32.137.13 " gfx="d14.png" maxcharges="6" name="D-14" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Uncover !-->
+  <active description="Qyyn wybxsxq!  " gfx="thedeleted_eye4.png" maxcharges="0" name="Xkdwho Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Uncover !-->
+  <active description="Jurer qb lbh yvir?  " gfx="thedeleted_eye3.png" maxcharges="0" name="Cyhqsbu Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Uncover !-->
+  <active description="Jurer ner lbhe cneragf?  " gfx="thedeleted_eye2.png" maxcharges="0" name="Kfiuj Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Uncover !-->
+  <active description="Vuub co mhqjx  " gfx="thedeleted_eye1.png" maxcharges="0" name="Qdwho Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Clean 1 !-->
+  <active description="Kills 99%" gfx="thedeleted_clean.png" maxcharges="12" name="Clean" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Extract !-->
+  <active description="40 days remaining" gfx="thedeleted_extract.png" maxcharges="0" name="Extract" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Extract Upgrade !-->
+  <active description="0 days remaining" gfx="thedeleted_extract2.png" maxcharges="60" name=" Extract" chargetype="timed" hidden="true" tags="quest" />
+  <!-- Extract EE !-->
+  <active description="Unzip your enemies" gfx="thedeleted_extractor.png" maxcharges="60" name="Extractor" chargetype="timed" hidden="true" tags="quest" />
+  <!-- Unlock !-->
+  <active description="Pay to unlock" gfx="thedeleted_unlock.png" maxcharges="0" name="Unlock" chargetype="normal" hidden="true" tags="quest" />
+  <!-- lock !-->
+  <active description="Free to lock" gfx="thedeleted_lock.png" maxcharges="0" name="Lock" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Passive Trash !-->
+  <active description="Trash Passive" gfx="trash.png" maxcharges="6" name=" Trash" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Active Trash -->
+  <active description="Trash Active" gfx="atrash.png" maxcharges="6" name="Trash" chargetype="normal" hidden="true" tags="quest" />
+  <!-- zzazzinator-->
+  <passive description="Be careful.." gfx="zazzinator.png" name="Corrupted Passive" quality="2" hidden="true" tags="quest" />
+
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="1" name="???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="2" name=" ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="3" name="  ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="4" name="   ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="5" name="    ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="6" name="     ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="7" name="      ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="8" name="       ???" chargetype="normal" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="12" name="        ???" chargetype="normal" hidden="true" />
+
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="1000" name="         ???" chargetype="timed" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="240" name="           ???" chargetype="timed" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="120" name="            ???" chargetype="timed" hidden="true" />
+  <!-- Corrupted Active -->
+  <active description="" gfx="thedeleted_corruptedactive1.png" maxcharges="10" name="          ???" chargetype="special" hidden="true" />
+
+  <!-- Trinkets -->
+  <trinket name="Shop Notice" description="They're coming" gfx="thedeleted_fbi.png" hidden="true" />
+</items>

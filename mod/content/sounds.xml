@@ -1,0 +1,74 @@
+<sounds root="sfx/">
+  <sound name="thedeleted_Glitch In">
+    <sample weight="1" path="glitchin.wav" />
+  </sound>
+  <sound name="thedeleted_Glitch Out">
+    <sample weight="1" path="glitchout.wav" />
+  </sound>
+  <sound name="thedeleted_Windows Error">
+    <sample weight="1" path="windowserror.wav" />
+  </sound>
+  <sound name="thedeleted_Trash">
+    <sample weight="1" path="trash1.wav" />
+  </sound>
+  <sound name="thedeleted_Delete1">
+    <sample weight="1" path="thedeleted_delete1.wav" />
+  </sound>
+  <sound name="thedeleted_Delete2">
+    <sample weight="1" path="thedeleted_delete2.wav" />
+  </sound>
+  <sound name="thedeleted_Delete3">
+    <sample weight="1" path="thedeleted_delete3.wav" />
+  </sound>
+  <sound name="thedeleted_Delete4">
+    <sample weight="1" path="thedeleted_delete4.wav" />
+  </sound>
+  <sound name="thedeleted_Delete5">
+    <sample weight="1" path="thedeleted_delete5.wav" />
+  </sound>
+  <sound name="thedeleted_Delete6">
+    <sample weight="1" path="thedeleted_delete6.wav" />
+  </sound>
+  <sound name="thedeleted_Delete7">
+    <sample weight="1" path="thedeleted_delete7.wav" />
+  </sound>
+  <sound name="thedeleted_Delete8">
+    <sample weight="1" path="thedeleted_delete8.wav" />
+  </sound>
+  <sound name="thedeleted_reroll">
+    <sample weight="1" path="thedeleted_reroll.wav" />
+  </sound>
+  <sound name="thedeleted_sticky">
+    <sample weight="1" path="thedeleted_sticky.wav" />
+  </sound>
+  <sound name="thedeleted_reveal">
+    <sample weight="1" path="thedeleted_pokemon.wav" />
+  </sound>
+  <sound name="thedeleted_boost">
+    <sample weight="1" path="thedeleted_boost.wav" />
+  </sound>
+  <sound name="thedeleted_laugh">
+    <sample weight="1" path="thedeleted_laugh.wav" />
+  </sound>
+  <sound name="thedeleted_eyebreak">
+    <sample weight="1" path="thedeleted_eyebreak.wav" />
+  </sound>
+  <sound name="thedeleted_diceroll">
+    <sample weight="1" path="thedeleted_diceroll.wav" />
+  </sound>
+  <sound name="thedeleted_unzip">
+    <sample weight="1" path="thedeleted_unzip.wav" />
+  </sound>
+  <sound name="thedeleted_pickup">
+    <sample weight="1" path="thedeleted_pickup.wav" />
+  </sound>
+  <sound name="thedeleted_siren">
+    <sample weight="1" path="thedeleted_siren.wav" />
+  </sound>
+  <sound name="thedeleted_skgrunt">
+    <sample weight="1" path="thedeleted_skgrunt.wav" />
+  </sound>
+  <sound name="thedeleted_lock">
+    <sample weight="1" path="thedeleted_lock.wav" />
+  </sound>
+</sounds>

@@ -1,48 +1,50 @@
-import { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
-import {
-  getRandomInt,
-  playerAddCollectible,
-  removeAllActiveItems,
-  setActiveItem,
-} from "isaacscript-common";
-import { ActionType } from "../../enums/corruption/actions/ActionType";
-import { ResponseType } from "../../enums/corruption/responses/ResponseType";
-import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { Mode } from "../../enums/modes/Mode";
-import { OnRoomAction } from "../../interfaces/corruption/actions/Action";
-import { UseActiveItemResponse } from "../../interfaces/corruption/responses/Response";
-import { validifyRange } from "../../types/general/Range";
-import { setCurrentMode } from "../modes/mode";
+import { CollectibleType, LevelStage } from "isaac-typescript-definitions";
+import { ModUpgraded } from "isaacscript-common";
+import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
+import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
+import { Morality } from "../../enums/corruption/Morality";
+import { mod } from "../../mod";
 
-const testResponse: UseActiveItemResponse = {
-  responseType: ResponseType.USE_ACTIVE_ITEM,
-  activeItem: CollectibleType.ANARCHIST_COOKBOOK,
-  tags: {
-    chanceToActivate: getRandomInt(1, 100),
-  },
-};
+/** Test player */
+const player = () => Isaac.GetPlayer(0);
 
-const testAction: OnRoomAction = {
-  actionType: ActionType.ON_ROOM,
-  responses: testResponse,
-  tags: {
-    activateAfter: 3,
-  },
-};
+/** Testing variables */
+const action1 = new OnFloorAction().setLevelStage(LevelStage.WOMB_1);
+const response1 = new UseActiveItemResponse().construct(
+  Morality.POSITIVE,
+  CollectibleType.BOOK_OF_SIN,
+);
+action1.setResponse(response1);
 
-const testAction2: OnRoomAction = {
-  actionType: ActionType.ON_ROOM,
-  responses: testResponse,
-};
+/** Add all the testing commands. */
+export function addTestingCommands(): void {
+  mod.addConsoleCommand("del1", () => {
+    testingFunction1(mod);
+  });
+  mod.addConsoleCommand("del2", () => {
+    testingFunction2(mod);
+  });
+  mod.addConsoleCommand("del3", () => {
+    testingFunction3(mod);
+  });
+  mod.addConsoleCommand("del4", () => {
+    testingFunction4(mod);
+  });
+  mod.addConsoleCommand("del5", () => {
+    testingFunction5(mod);
+  });
+}
 
 /** Test stuff as the developer with command 'del'. */
-export function testingFunctionA(): void {
-  setCurrentMode(Isaac.GetPlayer(0), Mode.HAPPY99);
-}
+export function testingFunction1(mod: ModUpgraded): void {}
+/** Test stuff as the developer with command 'eted'. */
+export function testingFunction2(mod: ModUpgraded): void {}
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunctionB(): void {
-  Isaac.GetPlayer(0).RemoveCollectible(
-    Isaac.GetPlayer(0).GetActiveItem(ActiveSlot.POCKET),
-  );
-}
+export function testingFunction3(mod: ModUpgraded): void {}
+
+/** Test stuff as the developer with command 'eted'. */
+export function testingFunction4(mod: ModUpgraded): void {}
+
+/** Test stuff as the developer with command 'eted'. */
+export function testingFunction5(mod: ModUpgraded): void {}

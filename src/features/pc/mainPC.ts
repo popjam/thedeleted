@@ -5,13 +5,13 @@ import {
   getSlots,
   gridCoordinatesToWorldPosition,
   PlayerIndex,
-  saveDataManager,
   sfxManager,
   spawnSlot,
 } from "isaacscript-common";
 import { PCState } from "../../enums/PCStatus";
 import { isPlayerDeleted } from "../../helper/deletedSpecific/deletedHelper";
-import { getDistanceBetweenEntities } from "../../helper/generalHelper";
+import { getDistanceBetweenEntities } from "../../helper/entityHelper";
+import { mod } from "../../mod";
 
 /**
  * Handles everything to do with the physical spawn PC. PC only spawns when first Deleted spawns in.
@@ -41,7 +41,7 @@ const v = {
 };
 
 export function mainPCInit(): void {
-  saveDataManager("mainPC", v);
+  mod.saveDataManager("mainPC", v);
 }
 
 /**

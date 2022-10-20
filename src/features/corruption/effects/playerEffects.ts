@@ -4,16 +4,15 @@
  */
 
 import {
-  arrayRemove,
-  arrayRemoveIndexInPlace,
   DefaultMap,
   defaultMapGetPlayer,
+  getPlayers,
   PlayerIndex,
-  saveDataManager,
 } from "isaacscript-common";
+import { Action, isAction } from "../../../classes/corruption/actions/Action";
+import { Response } from "../../../classes/corruption/responses/Response";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
-import { Action } from "../../../interfaces/corruption/actions/Action";
-import { triggerAction } from "../actions/actions";
+import { mod } from "../../../mod";
 
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
 
@@ -30,43 +29,75 @@ const v = {
   },
 };
 
+// TODO: Remove false.
 export function playerEffectsInit(): void {
-  saveDataManager("playerEffects", v);
+  mod.saveDataManager("playerEffects", v, false);
 }
 
-/** Adds an action to the player. Does not deepCopy! */
-export function addActionToPlayer(player: EntityPlayer, action: Action): void {
-  getAndSetActionArray(player, action.actionType).push(action);
+/**
+ * Add actions to the player. If an Action is of type ActionType.ON_OBTAIN, will trigger it instead
+ * of adding it to the player. Does not deepCopy!
+ */
+export function addActionsToPlayer(
+  player: EntityPlayer,
+  ...actions: Action[]
+): void {
+  actions.forEach((action) => {
+    const playerActionsOfType = getAndSetActionArray(player, action.actionType);
+    if (action.actionType === ActionType.ON_OBTAIN) {
+      action.trigger(player);
+    } else {
+      playerActionsOfType.push(action);
+    }
+  });
+}
+
+/**
+ * This will add any Actions to the player, and trigger any Responses, without adding them. Does not
+ * deepCopy!
+ */
+export function addEffectsToPlayer(
+  player: EntityPlayer,
+  ...effects: Array<Action | Response>
+): void {
+  effects.forEach((effect) => {
+    if (isAction(effect)) {
+      addActionsToPlayer(player, effect);
+    } else {
+      effect.trigger(player);
+    }
+  });
 }
 
 /** Removes an action from the player. */
-export function removeActionFromPlayer(
+export function removeFlaggedActionsOfType(
   player: EntityPlayer,
-  action: Action,
-): void {
-  const map = getAndSetActionArray(player, action.actionType);
-  arrayRemove(map, action);
+  actionType: ActionType,
+): void {}
+
+/** Triggers all Actions of the specified actionType for all Players. */
+export function triggerPlayersActionsByType(actionType: ActionType): void {
+  getPlayers().forEach((player) => {
+    triggerPlayerActionsByType(player, actionType);
+  });
 }
 
 /**
  * Iterates all functions in the players' action array of the specified ActionType. Will also remove
  * actions which are 'flaggedForRemoval' after triggering them.
  */
-export function triggerAllPlayerActionsByType(
+export function triggerPlayerActionsByType(
   player: EntityPlayer,
   actionType: ActionType,
 ): void {
-  const actionArray = getAndSetActionArray(player, actionType);
-  for (let i = 0; i < actionArray.length; i++) {
-    const action = actionArray[i];
-    if (action !== undefined) {
-      triggerAction(action, player);
-      if (action.tags?.flagForRemoval) {
-        arrayRemoveIndexInPlace(actionArray, i);
-        i--;
-      }
-    }
-  }
+  let playerActionsOfType = getAndSetActionArray(player, actionType);
+  playerActionsOfType.forEach((action) => {
+    action.trigger(player);
+  });
+  // Remove flaggedForRemoval actions.
+  playerActionsOfType = playerActionsOfType.filter(
+    (action) => !action.flagForRemoval,
+  );
 }
 
 /**

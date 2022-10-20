@@ -1,9 +1,9 @@
-import { saveDataManager } from "isaacscript-common";
+import { mod } from "../../../mod";
 
 const v = {};
 
 export function memzInit(): void {
-  saveDataManager("memz", v);
+  mod.saveDataManager("memz", v);
 }
 
 /** Initiate the player to the HAPPY99 mode. */

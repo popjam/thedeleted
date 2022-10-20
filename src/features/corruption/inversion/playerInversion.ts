@@ -4,11 +4,14 @@ import {
   getPlayers,
   getRandomArrayElement,
   PlayerIndex,
-  saveDataManager,
 } from "isaacscript-common";
-import { DEFAULT_CORRUPTION_DNA } from "../../../constants/corruptionConstants";
-import { CorruptionDNA } from "../../../interfaces/corruption/CorruptionDNA";
-import { getCorruptionDNASetting } from "../../settings/corruptionSettings";
+import { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
+import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import { mod } from "../../../mod";
+import {
+  generateActionSetFromPlayer,
+  generateDefaultActionSet,
+} from "../corruptionGeneration";
 
 /**
  * Tracks player inversion status. Non-Deleted's always start off un-inverted, while some Deleted
@@ -27,7 +30,7 @@ const v = {
 };
 
 export function inversionInit(): void {
-  saveDataManager("inversion", v);
+  mod.saveDataManager("inversion", v);
 }
 
 /** Returns the specified players' inversion status. */
@@ -59,13 +62,13 @@ export function getInvertedPlayers(): EntityPlayer[] {
  * inverted, picks a random CorruptionDNA from the set of inverted players. If no players are
  * inverted (so the game is not inverted) defaults to the standard CorruptionDNA.
  */
-export function getGameCorruptionDNA(): CorruptionDNA {
+export function getGameActionSet(inputs?: ActionSetBuilderInput): ActionSet {
   if (isGameInverted()) {
     const invertedPlayers = getInvertedPlayers();
     const chosenRandomPlayer = getRandomArrayElement(invertedPlayers);
-    return getCorruptionDNASetting(chosenRandomPlayer);
+    return generateActionSetFromPlayer(chosenRandomPlayer, inputs);
   }
-  return DEFAULT_CORRUPTION_DNA;
+  return generateDefaultActionSet(inputs);
 }
 
 /** Returns true if the Game is in an inverted state. */

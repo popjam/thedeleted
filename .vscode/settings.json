@@ -8,6 +8,9 @@
   "editor.rulers": [100],
   "editor.tabSize": 2,
 
+  // I added this.
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+
   "files.associations": {
     "*.anm2": "xml", // anm2 files are just XML files.
     "*.dat": "json", // Nearly all mods save JSON to the "save#.dat" file.

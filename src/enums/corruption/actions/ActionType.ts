@@ -2,5 +2,5 @@
 export enum ActionType {
   ON_FLOOR,
   ON_ROOM,
-  ON_PICKUP,
+  ON_OBTAIN,
 }

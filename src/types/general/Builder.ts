@@ -1,5 +1,6 @@
+import { ActionSet } from "../../classes/corruption/actionSets/ActionSet";
+import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+
 export type Builder<Type> = (...args: any[]) => Type;
 
-export function isBuilder<Type>(arg: any): arg is Builder<Type> {
-  return arg && typeof arg === "function";
-}
+export type ActionSetBuilder = (inputs?: ActionSetBuilderInput) => ActionSet;

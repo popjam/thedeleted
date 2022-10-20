@@ -13,6 +13,10 @@
     "rootDir": "./src",
   },
 
+  // I did this.
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true,
+
   // A list of the TypeScript files to compile.
   "include": ["./src/**/*.ts"],
 

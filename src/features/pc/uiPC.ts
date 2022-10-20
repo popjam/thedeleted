@@ -1,4 +1,4 @@
-import { saveDataManager } from "isaacscript-common";
+import { mod } from "../../mod";
 import { isPCActive } from "./mainPC";
 
 /**
@@ -9,7 +9,7 @@ import { isPCActive } from "./mainPC";
 const v = {};
 
 export function uiPCInit(): void {
-  saveDataManager("uiPC", v);
+  mod.saveDataManager("uiPC", v);
 }
 
 /** Render the PC UI. */

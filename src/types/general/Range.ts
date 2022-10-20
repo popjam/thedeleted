@@ -33,3 +33,8 @@ export function validifyRange(
   }
   return range;
 }
+
+/** Returns the range as a string, ready to print. */
+export function rangeToString(range: Range): string {
+  return `${range[0]}-${range[1]}`;
+}

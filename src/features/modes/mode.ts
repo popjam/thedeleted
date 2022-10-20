@@ -1,15 +1,25 @@
-import { ActiveSlot } from "isaac-typescript-definitions";
+import { ActiveSlot, PlayerType } from "isaac-typescript-definitions";
 import {
-  getPlayerIndex,
+  playerAddCollectible,
   PlayerIndex,
-  saveDataManager,
   setActiveItem,
+  setPlayerHealth,
 } from "isaacscript-common";
 import { Mode } from "../../enums/modes/Mode";
-import { setBombs, setCoins, setKeys } from "../../helper/playerHelper";
-import { getModeData } from "../../maps/modes/modeMap";
+import { isPlayerDeleted } from "../../helper/deletedSpecific/deletedHelper";
+import {
+  setPlayerBombs,
+  setPlayerCoins,
+  setPlayerKeys,
+} from "../../helper/playerHelper";
+import { getModeInit } from "../../maps/modes/modeInitMap";
+import {
+  getModeData,
+  getModeFromPlayerType,
+  getModePlayerType,
+} from "../../maps/modes/modeMap";
+import { mod } from "../../mod";
 import { NormalMode, TaintedMode } from "../../types/modes/ModeType";
-import { addSettingsToPlayer } from "../settings/mainSettings";
 
 /** Responsible for keeping track of Deleted's modes. */
 
@@ -27,30 +37,44 @@ const v = {
 };
 
 export function modeInit(): void {
-  saveDataManager("mode", v);
+  mod.saveDataManager("mode", v);
 }
 
-/** Get the real mode of the deleted player. */
+/**
+ * Get the real mode of the deleted player. Returns undefined if player is not a PlayerType which
+ * corresponds to a mode (e.g not a Deleted).
+ */
 export function getCurrentMode(player: EntityPlayer): Mode | undefined {
-  return v.run.currentMode.get(getPlayerIndex(player));
+  return getModeFromPlayerType(player.GetPlayerType());
 }
 
 /** Set the current mode of the Deleted player. Set up any mode specific settings. */
-export function setCurrentMode(player: EntityPlayer, mode: Mode): void {
-  v.run.currentMode.set(getPlayerIndex(player), mode);
+export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
+  if (!isPlayerDeleted(player)) {
+    return;
+  }
+  if (getModePlayerType(mode) !== player.GetPlayerType()) {
+    player.ChangePlayerType(getModePlayerType(mode));
+  }
+  // TODO:
   setPersistentNormalMode(mode);
   // Setup player.
   const modeData = getModeData(mode);
-  const { settings } = modeData;
-  if (settings !== undefined) {
-    addSettingsToPlayer(player, settings);
-  }
-  setBombs(player, modeData.startingBombs);
-  setKeys(player, modeData.startingKeys);
-  setCoins(player, modeData.startingCoins);
+  // Consumables:
+  setPlayerBombs(player, modeData.startingBombs);
+  setPlayerKeys(player, modeData.startingKeys);
+  setPlayerCoins(player, modeData.startingCoins);
+  // Health:
+  setPlayerHealth(player, modeData.startingHealth);
+  // Items:
   if (modeData.startingPocket !== undefined) {
     setActiveItem(player, modeData.startingPocket, ActiveSlot.POCKET);
   }
+  if (modeData.startingItems !== undefined) {
+    playerAddCollectible(player, ...modeData.startingItems);
+  }
+  // Init mode:
+  getModeInit(mode)(player);
 }
 
 /** Get the persistent normal-Deleted mode. */
@@ -71,4 +95,16 @@ export function getPersistentTaintedMode(): TaintedMode {
 /** Set the persistent tainted-Deleted mode. */
 export function setPersistentTaintedMode(mode: TaintedMode): void {
   v.persistent.taintedMode = mode;
+}
+
+/** If changing to a deleted PlayerType, sets them up appropriately. */
+export function postPlayerChangeTypeMode(
+  player: EntityPlayer,
+  oldCharacter: PlayerType,
+  newCharacter: PlayerType,
+): void {
+  const newMode = getModeFromPlayerType(newCharacter);
+  if (newMode !== undefined) {
+    setPlayerMode(player, newMode);
+  }
 }

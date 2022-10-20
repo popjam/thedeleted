@@ -2,4 +2,5 @@
 export enum Morality {
   POSITIVE,
   NEGATIVE,
+  NEUTRAL,
 }

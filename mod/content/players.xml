@@ -1,0 +1,12 @@
+<players nameimageroot="gfx/ui/boss/" portraitroot="gfx/ui/stage/" root="gfx/characters/costumes/">
+  <!-- Default Normal-Deleted Player, Not Playable -->
+  <player hp="2" armor="2" bombs="1" name="Deleted" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_EDEN.png" skinColor="0" birthright="Patched" />
+
+  <!-- HAPPY99 Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_HAPPY99" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- ILOVEYOU Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_ILOVEYOU" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ILOVEYOU.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <player black="6" coins="1" name="Deleted" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />
+</players>

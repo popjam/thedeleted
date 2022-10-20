@@ -5,8 +5,8 @@ import {
 } from "isaac-typescript-definitions";
 import { ModUpgraded } from "isaacscript-common";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
-import { bitflipPostUseItem } from "../items/bitflip";
-import { d14PostUseItem } from "../items/d14";
+import { bitflipPostUseItem } from "../features/items/bitflip";
+import { d14PostUseItem } from "../features/items/d14";
 
 export function postUseItemInit(mod: ModUpgraded): void {
   mod.AddCallback(

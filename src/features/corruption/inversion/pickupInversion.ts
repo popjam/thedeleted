@@ -12,19 +12,23 @@ import {
   defaultMapGetPlayer,
   defaultMapSetPlayer,
   getCollectibles,
-  getPickupIndex,
   getPlayerIndex,
   PickingUpItemCollectible,
   PickupIndex,
   PlayerIndex,
-  saveDataManager,
 } from "isaacscript-common";
+import { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
 import { fprint } from "../../../helper/printHelper";
+import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import { mod } from "../../../mod";
+import { ActionSetBuilder } from "../../../types/general/Builder";
 import {
   addInvertedItemToPlayer,
-  getInvertedItemActionSet,
+  getAndSetInvertedItemActionSet,
   getNormalItemActionSet,
+  setInvertedItemActionSetIfNone,
+  setNormalItemActionSetIfNone,
 } from "../effects/itemEffects";
 import { isGameInverted } from "./playerInversion";
 
@@ -48,7 +52,7 @@ const v = {
 };
 
 export function pickupInversionInit(): void {
-  saveDataManager("pickupInversion", v);
+  mod.saveDataManager("pickupInversion", v);
 }
 
 /** Every time a pedestal spawns, scan it. */
@@ -56,7 +60,7 @@ export function pickupInversionPostPickupInitLate(
   pickup: EntityPickupCollectible,
 ): void {
   fprint(
-    `pickupInversion: pedestal init, of pickup index: ${getPickupIndex(
+    `pickupInversion: pedestal init, of pickup index: ${mod.getPickupIndex(
       pickup,
     )}`,
   );
@@ -71,15 +75,15 @@ export function updatePedestalAppearance(
   collectible: EntityPickupCollectible,
 ): void {
   const isInverted = v.level.isInverted.getAndSetDefault(
-    getPickupIndex(collectible),
+    mod.getPickupIndex(collectible),
   );
   fprint(
-    `corruptItems: scanning pedestal of index ${getPickupIndex(
+    `corruptItems: scanning pedestal of index ${mod.getPickupIndex(
       collectible,
     )}, its ${isInverted ? "inverted" : "non-inverted"}`,
   );
   const actionSetOrUndefined = isInverted
-    ? getInvertedItemActionSet(collectible.SubType)
+    ? getAndSetInvertedItemActionSet(collectible.SubType)
     : getNormalItemActionSet(collectible.SubType);
   // Flip the pedestal orientation if it is inverted.
   if (isInverted) {
@@ -88,8 +92,9 @@ export function updatePedestalAppearance(
     collectible.FlipX = false;
   }
   // Set color.
-  if (actionSetOrUndefined?.tags?.color !== undefined) {
-    collectible.SetColor(actionSetOrUndefined.tags.color, 0, 1);
+  if (actionSetOrUndefined !== undefined) {
+    const color = actionSetOrUndefined.getColor();
+    collectible.SetColor(color, 0, 1);
   } else {
     collectible.SetColor(ColorDefault, 0, 1);
   }
@@ -100,41 +105,64 @@ export function updatePedestalAppearanceInRoom(): void {
   getCollectibles().forEach((pedestal) => updatePedestalAppearance(pedestal));
 }
 
-/** Set one item to a specific inversion status. This will also update the pedestal. */
-export function setItemInversion(
+/**
+ * Set one pedestal to a specific inversion status. This will also update the pedestal.
+ *
+ * @param actionSet Optional, will set the items ActionSet if the item does not have an ActionSet
+ *                  (does not DeepCopy).
+ */
+export function setPedestalInversion(
   desiredInversionStatus: boolean,
   collectible: EntityPickupCollectible,
+  actionSet?: ActionSet,
 ): void {
-  v.level.isInverted.set(getPickupIndex(collectible), desiredInversionStatus);
+  v.level.isInverted.set(
+    mod.getPickupIndex(collectible),
+    desiredInversionStatus,
+  );
+  if (actionSet !== undefined) {
+    setPedestalActionSetIfNone(collectible, actionSet);
+  }
   updatePedestalAppearance(collectible);
 }
 
 /**
- * Sets all items on the floor to a specific inversion status. This will also update all pedestals
- * in the room.
+ * Sets all pedestals on the floor to a specific inversion status. This will also update all
+ * pedestals in the room.
+ *
+ * @param corruptionDNA Optional, sets items in room ActionSet using specified CorruptionDNA if item
+ *                      does not already have an ActionSet.
  */
-export function setAllItemsOnLevelInversion(
+export function setAllPedestalsOnLevelInversion(
   desiredInversionStatus: boolean,
+  generationIfEmpty?: ActionSetBuilder,
+  inputs?: ActionSetBuilderInput,
 ): void {
+  getCollectibles().forEach((collectible) => {
+    setPedestalInversion(
+      desiredInversionStatus,
+      collectible,
+      generationIfEmpty?.(inputs),
+    );
+  });
   v.level.isInverted.forEach((value, key) =>
     v.level.isInverted.set(key, desiredInversionStatus),
   );
-  updatePedestalAppearanceInRoom();
 }
 
 /**
- * Set all the items in the room to the desired inversion status. This will also scan all pedestals
- * in the room.
+ * Sets the pedestal's item's ActionSet if the item does not have an ActionSet already. Works on
+ * inverted and non-inverted pedestals. Does not DeepCopy.
  */
-export function setAllItemsInRoomInversion(
-  desiredInversionStatus: boolean,
+export function setPedestalActionSetIfNone(
+  pickup: EntityPickupCollectible,
+  actionSet: ActionSet,
 ): void {
-  const itemsInRoom = getCollectibles();
-  itemsInRoom.forEach((value) => {
-    const pickupIndex = getPickupIndex(value);
-    v.level.isInverted.set(pickupIndex, desiredInversionStatus);
-  });
-  updatePedestalAppearanceInRoom();
+  if (v.level.isInverted.getAndSetDefault(mod.getPickupIndex(pickup))) {
+    setInvertedItemActionSetIfNone(pickup.SubType, actionSet);
+  } else {
+    setNormalItemActionSetIfNone(pickup.SubType, actionSet);
+  }
 }
 
 /**
@@ -169,7 +197,7 @@ export function pickupInversionPreGetPedestalCollectible(
   player: EntityPlayer,
   pickup: EntityPickupCollectible,
 ): boolean | undefined {
-  const pickupIndex = getPickupIndex(pickup);
+  const pickupIndex = mod.getPickupIndex(pickup);
   const isInverted = v.level.isInverted.getAndSetDefault(pickupIndex);
   if (pickup.SubType === CollectibleTypeCustom.ZAZZ) {
     return undefined;
