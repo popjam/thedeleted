@@ -1,10 +1,15 @@
-import { getRandomFromWeightedArray, WeightedArray } from "isaacscript-common";
+import {
+  getRandomFromWeightedArray,
+  isArray,
+  WeightedArray,
+} from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { multiplyRangesOrNumbers, Range } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 const DEFAULT_WEIGHT = 1;
-const BETWEEN_RESPONSES_TEXT = " OR ";
+const BETWEEN_RESPONSES_TEXT = " or ";
 
 /**
  * Response which contains a WeightedArray of sub-responses. Upon triggering, will trigger a random
@@ -15,25 +20,54 @@ export class TriggerRandomResponse extends Response {
   override morality: Morality = Morality.NEUTRAL;
   responses: WeightedArray<Response> = [];
 
-  addResponse(response: Response, weight = DEFAULT_WEIGHT): this {
-    this.responses.push([response, weight]);
+  construct(
+    ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
+  ): this {
+    return this.addResponses(...responseOrWeightedArrayTuple);
+  }
+
+  addResponses(
+    ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
+  ): this {
+    responseOrWeightedArrayTuple.forEach((responseData) => {
+      this.addResponse(responseData);
+    });
     return this;
   }
 
-  override getText(): string {
+  addResponse(
+    responseOrWeightedArrayTuple: Response | [Response, number],
+  ): this {
+    if (isArray(responseOrWeightedArrayTuple)) {
+      this.responses.push(responseOrWeightedArrayTuple);
+    } else {
+      this.responses.push([responseOrWeightedArrayTuple, DEFAULT_WEIGHT]);
+    }
+    return this;
+  }
+
+  override getText(overrideAmountOfActivations?: number | Range): string {
     let text = "";
     let iterations = this.responses.length;
-    const amountOfActivationsText = this.getAmountOfActivationsText();
+    const amountOfActivations =
+      overrideAmountOfActivations ?? this.getAmountOfActivations();
     for (const responseData of this.responses) {
       const [response, weight] = responseData;
-      text += response.getText();
+      if (amountOfActivations !== 1) {
+        const responseAmountOfActivations = response.getAmountOfActivations();
+        text += response.getText(
+          multiplyRangesOrNumbers(
+            amountOfActivations,
+            responseAmountOfActivations,
+          ),
+        );
+      } else {
+        text += response.getText();
+      }
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
       if (--iterations !== 0) {
         text += BETWEEN_RESPONSES_TEXT;
       }
-    }
-    if (amountOfActivationsText !== "") {
-      text = `repeat x${amountOfActivationsText} => (${text})`;
     }
     return text;
   }

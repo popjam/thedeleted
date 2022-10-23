@@ -3,8 +3,8 @@ import { Callback, ModFeature } from "isaacscript-common";
 
 export class TestFeature extends ModFeature {
   // eslint-disable-next-line class-methods-use-this
-  @Callback(ModCallback.POST_GAME_STARTED)
-  postGameStarted(isContinued: boolean): void {
+  @Callback(ModCallback.POST_NEW_ROOM)
+  postNewRoom(): void {
     print("hi");
   }
 }

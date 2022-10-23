@@ -1,1 +1,1 @@
-declare let modX: undefined | unknown;
+declare let FiendFolio: undefined | unknown;

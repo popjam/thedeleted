@@ -1,3 +1,4 @@
+import { deepCopy } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { TriggerData } from "../../../interfaces/corruption/actions/triggerData";
@@ -15,7 +16,7 @@ import {
 
 const DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE = 100;
 const DEFAULT_AMOUNT_OF_ACTIVATIONS = 1;
-const DEFAULT_MORALITY = Morality.POSITIVE;
+const DEFAULT_MORALITY = Morality.NEUTRAL;
 const NO_CHANCE_TO_ACTIVATE_TEXT = "don't";
 const CHANCE_TO_ACTIVATE_POST_TEXT = "% chance to";
 
@@ -30,7 +31,7 @@ const CHANCE_TO_ACTIVATE_POST_TEXT = "% chance to";
  */
 export abstract class Response {
   readonly responseType!: ResponseType;
-  morality: Morality = DEFAULT_MORALITY;
+  morality?: Morality;
   amountOfActivations: number | Range = DEFAULT_AMOUNT_OF_ACTIVATIONS;
   /** Percentage chance to activate (100% will always pass). */
   chanceToActivate: Percentage = DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE;
@@ -84,7 +85,7 @@ export abstract class Response {
   }
 
   getMorality(): Morality {
-    return this.morality;
+    return this.morality ?? DEFAULT_MORALITY;
   }
 
   /**
@@ -114,8 +115,10 @@ export abstract class Response {
   }
 
   /** Describes the Response in string format. */
-  getText(): string {
-    return "";
+  abstract getText(overrideAmountOfActivations?: number | Range): string;
+
+  deepCopy(): this {
+    return deepCopy(this);
   }
 
   /**

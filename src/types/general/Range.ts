@@ -38,3 +38,31 @@ export function validifyRange(
 export function rangeToString(range: Range): string {
   return `${range[0]}-${range[1]}`;
 }
+
+/** If a Range is involved, returns a range, otherwise returns a number. */
+export function multiplyRangesOrNumbers(
+  numberOrRange1: number | Range,
+  numberOrRange2: number | Range,
+): number | Range {
+  if (typeof numberOrRange1 === "number") {
+    if (typeof numberOrRange2 === "number") {
+      return numberOrRange1 * numberOrRange2;
+    }
+    return [
+      numberOrRange2[0] * numberOrRange1,
+      numberOrRange2[1] * numberOrRange1,
+    ];
+  }
+  if (typeof numberOrRange2 === "number") {
+    return [
+      numberOrRange1[0] * numberOrRange2,
+      numberOrRange1[1] * numberOrRange2,
+    ];
+  }
+  return multiplyRanges(numberOrRange1, numberOrRange2);
+}
+
+/** Multiply two Ranges together, like a matrix. */
+export function multiplyRanges(range1: Range, range2: Range): Range {
+  return [range1[0] * range2[0], range1[1] * range2[1]];
+}

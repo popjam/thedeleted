@@ -3,7 +3,7 @@ import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
-import { rangeToString } from "../../../types/general/Range";
+import { Range, rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 /** Defaults to The Poop if no activeItem is set. */
@@ -16,8 +16,10 @@ export class UseActiveItemResponse extends Response {
   activeItem: CollectibleType = DEFAULT_ACTIVE_ITEM;
 
   /** Alternative constructor so SaveData works with class. */
-  construct(morality: Morality, activeItem: CollectibleType): this {
-    this.morality = morality;
+  construct(activeItem: CollectibleType, morality?: Morality): this {
+    if (morality !== undefined) {
+      this.morality = morality;
+    }
     this.activeItem = activeItem;
     return this;
   }
@@ -31,21 +33,29 @@ export class UseActiveItemResponse extends Response {
     return this;
   }
 
-  override getAmountOfActivationsText(): string {
-    const amount = this.getAmountOfActivations();
-    if (typeof amount === "number") {
-      if (amount === 1) {
-        return "";
-      }
-      return `${numberToWords(amount)} times`;
-    }
-    return `${rangeToString(amount)} times`;
+  // TODO: Map ActiveItems to Morality and return that if undefined.
+  override getMorality(): Morality {
+    return this.morality ?? Morality.NEUTRAL;
   }
 
-  override getText(): string {
+  override getAmountOfActivationsText(
+    overrideAmountOfActivations?: number | Range,
+  ): string {
+    const amountOfActivations =
+      overrideAmountOfActivations ?? this.getAmountOfActivations();
+    if (typeof amountOfActivations === "number") {
+      if (amountOfActivations === 1) {
+        return "";
+      }
+      return `${numberToWords(amountOfActivations)} times`;
+    }
+    return `${rangeToString(amountOfActivations)} times`;
+  }
+
+  override getText(overrideAmountOfActivations?: number | Range): string {
     const text = `${VERB} ${getCollectibleName(
       this.activeItem,
-    )} ${this.getAmountOfActivationsText()}`;
+    )} ${this.getAmountOfActivationsText(overrideAmountOfActivations)}`;
     return text;
   }
 

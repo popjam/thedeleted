@@ -1,3 +1,4 @@
+import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
 import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
@@ -11,6 +12,7 @@ import { postUpdateInit } from "./callbacks/postUpdate";
 import { postUseItemInit } from "./callbacks/postUseItem";
 import { preGetPedestalInit } from "./callbacks/preGetPedestal";
 import { postItemPickupInit } from "./callbacks/preItemPickup";
+import { initEID } from "./features/compatibility/EID/EIDInit";
 import { addTestingCommands } from "./features/console/testing";
 import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
 import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
@@ -22,6 +24,7 @@ import { iLoveYouInit } from "./features/modes/ILOVEYOU/ILOVEYOU";
 import { modeInit } from "./features/modes/mode";
 import { mainPCInit } from "./features/pc/mainPC";
 import { uiPCInit } from "./features/pc/uiPC";
+import { runIndexInit } from "./features/runIndex";
 import { EIDSettingsInit } from "./features/settings/EIDSettings";
 import { backdropInit } from "./helper/backdropHelper";
 import { mod } from "./mod";
@@ -33,6 +36,7 @@ main();
 function main() {
   initFeatures();
   initCallbacks();
+  initExternalMods();
 }
 
 /** Initialize mod features. */
@@ -52,6 +56,7 @@ function initFeatures() {
   itemEffectsInit();
   corruptionGenerationInit();
   EIDSettingsInit();
+  runIndexInit();
 }
 
 /** Initialize mod features for dev. */
@@ -75,4 +80,10 @@ function initCallbacks() {
   postPlayerInitInit(mod);
   postPlayerChangeTypeInit(mod);
   postNPCInitLateInit(mod);
+  postGameStartedReorderedInit(mod);
+}
+
+/** Initialize External mods if they exist. */
+function initExternalMods() {
+  initEID();
 }

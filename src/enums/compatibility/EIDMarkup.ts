@@ -1,4 +1,6 @@
 /** EID Icon Markup. */
+
+// TODO: Finish
 export enum EIDMarkup {
   ERROR = "{{ERROR}}",
   ARROW_UP = "{{ArrowUp}}",
