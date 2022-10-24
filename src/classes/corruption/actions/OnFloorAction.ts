@@ -2,7 +2,7 @@ import { LevelStage } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
-import { TriggerData } from "../../../interfaces/corruption/actions/triggerData";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_FLOOR;
@@ -24,7 +24,7 @@ export class OnFloorAction extends Action {
     return this;
   }
 
-  override fire(player: EntityPlayer, triggerData?: TriggerData): void {
+  override fire(triggerData: TriggerData): void {
     const levelStage = this.getLevelStage();
     if (levelStage !== undefined) {
       if (game.GetLevel().GetAbsoluteStage() !== levelStage) {
@@ -32,7 +32,7 @@ export class OnFloorAction extends Action {
       }
     }
 
-    this.fire(player, triggerData);
+    this.fire(triggerData);
   }
 }
 

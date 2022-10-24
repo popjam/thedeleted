@@ -45,7 +45,7 @@ export function addActionsToPlayer(
   actions.forEach((action) => {
     const playerActionsOfType = getAndSetActionArray(player, action.actionType);
     if (action.actionType === ActionType.ON_OBTAIN) {
-      action.trigger(player);
+      action.trigger({ player });
     } else {
       playerActionsOfType.push(action);
     }
@@ -56,7 +56,7 @@ export function addActionsToPlayer(
  * This will add any Actions to the player, and trigger any Responses, without adding them. Does not
  * deepCopy!
  */
-export function addEffectsToPlayer(
+export function addActionOrResponseToPlayer(
   player: EntityPlayer,
   ...effects: Array<Action | Response>
 ): void {
@@ -64,7 +64,7 @@ export function addEffectsToPlayer(
     if (isAction(effect)) {
       addActionsToPlayer(player, effect);
     } else {
-      effect.trigger(player);
+      effect.trigger({ player });
     }
   });
 }
@@ -92,7 +92,7 @@ export function triggerPlayerActionsByType(
 ): void {
   let playerActionsOfType = getAndSetActionArray(player, actionType);
   playerActionsOfType.forEach((action) => {
-    action.trigger(player);
+    action.trigger({ player });
   });
   // Remove flaggedForRemoval actions.
   playerActionsOfType = playerActionsOfType.filter(

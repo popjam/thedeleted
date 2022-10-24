@@ -1,5 +1,6 @@
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { iLoveYouPostNewRoom } from "../features/modes/ILOVEYOU/ILOVEYOU";
+import { temporaryItemsPostNewRoomReordered } from "../features/general/temporaryItems";
+import { iLoveYouPostNewRoom as iLoveYouPostNewRoomReordered } from "../features/modes/ILOVEYOU/ILOVEYOU";
 import { postNewRoomReorderedBackdrop } from "../helper/backdropHelper";
 
 export function postNewRoomReorderedInit(mod: ModUpgraded): void {
@@ -8,5 +9,6 @@ export function postNewRoomReorderedInit(mod: ModUpgraded): void {
 
 function main() {
   postNewRoomReorderedBackdrop();
-  iLoveYouPostNewRoom();
+  temporaryItemsPostNewRoomReordered();
+  iLoveYouPostNewRoomReordered();
 }

@@ -1,21 +1,18 @@
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Range } from "../../../types/general/Range";
 import { Response } from "./Response";
 
-const DEFAULT_SECONDS_BETWEEN_TRIGGERS = 1;
 const UNKNOWN_MORALITY_MORALITY = Morality.NEUTRAL;
+const BETWEEN_RESPONSES_TEXT = " then ";
 
 export class TriggerInSequenceResponse extends Response {
   override responseType: ResponseType = ResponseType.TRIGGER_IN_SEQUENCE;
   responses: Response[] = [];
-  secondsBetweenTriggers = DEFAULT_SECONDS_BETWEEN_TRIGGERS;
 
-  construct(msBetweenTriggers?: number, ...responses: Response[]): this {
-    if (msBetweenTriggers !== undefined) {
-      this.setSecondsBetweenTriggers(msBetweenTriggers);
-    }
+  construct(...responses: Response[]): this {
     this.addResponse(...responses);
     return this;
   }
@@ -41,16 +38,21 @@ export class TriggerInSequenceResponse extends Response {
   }
 
   getText(overrideAmountOfActivations?: number | Range): string {
-    return "";
-  }
-
-  setSecondsBetweenTriggers(msBetweenTriggers: number): this {
-    if (msBetweenTriggers < 0) {
-      msBetweenTriggers = DEFAULT_SECONDS_BETWEEN_TRIGGERS;
+    let text = "";
+    let iterations = this.responses.length;
+    for (const response of this.responses) {
+      text += ` ${response.getText(overrideAmountOfActivations)} `;
+      // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
+      if (--iterations !== 0) {
+        text += BETWEEN_RESPONSES_TEXT;
+      }
     }
-    this.secondsBetweenTriggers = msBetweenTriggers;
-    return this;
+    return text;
   }
 
-  fire(entityPlayer: EntityPlayer): void {}
+  fire(triggerData: TriggerData): void {
+    this.responses.forEach((response) => {
+      response.trigger(triggerData);
+    });
+  }
 }

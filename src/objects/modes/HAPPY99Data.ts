@@ -1,4 +1,4 @@
-import { CollectibleType, HeartSubType } from "isaac-typescript-definitions";
+import { HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { ModeData } from "../../interfaces/modes/ModeData";
@@ -10,13 +10,12 @@ export const HAPPY99Data: ModeData = {
   birthright: "This is HAPPY99's birthright description",
   characterType: CharacterType.NORMAL,
   startingPocket: CollectibleTypeCustom.BITFLIP,
-  startingItems: [CollectibleType.LUDOVICO_TECHNIQUE],
   startingBombs: 1,
   startingKeys: 0,
   startingCoins: 0,
   startingHealth: {
-    maxHearts: 4,
-    hearts: 4,
+    maxHearts: 2,
+    hearts: 2,
     eternalHearts: 0,
     soulHearts: 2,
     boneHearts: 0,

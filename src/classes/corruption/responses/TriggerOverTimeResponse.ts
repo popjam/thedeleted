@@ -3,6 +3,7 @@ import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getRunIndex } from "../../../features/runIndex";
 import { addTheS } from "../../../helper/stringHelper";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 import { Range } from "../../../types/general/Range";
 import { Response } from "./Response";
@@ -27,14 +28,15 @@ export class TriggerOverTimeResponse extends Response {
 
   construct(
     response: Response,
-    totalTime?: number,
+    amountOfTriggers?: number,
     intervalTime?: number,
   ): this {
-    if (totalTime !== undefined) {
-      this.totalTime = totalTime;
-    }
     if (intervalTime !== undefined) {
       this.intervalTime = intervalTime;
+    }
+    // Amount of triggers x Interval between triggers = Total time.
+    if (amountOfTriggers !== undefined) {
+      this.totalTime = amountOfTriggers * this.intervalTime;
     }
     this.currentTime = this.totalTime;
     this.response = response;
@@ -89,7 +91,7 @@ export class TriggerOverTimeResponse extends Response {
     );
   }
 
-  fire(player: EntityPlayer): void {
+  fire(triggerData: TriggerData): void {
     if (this.runIndex === undefined) {
       this.runIndex = getRunIndex();
     }
@@ -99,8 +101,8 @@ export class TriggerOverTimeResponse extends Response {
       mod.runInNGameFrames(() => {
         if (this.runIndex === getRunIndex()) {
           if (this.tick()) {
-            response.trigger(player);
-            this.trigger(player);
+            response.trigger(triggerData);
+            this.trigger(triggerData);
           } else {
             this.currentTime = this.totalTime;
           }

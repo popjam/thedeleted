@@ -1,10 +1,14 @@
-import { CollectibleType, LevelStage } from "isaac-typescript-definitions";
+import {
+  CollectibleType,
+  LevelStage,
+  TrinketType,
+} from "isaac-typescript-definitions";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
-import { TriggerRandomResponse } from "../../classes/corruption/responses/TriggerRandomResponse";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
-import { legibleString } from "../../helper/stringHelper";
+import { TemporaryEffectType } from "../../enums/general/TemporaryEffectType";
 import { mod } from "../../mod";
+import { playerAddTemporaryTrinket } from "../general/temporaryItems";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -17,14 +21,7 @@ const item1 = new UseActiveItemResponse().construct(
 const item2 = new UseActiveItemResponse().construct(
   CollectibleType.CRACK_THE_SKY,
 );
-const itemOr = new TriggerRandomResponse().construct(
-  ...[
-    [item1, 1],
-    [item2, 1],
-  ],
-);
-const wait1 = new WaitThenTriggerResponse().construct(itemOr, 2);
-const wait2 = new WaitThenTriggerResponse().construct(wait1, 3);
+const wait = new WaitThenTriggerResponse().construct(item2, 3);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -47,9 +44,11 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const hmm = wait2.deepCopy();
-  hmm.trigger(player());
-  print(legibleString(hmm.getText()));
+  playerAddTemporaryTrinket(
+    player(),
+    TrinketType.CURSED_PENNY,
+    TemporaryEffectType.LEVEL,
+  );
 }
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {}

@@ -1,4 +1,5 @@
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
+import { postNewLevelReorderedInit } from "./callbacks/postNewLevelReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
 import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
@@ -12,6 +13,7 @@ import { postUpdateInit } from "./callbacks/postUpdate";
 import { postUseItemInit } from "./callbacks/postUseItem";
 import { preGetPedestalInit } from "./callbacks/preGetPedestal";
 import { postItemPickupInit } from "./callbacks/preItemPickup";
+import { preNewLevelReorderedInit } from "./callbacks/preNewLevel";
 import { initEID } from "./features/compatibility/EID/EIDInit";
 import { addTestingCommands } from "./features/console/testing";
 import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
@@ -19,6 +21,7 @@ import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
 import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
+import { temporaryItemsInit } from "./features/general/temporaryItems";
 import { happy99Init } from "./features/modes/HAPPY99/HAPPY99";
 import { iLoveYouInit } from "./features/modes/ILOVEYOU/ILOVEYOU";
 import { modeInit } from "./features/modes/mode";
@@ -57,6 +60,7 @@ function initFeatures() {
   corruptionGenerationInit();
   EIDSettingsInit();
   runIndexInit();
+  temporaryItemsInit();
 }
 
 /** Initialize mod features for dev. */
@@ -81,6 +85,8 @@ function initCallbacks() {
   postPlayerChangeTypeInit(mod);
   postNPCInitLateInit(mod);
   postGameStartedReorderedInit(mod);
+  postNewLevelReorderedInit(mod);
+  preNewLevelReorderedInit(mod);
 }
 
 /** Initialize External mods if they exist. */

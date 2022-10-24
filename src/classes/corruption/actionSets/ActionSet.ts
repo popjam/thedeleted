@@ -1,6 +1,6 @@
 import { ColorDefault, deepCopy } from "isaacscript-common";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
-import { addEffectsToPlayer } from "../../../features/corruption/effects/playerEffects";
+import { addActionOrResponseToPlayer } from "../../../features/corruption/effects/playerEffects";
 import { Action } from "../actions/Action";
 import { Response } from "../responses/Response";
 
@@ -40,6 +40,6 @@ export abstract class ActionSet {
    * or using a corrupted consumable. It usually involves adding the Actions to the player.
    */
   interact(player: EntityPlayer): void {
-    addEffectsToPlayer(player, ...this.getCopyOfEffects());
+    addActionOrResponseToPlayer(player, ...this.getCopyOfEffects());
   }
 }

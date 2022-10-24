@@ -1,7 +1,7 @@
 import { deepCopy } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { TriggerData } from "../../../interfaces/corruption/actions/triggerData";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import {
   createPercentage,
   passesChancePercentage,
@@ -125,7 +125,7 @@ export abstract class Response {
    * Trigger the Response, which may or may not fire depending on certain Tags. Actions will use
    * this function to fire the Responses tied to them.
    */
-  trigger(player: EntityPlayer, triggerData?: TriggerData): void {
+  trigger(triggerData: TriggerData): void {
     // Percentage
     if (!passesChancePercentage(this.getChanceToActivate())) {
       return;
@@ -134,12 +134,12 @@ export abstract class Response {
     // Firing + AmountOfActivations
     const amountOfActivations = this.calculateAmountOfActivations();
     for (let i = 0; i < amountOfActivations; i++) {
-      this.fire(player, triggerData);
+      this.fire(triggerData);
     }
   }
 
   /** Fire the response. */
-  abstract fire(player: EntityPlayer, triggerData?: TriggerData): void;
+  abstract fire(triggerData: TriggerData): unknown;
 }
 
 /** Type guard. */

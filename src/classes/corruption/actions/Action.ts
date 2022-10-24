@@ -1,6 +1,6 @@
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
-import { TriggerData } from "../../../interfaces/corruption/actions/triggerData";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Percentage } from "../../../types/general/Percentage";
 import {
   randomInRange,
@@ -210,7 +210,7 @@ export abstract class Action {
    * @example Interval.
    * @example Fire.
    */
-  trigger(player: EntityPlayer, triggerData?: TriggerData): void {
+  trigger(triggerData: TriggerData): void {
     // Trigger after then remove.
     if (this.fireAfterThenRemove !== undefined) {
       this.fireAfterThenRemove--;
@@ -230,12 +230,12 @@ export abstract class Action {
       return;
     }
 
-    this.fire(player, triggerData);
+    this.fire(triggerData);
   }
 
   /** Fire the action, triggering its responses. */
-  fire(player: EntityPlayer, triggerData?: TriggerData): void {
-    this.getResponse()?.fire(player, triggerData);
+  fire(triggerData: TriggerData): void {
+    this.getResponse()?.fire(triggerData);
   }
 }
 

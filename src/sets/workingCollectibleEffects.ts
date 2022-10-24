@@ -206,3 +206,21 @@ export function doesCollectibleEffectWork(
   }
   return inWorking;
 }
+
+/**
+ * If the Temporary Collectible effect works, adds it, otherwise adds the collectible (with no logic
+ * for removal).
+ */
+export function addTemporaryCollectibleOrNormalCollectible(
+  player: EntityPlayer,
+  collectibleType: CollectibleType,
+  partlyWorking = true,
+): void {
+  if (doesCollectibleEffectWork(collectibleType, partlyWorking)) {
+    player
+      .GetEffects()
+      .AddCollectibleEffect(collectibleType as TemporaryCollectibleType);
+  } else {
+    player.AddCollectible(collectibleType);
+  }
+}

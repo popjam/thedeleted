@@ -5,6 +5,7 @@ import {
 } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { multiplyRangesOrNumbers, Range } from "../../../types/general/Range";
 import { Response } from "./Response";
 
@@ -72,7 +73,7 @@ export class TriggerRandomResponse extends Response {
     return text;
   }
 
-  fire(player: EntityPlayer): void {
-    getRandomFromWeightedArray(this.responses).trigger(player);
+  fire(triggerData: TriggerData): void {
+    getRandomFromWeightedArray(this.responses).trigger(triggerData);
   }
 }

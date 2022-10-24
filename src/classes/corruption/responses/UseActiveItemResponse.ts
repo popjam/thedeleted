@@ -3,6 +3,7 @@ import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Range, rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 
@@ -59,7 +60,8 @@ export class UseActiveItemResponse extends Response {
     return text;
   }
 
-  fire(player: EntityPlayer): void {
-    player.UseActiveItem(this.activeItem, UseFlag.NO_ANIMATION);
+  fire(triggerData: TriggerData): void {
+    const { player } = triggerData;
+    player?.UseActiveItem(this.activeItem, UseFlag.NO_ANIMATION);
   }
 }

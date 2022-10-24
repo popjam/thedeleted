@@ -55,6 +55,7 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
   }
   if (getModePlayerType(mode) !== player.GetPlayerType()) {
     player.ChangePlayerType(getModePlayerType(mode));
+    return;
   }
   // TODO:
   setPersistentNormalMode(mode);

@@ -5,6 +5,6 @@ export function postGameStartedReorderedInit(mod: ModUpgraded): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main);
 }
 
-function main() {
-  runIndexPostGameStartedReordered();
+function main(isContinued: boolean) {
+  runIndexPostGameStartedReordered(isContinued);
 }

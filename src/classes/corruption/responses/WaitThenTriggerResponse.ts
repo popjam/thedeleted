@@ -3,6 +3,7 @@ import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getRunIndex } from "../../../features/runIndex";
 import { addTheS } from "../../../helper/stringHelper";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 import { Range } from "../../../types/general/Range";
 import { Response } from "./Response";
@@ -63,7 +64,7 @@ export class WaitThenTriggerResponse extends Response {
     );
   }
 
-  fire(player: EntityPlayer): void {
+  fire(triggerData: TriggerData): void {
     if (this.runIndex === undefined) {
       this.runIndex = getRunIndex();
     }
@@ -72,7 +73,7 @@ export class WaitThenTriggerResponse extends Response {
     if (response !== undefined) {
       mod.runInNGameFrames(() => {
         if (this.runIndex === getRunIndex()) {
-          response.trigger(player);
+          response.trigger(triggerData);
         }
       }, GAME_FRAMES_PER_SECOND * this.secondsWait);
     }
