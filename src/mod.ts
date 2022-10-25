@@ -1,5 +1,5 @@
 import { ISCFeature, upgradeMod } from "isaacscript-common";
-import { MOD_NAME } from "./constants/modConstants";
+import { MOD_NAME } from "./constants/mod/modConstants";
 
 const modVanilla = RegisterMod(MOD_NAME, 1);
 const MOD_FEATURES = [

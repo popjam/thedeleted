@@ -569,10 +569,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/node@^18.11.2":
-  version "18.11.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.3.tgz#78a6d7ec962b596fc2d2ec102c4dd3ef073fea6a"
-  integrity sha512-fNjDQzzOsZeKZu5NATgXUPsaFaTxeRgFXoosrHivTl8RGeV733OLawXsGfEk9a8/tySyZUyiZ6E8LcjPFZ2y1A==
+"@types/node@^18.11.5":
+  version "18.11.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.5.tgz#1bc94cf2f9ab5fe33353bc7c79c797dcc5325bef"
+  integrity sha512-3JRwhbjI+cHLAkUorhf8RnqUbFXajvzX4q6fMn5JwkgtuwfYtRQYI3u4V92vI6NJuTsbBQWWh3RZjFsuevyMGQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2615,17 +2615,17 @@ is-yarn-global@^0.4.0:
   resolved "https://registry.yarnpkg.com/is-yarn-global/-/is-yarn-global-0.4.0.tgz#714d94453327db9ea98fbf1a0c5f2b88f59ddd5c"
   integrity sha512-HneQBCrXGBy15QnaDfcn6OLoU8AQPAa0Qn0IeJR/QCo4E8dNZaGGwxpCwWyEBQC5QvFonP8d6t60iGpAHVAfNA==
 
-isaac-typescript-definitions@^9.0.3, isaac-typescript-definitions@^9.0.4:
+isaac-typescript-definitions@^9.0.4:
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/isaac-typescript-definitions/-/isaac-typescript-definitions-9.0.4.tgz#4edb0af5580b3096aa5b4efbce64852c58d7a193"
   integrity sha512-p4riLgPdFRfL5rCI0LRsrFp4G9SFfGwUFHAUpKrIrzdeslYxU5sD0ULv9M/L5xJdjHH3bfLw17w7OhkZ+zCA0Q==
   dependencies:
     lua-types "^2.13.0"
 
-isaacscript-common@^15.3.0:
-  version "15.3.1"
-  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.1.tgz#8dae2b54c93c15277f70779d7ba40f38b7b076d0"
-  integrity sha512-QUDpnk+ODGGpfnV0kSmoF9G/MHmn12H1Msgum8rDmjECyOyko3tpa9DNSjZzkoKNrw7JDe80U8tQrhHVuS4EYQ==
+isaacscript-common@^15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.2.tgz#e500a0be3a0e0268b29c2f56d357dadb44ba433a"
+  integrity sha512-/VnnqHq73AL5cXj13HplZucfWIOnL20Qxk1W1O2L+wtDv/ifucJuVOaWYvCm35Avu0Zbrg4BIDZ7zHcKmHFrrQ==
   dependencies:
     isaac-typescript-definitions "^9.0.4"
 

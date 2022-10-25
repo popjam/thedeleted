@@ -11,7 +11,11 @@
  * enum.
  */
 
-import { CollectibleType, TrinketType } from "isaac-typescript-definitions";
+import {
+  CollectibleType,
+  DamageFlag,
+  TrinketType,
+} from "isaac-typescript-definitions";
 import {
   DefaultMap,
   defaultMapGetPlayer,
@@ -25,9 +29,20 @@ import { mod } from "../../mod";
 import { doesCollectibleEffectWork } from "../../sets/workingCollectibleEffects";
 
 const INCLUDE_PARTLY_WORKING = true;
+const FIRST_TIME_PICKING_UP = false;
 
 const v = {
   run: {
+    temporaryOnHitCollectibleEffects: new DefaultMap<
+      PlayerIndex,
+      CollectibleType[]
+    >(() => []),
+    temporaryOnHitCollectibles: new DefaultMap<PlayerIndex, CollectibleType[]>(
+      () => [],
+    ),
+    temporaryOnHitTrinkets: new DefaultMap<PlayerIndex, TrinketType[]>(
+      () => [],
+    ),
     temporaryLevelCollectibleEffects: new DefaultMap<
       PlayerIndex,
       CollectibleType[]
@@ -60,8 +75,34 @@ export function temporaryItemsInit(): void {
   mod.saveDataManager("temporaryItems", v);
 }
 
-export function temporaryItemsPostNewLevelReordered(): void {
-  const currentRoomIndex = game.GetLevel().GetCurrentRoomIndex();
+// TODO: Make function to check if Damage is from a 'hostile' source (e.g Blood Banks shouldn't remove temp items).
+export function temporaryItemsPlayerTakeDMG(
+  entity: Entity,
+  amount: float,
+  damageFlags: BitFlags<DamageFlag>,
+  source: EntityRef,
+  countdownFrames: int,
+): boolean | undefined {
+  const player = entity.ToPlayer();
+  if (player === undefined) {
+    return;
+  }
+
+  // Remove temporary collectibles that are on hit.
+  removeTemporaryCollectiblesFromPlayer(
+    v.run.temporaryOnHitCollectibles,
+    player,
+  );
+
+  // Remove temporary trinkets that are on hit.
+  removeTemporaryTrinketsFromPlayer(v.run.temporaryOnHitTrinkets, player);
+
+  // Remove temporary collectible effects that are on hit.
+  removeTemporaryCollectibleEffectsFromPlayer(
+    v.run.temporaryOnHitCollectibleEffects,
+    player,
+  );
+  return undefined;
 }
 
 export function temporaryItemsPreNewLevel(player: EntityPlayer): void {
@@ -87,27 +128,44 @@ export function temporaryItemsPostNewRoomReordered(): void {
   // Floor temporary effects need to be reapplied in every new room instance (they are removed
   // before this callback is called for the new floor).
   reapplyTemporaryCollectibleEffects(v.run.temporaryLevelCollectibleEffects);
+  // On hit effects need to be reapplied.
+  reapplyTemporaryCollectibleEffects(v.run.temporaryOnHitCollectibleEffects);
 
   v.run.roomIndex = currentRoomIndex;
 }
 
+/**
+ * Add a temporary trinket to the player. This will be in the form of a smelted trinket (I don't
+ * think TrinketEffects work). A duration can be specified, dictating when the collectible will be
+ * removed.
+ *
+ * Default duration is 'room'.
+ */
 export function playerAddTemporaryTrinket(
   player: EntityPlayer,
   trinket: TrinketType,
-  duration: TemporaryEffectType,
+  duration: TemporaryEffectType = TemporaryEffectType.ROOM,
 ): void {
   smeltTrinket(player, trinket);
   if (duration === TemporaryEffectType.ROOM) {
     defaultMapGetPlayer(v.run.temporaryRoomTrinkets, player).push(trinket);
   } else if (duration === TemporaryEffectType.LEVEL) {
     defaultMapGetPlayer(v.run.temporaryLevelTrinkets, player).push(trinket);
+  } else if (duration === TemporaryEffectType.ON_HIT) {
+    defaultMapGetPlayer(v.run.temporaryOnHitTrinkets, player).push(trinket);
   }
 }
 
+/**
+ * Add a temporary collectible to the player. This will either be an actual collectible, or a
+ * collectible effect. A duration can be specified, dictating when the collectible will be removed.
+ *
+ * Default duration is 'room'.
+ */
 export function playerAddTemporaryCollectible(
   player: EntityPlayer,
   collectibleType: CollectibleType,
-  duration: TemporaryEffectType,
+  duration: TemporaryEffectType = TemporaryEffectType.ROOM,
 ): void {
   const isEffectWorking = doesCollectibleEffectWork(
     collectibleType,
@@ -125,15 +183,23 @@ export function playerAddTemporaryCollectible(
       defaultMapGetPlayer(v.run.temporaryLevelCollectibleEffects, player).push(
         collectibleType,
       );
+    } else if (duration === TemporaryEffectType.ON_HIT) {
+      defaultMapGetPlayer(v.run.temporaryOnHitCollectibleEffects, player).push(
+        collectibleType,
+      );
     }
   } else {
-    player.AddCollectible(collectibleType);
+    player.AddCollectible(collectibleType, undefined, FIRST_TIME_PICKING_UP);
     if (duration === TemporaryEffectType.ROOM) {
       defaultMapGetPlayer(v.run.temporaryRoomCollectibles, player).push(
         collectibleType,
       );
     } else if (duration === TemporaryEffectType.LEVEL) {
       defaultMapGetPlayer(v.run.temporaryLevelCollectibles, player).push(
+        collectibleType,
+      );
+    } else if (duration === TemporaryEffectType.ON_HIT) {
+      defaultMapGetPlayer(v.run.temporaryOnHitCollectibles, player).push(
         collectibleType,
       );
     }
@@ -145,47 +211,101 @@ function reapplyTemporaryCollectibleEffects(
   map: DefaultMap<PlayerIndex, CollectibleType[]>,
 ) {
   map.forEach((temporaryCollectibles, playerIndex) => {
-    const player = getPlayerFromIndex(playerIndex);
-    if (player !== undefined) {
-      temporaryCollectibles.forEach((collectibleType) => {
-        player
-          .GetEffects()
-          .AddCollectibleEffect(collectibleType as TemporaryCollectibleType);
-      });
+    if (temporaryCollectibles.length > 0) {
+      const player = getPlayerFromIndex(playerIndex);
+      if (player !== undefined) {
+        temporaryCollectibles.forEach((collectibleType) => {
+          player
+            .GetEffects()
+            .AddCollectibleEffect(collectibleType as TemporaryCollectibleType);
+        });
+      }
     }
   });
 }
 
 /**
- * Removes temporary collectibles from the player (e.g upon going to the next room). Will also
- * remove them from the appropriate array.
+ * Removes temporary collectibles from all players in the specified map (e.g upon going to the next
+ * room), also updating the map.
  */
 function removeTemporaryCollectibles(
   map: DefaultMap<PlayerIndex, CollectibleType[]>,
 ) {
   map.forEach((collectibleTypes, playerIndex) => {
-    const player = getPlayerFromIndex(playerIndex);
-    if (player !== undefined) {
-      collectibleTypes.forEach((collectibleType) => {
-        player.RemoveCollectible(collectibleType);
-      });
+    if (collectibleTypes.length > 0) {
+      const player = getPlayerFromIndex(playerIndex);
+      if (player !== undefined) {
+        collectibleTypes.forEach((collectibleType) => {
+          player.RemoveCollectible(collectibleType);
+        });
+      }
+      collectibleTypes.splice(0);
     }
-    collectibleTypes.splice(0);
   });
 }
 
 /**
- * Removes temporary trinkets from the player (e.g upon going to the next room). Will also remove
- * them from the appropriate array.
+ * Removes temporary trinkets from all players in the specified map (e.g upon going to the next
+ * room), also updating the map.
  */
 function removeTemporaryTrinkets(map: DefaultMap<PlayerIndex, TrinketType[]>) {
   map.forEach((trinketTypes, playerIndex) => {
-    const player = getPlayerFromIndex(playerIndex);
-    if (player !== undefined) {
-      trinketTypes.forEach((trinketType) => {
-        player.TryRemoveTrinket(trinketType);
-      });
+    if (trinketTypes.length > 0) {
+      const player = getPlayerFromIndex(playerIndex);
+      if (player !== undefined) {
+        trinketTypes.forEach((trinketType) => {
+          player.TryRemoveTrinket(trinketType);
+        });
+      }
+      trinketTypes.splice(0);
     }
-    trinketTypes.splice(0);
   });
+}
+
+/**
+ * Removes temporary collectibles from specified players in the specified map (e.g upon being hit),
+ * also updating the map.
+ */
+function removeTemporaryCollectiblesFromPlayer(
+  map: DefaultMap<PlayerIndex, CollectibleType[]>,
+  player: EntityPlayer,
+) {
+  const collectibleTypes = defaultMapGetPlayer(map, player);
+  if (collectibleTypes.length > 0) {
+    collectibleTypes.forEach((collectibleType) => {
+      player.RemoveCollectible(collectibleType);
+    });
+    collectibleTypes.splice(0);
+  }
+}
+
+/**
+ * Removes temporary trinkets from specified players in the specified map (e.g upon being hit), also
+ * updating the map.
+ */
+function removeTemporaryTrinketsFromPlayer(
+  map: DefaultMap<PlayerIndex, TrinketType[]>,
+  player: EntityPlayer,
+) {
+  const trinketTypes = defaultMapGetPlayer(map, player);
+  if (trinketTypes.length > 0) {
+    trinketTypes.forEach((trinketType) => {
+      player.TryRemoveTrinket(trinketType);
+    });
+    trinketTypes.splice(0);
+  }
+}
+
+function removeTemporaryCollectibleEffectsFromPlayer(
+  map: DefaultMap<PlayerIndex, CollectibleType[]>,
+  player: EntityPlayer,
+) {
+  const playerTemporaryCollectibles = defaultMapGetPlayer(map, player);
+  if (playerTemporaryCollectibles.length > 0) {
+    const playerEffects = player.GetEffects();
+    playerTemporaryCollectibles.forEach((collectibleType) => {
+      playerEffects.RemoveCollectibleEffect(collectibleType);
+    });
+    playerTemporaryCollectibles.splice(0);
+  }
 }

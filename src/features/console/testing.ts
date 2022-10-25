@@ -1,14 +1,9 @@
-import {
-  CollectibleType,
-  LevelStage,
-  TrinketType,
-} from "isaac-typescript-definitions";
+import { CollectibleType, LevelStage } from "isaac-typescript-definitions";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
-import { TemporaryEffectType } from "../../enums/general/TemporaryEffectType";
+import { ModFeatures } from "../../constants/mod/featureConstants";
 import { mod } from "../../mod";
-import { playerAddTemporaryTrinket } from "../general/temporaryItems";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -44,14 +39,12 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  playerAddTemporaryTrinket(
-    player(),
-    TrinketType.CURSED_PENNY,
-    TemporaryEffectType.LEVEL,
-  );
+  ModFeatures.testFeature.init();
 }
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction2(): void {}
+export function testingFunction2(): void {
+  ModFeatures.testFeature.uninit();
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {}

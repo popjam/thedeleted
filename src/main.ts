@@ -1,3 +1,4 @@
+import { playerTakeDMGInit } from "./callbacks/playerTakeDMG";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
 import { postNewLevelReorderedInit } from "./callbacks/postNewLevelReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
@@ -40,6 +41,7 @@ function main() {
   initFeatures();
   initCallbacks();
   initExternalMods();
+  initExports();
 }
 
 /** Initialize mod features. */
@@ -87,9 +89,14 @@ function initCallbacks() {
   postGameStartedReorderedInit(mod);
   postNewLevelReorderedInit(mod);
   preNewLevelReorderedInit(mod);
+  playerTakeDMGInit(mod);
 }
 
 /** Initialize External mods if they exist. */
 function initExternalMods() {
   initEID();
+}
+
+function initExports() {
+  TheDeleted = {};
 }
