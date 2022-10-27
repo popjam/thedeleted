@@ -31,6 +31,7 @@ const NO_RESPONSE_TEXT = "do nothing";
 export abstract class Action {
   readonly actionType!: ActionType;
   response?: Response;
+  overriddenActionText?: string;
 
   // E.g every 3 triggers. Used for text.
   verb = "every";
@@ -87,6 +88,17 @@ export abstract class Action {
 
   getResponse(): Response | undefined {
     return this.response;
+  }
+
+  /** Overrides the 'Action' portion of the Action text (when called from getText()). */
+  getOverriddenActionText(): string | undefined {
+    return this.overriddenActionText;
+  }
+
+  /** Overrides the 'Action' portion of the Action text (when called from getText()). */
+  setOverriddenActionText(text: string): this {
+    this.overriddenActionText = text;
+    return this;
   }
 
   /**
@@ -173,6 +185,11 @@ export abstract class Action {
 
   // Only get the 'Action' part of the text, not including responses.
   getActionText(): string {
+    // If overridden.
+    if (this.overriddenActionText !== undefined) {
+      return this.overriddenActionText;
+    }
+
     let text = "";
     const fireAfterThenRemove = this.getFireAfterThenRemove();
     if (fireAfterThenRemove !== undefined) {
@@ -218,8 +235,9 @@ export abstract class Action {
         this.fireAfterThenRemove === TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER
       ) {
         this.flagForRemoval = true;
+      } else {
+        return;
       }
-      return;
     }
 
     // Interval

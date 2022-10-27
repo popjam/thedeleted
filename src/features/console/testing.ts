@@ -1,15 +1,16 @@
-import { CollectibleType, LevelStage } from "isaac-typescript-definitions";
-import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
+import { CollectibleType } from "isaac-typescript-definitions";
+import { OnObtainAction } from "../../classes/corruption/actions/OnObtainAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
 import { ModFeatures } from "../../constants/mod/featureConstants";
+import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
 
 /** Testing variables */
-const action1 = new OnFloorAction().setLevelStage(LevelStage.WOMB_1);
+const action1 = new OnObtainAction().setRandomFunnyActionText();
 const item1 = new UseActiveItemResponse().construct(
   CollectibleType.BOOK_OF_SIN,
 );
@@ -17,6 +18,7 @@ const item2 = new UseActiveItemResponse().construct(
   CollectibleType.CRACK_THE_SKY,
 );
 const wait = new WaitThenTriggerResponse().construct(item2, 3);
+action1.setResponse(item1);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -39,7 +41,7 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  ModFeatures.testFeature.init();
+  print(legibleString(action1.getText()));
 }
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {

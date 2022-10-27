@@ -1,5 +1,6 @@
 import { playerTakeDMGInit } from "./callbacks/playerTakeDMG";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
+import { postGridEntityCollisionInit } from "./callbacks/postGridEntityCollision";
 import { postNewLevelReorderedInit } from "./callbacks/postNewLevelReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
@@ -90,6 +91,9 @@ function initCallbacks() {
   postNewLevelReorderedInit(mod);
   preNewLevelReorderedInit(mod);
   playerTakeDMGInit(mod);
+
+  // Laggy
+  postGridEntityCollisionInit(mod);
 }
 
 /** Initialize External mods if they exist. */

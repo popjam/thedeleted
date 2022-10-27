@@ -569,10 +569,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/node@^18.11.5":
-  version "18.11.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.5.tgz#1bc94cf2f9ab5fe33353bc7c79c797dcc5325bef"
-  integrity sha512-3JRwhbjI+cHLAkUorhf8RnqUbFXajvzX4q6fMn5JwkgtuwfYtRQYI3u4V92vI6NJuTsbBQWWh3RZjFsuevyMGQ==
+"@types/node@^18.11.7":
+  version "18.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.7.tgz#8ccef136f240770c1379d50100796a6952f01f94"
+  integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2622,10 +2622,10 @@ isaac-typescript-definitions@^9.0.4:
   dependencies:
     lua-types "^2.13.0"
 
-isaacscript-common@^15.3.2:
-  version "15.3.2"
-  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.2.tgz#e500a0be3a0e0268b29c2f56d357dadb44ba433a"
-  integrity sha512-/VnnqHq73AL5cXj13HplZucfWIOnL20Qxk1W1O2L+wtDv/ifucJuVOaWYvCm35Avu0Zbrg4BIDZ7zHcKmHFrrQ==
+isaacscript-common@^15.3.4:
+  version "15.3.4"
+  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.4.tgz#8b6d2ba38e61a46e0d488d1d4b40b7ce909f9e19"
+  integrity sha512-TEFOI0bsoSQoFCIn2KLOmMjaEcZ7xR4143xRyJ5cEkj6Rki5hihv2m4IeJesmAsMm0pIqLKtnK0H0fu+RttR0Q==
   dependencies:
     isaac-typescript-definitions "^9.0.4"
 

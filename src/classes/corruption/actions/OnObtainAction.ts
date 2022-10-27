@@ -1,4 +1,6 @@
+import { getRandomSetElement } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import { FUNNY_ACTION_TEXT_SET } from "../../../sets/funnyActionTexts";
 import { Action } from "./Action";
 
 /**
@@ -8,7 +10,23 @@ import { Action } from "./Action";
 export class OnObtainAction extends Action {
   override actionType = ActionType.ON_OBTAIN;
 
-  override getText(): string {
-    return `${this.getResponseText()}`;
+  /**
+   * Overrides any ActionText and provides a 'dummy' value, which is randomly chosen from a set.
+   *
+   * @example 'On uninstalling isaac, ' ...
+   */
+  setRandomFunnyActionText(): this {
+    this.overriddenActionText = getRandomSetElement(FUNNY_ACTION_TEXT_SET);
+    return this;
+  }
+
+  /** Obtain Actions are identical to naked responses, hence they usually do not have any text. */
+  override getActionText(): string {
+    // If overridden.
+    if (this.overriddenActionText !== undefined) {
+      return this.overriddenActionText;
+    }
+
+    return "";
   }
 }

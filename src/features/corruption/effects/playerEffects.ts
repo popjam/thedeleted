@@ -12,6 +12,7 @@ import {
 import { Action, isAction } from "../../../classes/corruption/actions/Action";
 import { Response } from "../../../classes/corruption/responses/Response";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
 
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
@@ -90,14 +91,28 @@ export function triggerPlayerActionsByType(
   player: EntityPlayer,
   actionType: ActionType,
 ): void {
-  let playerActionsOfType = getAndSetActionArray(player, actionType);
+  let anyFlaggedForRemoval = false;
+  const playerActionsOfType = getAndSetActionArray(player, actionType);
   playerActionsOfType.forEach((action) => {
-    action.trigger({ player });
+    fprint(`Triggering: ${action.getText()}`);
+    action.trigger({ player, action });
+    if (action.flagForRemoval) {
+      anyFlaggedForRemoval = true;
+    }
   });
-  // Remove flaggedForRemoval actions.
-  playerActionsOfType = playerActionsOfType.filter(
-    (action) => !action.flagForRemoval,
-  );
+
+  // If there are any actions that are flagged for removal. Don't do this every time as it may cause
+  // additional lag.
+  if (anyFlaggedForRemoval) {
+    let index = playerActionsOfType.length - 1;
+    while (index >= 0) {
+      if (playerActionsOfType[index]?.flagForRemoval === true) {
+        fprint(`Removing: ${playerActionsOfType[index]?.getText()}`);
+        playerActionsOfType.splice(index, 1);
+      }
+      index--;
+    }
+  }
 }
 
 /**
