@@ -16,6 +16,11 @@ export function postUseItemInit(mod: ModUpgraded): void {
   );
   mod.AddCallback(
     ModCallback.POST_USE_ITEM,
+    mainBitflip,
+    CollectibleTypeCustom.BITFLIP_PINK,
+  );
+  mod.AddCallback(
+    ModCallback.POST_USE_ITEM,
     mainD14,
     CollectibleTypeCustom.D14,
   );

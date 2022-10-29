@@ -1,16 +1,15 @@
 import { HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
-/** Information about HAPPY99. */
+/** Information about MORRIS. */
 // eslint-disable-next-line isaacscript/require-const-assertions
-export const HAPPY99Data: ModeData = {
-  description: "This is HAPPY99's description",
-  birthright: "This is HAPPY99's birthright description",
+export const MORRISData: ModeData = {
+  description: "This is ILOVEYOU's description",
+  birthright: "This is ILOVEYOU's birthright description",
   characterType: CharacterType.NORMAL,
-  startingPocket: CollectibleTypeCustom.BITFLIP,
+  startingPocket: CollectibleTypeCustom.D14,
   startingBombs: 1,
   startingKeys: 0,
   startingCoins: 0,
@@ -18,7 +17,7 @@ export const HAPPY99Data: ModeData = {
     maxHearts: 2,
     hearts: 2,
     eternalHearts: 0,
-    soulHearts: 2,
+    soulHearts: 0,
     boneHearts: 0,
     goldenHearts: 0,
     rottenHearts: 0,
@@ -27,5 +26,4 @@ export const HAPPY99Data: ModeData = {
     bloodCharges: 0,
     soulHeartTypes: [HeartSubType.SOUL],
   },
-  mainColor: DeletedColor.HAPPY_YELLOW,
 };

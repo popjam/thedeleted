@@ -7,6 +7,7 @@ export const PLAYER_TYPES_DELETED = [
   PlayerTypeCustom.DELETED_BASE,
   PlayerTypeCustom.DELETED_HAPPY99,
   PlayerTypeCustom.DELETED_ILOVEYOU,
+  PlayerTypeCustom.DELETED_MORRIS,
   PlayerTypeCustom.T_DELETED_BASE,
 ];
 
@@ -15,6 +16,7 @@ export const PLAYER_TYPES_NORMAL_DELETED = [
   PlayerTypeCustom.DELETED_BASE,
   PlayerTypeCustom.DELETED_HAPPY99,
   PlayerTypeCustom.DELETED_ILOVEYOU,
+  PlayerTypeCustom.DELETED_MORRIS,
 ];
 
 /** An array of PlayerType which classify under 'Tainted' Deleted. */

@@ -1,6 +1,8 @@
 <items gfxroot="gfx/Items/" version="1">
   <!-- BitFlip !-->
   <active description="Ones and Zeros" gfx="bitflip.png" maxcharges="0" name="Bitflip" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Pink BitFlip !-->
+  <active description="Ones and Zeros" gfx="bitflip_pink.png" maxcharges="0" name="Bitflip " chargetype="normal" hidden="true" tags="quest" />
   <!-- Bitshift !-->
   <active description="Ones and Zeros" gfx="thedeleted_bitshift.png" maxcharges="0" name="Bitshift" chargetype="normal" hidden="true" tags="quest" />
   <!-- D-1 !-->

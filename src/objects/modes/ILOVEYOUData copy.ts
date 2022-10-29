@@ -8,7 +8,7 @@ export const ILOVEYOUData: ModeData = {
   description: "This is ILOVEYOU's description",
   birthright: "This is ILOVEYOU's birthright description",
   characterType: CharacterType.NORMAL,
-  startingPocket: CollectibleTypeCustom.BITFLIP,
+  startingPocket: CollectibleTypeCustom.BITFLIP_PINK,
   startingBombs: 1,
   startingKeys: 0,
   startingCoins: 0,

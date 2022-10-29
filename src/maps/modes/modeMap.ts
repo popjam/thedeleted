@@ -3,12 +3,14 @@ import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { Mode } from "../../enums/modes/Mode";
 import { ModeData } from "../../interfaces/modes/ModeData";
 import { HAPPY99Data } from "../../objects/modes/HAPPY99Data";
-import { ILOVEYOUData } from "../../objects/modes/ILOVEYOUData";
+import { ILOVEYOUData } from "../../objects/modes/ILOVEYOUData copy";
+import { MORRISData } from "../../objects/modes/MORRISData";
 
 /** Maps each Mode type to their respective data object. */
 const MODE_DATA_MAP: ReadonlyMap<Mode, ModeData> = new Map([
   [Mode.HAPPY99, HAPPY99Data],
   [Mode.ILOVEYOU, ILOVEYOUData],
+  [Mode.MORRIS, MORRISData],
   // [Mode.ILOVEYOU, ILOVEYOUData], [Mode.MORRIS, MORRISData], [Mode.ZIPBOMBER, ZIPBOMBERData],
   // [Mode.CRYPTOLOCKER, CRYPTOLOCKERData], [Mode.SPYWIPER, SPYWIPERData], [Mode.JERUSALEM,
   // JERUSALEMData], [Mode.HICURDISMOS, HICURDISMOSData], [Mode.VCS, VCSData], [Mode.MEMZ,
@@ -19,12 +21,14 @@ const MODE_DATA_MAP: ReadonlyMap<Mode, ModeData> = new Map([
 const MODE_PLAYERTYPE_MAP: ReadonlyMap<Mode, PlayerType> = new Map([
   [Mode.HAPPY99, PlayerTypeCustom.DELETED_HAPPY99],
   [Mode.ILOVEYOU, PlayerTypeCustom.DELETED_ILOVEYOU],
+  [Mode.MORRIS, PlayerTypeCustom.DELETED_MORRIS],
 ]);
 
 /** Maps each PlayerType to their respective Mode. */
 const PLAYERTYPE_MODE_MAP: ReadonlyMap<PlayerType, Mode> = new Map([
   [PlayerTypeCustom.DELETED_HAPPY99, Mode.HAPPY99],
   [PlayerTypeCustom.DELETED_ILOVEYOU, Mode.ILOVEYOU],
+  [PlayerTypeCustom.DELETED_MORRIS, Mode.MORRIS],
 ]);
 
 /** Retrieve a Mode's ModeData. */

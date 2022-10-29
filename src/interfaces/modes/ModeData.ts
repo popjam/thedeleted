@@ -25,4 +25,9 @@ export interface ModeData {
   startingBombs: number;
   /** Starting health. */
   startingHealth: PlayerHealth;
+  /**
+   * The main color associated with the mode. Note: Some modes have multiple 'main' colors, so just
+   * do not set the main Color and set it instead in the mode file.
+   */
+  mainColor?: Color;
 }

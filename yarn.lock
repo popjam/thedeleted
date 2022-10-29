@@ -2622,10 +2622,10 @@ isaac-typescript-definitions@^9.0.4:
   dependencies:
     lua-types "^2.13.0"
 
-isaacscript-common@^15.3.4:
-  version "15.3.4"
-  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.4.tgz#8b6d2ba38e61a46e0d488d1d4b40b7ce909f9e19"
-  integrity sha512-TEFOI0bsoSQoFCIn2KLOmMjaEcZ7xR4143xRyJ5cEkj6Rki5hihv2m4IeJesmAsMm0pIqLKtnK0H0fu+RttR0Q==
+isaacscript-common@^15.3.6:
+  version "15.3.6"
+  resolved "https://registry.yarnpkg.com/isaacscript-common/-/isaacscript-common-15.3.6.tgz#8221a0c3851a1449402d7486303fdaa1c02af3f6"
+  integrity sha512-qoTgzVA/4VVcmIsuUsAOYhI80sttTO38Ybu/WKWIg1ERQLHgWaScx4rD7rzFhUtLfh7j+PA8e9bWg/Y24dTh/A==
   dependencies:
     isaac-typescript-definitions "^9.0.4"
 

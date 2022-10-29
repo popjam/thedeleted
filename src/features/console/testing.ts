@@ -1,16 +1,16 @@
 import { CollectibleType } from "isaac-typescript-definitions";
-import { OnObtainAction } from "../../classes/corruption/actions/OnObtainAction";
+import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
 import { ModFeatures } from "../../constants/mod/featureConstants";
-import { legibleString } from "../../helper/stringHelper";
+import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { mod } from "../../mod";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
 
 /** Testing variables */
-const action1 = new OnObtainAction().setRandomFunnyActionText();
+const action1 = new OnDamageAction();
 const item1 = new UseActiveItemResponse().construct(
   CollectibleType.BOOK_OF_SIN,
 );
@@ -41,7 +41,7 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  print(legibleString(action1.getText()));
+  player().ChangePlayerType(PlayerTypeCustom.DELETED_HAPPY99);
 }
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {

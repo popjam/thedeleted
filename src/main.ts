@@ -1,6 +1,6 @@
+import { evaluateCacheInit } from "./callbacks/evaluateCache";
 import { playerTakeDMGInit } from "./callbacks/playerTakeDMG";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
-import { postGridEntityCollisionInit } from "./callbacks/postGridEntityCollision";
 import { postNewLevelReorderedInit } from "./callbacks/postNewLevelReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
@@ -8,6 +8,7 @@ import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
 import { postPeffectUpdateReorderedInit } from "./callbacks/postPeffectUpdateReordered";
 import { postPickupInitLate } from "./callbacks/postPickupInitLate";
 import { postPlayerChangeTypeInit } from "./callbacks/postPlayerChangeType";
+import { postPlayerFatalDamageInit } from "./callbacks/postPlayerFatalDamage";
 import { postPlayerInitInit } from "./callbacks/postPlayerInit";
 import { postPlayerInitFirstInit } from "./callbacks/postPlayerInitFirst";
 import { postRenderInit } from "./callbacks/postRender";
@@ -91,9 +92,8 @@ function initCallbacks() {
   postNewLevelReorderedInit(mod);
   preNewLevelReorderedInit(mod);
   playerTakeDMGInit(mod);
-
-  // Laggy
-  postGridEntityCollisionInit(mod);
+  postPlayerFatalDamageInit(mod);
+  evaluateCacheInit(mod);
 }
 
 /** Initialize External mods if they exist. */
