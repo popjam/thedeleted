@@ -28,6 +28,11 @@ export function iLoveYouModeSetup(player: EntityPlayer): void {
     .AddCollectibleEffect(PERSISTENT_COLLECTIBLE_EFFECT, false);
 }
 
+/** When the player swaps out from ILOVEYOU mode. */
+export function iLoveYouModeFin(player: EntityPlayer): void {
+  player.GetEffects().RemoveCollectibleEffect(PERSISTENT_COLLECTIBLE_EFFECT);
+}
+
 /** Make sure ILOVEYOU player keeps collectible effect. */
 // TODO: Fix
 export function iLoveYouPostNewRoom(): void {

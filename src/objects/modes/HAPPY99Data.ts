@@ -1,7 +1,6 @@
-import { HeartSubType } from "isaac-typescript-definitions";
+import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about HAPPY99. */
@@ -27,5 +26,8 @@ export const HAPPY99Data: ModeData = {
     bloodCharges: 0,
     soulHeartTypes: [HeartSubType.SOUL],
   },
-  mainColor: DeletedColor.HAPPY_YELLOW,
+  characterStats: new Map<CacheFlag, number>([
+    [CacheFlag.DAMAGE, 3.4],
+    [CacheFlag.SPEED, 0.9],
+  ]),
 };

@@ -5,39 +5,36 @@ import {
 } from "isaac-typescript-definitions";
 import {
   playerAddCollectible,
-  PlayerIndex,
   setActiveItem,
   setPlayerHealth,
 } from "isaacscript-common";
 import { Mode } from "../../enums/modes/Mode";
-import { isPlayerDeleted } from "../../helper/deletedSpecific/deletedHelper";
+import {
+  isModeTainted,
+  isPlayerDeleted,
+} from "../../helper/deletedSpecific/deletedHelper";
 import {
   setPlayerBombs,
   setPlayerCoins,
   setPlayerKeys,
 } from "../../helper/playerHelper";
-import { getModeInit } from "../../maps/modes/modeInitMap";
+import { getModeFin, getModeInit } from "../../maps/modes/modeInitMap";
 import {
   getModeData,
   getModeFromPlayerType,
   getModePlayerType,
 } from "../../maps/modes/modeMap";
 import { mod } from "../../mod";
-import { NormalMode, TaintedMode } from "../../types/modes/ModeType";
 
 /** Responsible for keeping track of Deleted's modes. */
 
 const v = {
   persistent: {
     /** The mode N.Deleted will be upon starting a run. */
-    normalMode: Mode.HAPPY99 as NormalMode,
+    normalMode: Mode.HAPPY99,
     /** The mode T.Deleted will be upon starting a run. */
-    taintedMode: undefined,
-  },
-  run: {
-    /** The current mode Deleted is on the run. */
-    currentMode: new Map<PlayerIndex, Mode>(),
-  },
+    taintedMode: Mode.SOPHOS,
+  }, // NOTE: There are currently no checks in place to
 };
 
 export function modeInit(): void {
@@ -62,7 +59,7 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
     return;
   }
   // TODO:
-  setPersistentNormalMode(mode);
+  setPersistentMode(mode);
   // Setup player.
   const modeData = getModeData(mode);
   // Consumables:
@@ -86,31 +83,49 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
 }
 
 /** Get the persistent normal-Deleted mode. */
-export function getPersistentNormalMode(): NormalMode {
+export function getPersistentNormalMode(): Mode {
   return v.persistent.normalMode;
 }
 
-/** Set the persistent normal-Deleted mode. */
-export function setPersistentNormalMode(mode: NormalMode): void {
-  v.persistent.normalMode = mode;
+/**
+ * Set the persistent Deleted mode. This will determine whether the mode is for Deleted or Tainted
+ * Deleted and modify the appropriate value, so next time a run is started the most recent mode is
+ * loaded (for the appropriate CharacterType).
+ */
+export function setPersistentMode(mode: Mode): void {
+  if (isModeTainted(mode)) {
+    v.persistent.taintedMode = mode;
+  } else {
+    v.persistent.normalMode = mode;
+  }
 }
 
 /** Get the persistent tainted-Deleted mode. */
-export function getPersistentTaintedMode(): TaintedMode {
+export function getPersistentTaintedMode(): Mode {
   return v.persistent.taintedMode;
 }
 
-/** Set the persistent tainted-Deleted mode. */
-export function setPersistentTaintedMode(mode: TaintedMode): void {
-  v.persistent.taintedMode = mode;
+/** When the player first loads in as a Mode, set it up. */
+export function modePostPlayerInitFirst(player: EntityPlayer): void {
+  const mode = getModeFromPlayerType(player.GetPlayerType());
+  if (mode !== undefined) {
+    setPlayerMode(player, mode);
+  }
 }
 
-/** If changing to a deleted PlayerType, sets them up appropriately. */
+/**
+ * If changing to a deleted PlayerType, sets them up appropriately. Also handles calling a mode's
+ * finalization function upon switching from that mode.
+ */
 export function postPlayerChangeTypeMode(
   player: EntityPlayer,
   oldCharacter: PlayerType,
   newCharacter: PlayerType,
 ): void {
+  const oldMode = getModeFromPlayerType(oldCharacter);
+  if (oldMode !== undefined) {
+    getModeFin(oldMode)(player);
+  }
   const newMode = getModeFromPlayerType(newCharacter);
   if (newMode !== undefined) {
     setPlayerMode(player, newMode);
@@ -118,11 +133,15 @@ export function postPlayerChangeTypeMode(
 }
 
 /** Sets the Deleted Mode's tear color. */
-export function colorEvaluateCacheMode(
+export function modeEvaluateCacheColor(
   player: EntityPlayer,
   cacheFlag: CacheFlag,
 ): void {
-  if (MODE_DATA.mainColor !== undefined) {
-    player.TearColor = MODE_DATA.mainColor;
+  const mode = getCurrentMode(player);
+  if (mode !== undefined) {
+    const { mainColor } = getModeData(mode);
+    if (mainColor !== undefined) {
+      player.TearColor = mainColor;
+    }
   }
 }

@@ -19,6 +19,9 @@ export function happy99ModeSetup(player: EntityPlayer): void {
   fprint(`HAPPY99: Mode init for player: ${getPlayerIndex(player)}`);
 }
 
+/** When the player swaps out from HAPPY99 mode. */
+export function happy99ModeFin(player: EntityPlayer): void {}
+
 /** Death fireworks effect */
 export function happy99PostPlayerFatalDamage(
   player: EntityPlayer,

@@ -1,4 +1,5 @@
 import { CollectibleType } from "isaac-typescript-definitions";
+import { getEnumValues, getRandomArrayElement } from "isaacscript-common";
 import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
@@ -41,7 +42,7 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  player().ChangePlayerType(PlayerTypeCustom.DELETED_HAPPY99);
+  player().ChangePlayerType(PlayerTypeCustom.T_DELETED_SOPHOS);
 }
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
@@ -55,4 +56,8 @@ export function testingFunction3(): void {}
 export function testingFunction4(): void {}
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction5(): void {}
+export function testingFunction5(): void {
+  const customPlayerTypes = getEnumValues(PlayerTypeCustom);
+  const randomPlayerType = getRandomArrayElement(customPlayerTypes);
+  player().ChangePlayerType(randomPlayerType);
+}

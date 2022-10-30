@@ -9,7 +9,6 @@ import {
   spawnSlot,
 } from "isaacscript-common";
 import { PCState } from "../../enums/PCStatus";
-import { isPlayerDeleted } from "../../helper/deletedSpecific/deletedHelper";
 import { getDistanceBetweenEntities } from "../../helper/entityHelper";
 import { mod } from "../../mod";
 
@@ -49,7 +48,7 @@ export function mainPCInit(): void {
  * TODO: Make sure it only spawns in spawn & not after save & continue.
  */
 export function mainPCPostPlayerInitFirst(player: EntityPlayer): void {
-  if (!v.run.spawned && isPlayerDeleted(player)) {
+  if (!v.run.spawned) {
     setupPC();
   }
 }

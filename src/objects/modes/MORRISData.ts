@@ -1,6 +1,7 @@
-import { HeartSubType } from "isaac-typescript-definitions";
+import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
+import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
@@ -26,4 +27,9 @@ export const MORRISData: ModeData = {
     bloodCharges: 0,
     soulHeartTypes: [HeartSubType.SOUL],
   },
+  mainColor: DeletedColor.WORM_TURQUOISE,
+  characterStats: new Map<CacheFlag, number>([
+    [CacheFlag.DAMAGE, 3.4],
+    [CacheFlag.SPEED, 0.9],
+  ]),
 };

@@ -13,6 +13,7 @@ const MOD_FEATURES = [
   ISCFeature.SPAWN_COLLECTIBLE,
   ISCFeature.PLAYER_INVENTORY,
   ISCFeature.PICKUP_INDEX_CREATION,
+  ISCFeature.CHARACTER_STATS,
 ] as const;
 
 export const mod = upgradeMod(modVanilla, MOD_FEATURES);

@@ -1,11 +1,11 @@
 import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
 import { ModUpgraded } from "isaacscript-common";
-import { happy99EvaluateCache as happy99EvaluateCacheColor } from "../features/modes/HAPPY99/HAPPY99";
+import { modeEvaluateCacheColor } from "../features/modes/mode";
 
 export function evaluateCacheInit(mod: ModUpgraded): void {
-  mod.AddCallback(ModCallback.EVALUATE_CACHE, color, CacheFlag.COLOR);
+  mod.AddCallback(ModCallback.EVALUATE_CACHE, modeColor, CacheFlag.TEAR_COLOR);
 }
 
-function color(player: EntityPlayer, cacheFlag: CacheFlag) {
-  happy99EvaluateCacheColor(player, cacheFlag);
+function modeColor(player: EntityPlayer, cacheFlag: CacheFlag) {
+  modeEvaluateCacheColor(player, cacheFlag);
 }

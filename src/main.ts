@@ -1,3 +1,4 @@
+import { getEnumValues } from "isaacscript-common";
 import { evaluateCacheInit } from "./callbacks/evaluateCache";
 import { playerTakeDMGInit } from "./callbacks/playerTakeDMG";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
@@ -17,6 +18,7 @@ import { postUseItemInit } from "./callbacks/postUseItem";
 import { preGetPedestalInit } from "./callbacks/preGetPedestal";
 import { postItemPickupInit } from "./callbacks/preItemPickup";
 import { preNewLevelReorderedInit } from "./callbacks/preNewLevel";
+import { Mode } from "./enums/modes/Mode";
 import { initEID } from "./features/compatibility/EID/EIDInit";
 import { addTestingCommands } from "./features/console/testing";
 import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
@@ -33,6 +35,7 @@ import { uiPCInit } from "./features/pc/uiPC";
 import { runIndexInit } from "./features/runIndex";
 import { EIDSettingsInit } from "./features/settings/EIDSettings";
 import { backdropInit } from "./helper/backdropHelper";
+import { getModeData, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
 
 const IS_DEV = true;
@@ -44,6 +47,7 @@ function main() {
   initCallbacks();
   initExternalMods();
   initExports();
+  initStats();
 }
 
 /** Initialize mod features. */
@@ -103,4 +107,14 @@ function initExternalMods() {
 
 function initExports() {
   TheDeleted = {};
+}
+
+function initStats() {
+  const modes = getEnumValues(Mode);
+  for (const mode of modes) {
+    const { characterStats } = getModeData(mode);
+    if (characterStats !== undefined) {
+      mod.registerCharacterStats(getModePlayerType(mode), characterStats);
+    }
+  }
 }

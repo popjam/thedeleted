@@ -1,4 +1,4 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import { CacheFlag, CollectibleType } from "isaac-typescript-definitions";
 import { PlayerHealth } from "isaacscript-common";
 import { CharacterType } from "../../enums/general/CharacterType";
 
@@ -30,4 +30,8 @@ export interface ModeData {
    * do not set the main Color and set it instead in the mode file.
    */
   mainColor?: Color;
+  /**
+   * Any stat included in this map will make the character start with alternate stats to base isaac.
+   */
+  characterStats?: Map<CacheFlag, number>;
 }
