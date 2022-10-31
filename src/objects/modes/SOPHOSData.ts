@@ -1,7 +1,5 @@
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
-import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
@@ -10,7 +8,6 @@ export const SOPHOSData: ModeData = {
   description: "This is ILOVEYOU's description",
   birthright: "This is ILOVEYOU's birthright description",
   characterType: CharacterType.TAINTED,
-  startingPocket: CollectibleTypeCustom.D14,
   startingBombs: 1,
   startingKeys: 0,
   startingCoins: 0,
@@ -27,7 +24,6 @@ export const SOPHOSData: ModeData = {
     bloodCharges: 0,
     soulHeartTypes: [HeartSubType.SOUL],
   },
-  mainColor: DeletedColor.WORM_TURQUOISE,
   characterStats: new Map<CacheFlag, number>([
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],

@@ -1,11 +1,17 @@
 import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
 import { ModUpgraded } from "isaacscript-common";
-import { modeEvaluateCacheColor } from "../features/modes/mode";
+import { playerStatsEvaluateCache } from "../features/general/playerStats";
+import { modeEvaluateCacheTearColor } from "../features/modes/mode";
 
 export function evaluateCacheInit(mod: ModUpgraded): void {
-  mod.AddCallback(ModCallback.EVALUATE_CACHE, modeColor, CacheFlag.TEAR_COLOR);
+  mod.AddCallback(ModCallback.EVALUATE_CACHE, main);
+  mod.AddCallback(ModCallback.EVALUATE_CACHE, tearColor, CacheFlag.TEAR_COLOR);
 }
 
-function modeColor(player: EntityPlayer, cacheFlag: CacheFlag) {
-  modeEvaluateCacheColor(player, cacheFlag);
+function main(player: EntityPlayer, cacheFlag: CacheFlag) {
+  playerStatsEvaluateCache(player, cacheFlag);
+}
+
+function tearColor(player: EntityPlayer) {
+  modeEvaluateCacheTearColor(player);
 }

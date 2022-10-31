@@ -28,6 +28,5 @@ export function happy99PostPlayerFatalDamage(
 ): boolean | undefined {
   spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
   spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
-  spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
   return undefined;
 }

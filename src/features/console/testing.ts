@@ -3,9 +3,10 @@ import { getEnumValues, getRandomArrayElement } from "isaacscript-common";
 import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
-import { ModFeatures } from "../../constants/mod/featureConstants";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
+import { Mode } from "../../enums/modes/Mode";
 import { mod } from "../../mod";
+import { setPlayerMode } from "../modes/mode";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -42,15 +43,17 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  player().ChangePlayerType(PlayerTypeCustom.T_DELETED_SOPHOS);
+  setPlayerMode(player(), Mode.ILOVEYOU);
 }
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  ModFeatures.testFeature.uninit();
+  setPlayerMode(player(), Mode.HAPPY99);
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction3(): void {}
+export function testingFunction3(): void {
+  setPlayerMode(player(), Mode.SOPHOS);
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction4(): void {}

@@ -1,8 +1,4 @@
-import {
-  ActiveSlot,
-  CacheFlag,
-  PlayerType,
-} from "isaac-typescript-definitions";
+import { ActiveSlot, PlayerType } from "isaac-typescript-definitions";
 import {
   playerAddCollectible,
   setActiveItem,
@@ -75,9 +71,6 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
   if (modeData.startingItems !== undefined) {
     playerAddCollectible(player, ...modeData.startingItems);
   }
-  if (modeData.mainColor !== undefined) {
-    player.AddCacheFlags(CacheFlag.COLOR);
-  }
   // Init mode:
   getModeInit(mode)(player);
 }
@@ -133,10 +126,8 @@ export function postPlayerChangeTypeMode(
 }
 
 /** Sets the Deleted Mode's tear color. */
-export function modeEvaluateCacheColor(
-  player: EntityPlayer,
-  cacheFlag: CacheFlag,
-): void {
+// CACHE_UPDATE, CacheFlag.TEAR_COLOR
+export function modeEvaluateCacheTearColor(player: EntityPlayer): void {
   const mode = getCurrentMode(player);
   if (mode !== undefined) {
     const { mainColor } = getModeData(mode);

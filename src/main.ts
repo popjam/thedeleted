@@ -7,6 +7,7 @@ import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
 import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
 import { postPeffectUpdateReorderedInit } from "./callbacks/postPeffectUpdateReordered";
+import { postPickupInitFirst } from "./callbacks/postPickupInitFirst";
 import { postPickupInitLate } from "./callbacks/postPickupInitLate";
 import { postPlayerChangeTypeInit } from "./callbacks/postPlayerChangeType";
 import { postPlayerFatalDamageInit } from "./callbacks/postPlayerFatalDamage";
@@ -26,6 +27,7 @@ import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
 import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
+import { playerStatsInit } from "./features/general/playerStats";
 import { temporaryItemsInit } from "./features/general/temporaryItems";
 import { happy99Init } from "./features/modes/HAPPY99/HAPPY99";
 import { iLoveYouInit } from "./features/modes/ILOVEYOU/ILOVEYOU";
@@ -34,6 +36,8 @@ import { mainPCInit } from "./features/pc/mainPC";
 import { uiPCInit } from "./features/pc/uiPC";
 import { runIndexInit } from "./features/runIndex";
 import { EIDSettingsInit } from "./features/settings/EIDSettings";
+import { happy99SettingsInit } from "./features/settings/HAPPY99Settings";
+import { sophosSettingsInit } from "./features/settings/SOPHOSSettings";
 import { backdropInit } from "./helper/backdropHelper";
 import { getModeData, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
@@ -69,6 +73,9 @@ function initFeatures() {
   EIDSettingsInit();
   runIndexInit();
   temporaryItemsInit();
+  playerStatsInit();
+  happy99SettingsInit();
+  sophosSettingsInit();
 }
 
 /** Initialize mod features for dev. */
@@ -98,6 +105,7 @@ function initCallbacks() {
   playerTakeDMGInit(mod);
   postPlayerFatalDamageInit(mod);
   evaluateCacheInit(mod);
+  postPickupInitFirst(mod);
 }
 
 /** Initialize External mods if they exist. */

@@ -4,8 +4,8 @@ import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import {
   createPercentage,
-  passesChancePercentage,
   Percentage,
+  rollPercentage,
 } from "../../../types/general/Percentage";
 import {
   randomInRange,
@@ -127,7 +127,7 @@ export abstract class Response {
    */
   trigger(triggerData: TriggerData): void {
     // Percentage
-    if (!passesChancePercentage(this.getChanceToActivate())) {
+    if (!rollPercentage(this.getChanceToActivate())) {
       return;
     }
 
