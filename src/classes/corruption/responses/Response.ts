@@ -31,21 +31,21 @@ const CHANCE_TO_ACTIVATE_POST_TEXT = "% chance to";
  */
 export abstract class Response {
   readonly responseType!: ResponseType;
-  morality?: Morality;
-  amountOfActivations: number | Range = DEFAULT_AMOUNT_OF_ACTIVATIONS;
+  mo?: Morality;
+  aoa?: number | Range;
   /** Percentage chance to activate (100% will always pass). */
-  chanceToActivate: Percentage = DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE;
+  cta?: Percentage;
 
   // Use calculateAmountOfActivations() instead!
   getAmountOfActivations(): number | Range {
-    return this.amountOfActivations;
+    return this.aoa ?? DEFAULT_AMOUNT_OF_ACTIVATIONS;
   }
 
-  getAmountOfActivationsText(): string {
+  getAmountOfActivationsText(): string | undefined {
     const amountOfActivations = this.getAmountOfActivations();
     if (typeof amountOfActivations === "number") {
       if (amountOfActivations === 1) {
-        return "";
+        return undefined;
       }
       return amountOfActivations.toString();
     }
@@ -57,11 +57,11 @@ export abstract class Response {
    * returns a random number in the Range.
    */
   calculateAmountOfActivations(): number {
-    const { amountOfActivations } = this;
-    if (typeof amountOfActivations === "number") {
-      return amountOfActivations;
+    const aoa = this.getAmountOfActivations();
+    if (typeof aoa === "number") {
+      return aoa;
     }
-    return randomInRange(amountOfActivations);
+    return randomInRange(aoa);
   }
 
   /**
@@ -72,20 +72,20 @@ export abstract class Response {
    */
   setAmountOfActivations(amount: number | Range): this {
     if (typeof amount === "number") {
-      this.amountOfActivations = amount;
+      this.aoa = amount;
     } else {
-      this.amountOfActivations = validifyRange(amount);
+      this.aoa = validifyRange(amount);
     }
     return this;
   }
 
   setMorality(morality: Morality): this {
-    this.morality = morality;
+    this.mo = morality;
     return this;
   }
 
   getMorality(): Morality {
-    return this.morality ?? DEFAULT_MORALITY;
+    return this.mo ?? DEFAULT_MORALITY;
   }
 
   /**
@@ -95,12 +95,12 @@ export abstract class Response {
    * @example "50% chance to spawn a spider" --> 50 chanceToActivate.
    */
   setChanceToActivate(percentage: Percentage): this {
-    this.chanceToActivate = createPercentage(percentage);
+    this.cta = createPercentage(percentage);
     return this;
   }
 
   getChanceToActivate(): Percentage {
-    return this.chanceToActivate;
+    return this.cta ?? DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE;
   }
 
   getChanceToActivateText(): string {
@@ -115,7 +115,7 @@ export abstract class Response {
   }
 
   /** Describes the Response in string format. */
-  abstract getText(overrideAmountOfActivations?: number | Range): string;
+  abstract getText(): string;
 
   deepCopy(): this {
     return deepCopy(this);

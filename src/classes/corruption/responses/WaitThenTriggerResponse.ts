@@ -1,7 +1,6 @@
 import { GAME_FRAMES_PER_SECOND } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { getRunIndex } from "../../../features/runIndex";
 import { addTheS } from "../../../helper/stringHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
@@ -19,63 +18,71 @@ const NO_RESPONSE_MORALITY = Morality.NEUTRAL;
  */
 export class WaitThenTriggerResponse extends Response {
   override responseType: ResponseType = ResponseType.WAIT_THEN_TRIGGER;
-  response?: Response;
-  secondsWait = DEFAULT_WAIT_TIME_SECONDS;
-  runIndex?: number;
+  r?: Response;
+  sW?: number;
 
   construct(response: Response, secondsWait?: number): this {
     if (secondsWait !== undefined) {
-      this.secondsWait = secondsWait;
+      this.sW = secondsWait;
     }
-    this.response = response;
+    this.r = response;
     return this;
   }
 
+  /** The amount of seconds to wait before the Response triggers. */
   setSecondsToWait(seconds: number): this {
-    this.secondsWait = seconds;
+    this.sW = seconds;
     return this;
+  }
+
+  /** The amount of seconds to wait before the Response triggers. */
+  getSecondsToWait(): number {
+    return this.sW ?? DEFAULT_WAIT_TIME_SECONDS;
   }
 
   getResponse(): Response | undefined {
-    return this.response;
+    return this.r;
   }
 
   setResponse(response: Response): this {
-    this.response = response;
+    this.r = response;
     return this;
   }
 
-  getWaitText(): string {
-    const { secondsWait } = this;
-    return `wait ${secondsWait} ${addTheS("second", secondsWait)}, then `;
-  }
-
-  getText(overrideAmountOfActivations?: number | Range): string {
-    const amountOfActivations =
-      overrideAmountOfActivations ?? this.getAmountOfActivations();
-    let text = ` ${this.getWaitText()} `;
-    text += this.getResponse()?.getText(amountOfActivations) ?? "do nothing.";
-    return text;
-  }
-
-  override getMorality(): Morality {
-    return (
-      this.morality ?? this.getResponse()?.getMorality() ?? NO_RESPONSE_MORALITY
+  /** This response should not have more than one AmountOfActivations. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
+  override setAmountOfActivations(amount: number | Range): this {
+    throw new Error(
+      "TriggerOverTimeResponse: Cannot set amount of activations.",
     );
   }
 
-  fire(triggerData: TriggerData): void {
-    if (this.runIndex === undefined) {
-      this.runIndex = getRunIndex();
-    }
+  /** The amount of seconds to wait before the Response triggers. */
+  getWaitText(): string {
+    const secondsWait = this.getSecondsToWait();
+    return `wait ${secondsWait} ${addTheS("second", secondsWait)}, then `;
+  }
 
+  getText(): string {
+    let text = ` ${this.getWaitText()} `;
+    text += this.getResponse()?.getText() ?? "do nothing.";
+    return text;
+  }
+
+  /**
+   * Returns its set morality, if a morality is not set returns its responses morality, if there is
+   * no response morality, returns a default morality.
+   */
+  override getMorality(): Morality {
+    return this.mo ?? this.getResponse()?.getMorality() ?? NO_RESPONSE_MORALITY;
+  }
+
+  fire(triggerData: TriggerData): void {
     const response = this.getResponse();
     if (response !== undefined) {
       mod.runInNGameFrames(() => {
-        if (this.runIndex === getRunIndex()) {
-          response.trigger(triggerData);
-        }
-      }, GAME_FRAMES_PER_SECOND * this.secondsWait);
+        response.trigger(triggerData);
+      }, GAME_FRAMES_PER_SECOND * this.getSecondsToWait());
     }
   }
 }

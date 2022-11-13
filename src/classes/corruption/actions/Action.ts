@@ -1,22 +1,26 @@
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
+// eslint-disable-next-line import/no-cycle
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { Percentage } from "../../../types/general/Percentage";
 import {
   randomInRange,
   Range,
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
+// eslint-disable-next-line import/no-cycle
 import { Response } from "../responses/Response";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
 const TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER = 0;
 const STARTING_INTERVAL_COUNTER_NUMBER = 1;
 const DEFAULT_INTERVAL = 1;
-const DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE = 100;
 const DEFAULT_FLAG_FOR_REMOVAL = false;
 const NO_RESPONSE_TEXT = "do nothing";
+
+export enum ActionOrigin {
+  INVERTED_COLLECTIBLE,
+}
 
 /**
  * Actions are containers which hold Responses. After the Action has passed all its 'checks', it
@@ -30,19 +34,15 @@ const NO_RESPONSE_TEXT = "do nothing";
  */
 export abstract class Action {
   readonly actionType!: ActionType;
-  response?: Response;
-  overriddenActionText?: string;
-
-  // E.g every 3 triggers. Used for text.
-  verb = "every";
-  noun = "trigger";
-  nounPlural = "triggers";
+  r?: Response;
+  oat?: string;
+  o?: [ActionOrigin, number];
 
   /**
    * When using getMorality() on the Action, this value will return instead of looking at the
    * Actions responses Moralities.
    */
-  overriddenMorality?: Morality;
+  om?: Morality;
 
   /**
    * Distance between firing.
@@ -51,17 +51,17 @@ export abstract class Action {
    * @example "Every 1-5 rooms", get brimstone.
    * @example If not specified defaults to every time: "Every room", get brimstone.
    */
-  interval: Range | number = DEFAULT_INTERVAL;
+  i?: Range | number;
 
   /**
    * Only fires after X triggers. Once triggered, will be removed.
    *
    * @example "After 3 rooms", get brimstone. --> activateAfter: 3
    */
-  fireAfterThenRemove?: number;
+  fatr?: number;
 
   /** Used by interval property, shouldn't be changed. */
-  intervalCounter = STARTING_INTERVAL_COUNTER_NUMBER;
+  ic?: number;
 
   /**
    * Indicates that the Action should be removed from whatever list or container it is being held
@@ -72,32 +72,39 @@ export abstract class Action {
    * @example In triggerAllPlayerActionsByType(), it will do a 'garbage disposal' at the end,
    *          removing actions with this tag from the player.
    */
-  flagForRemoval = DEFAULT_FLAG_FOR_REMOVAL;
-
-  /** Percentage chance to activate (100% will always pass). */
-  chanceToActivate: Percentage = DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE;
+  ffR?: boolean;
 
   /**
    * Adds one or more responses to the action. Can provide one response, multiple responses or an
    * array of responses.
    */
   setResponse(response: Response): this {
-    this.response = response;
+    this.r = response;
     return this;
   }
 
   getResponse(): Response | undefined {
-    return this.response;
+    return this.r;
   }
 
   /** Overrides the 'Action' portion of the Action text (when called from getText()). */
   getOverriddenActionText(): string | undefined {
-    return this.overriddenActionText;
+    return this.oat;
   }
 
   /** Overrides the 'Action' portion of the Action text (when called from getText()). */
   setOverriddenActionText(text: string): this {
-    this.overriddenActionText = text;
+    this.oat = text;
+    return this;
+  }
+
+  /** If the Action wants to be removed. */
+  getFlagForRemoval(): boolean {
+    return this.ffR ?? DEFAULT_FLAG_FOR_REMOVAL;
+  }
+
+  flagForRemoval(): this {
+    this.ffR = true;
     return this;
   }
 
@@ -113,24 +120,24 @@ export abstract class Action {
       return EMPTY_ACTION_MORALITY;
     }
 
-    if (this.overriddenMorality !== undefined) {
-      return this.overriddenMorality;
+    if (this.om !== undefined) {
+      return this.om;
     }
 
     return response.getMorality();
   }
 
   getOverriddenMorality(): Morality | undefined {
-    return this.overriddenMorality;
+    return this.om;
   }
 
   setOverriddenMorality(morality: Morality): this {
-    this.overriddenMorality = morality;
+    this.om = morality;
     return this;
   }
 
   getFireAfterThenRemove(): number | undefined {
-    return this.fireAfterThenRemove;
+    return this.fatr;
   }
 
   getFireAfterThenRemoveText(): string | undefined {
@@ -142,17 +149,20 @@ export abstract class Action {
   }
 
   setFireAfterThenRemove(fireAfterThenRemove: number): this {
-    this.fireAfterThenRemove = fireAfterThenRemove;
+    this.fatr = fireAfterThenRemove;
     return this;
   }
 
   /** Use calculateInterval() instead! */
-  getInterval(): number | Range {
-    return this.interval;
+  getInterval(): number | Range | undefined {
+    return this.i;
   }
 
   getIntervalText(): string {
     const interval = this.getInterval();
+    if (interval === undefined) {
+      return "";
+    }
     if (typeof interval === "number") {
       if (interval === DEFAULT_INTERVAL) {
         return "";
@@ -164,51 +174,17 @@ export abstract class Action {
 
   /** Will validify ranges. */
   setInterval(interval: number | Range): this {
+    this.ic = STARTING_INTERVAL_COUNTER_NUMBER;
     if (typeof interval !== "number") {
-      this.interval = validifyRange(interval);
+      this.i = validifyRange(interval);
     } else {
-      this.interval = interval;
+      this.i = interval;
     }
     return this;
   }
 
-  /**
-   * Returns the interval between activations. If it is a Range, returns a random number in the
-   * range.
-   */
-  calculateInterval(): number {
-    if (typeof this.interval !== "number") {
-      return randomInRange(this.interval);
-    }
-    return this.interval;
-  }
-
   // Only get the 'Action' part of the text, not including responses.
-  getActionText(): string {
-    // If overridden.
-    if (this.overriddenActionText !== undefined) {
-      return this.overriddenActionText;
-    }
-
-    let text = "";
-    const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove !== undefined) {
-      if (fireAfterThenRemove === 1) {
-        text += `next ${this.noun}`;
-      } else {
-        text += `after ${fireAfterThenRemove} ${this.nounPlural}`;
-      }
-    } else {
-      const intervalText = this.getIntervalText();
-      if (intervalText === "") {
-        text += `${this.verb} ${this.noun}`;
-      } else {
-        text += `${this.verb} ${intervalText} ${this.nounPlural}`;
-      }
-    }
-    text += ", ";
-    return text;
-  }
+  abstract getActionText(): string;
 
   // Only get the 'Responses' part of the text.
   getResponseText(): string {
@@ -229,23 +205,33 @@ export abstract class Action {
    */
   trigger(triggerData: TriggerData): void {
     // Trigger after then remove.
-    if (this.fireAfterThenRemove !== undefined) {
-      this.fireAfterThenRemove--;
+    const currentFireAfterThenRemove = this.getFireAfterThenRemove();
+    if (currentFireAfterThenRemove !== undefined) {
+      this.setFireAfterThenRemove(currentFireAfterThenRemove - 1);
       if (
-        this.fireAfterThenRemove === TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER
+        this.getFireAfterThenRemove() ===
+        TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER
       ) {
-        this.flagForRemoval = true;
+        this.ffR = true;
       } else {
         return;
       }
     }
 
     // Interval
-    this.intervalCounter++;
-    if (this.intervalCounter > this.calculateInterval()) {
-      this.intervalCounter = 1;
-    } else {
-      return;
+    const interval = this.getInterval();
+    if (interval !== undefined) {
+      this.ic = 1 + (this.ic ?? STARTING_INTERVAL_COUNTER_NUMBER);
+      if (
+        this.ic >
+        (typeof this.i === "number"
+          ? interval
+          : randomInRange(interval as Range))
+      ) {
+        this.ic = 1;
+      } else {
+        return;
+      }
     }
 
     this.fire(triggerData);
@@ -258,6 +244,7 @@ export abstract class Action {
 }
 
 /** Type guard. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function isAction(obj: any): obj is Action {
   return "actionType" in obj;
 }

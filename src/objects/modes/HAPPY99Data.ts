@@ -1,4 +1,5 @@
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
@@ -32,4 +33,6 @@ export const HAPPY99Data: ModeData = {
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],
   ]),
+  itemActionSetBuilderReference:
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY99_DEFAULT,
 };

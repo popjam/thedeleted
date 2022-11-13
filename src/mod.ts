@@ -14,6 +14,9 @@ const MOD_FEATURES = [
   ISCFeature.PLAYER_INVENTORY,
   ISCFeature.PICKUP_INDEX_CREATION,
   ISCFeature.CHARACTER_STATS,
+  ISCFeature.MODDED_ELEMENT_DETECTION,
+  ISCFeature.MODDED_ELEMENT_SETS,
+  ISCFeature.COLLECTIBLE_ITEM_POOL_TYPE,
 ] as const;
 
 export const mod = upgradeMod(modVanilla, MOD_FEATURES);

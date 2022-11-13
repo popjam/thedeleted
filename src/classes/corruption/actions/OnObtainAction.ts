@@ -16,15 +16,15 @@ export class OnObtainAction extends Action {
    * @example 'On uninstalling isaac, ' ...
    */
   setRandomFunnyActionText(): this {
-    this.overriddenActionText = getRandomSetElement(FUNNY_ACTION_TEXT_SET);
+    this.oat = getRandomSetElement(FUNNY_ACTION_TEXT_SET);
     return this;
   }
 
   /** Obtain Actions are identical to naked responses, hence they usually do not have any text. */
   override getActionText(): string {
     // If overridden.
-    if (this.overriddenActionText !== undefined) {
-      return this.overriddenActionText;
+    if (this.oat !== undefined) {
+      return this.oat;
     }
 
     return "";

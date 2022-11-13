@@ -1,45 +1,55 @@
-import { ColorDefault, deepCopy } from "isaacscript-common";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
-import { addActionOrResponseToPlayer } from "../../../features/corruption/effects/playerEffects";
-import { Action } from "../actions/Action";
-import { Response } from "../responses/Response";
+import { legibleString } from "../../../helper/stringHelper";
+import { Action, isAction } from "../actions/Action";
+import { isResponse, Response } from "../responses/Response";
+
+const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
 
 /** ActionSet class. */
 export abstract class ActionSet {
   readonly actionSetType!: ActionSetType;
   effects: Array<Action | Response> = [];
 
-  /** This color will be reflected in the entity which the ActionSet belongs to. */
-  color: Color = ColorDefault;
-
-  /**
-   * Adds one or more actions to the ActionSet. Can provide one action, multiple actions or an array
-   * of actions.
-   */
-  addAction(...actions: Action[]): this {
-    this.effects = this.effects.concat(actions);
-    return this;
+  /** Returns Actions + Responses, does not deepCopy! */
+  getEffects(): Array<Action | Response> {
+    return this.effects;
   }
 
-  /** Returns deep copy of Actions, not including any responses. */
-  getCopyOfEffects(): Array<Action | Response> {
-    return deepCopy<Array<Action | Response>>(this.effects);
+  /** Gets only the Responses (does not deepCopy!). */
+  getResponses(): Response[] {
+    return this.effects.filter(
+      (actionOrResponse): actionOrResponse is Response =>
+        isResponse(actionOrResponse),
+    );
   }
 
-  getColor(): Color {
-    return this.color;
-  }
-
-  setColor(color: Color): this {
-    this.color = color;
-    return this;
+  /** Gets only the Actions (does not deepCopy!). */
+  getActions(): Action[] {
+    return this.effects.filter((actionOrResponse): actionOrResponse is Action =>
+      isAction(actionOrResponse),
+    );
   }
 
   /**
-   * Occurs when the player has 'interacted' with the ActionSet, such as picking up a corrupted item
-   * or using a corrupted consumable. It usually involves adding the Actions to the player.
+   * Adds one or more actions or responses to the ActionSet. Can provide one action or response,
+   * multiple actions or responses or an array of actions or responses.
    */
-  interact(player: EntityPlayer): void {
-    addActionOrResponseToPlayer(player, ...this.getCopyOfEffects());
+  addEffects(...effects: Array<Action | Response>): this {
+    this.effects = this.effects.concat(effects);
+    return this;
   }
+
+  getText(): string {
+    let text = "";
+    this.effects.forEach((actionOrResponse) => {
+      text += "#";
+      text += legibleString(actionOrResponse.getText());
+    });
+    if (text === "") {
+      return NO_EFFECTS_DEFAULT_TEXT;
+    }
+    return text;
+  }
+
+  abstract updateAppearance(entity: Entity): void;
 }

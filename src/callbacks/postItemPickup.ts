@@ -11,7 +11,7 @@ import { corruptItemsPreItemPickupCollectible } from "../features/corruption/inv
 import { fprint } from "../helper/printHelper";
 
 export function postItemPickupInit(mod: ModUpgraded): void {
-  mod.AddCallbackCustom(ModCallbackCustom.PRE_ITEM_PICKUP, main);
+  mod.AddCallbackCustom(ModCallbackCustom.POST_ITEM_PICKUP, main);
 }
 
 function main(player: EntityPlayer, pickingUpItem: PickingUpItem) {

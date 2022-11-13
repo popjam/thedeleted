@@ -1,9 +1,8 @@
 /**
- * Collection of all ActionSetBuilders, use ACTION_SET_BUILDER_MAP with one of these values to get
- * the ActionSetBuilder.
+ * Collection of all InvertedItemActionSetBuilders, use ACTION_SET_BUILDER_MAP with one of these
+ * values to get the InvertedItemActionSetBuilder.
  */
-export enum ActionSetBuilderReference {
-  /** Default ActionSetBuilder to default to. */
-  ACTION_SET_DEFAULT,
-  ACTION_SET_HAPPY99_DEFAULT,
+export enum InvertedItemActionSetBuilderReference {
+  INVERTED_ITEM_ACTION_SET_DEFAULT,
+  INVERTED_ITEM_ACTION_SET_HAPPY99_DEFAULT,
 }

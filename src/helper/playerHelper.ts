@@ -1,4 +1,9 @@
-import { getPlayerBlackHearts, getPlayerSoulHearts } from "isaacscript-common";
+import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import {
+  arrayToBitFlags,
+  getPlayerBlackHearts,
+  getPlayerSoulHearts,
+} from "isaacscript-common";
 
 /** Sets the players' bomb count to a specific amount. */
 export function setPlayerBombs(player: EntityPlayer, amount: number): void {
@@ -97,4 +102,23 @@ export function replacePlayerAnm2(
 ): void {
   const sprite = player.GetSprite();
   sprite.Load(anm2Path, true);
+}
+
+/** Quickly teleports a player to a location and uses the active item. */
+export function useActiveItemAtPosition(
+  activeItem: CollectibleType,
+  roomPos: Vector,
+  player?: EntityPlayer,
+): void {
+  player = player ?? Isaac.GetPlayer();
+  const currentPos = player.Position;
+  player.Position = roomPos;
+  player.UseActiveItem(
+    activeItem,
+    arrayToBitFlags<UseFlag>([
+      UseFlag.NO_ANIMATION,
+      UseFlag.NO_ANNOUNCER_VOICE,
+    ]),
+  );
+  player.Position = currentPos;
 }

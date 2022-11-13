@@ -2,7 +2,6 @@ import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { Range } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 const UNKNOWN_MORALITY_MORALITY = Morality.NEUTRAL;
@@ -10,7 +9,7 @@ const BETWEEN_RESPONSES_TEXT = " then ";
 
 export class TriggerInSequenceResponse extends Response {
   override responseType: ResponseType = ResponseType.TRIGGER_IN_SEQUENCE;
-  responses: Response[] = [];
+  r: Response[] = [];
 
   construct(...responses: Response[]): this {
     this.addResponse(...responses);
@@ -19,7 +18,7 @@ export class TriggerInSequenceResponse extends Response {
 
   /** Add Responses to the end of the Trigger Sequence. */
   addResponse(...responses: Response[]): this {
-    this.responses = this.responses.concat(responses);
+    this.r = this.r.concat(responses);
     return this;
   }
 
@@ -27,21 +26,20 @@ export class TriggerInSequenceResponse extends Response {
    * Morality should be the general Morality of Queued Responses, unless morality is already set.
    */
   override getMorality(): Morality {
-    const { responses } = this;
     return (
-      this.morality ??
+      this.mo ??
       getMostFrequentElementInArray(
-        this.responses.map((response) => response.getMorality()),
+        this.r.map((response) => response.getMorality()),
       ) ??
       UNKNOWN_MORALITY_MORALITY
     );
   }
 
-  getText(overrideAmountOfActivations?: number | Range): string {
+  getText(): string {
     let text = "";
-    let iterations = this.responses.length;
-    for (const response of this.responses) {
-      text += ` ${response.getText(overrideAmountOfActivations)} `;
+    let iterations = this.r.length;
+    for (const response of this.r) {
+      text += ` ${response.getText()} `;
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
       if (--iterations !== 0) {
         text += BETWEEN_RESPONSES_TEXT;
@@ -51,7 +49,7 @@ export class TriggerInSequenceResponse extends Response {
   }
 
   fire(triggerData: TriggerData): void {
-    this.responses.forEach((response) => {
+    this.r.forEach((response) => {
       response.trigger(triggerData);
     });
   }

@@ -1,28 +1,43 @@
-import { ActionSet } from "../../classes/corruption/actionSets/ActionSet";
-import { BasicActionSet } from "../../classes/corruption/actionSets/BasicActionSet";
-import { ActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
+import { CollectibleType, ItemType } from "isaac-typescript-definitions";
+import { InvertedItemActionSet } from "../../classes/corruption/actionSets/InvertedItemActionSet";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/InvertedPassiveActionSet";
+import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { happy99DefaultBuilder } from "../../helper/builders/modes/HAPPY99Builders";
-import { ActionSetBuilder, Builder } from "../../types/general/Builder";
+import { getRandomCollectibleType } from "../../helper/collectibleHelpter";
+import {
+  Builder,
+  InvertedItemActionSetBuilder,
+} from "../../types/general/Builder";
 
-const ACTION_SET_BUILDER_REFERENCE_MAP: ReadonlyMap<
-  ActionSetBuilderReference,
-  Builder<ActionSet>
+const INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE_MAP: ReadonlyMap<
+  InvertedItemActionSetBuilderReference,
+  Builder<InvertedItemActionSet>
 > = new Map([
-  [ActionSetBuilderReference.ACTION_SET_DEFAULT, () => new BasicActionSet()],
   [
-    ActionSetBuilderReference.ACTION_SET_HAPPY99_DEFAULT,
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT,
+    () =>
+      new InvertedPassiveActionSet().addEffects(
+        new UseActiveItemResponse().construct(
+          getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
+            CollectibleType.POOP,
+        ),
+      ),
+  ],
+  [
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY99_DEFAULT,
     () => happy99DefaultBuilder(),
   ],
 ]);
 
 /** Returns the ActionSetBuilder correlated to the ActionSetBuilderReference. */
-export function getActionSetBuilderFromReference(
-  reference: ActionSetBuilderReference,
-): ActionSetBuilder {
-  const builder = ACTION_SET_BUILDER_REFERENCE_MAP.get(reference);
+export function getInvertedItemActionSetBuilderFromReference(
+  reference: InvertedItemActionSetBuilderReference,
+): InvertedItemActionSetBuilder {
+  const builder = INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE_MAP.get(reference);
   if (builder === undefined) {
     throw new Error("actionSetBuilderReferenceMap: Builder not found!");
   } else {
-    return builder;
+    return builder as InvertedItemActionSetBuilder;
   }
 }

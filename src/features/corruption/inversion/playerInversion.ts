@@ -5,12 +5,12 @@ import {
   getRandomArrayElement,
   PlayerIndex,
 } from "isaacscript-common";
-import { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
+import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/InvertedItemActionSet";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";
 import {
-  generateActionSetFromPlayer,
-  generateDefaultActionSet,
+  generateDefaultInvertedItemActionSet,
+  generateInvertedItemActionSetFromPlayer,
 } from "../corruptionGeneration";
 
 /**
@@ -58,17 +58,19 @@ export function getInvertedPlayers(): EntityPlayer[] {
 }
 
 /**
- * Returns a CorruptionDNA based on the inversion settings of the players. If multiple players are
- * inverted, picks a random CorruptionDNA from the set of inverted players. If no players are
- * inverted (so the game is not inverted) defaults to the standard CorruptionDNA.
+ * Returns an InvertedItemActionSet based on the game circumstances. If the game is inverted,
+ * randomly chooses between inverted players to generate an ActionSet based on their preferences.
+ * Otherwise, uses a default ActionSetBuilder.
  */
-export function getGameActionSet(inputs?: ActionSetBuilderInput): ActionSet {
+export function getGameInvertedItemActionSet(
+  inputs?: ActionSetBuilderInput,
+): InvertedItemActionSet {
   if (isGameInverted()) {
     const invertedPlayers = getInvertedPlayers();
     const chosenRandomPlayer = getRandomArrayElement(invertedPlayers);
-    return generateActionSetFromPlayer(chosenRandomPlayer, inputs);
+    return generateInvertedItemActionSetFromPlayer(chosenRandomPlayer, inputs);
   }
-  return generateDefaultActionSet(inputs);
+  return generateDefaultInvertedItemActionSet(inputs);
 }
 
 /** Returns true if the Game is in an inverted state. */

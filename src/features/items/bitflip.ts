@@ -6,10 +6,6 @@ import {
 import { game, getPlayerIndex } from "isaacscript-common";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
 import {
-  overrideBackdrop,
-  removeOverriddenBackdrop,
-} from "../../helper/backdropHelper";
-import {
   removeAllCostumes,
   restoreAllCostumes,
 } from "../../helper/costumeHelper";
@@ -19,6 +15,10 @@ import {
   isPlayerInverted,
   setPlayerInversion,
 } from "../corruption/inversion/playerInversion";
+import {
+  overrideBackdrop,
+  removeOverriddenBackdrop,
+} from "../general/backdropHelper";
 
 const NORMAL_TO_INVERTED_SFX = SoundEffectCustom.BITFLIP_IN;
 const INVERTED_TO_NORMAL_SFX = SoundEffectCustom.BITFLIP_OUT;

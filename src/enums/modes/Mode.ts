@@ -15,4 +15,5 @@ export enum Mode {
   REVETON,
   // T. Deleted.
   SOPHOS,
+  BATTLEYE,
 }

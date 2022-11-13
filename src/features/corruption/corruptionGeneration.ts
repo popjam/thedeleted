@@ -1,4 +1,4 @@
-/** Responsible for creating populated ActionSets, Actions and Responses. */
+/** Responsible for creating populated InvertedActionSets, Actions and Responses. */
 
 import {
   DefaultMap,
@@ -6,20 +6,20 @@ import {
   defaultMapSetPlayer,
   PlayerIndex,
 } from "isaacscript-common";
-import { ActionSet } from "../../classes/corruption/actionSets/ActionSet";
-import { DEFAULT_ACTION_SET_BUILDER_REFERENCE } from "../../constants/corruptionConstants";
-import { ActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
+import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/InvertedActiveActionSet";
+import { DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE } from "../../constants/corruptionConstants";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { getActionSetBuilderFromReference } from "../../maps/builders/actionSetBuilderMap";
+import { getInvertedItemActionSetBuilderFromReference } from "../../maps/builders/actionSetBuilderMap";
 import { mod } from "../../mod";
-import { ActionSetBuilder } from "../../types/general/Builder";
+import { InvertedItemActionSetBuilder } from "../../types/general/Builder";
 
 const v = {
   run: {
     actionSetBuilderReference: new DefaultMap<
       PlayerIndex,
-      ActionSetBuilderReference
-    >(DEFAULT_ACTION_SET_BUILDER_REFERENCE),
+      InvertedItemActionSetBuilderReference
+    >(DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE),
   },
 };
 
@@ -31,9 +31,9 @@ export function corruptionGenerationInit(): void {
  * Set the players' ActionSetBuilderReference. This will be used when the game is inverted and an
  * inverted item is looking for an ActionSet.
  */
-export function setPlayerActionSetBuilderReference(
+export function setPlayerInvertedItemActionSetBuilderReference(
   player: EntityPlayer,
-  reference: ActionSetBuilderReference,
+  reference: InvertedItemActionSetBuilderReference,
 ): void {
   defaultMapSetPlayer(v.run.actionSetBuilderReference, player, reference);
 }
@@ -43,52 +43,57 @@ export function setPlayerActionSetBuilderReference(
  * inverted item is looking for an ActionSet. You should probably use generateActionSetFromPlayer()
  * instead.
  */
-export function getPlayerActionSetBuilderReference(
+function getPlayerInvertedItemActionSetBuilderReference(
   player: EntityPlayer,
-): ActionSetBuilderReference {
+): InvertedItemActionSetBuilderReference {
   return defaultMapGetPlayer(v.run.actionSetBuilderReference, player);
 }
 
-/** Generates an ActionSet from an ActionSetBuilderReference. */
-export function generateActionSetFromReference(
-  actionSetBuilder: ActionSetBuilderReference,
+/** Generates an InvertedActiveActionSet from an InvertedItemActionSetBuilderReference. */
+function generateInvertedItemActionSetFromReference(
+  actionSetBuilder: InvertedItemActionSetBuilderReference,
   inputs?: ActionSetBuilderInput,
-): ActionSet {
-  return getActionSetBuilderFromReference(actionSetBuilder)(inputs);
+): InvertedActiveActionSet {
+  return getInvertedItemActionSetBuilderFromReference(actionSetBuilder)(inputs);
 }
 
-/** Generates an ActionSet depending on if the input is an ActionSetReference or ActionBuilder. */
-export function generateActionSetFromReferenceOrBuilder(
-  referenceOrBuilder: ActionSetBuilderReference | ActionSetBuilder,
+/**
+ * Generates an InvertedActiveActionSet depending on if the input is an
+ * InvertedItemActionSetBuilderReference or InvertedItemActionSetBuilder.
+ */
+function generateInvertedItemActionSetFromReferenceOrBuilder(
+  referenceOrBuilder:
+    | InvertedItemActionSetBuilderReference
+    | InvertedItemActionSetBuilder,
   inputs?: ActionSetBuilderInput,
-): ActionSet {
+): InvertedActiveActionSet {
   if (typeof referenceOrBuilder === "function") {
     return referenceOrBuilder(inputs);
   }
-  return generateActionSetFromReference(referenceOrBuilder, inputs);
+  return generateInvertedItemActionSetFromReference(referenceOrBuilder, inputs);
 }
 
 /**
  * Generates an ActionSet based on the players' ActionSetBuilderReference. Will always include the
  * player as an Input.
  */
-export function generateActionSetFromPlayer(
+export function generateInvertedItemActionSetFromPlayer(
   player: EntityPlayer,
   inputs: ActionSetBuilderInput = {},
-): ActionSet {
+): InvertedActiveActionSet {
   inputs.player ??= player;
-  return generateActionSetFromReference(
+  return generateInvertedItemActionSetFromReference(
     defaultMapGetPlayer(v.run.actionSetBuilderReference, player),
     inputs,
   );
 }
 
 /** Generates an ActionSet from the default ActionSetBuilderReference. */
-export function generateDefaultActionSet(
+export function generateDefaultInvertedItemActionSet(
   inputs?: ActionSetBuilderInput,
-): ActionSet {
-  return generateActionSetFromReference(
-    DEFAULT_ACTION_SET_BUILDER_REFERENCE,
+): InvertedActiveActionSet {
+  return generateInvertedItemActionSetFromReference(
+    DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE,
     inputs,
   );
 }

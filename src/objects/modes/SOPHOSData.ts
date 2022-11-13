@@ -8,7 +8,7 @@ export const SOPHOSData: ModeData = {
   description: "This is ILOVEYOU's description",
   birthright: "This is ILOVEYOU's birthright description",
   characterType: CharacterType.TAINTED,
-  startingBombs: 1,
+  startingBombs: 0,
   startingKeys: 0,
   startingCoins: 0,
   startingHealth: {
@@ -25,7 +25,7 @@ export const SOPHOSData: ModeData = {
     soulHeartTypes: [HeartSubType.SOUL],
   },
   characterStats: new Map<CacheFlag, number>([
-    [CacheFlag.DAMAGE, 3.4],
-    [CacheFlag.SPEED, 0.9],
+    [CacheFlag.DAMAGE, 3.5],
+    [CacheFlag.SPEED, 1.1],
   ]),
 };

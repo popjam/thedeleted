@@ -12,7 +12,6 @@ export function initEID(): void {
     return;
   }
   initEIDItems(EID);
-  initEIDDescriptionModifiers(EID);
 }
 
 function initEIDItems(EID: EIDInterface) {
@@ -23,9 +22,4 @@ function initEIDItems(EID: EIDInterface) {
   );
   EID.addCollectible(CollectibleTypeCustom.D14, D14_DESCRIPTION);
   EID.addCollectible(CollectibleTypeCustom.ZAZZ, ZAZZ_DESCRIPTION);
-}
-
-function initEIDDescriptionModifiers(EID: EIDInterface) {
-  // EID.addDescriptionModifier( "testModifier", () => true, (oldDescription) => `${oldDescription}
-  // test!`, );
 }

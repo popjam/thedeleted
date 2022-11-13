@@ -5,8 +5,9 @@ import {
 } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { multiplyRangesOrNumbers, Range } from "../../../types/general/Range";
+import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 const DEFAULT_WEIGHT = 1;
@@ -18,8 +19,8 @@ const BETWEEN_RESPONSES_TEXT = " or ";
  */
 export class TriggerRandomResponse extends Response {
   override responseType: ResponseType = ResponseType.TRIGGER_RANDOM;
-  override morality: Morality = Morality.NEUTRAL;
-  responses: WeightedArray<Response> = [];
+  override mo: Morality = Morality.NEUTRAL;
+  r: WeightedArray<Response> = [];
 
   construct(
     ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
@@ -40,28 +41,29 @@ export class TriggerRandomResponse extends Response {
     responseOrWeightedArrayTuple: Response | [Response, number],
   ): this {
     if (isArray(responseOrWeightedArrayTuple)) {
-      this.responses.push(responseOrWeightedArrayTuple);
+      this.r.push(responseOrWeightedArrayTuple);
     } else {
-      this.responses.push([responseOrWeightedArrayTuple, DEFAULT_WEIGHT]);
+      this.r.push([responseOrWeightedArrayTuple, DEFAULT_WEIGHT]);
     }
     return this;
   }
 
-  override getText(overrideAmountOfActivations?: number | Range): string {
+  override getText(): string {
     let text = "";
-    let iterations = this.responses.length;
-    const amountOfActivations =
-      overrideAmountOfActivations ?? this.getAmountOfActivations();
-    for (const responseData of this.responses) {
+    let iterations = this.r.length;
+    const amountOfActivations = this.getAmountOfActivations();
+    if (amountOfActivations !== 1) {
+      if (typeof amountOfActivations === "number") {
+        text += ` ${numberToWords(amountOfActivations)}`;
+      } else {
+        text += ` ${rangeToString(amountOfActivations)}`;
+      }
+      text += " times, ";
+    }
+    for (const responseData of this.r) {
       const [response, weight] = responseData;
       if (amountOfActivations !== 1) {
-        const responseAmountOfActivations = response.getAmountOfActivations();
-        text += response.getText(
-          multiplyRangesOrNumbers(
-            amountOfActivations,
-            responseAmountOfActivations,
-          ),
-        );
+        text += response.getText();
       } else {
         text += response.getText();
       }
@@ -74,6 +76,6 @@ export class TriggerRandomResponse extends Response {
   }
 
   fire(triggerData: TriggerData): void {
-    getRandomFromWeightedArray(this.responses).trigger(triggerData);
+    getRandomFromWeightedArray(this.r).trigger(triggerData);
   }
 }

@@ -1,5 +1,6 @@
 import { CacheFlag, CollectibleType } from "isaac-typescript-definitions";
 import { PlayerHealth } from "isaacscript-common";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { CharacterType } from "../../enums/general/CharacterType";
 
 /** Information about the mode, including player settings. */
@@ -34,4 +35,6 @@ export interface ModeData {
    * Any stat included in this map will make the character start with alternate stats to base isaac.
    */
   characterStats?: Map<CacheFlag, number>;
+  /** The mode's ItemActionSetBuilder generation method. */
+  itemActionSetBuilderReference?: InvertedItemActionSetBuilderReference;
 }

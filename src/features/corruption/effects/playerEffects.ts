@@ -9,10 +9,15 @@ import {
   getPlayers,
   PlayerIndex,
 } from "isaacscript-common";
-import { Action, isAction } from "../../../classes/corruption/actions/Action";
+import {
+  Action,
+  ActionOrigin,
+  isAction,
+} from "../../../classes/corruption/actions/Action";
 import { Response } from "../../../classes/corruption/responses/Response";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
+import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
@@ -32,8 +37,14 @@ const v = {
 
 // TODO: Remove false.
 export function playerEffectsInit(): void {
-  mod.saveDataManager("playerEffects", v, false);
+  mod.saveDataManager("playerEffects", v);
 }
+
+export function removeActionFromPlayer(
+  player: EntityPlayer,
+  actionType: ActionType,
+  origin?: [ActionOrigin, number],
+): void {}
 
 /**
  * Add actions to the player. If an Action is of type ActionType.ON_OBTAIN, will trigger it instead
@@ -46,7 +57,7 @@ export function addActionsToPlayer(
   actions.forEach((action) => {
     const playerActionsOfType = getAndSetActionArray(player, action.actionType);
     if (action.actionType === ActionType.ON_OBTAIN) {
-      action.trigger({ player });
+      action.trigger({ player, action });
     } else {
       playerActionsOfType.push(action);
     }
@@ -77,9 +88,12 @@ export function removeFlaggedActionsOfType(
 ): void {}
 
 /** Triggers all Actions of the specified actionType for all Players. */
-export function triggerPlayersActionsByType(actionType: ActionType): void {
+export function triggerPlayersActionsByType(
+  actionType: ActionType,
+  triggerData: TriggerData,
+): void {
   getPlayers().forEach((player) => {
-    triggerPlayerActionsByType(player, actionType);
+    triggerPlayerActionsByType(player, actionType, { ...triggerData });
   });
 }
 
@@ -90,13 +104,16 @@ export function triggerPlayersActionsByType(actionType: ActionType): void {
 export function triggerPlayerActionsByType(
   player: EntityPlayer,
   actionType: ActionType,
+  triggerData: TriggerData,
 ): void {
-  let anyFlaggedForRemoval = false;
+  triggerData.player ??= player;
+  let anyFlaggedForRemoval = false as boolean;
   const playerActionsOfType = getAndSetActionArray(player, actionType);
   playerActionsOfType.forEach((action) => {
     fprint(`Triggering: ${action.getText()}`);
-    action.trigger({ player, action });
-    if (action.flagForRemoval) {
+    triggerData.action = action;
+    action.trigger({ ...triggerData });
+    if (action.ffR === true) {
       anyFlaggedForRemoval = true;
     }
   });
@@ -106,7 +123,7 @@ export function triggerPlayerActionsByType(
   if (anyFlaggedForRemoval) {
     let index = playerActionsOfType.length - 1;
     while (index >= 0) {
-      if (playerActionsOfType[index]?.flagForRemoval === true) {
+      if (playerActionsOfType[index]?.ffR === true) {
         fprint(`Removing: ${playerActionsOfType[index]?.getText()}`);
         playerActionsOfType.splice(index, 1);
       }

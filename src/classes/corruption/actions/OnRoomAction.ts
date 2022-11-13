@@ -16,23 +16,21 @@ const PLURAL_NUMBER = 2;
 /** Triggers every floor. */
 export class OnRoomAction extends Action {
   override actionType = ACTION_TYPE;
-  override noun = "room";
-  override nounPlural = "rooms";
-  roomType?: RoomType;
+  rT?: RoomType;
 
   /** If set, will only fire on the specified RoomType. */
   getRoomType(): RoomType | undefined {
-    return this.roomType;
+    return this.rT;
   }
 
   /** If set, will only fire on the specified RoomType. */
   setRoomType(roomType: RoomType): this {
-    this.roomType = roomType;
+    this.rT = roomType;
     return this;
   }
 
   getRoomTypeText(amount: number): string | undefined {
-    const { roomType } = this;
+    const { rT: roomType } = this;
     if (roomType !== undefined) {
       if (roomType === RoomType.CHEST) {
         if (amount !== 1) {
@@ -49,31 +47,27 @@ export class OnRoomAction extends Action {
   // Additional Text manipulation for 'RoomType' modifier.
   override getActionText(): string {
     // If overridden.
-    if (this.overriddenActionText !== undefined) {
-      return this.overriddenActionText;
+    if (this.oat !== undefined) {
+      return this.oat;
     }
 
     let text = "";
     const fireAfterThenRemove = this.getFireAfterThenRemove();
     if (fireAfterThenRemove !== undefined) {
       if (fireAfterThenRemove === 1) {
-        text += `next ${
-          this.getRoomTypeText(fireAfterThenRemove) ?? this.noun
-        }`;
+        text += `next ${this.getRoomTypeText(fireAfterThenRemove) ?? "room"}`;
       } else {
         text += `after ${fireAfterThenRemove} ${
-          this.getRoomTypeText(fireAfterThenRemove) ?? this.nounPlural
+          this.getRoomTypeText(fireAfterThenRemove) ?? "rooms"
         }`;
       }
     } else {
       const intervalText = this.getIntervalText();
       if (intervalText === "") {
-        text += `${this.verb} ${
-          this.getRoomTypeText(SINGULAR_NUMBER) ?? this.noun
-        }`;
+        text += `"every" ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`;
       } else {
-        text += `${this.verb} ${intervalText} ${
-          this.getRoomTypeText(PLURAL_NUMBER) ?? this.nounPlural
+        text += `"every" ${intervalText} ${
+          this.getRoomTypeText(PLURAL_NUMBER) ?? "rooms"
         }`;
       }
     }
@@ -87,8 +81,8 @@ export class OnRoomAction extends Action {
       return;
     }
 
-    if (this.roomType !== undefined) {
-      if (getRoomType() !== this.roomType) {
+    if (this.rT !== undefined) {
+      if (getRoomType() !== this.rT) {
         return;
       }
     }
@@ -99,5 +93,5 @@ export class OnRoomAction extends Action {
 
 /** Triggers all OnRoomActions for all players. */
 export function triggerOnRoomActions(): void {
-  triggerPlayersActionsByType(ACTION_TYPE);
+  triggerPlayersActionsByType(ACTION_TYPE, {});
 }

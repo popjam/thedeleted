@@ -1,3 +1,4 @@
+import { DamageFlag } from "isaac-typescript-definitions";
 import { Action } from "../../../classes/corruption/actions/Action";
 import { Response } from "../../../classes/corruption/responses/Response";
 
@@ -12,4 +13,13 @@ export interface TriggerData {
   responses?: Response[];
   // If the Action / Response takes a player input.
   player?: EntityPlayer;
+  // If the Action / Response takes an NPC input. Sometimes overrides player.
+  onKillAction?: EntityNPC;
+  // If the Action is onDamage.
+  onDamageAction?: {
+    damageFlags: BitFlags<DamageFlag>;
+    source: EntityRef;
+    amount: float;
+    countdownFrames: int;
+  };
 }

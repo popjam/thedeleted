@@ -21,6 +21,7 @@ import {
   getModePlayerType,
 } from "../../maps/modes/modeMap";
 import { mod } from "../../mod";
+import { setPlayerInvertedItemActionSetBuilderReference } from "../corruption/corruptionGeneration";
 
 /** Responsible for keeping track of Deleted's modes. */
 
@@ -70,6 +71,12 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
   }
   if (modeData.startingItems !== undefined) {
     playerAddCollectible(player, ...modeData.startingItems);
+  }
+  if (modeData.itemActionSetBuilderReference !== undefined) {
+    setPlayerInvertedItemActionSetBuilderReference(
+      player,
+      modeData.itemActionSetBuilderReference,
+    );
   }
   // Init mode:
   getModeInit(mode)(player);

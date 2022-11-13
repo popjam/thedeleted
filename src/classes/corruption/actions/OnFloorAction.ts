@@ -14,8 +14,6 @@ const PLURAL_NUMBER = 2;
 /** Triggers every floor. */
 export class OnFloorAction extends Action {
   override actionType = ACTION_TYPE;
-  override noun = "floor";
-  override nounPlural = "floors";
   levelStage?: LevelStage;
 
   /** If set, will only fire on the specified LevelStage. */
@@ -41,8 +39,8 @@ export class OnFloorAction extends Action {
   // Additional Text manipulation for 'RoomType' modifier.
   override getActionText(): string {
     // If overridden.
-    if (this.overriddenActionText !== undefined) {
-      return this.overriddenActionText;
+    if (this.oat !== undefined) {
+      return this.oat;
     }
 
     let text = "";
@@ -50,22 +48,20 @@ export class OnFloorAction extends Action {
     if (fireAfterThenRemove !== undefined) {
       if (fireAfterThenRemove === 1) {
         text += `next ${
-          this.getLevelStageText(fireAfterThenRemove) ?? this.noun
+          this.getLevelStageText(fireAfterThenRemove) ?? "floor"
         }`;
       } else {
         text += `after ${fireAfterThenRemove} ${
-          this.getLevelStageText(fireAfterThenRemove) ?? this.nounPlural
+          this.getLevelStageText(fireAfterThenRemove) ?? "floors"
         }`;
       }
     } else {
       const intervalText = this.getIntervalText();
       if (intervalText === "") {
-        text += `${this.verb} ${
-          this.getLevelStageText(SINGULAR_NUMBER) ?? this.noun
-        }`;
+        text += `every ${this.getLevelStageText(SINGULAR_NUMBER) ?? "floor"}`;
       } else {
-        text += `${this.verb} ${intervalText} ${
-          this.getLevelStageText(PLURAL_NUMBER) ?? this.nounPlural
+        text += `every ${intervalText} ${
+          this.getLevelStageText(PLURAL_NUMBER) ?? "floors"
         }`;
       }
     }
@@ -87,5 +83,5 @@ export class OnFloorAction extends Action {
 
 /** Triggers all OnFloorActions for all players. */
 export function triggerOnFloorActions(): void {
-  triggerPlayersActionsByType(ACTION_TYPE);
+  triggerPlayersActionsByType(ACTION_TYPE, {});
 }

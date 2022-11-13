@@ -1,5 +1,9 @@
 import { Mode } from "../../enums/modes/Mode";
 import {
+  battleyeModeFin,
+  battleyeModeSetup,
+} from "../../features/modes/BATTLEYE/BATTLEYE";
+import {
   happy99ModeFin,
   happy99ModeSetup,
 } from "../../features/modes/HAPPY99/HAPPY99";
@@ -23,6 +27,7 @@ const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
     [Mode.ILOVEYOU, (player: EntityPlayer) => iLoveYouModeSetup(player)],
     [Mode.MORRIS, (player: EntityPlayer) => morrisModeSetup(player)],
     [Mode.SOPHOS, (player: EntityPlayer) => sophosModeSetup(player)],
+    [Mode.BATTLEYE, (player: EntityPlayer) => battleyeModeSetup(player)],
   ]);
 
 /** Maps each Mode type to their respective finalization function. */
@@ -32,6 +37,7 @@ const MODE_FIN_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> = new Map(
     [Mode.ILOVEYOU, (player: EntityPlayer) => iLoveYouModeFin(player)],
     [Mode.MORRIS, (player: EntityPlayer) => morrisModeFin(player)],
     [Mode.SOPHOS, (player: EntityPlayer) => sophosModeFin(player)],
+    [Mode.BATTLEYE, (player: EntityPlayer) => battleyeModeFin(player)],
   ],
 );
 
@@ -44,7 +50,7 @@ export function getModeInit(mode: Mode): (player: EntityPlayer) => void {
   if (modeInit !== undefined) {
     return modeInit;
   }
-  throw new Error("modeInitMap: Mode init not found!");
+  error("modeInitMap: Mode init not found!");
 }
 
 /**
@@ -56,5 +62,5 @@ export function getModeFin(mode: Mode): (player: EntityPlayer) => void {
   if (modeFin !== undefined) {
     return modeFin;
   }
-  throw new Error("modeInitMap: Mode init not found!");
+  error("modeInitMap: Mode init not found!");
 }

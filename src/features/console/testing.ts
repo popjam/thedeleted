@@ -1,25 +1,27 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import { getEnumValues, getRandomArrayElement } from "isaacscript-common";
+import { DamageFlag, EntityType } from "isaac-typescript-definitions";
+import {
+  clearSprite,
+  getEnumValues,
+  getRandomArrayElement,
+  getRandomSeed,
+  spawnNPC,
+} from "isaacscript-common";
 import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
-import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
-import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
+import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import { NPCID } from "../../enums/general/NPCID";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import { Mode } from "../../enums/modes/Mode";
+import { getRandomAccessiblePosition } from "../../helper/entityHelper";
 import { mod } from "../../mod";
-import { setPlayerMode } from "../modes/mode";
+import { addActionsToPlayer } from "../corruption/effects/playerEffects";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
 
 /** Testing variables */
-const action1 = new OnDamageAction();
-const item1 = new UseActiveItemResponse().construct(
-  CollectibleType.BOOK_OF_SIN,
-);
-const item2 = new UseActiveItemResponse().construct(
-  CollectibleType.CRACK_THE_SKY,
-);
-const wait = new WaitThenTriggerResponse().construct(item2, 3);
+const action1 = new OnDamageAction().setDamageFlag(DamageFlag.IV_BAG);
+const item1 = new SpawnNPCResponse()
+  .construct(NPCID.CHUBBER_PROJECTILE)
+  .setAmountOfActivations(5);
 action1.setResponse(item1);
 
 /** Add all the testing commands. */
@@ -41,19 +43,51 @@ export function addTestingCommands(): void {
   });
 }
 
+function spawnDips() {
+  new SpawnNPCResponse().setNPC(NPCID.FLAMING_GAPER).trigger({});
+}
+
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  setPlayerMode(player(), Mode.ILOVEYOU);
+  addActionsToPlayer(player(), action1);
+  print(action1.getText());
 }
-/** Test stuff as the developer with command 'eted'. */
-export function testingFunction2(): void {
-  setPlayerMode(player(), Mode.HAPPY99);
+
+function renderThing(sprite: Sprite, spider: EntityNPC) {
+  mod.runNextRenderFrame(() => {
+    sprite.Render(Isaac.WorldToRenderPosition(spider.Position));
+    sprite.Update();
+    if (sprite.IsFinished(sprite.GetAnimation())) {
+      sprite.PlayRandom(getRandomSeed());
+    }
+    renderThing(sprite, spider);
+  });
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction3(): void {
-  setPlayerMode(player(), Mode.SOPHOS);
+export function testingFunction2(): void {
+  const collectible = spawnNPC(EntityType.DRIP, 0, 0, Vector(0, 0));
+  const spider = spawnNPC(
+    EntityType.RAINMAKER,
+    0,
+    0,
+    getRandomAccessiblePosition(player().Position) ?? Vector(0, 0),
+  );
+  clearSprite(spider.GetSprite());
+  const sprite = collectible.GetSprite();
+  const newSprite = Sprite();
+  newSprite.Load(sprite.GetFilename(), true);
+  newSprite.PlayRandom(getRandomSeed());
+  newSprite.PlaybackSpeed = 0.5;
+  // for (let i = 0; i < newSprite.GetLayerCount() - 1; i++) { newSprite.ReplaceSpritesheet( i,
+  // getCollectibleGfxFilename(collectible.SubType), ); }
+  newSprite.LoadGraphics();
+  collectible.Remove();
+  renderThing(newSprite, spider);
 }
+
+/** Test stuff as the developer with command 'eted'. */
+export function testingFunction3(): void {}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction4(): void {}
