@@ -119,11 +119,16 @@ export function triggerPlayerActionsByType(
   });
 
   // If there are any actions that are flagged for removal. Don't do this every time as it may cause
-  // additional lag.
+  // additional lag. Will not remove actions with 'permanent' tag.
   if (anyFlaggedForRemoval) {
     let index = playerActionsOfType.length - 1;
     while (index >= 0) {
-      if (playerActionsOfType[index]?.ffR === true) {
+      const action = playerActionsOfType[index];
+      if (
+        action !== undefined &&
+        action.ffR === true &&
+        !action.getPermanence()
+      ) {
         fprint(`Removing: ${playerActionsOfType[index]?.getText()}`);
         playerActionsOfType.splice(index, 1);
       }

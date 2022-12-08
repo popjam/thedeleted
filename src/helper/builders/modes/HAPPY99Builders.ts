@@ -22,7 +22,7 @@ import { WaitThenTriggerResponse } from "../../../classes/corruption/responses/W
 import { DeletedColor } from "../../../enums/general/DeletedColor";
 import { NPCID } from "../../../enums/general/NPCID";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { getRandomCollectibleType } from "../../collectibleHelpter";
+import { getRandomCollectibleType } from "../../collectibleHelper";
 import { getObjectValues } from "../../objectHelper";
 
 export function happy99DefaultBuilder(

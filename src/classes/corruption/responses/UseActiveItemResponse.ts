@@ -2,7 +2,7 @@ import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { getRandomCollectibleType } from "../../../helper/collectibleHelpter";
+import { getRandomCollectibleType } from "../../../helper/collectibleHelper";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { useActiveItemAtPosition } from "../../../helper/playerHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";

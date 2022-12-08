@@ -1,7 +1,8 @@
 import { DamageFlag } from "isaac-typescript-definitions";
 import { bitFlagsContainsAtLeastOneBitflags } from "./bitflagHelper";
 
-export function isAcceptableDamage(damageFlags: BitFlags<DamageFlag>): boolean {
+/** Damage that makes sense when triggering effects. */
+export function isSensibleDamage(damageFlags: BitFlags<DamageFlag>): boolean {
   return !bitFlagsContainsAtLeastOneBitflags(damageFlags, [
     DamageFlag.DEVIL,
     DamageFlag.CHEST,

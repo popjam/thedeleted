@@ -6,4 +6,6 @@ export enum TemporaryEffectType {
   LEVEL,
   /** Lasts until you are hit. */
   ON_HIT,
+  /** Lasts forever. */
+  PERMANENT,
 }

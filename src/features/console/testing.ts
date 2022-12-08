@@ -1,28 +1,24 @@
-import { DamageFlag, EntityType } from "isaac-typescript-definitions";
-import {
-  clearSprite,
-  getEnumValues,
-  getRandomArrayElement,
-  getRandomSeed,
-  spawnNPC,
-} from "isaacscript-common";
-import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
-import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
-import { NPCID } from "../../enums/general/NPCID";
+import { CollectibleType, LevelStage } from "isaac-typescript-definitions";
+import { getEnumValues, getRandomArrayElement } from "isaacscript-common";
+import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
+import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
+import { CustomModFeatures } from "../../constants/mod/featureConstants";
+
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import { getRandomAccessiblePosition } from "../../helper/entityHelper";
+import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { addActionsToPlayer } from "../corruption/effects/playerEffects";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
+const del1ID = 0;
+let del2ID = 0;
 
 /** Testing variables */
-const action1 = new OnDamageAction().setDamageFlag(DamageFlag.IV_BAG);
-const item1 = new SpawnNPCResponse()
-  .construct(NPCID.CHUBBER_PROJECTILE)
-  .setAmountOfActivations(5);
-action1.setResponse(item1);
+const action1 = new OnFloorAction()
+  .setInterval(1)
+  .setLevelStage(LevelStage.BLUE_WOMB);
+const response1 = new UseActiveItemResponse();
+action1.setResponse(response1);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -43,54 +39,27 @@ export function addTestingCommands(): void {
   });
 }
 
-function spawnDips() {
-  new SpawnNPCResponse().setNPC(NPCID.FLAMING_GAPER).trigger({});
-}
-
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  addActionsToPlayer(player(), action1);
-  print(action1.getText());
-}
-
-function renderThing(sprite: Sprite, spider: EntityNPC) {
-  mod.runNextRenderFrame(() => {
-    sprite.Render(Isaac.WorldToRenderPosition(spider.Position));
-    sprite.Update();
-    if (sprite.IsFinished(sprite.GetAnimation())) {
-      sprite.PlayRandom(getRandomSeed());
-    }
-    renderThing(sprite, spider);
-  });
+  print(legibleString(action1.getText()));
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  const collectible = spawnNPC(EntityType.DRIP, 0, 0, Vector(0, 0));
-  const spider = spawnNPC(
-    EntityType.RAINMAKER,
-    0,
-    0,
-    getRandomAccessiblePosition(player().Position) ?? Vector(0, 0),
+  del2ID = CustomModFeatures.EveryItemIsFeature.subscribe(
+    CollectibleType.ABADDON,
   );
-  clearSprite(spider.GetSprite());
-  const sprite = collectible.GetSprite();
-  const newSprite = Sprite();
-  newSprite.Load(sprite.GetFilename(), true);
-  newSprite.PlayRandom(getRandomSeed());
-  newSprite.PlaybackSpeed = 0.5;
-  // for (let i = 0; i < newSprite.GetLayerCount() - 1; i++) { newSprite.ReplaceSpritesheet( i,
-  // getCollectibleGfxFilename(collectible.SubType), ); }
-  newSprite.LoadGraphics();
-  collectible.Remove();
-  renderThing(newSprite, spider);
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction3(): void {}
+export function testingFunction3(): void {
+  CustomModFeatures.EveryItemIsFeature.unsubscribe(del1ID);
+}
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction4(): void {}
+export function testingFunction4(): void {
+  CustomModFeatures.EveryItemIsFeature.unsubscribe(del2ID);
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction5(): void {

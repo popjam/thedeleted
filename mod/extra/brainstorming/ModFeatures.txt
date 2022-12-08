@@ -1,0 +1,32 @@
+  Rules
+Rules apply to all players.
+
+- Every item is X Rule
+- Cobwebs slow player even more Rule
+- Every enemy is Rule
+-
+
+  Traits
+Traits apply to specific players.
+
+  Positive (Jobs)
+- The next 4 items you pick up will be X.
+-
+
+  Negative ()
+- Player can not buy or pickup anything in X room.
+- Every new room, 50% chance to lose a coin.
+- DID: Every floor, randomly change characters.
+- Amnesia: After seeing a pickup for the first time, it will disappear
+- ASPD: You can harm your familiars, friendly enemies, friendly players, etc.
+-
+
+  Worlds
+Worlds are floors that have unique rulesets and design.
+- Cotton candy world: Half the enemies
+
+  Quest
+Quests are
+
+
+

@@ -31,8 +31,13 @@ import { OnRoomAction } from "./classes/corruption/actions/OnRoomAction";
 import { InvertedActiveActionSet } from "./classes/corruption/actionSets/InvertedActiveActionSet";
 import { InvertedPassiveActionSet } from "./classes/corruption/actionSets/InvertedPassiveActionSet";
 import { NonInvertedPickupActionSet } from "./classes/corruption/actionSets/NonInvertedPickupActionSet";
+import { AddRuleResponse } from "./classes/corruption/responses/AddRuleResponse";
+import { RemoveCollectibleResponse } from "./classes/corruption/responses/RemoveCollectibleResponse";
+import { RemoveRuleResponse } from "./classes/corruption/responses/RemoveRuleResponse";
 import { SpawnNPCResponse } from "./classes/corruption/responses/SpawnNPCResponse";
 import { SpawnPickupResponse } from "./classes/corruption/responses/SpawnPickupResponse";
+import { TemporaryCollectibleResponse } from "./classes/corruption/responses/TemporaryCollectibleResponse";
+import { TemporaryRuleResponse } from "./classes/corruption/responses/TemporaryRuleResponse";
 import { TriggerInSequenceResponse } from "./classes/corruption/responses/TriggerInSequence";
 import { TriggerOverTimeResponse } from "./classes/corruption/responses/TriggerOverTimeResponse";
 import { TriggerRandomResponse } from "./classes/corruption/responses/TriggerRandomResponse";
@@ -173,7 +178,12 @@ function initClasses() {
     TriggerRandomResponse,
     TriggerOverTimeResponse,
     TriggerInSequenceResponse,
+    TemporaryCollectibleResponse,
+    TemporaryRuleResponse,
+    RemoveCollectibleResponse,
+    RemoveRuleResponse,
     SpawnNPCResponse,
     SpawnPickupResponse,
+    AddRuleResponse,
   );
 }

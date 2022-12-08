@@ -2,7 +2,7 @@ import { DamageFlag } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { bitFlagsContainsValue } from "../../../helper/bitflagHelper";
-import { isAcceptableDamage } from "../../../helper/damageHelper";
+import { isSensibleDamage } from "../../../helper/damageHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getDamageFlagTextFromMap } from "../../../maps/data/damageFlagText";
 import { Action } from "./Action";
@@ -30,21 +30,18 @@ export class OnDamageAction extends Action {
     }
 
     let text = "";
+    const intervalText = this.getIntervalText();
     const fireAfterThenRemove = this.getFireAfterThenRemove();
     if (fireAfterThenRemove !== undefined) {
       if (fireAfterThenRemove === 1) {
-        text += `next time you take damage ${this.getDamageFlagText()}`;
+        text += `next time you take damage ${this.getDamageFlagText()} ${intervalText}`;
       } else {
-        text += `after taking damage ${this.getDamageFlagText()} ${fireAfterThenRemove} times
-        }`;
+        text += `up to ${fireAfterThenRemove} times, after taking damage ${this.getDamageFlagText()} ${intervalText}`;
       }
+    } else if (intervalText === "") {
+      text += `every time you take damage ${this.getDamageFlagText()}`;
     } else {
-      const intervalText = this.getIntervalText();
-      if (intervalText === "") {
-        text += `every time you take damage ${this.getDamageFlagText()}`;
-      } else {
-        text += `every time you take damage ${this.getDamageFlagText()} ${intervalText} times`;
-      }
+      text += `every time you take damage ${this.getDamageFlagText()} ${intervalText}`;
     }
     text += ", ";
     return text;
@@ -71,7 +68,7 @@ export class OnDamageAction extends Action {
     const damageFlag = this.getDamageFlag();
     if (damageFlag === undefined) {
       // No damageFlag specified.
-      if (!isAcceptableDamage(onDamageTriggerData.damageFlags)) {
+      if (!isSensibleDamage(onDamageTriggerData.damageFlags)) {
         return;
       }
     } else if (
@@ -97,6 +94,7 @@ export function triggerOnDamageActions(
   if (player === undefined) {
     return;
   }
+
   triggerPlayerActionsByType(player, ACTION_TYPE, {
     player,
     onDamageAction: {

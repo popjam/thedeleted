@@ -1,0 +1,105 @@
+    The Green
+- Green theme
+- No items or consumables or anything, base stats, health is VP.
+- 18 rooms until the difficulty changes (for first diff)
+- Colour changes along with difficulty
+- All enemies have standardized HP, including bosses. Bosses are enemy-sized and act as enemies.
+- Final room of diff is a boss, triple the health. Can be enemy or boss, but giant sized.
+- Each diff enemy hit points increases by 1
+- Each diff room length increases by 1
+- Every 5? rooms enemy quantity increases by 1, reset upon new diff.
+- Special rooms can be accessed for 1VP.
+- Can contain low quality items, trinkets or other things.
+- Die when run out of VP.
+- Score is rooms cleared ('backdoors') along with a title 'e.g noob' that improves every diff.
+- No game music, heartbeat.
+- Each diff has a set layout (e.g a few rocks or pits)?
+
+    Earning VP
+- VP is earned during a normal run (greed / normal).
+- Start off with 3 'challenges' that earn VP.
+- Start off with 1 'curse' that makes you lose VP.
+- Pocket item / Starting room trapdoor teleports you to special Error room.
+- Error room is wiped and instead contains VP related items.
+- VP Related items can be VP -> Power or Power -> VP.
+- Womb 1 and onwards Error shops are greatly nerfed and offer you mainly VP -> Power.
+- Can have max 30 VP (?)
+- Minimum -30 VP (?)
+
+    Example challenges
+- Kill delirium (+5 VP)
+- Kill Isaac (+3 VP)
+- Blow up 20 shopkeepers (+2 VP)
+- Visit a planetarium (+2 VP)
+- Survive a floor without taking damage (+3 VP)
+- Use an active 3 times in one room (+1 VP)
+- Complete a floor in 60 seconds (+1 VP / 2)
+- Pick up an item you already have (+1 VP / 3)
+- Get a transformation (+1 VP / 3)
+- Visit every room on the map (+1 VP / 3)
+- Access the next floor from a non-boss room trapdoor (+2 VP)
+- Reach 0.1 or 2 speed (+2 VP)
+- Pick up 3 food items in a row (+3 VP)
+- Use an active item in the starting room (+1 VP / 2)
+- Pick up 15 coins without leaving the room (+2 VP)
+- End the game with 3 angel items (+3 VP)
+
+    Example Curses
+- Taking damage to a floor boss, -1 VP.
+- Taking devil deals, -1 VP.
+- Picking up black hearts, -1 VP.
+- Bombing shopkeeper, -1 VP.
+- Use a rune, -1 VP.
+- Every item over 100, -1 VP.
+- Use an active item in a boss room, -1 VP.
+- Pick up a quality 0 item, -1 VP.
+- Every two quality 4 items, -1 VP.
+- Blow up a tinted rock which doesn't drop soul hearts, -1 VP.
+- Pick up a black heart, -1 VP.
+- Pick up an item in the chest or dark room, -1 VP.
+- Walking into an item room before killing the boss, -1 VP.
+- Gain a broken heart, -1 VP.
+- Blow up a beggar, -1 VP.
+- Taking damage to an enemy with <10 HP, -1 VP.
+- Reaching 0 coins, -1 VP.
+- Reaching 0 bombs, -1 VP.
+- Ending the game with more than 50 coins, -3 VP.
+-
+
+    Example Error Shop Items
+These come in two forms, 'royals' and 'curses'.
+
+    Royals
+- Royal Bagel: 3 uses, upon use -0.4 speed for +1 VP.
+- Royal Lens: 1 use, upon use, +1 VP for every unique enemy in the room, max 5.
+- Royal Baguette: +1 VP, +1 heart container.
+- Royal Coat: Passive, nullifies next 3 VP lost.
+- Royal Compactor: 3 uses, trash most recent passive item for +2 VP.
+- Royal Flag: Active, while held, -0.3 speed, -1.0 damage, -0.5 tears, -2 luck. +2 VP per new floor,
+            up to a max of 3.
+- Royal Cannon: Lets out a small golden shot, if it kills enemy, +1 VP. Max 5.
+- Royal Plantation: 3 uses, upon use lose 1 VP. When you reach triple your dmg, get x2 back.
+- Royal ATM: 5 uses, convert 15c to 1 VP.
+- Royal Syringe: 5 uses, -1 heart container for 1 VP.
+- Royal Soup: +0.1 tears, -2 VP, more VP items in error shops.
+- Royal Deck: Upon going to next unvisited room, count the number of enemies and add it to a counter.
+            At any time, use Royal Deck to stop counter. Dealer gets random number (15 - bust).
+            If you go over 21, bust and -1 VP. If you beat dealer, +1 VP. If you draw, +0 VP. After
+            5 outcomes, lose Royal Deck.
+- Royal Porridge: Passive, -0.7 tears, +3 VP.
+- Royal Vial: 5 uses, -0.7 tears for +2 VP.
+- Royal Die: 12 charges, reroll an item into a Royal / Cursed item.
+- Royal Remote: 3 uses, change characters for +1 VP.
+- Royal Lipstick: 1 use, +5 VP, fill up remaining heart spaces with broken hearts.
+- Royal Noose: 5 use, kills you for +2 VP.
+- Royal Aid: -3 VP, if you end the floor under 10 VP, go to 10VP.
+
+    Cursed
+- Cursed Sword: -1 VP, get sword item for current room (infinite uses).
+- Cursed Credit Card: -2 VP instead of next 3 purchases.
+- Cursed slot: -1 VP to use. Get a range of things including VP, coins, etc..
+- Cursed ATM: Convert 1 VP to 10c.
+- Cursed Syringe: Convert 2 VP to 1 heart container.
+- Cursed X: X is any active item with charges, infinite uses, -1 VP (or more).
+- Cursed Die: -1 VP to use, reroll an item into a Royal item.
+

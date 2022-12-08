@@ -34,13 +34,13 @@ export class SpawnNPCResponse extends Response {
 
   construct(
     entityNPC: NPCID,
-    rst?: SpawnType,
+    spawnType?: SpawnType,
     overridePos?: Vector,
     overrideVel?: Vector,
   ): this {
     this.setNPC(entityNPC);
-    if (rst !== undefined) {
-      this.setSpawnType(rst);
+    if (spawnType !== undefined) {
+      this.setSpawnType(spawnType);
     }
     if (overridePos !== undefined) {
       this.setPosition(overridePos);

@@ -2,11 +2,16 @@ import { CollectibleType, ItemType } from "isaac-typescript-definitions";
 import { getCollectibleItemType } from "isaacscript-common";
 import { mod } from "../mod";
 
+/** No of TMTRAINER items to spawn when searching for an Active TMTRAINER item. */
+const TMTRAINER_FIND_ACTIVE_ITEM_LIMIT = 200;
+
 /**
  * Returns a random TMTRAINER CollectibleType. This is done by temporarily giving the player
  * TMTRAINER, and spawning collectibles, giving them to the player then removing them.
  */
-export function getRandomTMTRAINERItem(player: EntityPlayer): Sprite {
+export function getRandomTMTRAINERItem(
+  player: EntityPlayer,
+): EntityPickupCollectible {
   const hasTMTRAINER = player.HasCollectible(CollectibleType.TMTRAINER);
   if (!hasTMTRAINER) {
     player.AddCollectible(CollectibleType.TMTRAINER, 0, false);
@@ -22,12 +27,13 @@ export function getRandomTMTRAINERItem(player: EntityPlayer): Sprite {
     player.RemoveCollectible(CollectibleType.TMTRAINER);
   }
 
-  return tmtCollectible.GetSprite();
+  return tmtCollectible;
 }
 
 /**
  * Returns a random TMTRAINER active CollectibleType. This is done by temporarily giving the player
- * TMTRAINER, and spawning collectibles, giving them to the player then removing them.
+ * TMTRAINER, and spawning collectibles until an active item is found, giving them to the player
+ * then removing them.
  */
 export function getRandomTMTRAINERActiveItem(): CollectibleType {
   const player = Isaac.GetPlayer();
@@ -39,7 +45,7 @@ export function getRandomTMTRAINERActiveItem(): CollectibleType {
 
   let activeItemType = CollectibleType.POOP;
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < TMTRAINER_FIND_ACTIVE_ITEM_LIMIT; i++) {
     const tmtCollectible = mod.spawnCollectible(
       CollectibleType.SAD_ONION,
       Vector(0, 0),
@@ -57,21 +63,4 @@ export function getRandomTMTRAINERActiveItem(): CollectibleType {
   }
 
   return activeItemType;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function deepCopy2<T>(target: T): any {
-  if (target === null) {
-    return target;
-  }
-  if (typeof target === "object") {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cp = { ...(target as Record<string, any>) } as Record<string, any>;
-    Object.keys(cp).forEach((k) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-      cp[k] = deepCopy2<any>(cp[k]);
-    });
-    return cp as T;
-  }
-  return target;
 }

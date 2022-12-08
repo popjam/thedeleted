@@ -95,7 +95,7 @@ export function setPlayerEternalHearts(
   player.AddEternalHearts(amount - player.GetEternalHearts());
 }
 
-/** Replace player "001.000_player.anm2" animation. */
+/** Replace player "001.000_player.anm2" file. */
 export function replacePlayerAnm2(
   player: EntityPlayer,
   anm2Path: string,
@@ -104,7 +104,7 @@ export function replacePlayerAnm2(
   sprite.Load(anm2Path, true);
 }
 
-/** Quickly teleports a player to a location and uses the active item. */
+/** Quickly teleports a player to a location and uses the active item, then teleports them back. */
 export function useActiveItemAtPosition(
   activeItem: CollectibleType,
   roomPos: Vector,

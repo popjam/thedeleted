@@ -5,11 +5,13 @@ import { triggerPlayersActionsByType } from "../../../features/corruption/effect
 import { addTheS } from "../../../helper/stringHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getStageNameFromLevelStage } from "../../../maps/data/levelStageNameMap";
+import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_FLOOR;
 const SINGULAR_NUMBER = 1;
 const PLURAL_NUMBER = 2;
+const DEFAULT_INTERVAL = 1;
 
 /** Triggers every floor. */
 export class OnFloorAction extends Action {
@@ -36,6 +38,20 @@ export class OnFloorAction extends Action {
     return undefined;
   }
 
+  override getIntervalText(): string {
+    const interval = this.getInterval();
+    if (interval === undefined) {
+      return "";
+    }
+    if (typeof interval === "number") {
+      if (interval === DEFAULT_INTERVAL) {
+        return "";
+      }
+      return `${interval.toString()} `;
+    }
+    return `${rangeToString(interval)} `;
+  }
+
   // Additional Text manipulation for 'RoomType' modifier.
   override getActionText(): string {
     // If overridden.
@@ -45,25 +61,28 @@ export class OnFloorAction extends Action {
 
     let text = "";
     const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove !== undefined) {
-      if (fireAfterThenRemove === 1) {
-        text += `next ${
-          this.getLevelStageText(fireAfterThenRemove) ?? "floor"
-        }`;
-      } else {
-        text += `after ${fireAfterThenRemove} ${
-          this.getLevelStageText(fireAfterThenRemove) ?? "floors"
-        }`;
-      }
+    const interval = this.getInterval() ?? 1;
+    let intervalNoRange = interval;
+    if (typeof intervalNoRange !== "number") {
+      intervalNoRange = intervalNoRange[1];
+    }
+
+    if (fireAfterThenRemove === 1 && interval === 1) {
+      text += `next ${this.getLevelStageText(intervalNoRange) ?? "floor"}`;
+    } else if (fireAfterThenRemove === 1) {
+      text += `after ${this.getIntervalText()} ${
+        this.getLevelStageText(intervalNoRange) ?? "floor"
+      }`;
+    } else if (fireAfterThenRemove === undefined) {
+      text += `every ${this.getIntervalText()} ${
+        this.getLevelStageText(intervalNoRange) ??
+        `${addTheS("floor", intervalNoRange)}`
+      }`;
     } else {
-      const intervalText = this.getIntervalText();
-      if (intervalText === "") {
-        text += `every ${this.getLevelStageText(SINGULAR_NUMBER) ?? "floor"}`;
-      } else {
-        text += `every ${intervalText} ${
-          this.getLevelStageText(PLURAL_NUMBER) ?? "floors"
-        }`;
-      }
+      text += `up to ${fireAfterThenRemove} times, every ${this.getIntervalText()} ${
+        this.getLevelStageText(intervalNoRange) ??
+        `${addTheS("floor", intervalNoRange)}`
+      }`;
     }
     text += ", ";
     return text;

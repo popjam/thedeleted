@@ -1,6 +1,6 @@
 <players nameimageroot="gfx/ui/boss/" portraitroot="gfx/ui/stage/" root="gfx/characters/costumes/">
   <!-- HAPPY99 Mode -->
-  <player hp="2" armor="2" bombs="1" name="Deleted" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" skinColor="0" birthright="Patched" />
+  <player hp="2" armor="2" bombs="1" name="Deleted" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
 
   <!-- ILOVEYOU Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_ILOVEYOU" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ILOVEYOU.png" hidden="true" skinColor="0" birthright="Patched" />

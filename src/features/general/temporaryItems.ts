@@ -17,8 +17,10 @@ import {
   TrinketType,
 } from "isaac-typescript-definitions";
 import {
+  arrayRemove,
   DefaultMap,
   defaultMapGetPlayer,
+  defaultMapSetPlayer,
   game,
   getPlayerFromIndex,
   PlayerIndex,
@@ -33,6 +35,9 @@ const FIRST_TIME_PICKING_UP = false;
 
 const v = {
   run: {
+    permanentCollectibleEffects: new DefaultMap<PlayerIndex, CollectibleType[]>(
+      () => [],
+    ),
     temporaryOnHitCollectibleEffects: new DefaultMap<
       PlayerIndex,
       CollectibleType[]
@@ -130,6 +135,8 @@ export function temporaryItemsPostNewRoomReordered(): void {
   reapplyTemporaryCollectibleEffects(v.run.temporaryLevelCollectibleEffects);
   // On hit effects need to be reapplied.
   reapplyTemporaryCollectibleEffects(v.run.temporaryOnHitCollectibleEffects);
+  /** Permanent effects need to be reapplied. */
+  reapplyTemporaryCollectibleEffects(v.run.permanentCollectibleEffects);
 
   v.run.roomIndex = currentRoomIndex;
 }
@@ -160,13 +167,14 @@ export function playerAddTemporaryTrinket(
  * Add a temporary collectible to the player. This will either be an actual collectible, or a
  * collectible effect. A duration can be specified, dictating when the collectible will be removed.
  *
- * Default duration is 'room'.
+ * Default duration is 'room'. Returns true if added a collectible effect, false if added a
+ * collectible.
  */
 export function playerAddTemporaryCollectible(
   player: EntityPlayer,
   collectibleType: CollectibleType,
   duration: TemporaryEffectType = TemporaryEffectType.ROOM,
-): void {
+): boolean {
   const isEffectWorking = doesCollectibleEffectWork(
     collectibleType,
     INCLUDE_PARTLY_WORKING,
@@ -187,23 +195,49 @@ export function playerAddTemporaryCollectible(
       defaultMapGetPlayer(v.run.temporaryOnHitCollectibleEffects, player).push(
         collectibleType,
       );
-    }
-  } else {
-    player.AddCollectible(collectibleType, undefined, FIRST_TIME_PICKING_UP);
-    if (duration === TemporaryEffectType.ROOM) {
-      defaultMapGetPlayer(v.run.temporaryRoomCollectibles, player).push(
-        collectibleType,
-      );
-    } else if (duration === TemporaryEffectType.LEVEL) {
-      defaultMapGetPlayer(v.run.temporaryLevelCollectibles, player).push(
-        collectibleType,
-      );
-    } else if (duration === TemporaryEffectType.ON_HIT) {
-      defaultMapGetPlayer(v.run.temporaryOnHitCollectibles, player).push(
+    } else if (duration === TemporaryEffectType.PERMANENT) {
+      defaultMapGetPlayer(v.run.permanentCollectibleEffects, player).push(
         collectibleType,
       );
     }
+    return true;
   }
+  player.AddCollectible(collectibleType, undefined, FIRST_TIME_PICKING_UP);
+  if (duration === TemporaryEffectType.ROOM) {
+    defaultMapGetPlayer(v.run.temporaryRoomCollectibles, player).push(
+      collectibleType,
+    );
+  } else if (duration === TemporaryEffectType.LEVEL) {
+    defaultMapGetPlayer(v.run.temporaryLevelCollectibles, player).push(
+      collectibleType,
+    );
+  } else if (duration === TemporaryEffectType.ON_HIT) {
+    defaultMapGetPlayer(v.run.temporaryOnHitCollectibles, player).push(
+      collectibleType,
+    );
+  }
+
+  return false;
+}
+
+/**
+ * Remove a permanent collectible effect from the player (that is set to reapply every room). If the
+ * player does not have one of the specified collectibleType, does nothing. Will only remove one if
+ * the player has multiple of the same type.
+ *
+ * Use 'addCollectibleOrEffect()' to add.
+ */
+export function playerRemovePermanentCollectibleEffect(
+  player: EntityPlayer,
+  collectible: CollectibleType,
+): void {
+  const permCollectibles = defaultMapGetPlayer(
+    v.run.permanentCollectibleEffects,
+    player,
+  );
+  player.GetEffects().RemoveCollectibleEffect(collectible);
+  const newArray = arrayRemove<CollectibleType>(permCollectibles, collectible);
+  defaultMapSetPlayer(v.run.permanentCollectibleEffects, player, newArray);
 }
 
 /** Temporary effects disappear upon saving and continuing, so this function reapplies them. */

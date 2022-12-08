@@ -1,7 +1,10 @@
 import { capitalizeFirstLetter, getRandomInt } from "isaacscript-common";
 import { patternToPlainString } from "./patternHelper";
 
-/** Removes unnecessary spaces, capitalizes first letter. */
+/**
+ * Removes unnecessary spaces, capitalizes first letter.
+ * TODO: fix: "thing ," <-- space before comma.
+ */
 export function legibleString(s: string): string {
   return capitalizeFirstLetter(removeUnnecessaryWhiteSpace(s));
 }

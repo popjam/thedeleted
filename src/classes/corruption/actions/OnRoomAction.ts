@@ -64,9 +64,9 @@ export class OnRoomAction extends Action {
     } else {
       const intervalText = this.getIntervalText();
       if (intervalText === "") {
-        text += `"every" ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`;
+        text += `every ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`;
       } else {
-        text += `"every" ${intervalText} ${
+        text += `every ${intervalText} ${
           this.getRoomTypeText(PLURAL_NUMBER) ?? "rooms"
         }`;
       }

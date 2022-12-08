@@ -19,9 +19,12 @@
     "mod/resources/rooms/**"
   ],
   "words": [
+    "ASPD",
+    "backdoors",
     "BATTLEYE",
     "BITFLIP",
     "bitflipping",
+    "colour",
     "CRYPTOLOCKER",
     "CRYPTOLOCKER's",
     "Deleteds",
@@ -35,6 +38,7 @@
     "MYDOOM",
     "MYDOOM's",
     "NONINVERTED",
+    "noob",
     "NPCID",
     "NPCIDX",
     "PLAYERTYPE",
@@ -44,6 +48,7 @@
     "SPYWIPER",
     "SPYWIPER's",
     "thedeleted",
+    "Uninitialising",
     "validify",
     "ZAZZ",
     "ZIPBOMBER"

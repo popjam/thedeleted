@@ -17,9 +17,13 @@ const STARTING_INTERVAL_COUNTER_NUMBER = 1;
 const DEFAULT_INTERVAL = 1;
 const DEFAULT_FLAG_FOR_REMOVAL = false;
 const NO_RESPONSE_TEXT = "do nothing";
+const DEFAULT_PERMANENCE = false;
 
 export enum ActionOrigin {
   INVERTED_COLLECTIBLE,
+  TEMPORARY_ACTION,
+  TEMPORARY_TRINKET,
+  TEMPORARY_RULE,
 }
 
 /**
@@ -37,6 +41,7 @@ export abstract class Action {
   r?: Response;
   oat?: string;
   o?: [ActionOrigin, number];
+  p?: boolean;
 
   /**
    * When using getMorality() on the Action, this value will return instead of looking at the
@@ -69,10 +74,23 @@ export abstract class Action {
    * not know where it is being stored: so it has to 'signal' to tell its outer components it should
    * be removed.
    *
+   * Will not be removed if the Action also has the 'permanent' tag enabled, but will stay flagged.
+   *
    * @example In triggerAllPlayerActionsByType(), it will do a 'garbage disposal' at the end,
    *          removing actions with this tag from the player.
    */
   ffR?: boolean;
+
+  /** If an Action is permanent, it can not be rerolled or removed with Action-altering effects. */
+  getPermanence(): boolean {
+    return this.p ?? DEFAULT_PERMANENCE;
+  }
+
+  /** If an Action is permanent, it can not be rerolled or removed with Action-altering effects. */
+  setPermanence(permanent: boolean): this {
+    this.p = permanent;
+    return this;
+  }
 
   /**
    * Adds one or more responses to the action. Can provide one response, multiple responses or an
@@ -136,6 +154,13 @@ export abstract class Action {
     return this;
   }
 
+  /**
+   * Whether the Action should remove itself after firing X times.
+   *
+   * @example 'Every 2 - 3 rooms' -> no FATR.
+   * @example 'After 2 - 3 rooms' -> 1 FATR.
+   * @example 'Every 2 - 3 rooms, up to three times' -> 3 FATR.
+   */
   getFireAfterThenRemove(): number | undefined {
     return this.fatr;
   }
@@ -148,6 +173,13 @@ export abstract class Action {
     return `after ${fireAfterThenRemove}`;
   }
 
+  /**
+   * Whether the Action should remove itself after firing X times.
+   *
+   * @example 'Every 2 - 3 rooms' -> no FATR.
+   * @example 'After 2 - 3 rooms' -> 1 FATR.
+   * @example 'Every 2 - 3 rooms, up to three times' -> 3 FATR.
+   */
   setFireAfterThenRemove(fireAfterThenRemove: number): this {
     this.fatr = fireAfterThenRemove;
     return this;
@@ -167,9 +199,9 @@ export abstract class Action {
       if (interval === DEFAULT_INTERVAL) {
         return "";
       }
-      return interval.toString();
+      return `${interval.toString()} times`;
     }
-    return rangeToString(interval);
+    return `${rangeToString(interval)} times`;
   }
 
   /** Will validify ranges. */
@@ -204,20 +236,6 @@ export abstract class Action {
    * @example Fire.
    */
   trigger(triggerData: TriggerData): void {
-    // Trigger after then remove.
-    const currentFireAfterThenRemove = this.getFireAfterThenRemove();
-    if (currentFireAfterThenRemove !== undefined) {
-      this.setFireAfterThenRemove(currentFireAfterThenRemove - 1);
-      if (
-        this.getFireAfterThenRemove() ===
-        TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER
-      ) {
-        this.ffR = true;
-      } else {
-        return;
-      }
-    }
-
     // Interval
     const interval = this.getInterval();
     if (interval !== undefined) {
@@ -235,6 +253,18 @@ export abstract class Action {
     }
 
     this.fire(triggerData);
+
+    // Fire after then remove.
+    const currentFireAfterThenRemove = this.getFireAfterThenRemove();
+    if (currentFireAfterThenRemove !== undefined) {
+      this.setFireAfterThenRemove(currentFireAfterThenRemove - 1);
+      if (
+        this.getFireAfterThenRemove() ===
+        TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER
+      ) {
+        this.ffR = true;
+      }
+    }
   }
 
   /** Fire the action, triggering its responses. */

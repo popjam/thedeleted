@@ -4,7 +4,7 @@ import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/In
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { happy99DefaultBuilder } from "../../helper/builders/modes/HAPPY99Builders";
-import { getRandomCollectibleType } from "../../helper/collectibleHelpter";
+import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import {
   Builder,
   InvertedItemActionSetBuilder,

@@ -4,11 +4,11 @@ import { getPlayersOfType, setCollectibleGlitched } from "isaacscript-common";
 import { PlayerTypeCustom } from "../../../enums/general/PlayerTypeCustom";
 import { fprint } from "../../../helper/printHelper";
 import { rollPercentage } from "../../../types/general/Percentage";
+import { randomInRange, Range } from "../../../types/general/Range";
 import { getSOPHOSChanceForNormalItemSetting } from "../../settings/SOPHOSSettings";
 
 const PLAYER_TYPE = PlayerTypeCustom.T_DELETED_SOPHOS;
-const DEFAULT_SHOP_PRICE_WHEN_TOO_HIGH = 7;
-const MAXIMUM_SHOP_PRICE = 30;
+const SHOP_PRICE_RANGE: Range = [1, 30];
 
 /** Initiate the player to the SOPHOS mode. */
 export function sophosModeSetup(player: EntityPlayer): void {}
@@ -34,9 +34,9 @@ export function sophosPostPickupInitFirst(
       `Glitched collectible ${collectible.SubType} is of price: ${collectible.Price}`,
     );
     collectible.AutoUpdatePrice = false;
-    if (collectible.Price > MAXIMUM_SHOP_PRICE) {
+    if (collectible.Price > SHOP_PRICE_RANGE[1]) {
       fprint("SOPHOS: Price too high, setting lower...");
-      collectible.Price = DEFAULT_SHOP_PRICE_WHEN_TOO_HIGH;
+      collectible.Price = randomInRange(SHOP_PRICE_RANGE);
     }
   }
 }

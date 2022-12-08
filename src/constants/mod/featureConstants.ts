@@ -1,7 +1,9 @@
-import { TestFeature } from "../../features/modFeatures/test";
 import { mod } from "../../mod";
+import { EveryItemIsFeature } from "../../modFeatures/general/EveryItemIsFeature";
+import { TooManyItemsFeature } from "../../modFeatures/general/TooManyItemsFeature";
 
 /** An object containing all 'ModFeatures'. */
-export const ModFeatures = {
-  testFeature: new TestFeature(mod, false),
+export const CustomModFeatures = {
+  EveryItemIsFeature: new EveryItemIsFeature(mod, false),
+  TooManyItemsFeature: new TooManyItemsFeature(mod, false),
 } as const;
