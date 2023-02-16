@@ -12,6 +12,11 @@ export class RemoveCollectibleResponse extends Response {
   c?: CollectibleType;
   ce?: boolean;
 
+  /** Get collectibles mentioned. */
+  override getInvolvedCollectibles(): CollectibleType[] {
+    return [this.getCollectible()];
+  }
+
   /**
    * Whether the Response should remove a physical collectible or a 'permanent' collectible effect.
    * Default is false.

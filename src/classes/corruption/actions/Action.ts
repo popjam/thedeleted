@@ -1,14 +1,18 @@
+import { CollectibleType } from "isaac-typescript-definitions";
+import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
-// eslint-disable-next-line import/no-cycle
+
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
 import {
   randomInRange,
   Range,
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
-// eslint-disable-next-line import/no-cycle
+
 import { Response } from "../responses/Response";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
@@ -19,29 +23,20 @@ const DEFAULT_FLAG_FOR_REMOVAL = false;
 const NO_RESPONSE_TEXT = "do nothing";
 const DEFAULT_PERMANENCE = false;
 
-export enum ActionOrigin {
-  INVERTED_COLLECTIBLE,
-  TEMPORARY_ACTION,
-  TEMPORARY_TRINKET,
-  TEMPORARY_RULE,
-}
-
 /**
  * Actions are containers which hold Responses. After the Action has passed all its 'checks', it
  * will trigger the responses it holds. Usually Actions are tied to Callbacks. Actions may also have
  * additional properties which modify their behavior.
  *
- * @example Every 3 - 5 rooms.
- *
- * If there are multiple responses in an action, only one of the responses will fire every time,
- * chosen randomly. Certain tags may modify this behavior.
+ * @example Every 3 - 5 rooms, trigger response.
  */
 export abstract class Action {
   readonly actionType!: ActionType;
   r?: Response;
   oat?: string;
-  o?: [ActionOrigin, number];
+  o?: ActionOriginType;
   p?: boolean;
+  oc?: EIDColorShortcut;
 
   /**
    * When using getMorality() on the Action, this value will return instead of looking at the
@@ -80,6 +75,30 @@ export abstract class Action {
    *          removing actions with this tag from the player.
    */
   ffR?: boolean;
+
+  /**
+   * Get the assigned EID Color used to represent the Action. This can either be derived from the
+   * Morality or overridden with overrideTextColor().
+   */
+  getTextColor(): EIDColorShortcut {
+    return this.oc ?? getEIDColorShortcutFromMorality(this.getMorality());
+  }
+
+  /** Override the text color generated to this Action through its Morality. */
+  overrideTextColor(color: EIDColorShortcut): this {
+    this.oc = color;
+    return this;
+  }
+
+  /** Get collectibles involved in the Action and all its responses. */
+  getInvolvedCollectibles(): CollectibleType[] {
+    const response = this.getResponse();
+    if (response === undefined) {
+      return [];
+    }
+
+    return response.getInvolvedCollectibles();
+  }
 
   /** If an Action is permanent, it can not be rerolled or removed with Action-altering effects. */
   getPermanence(): boolean {

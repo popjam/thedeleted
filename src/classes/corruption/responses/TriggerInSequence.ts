@@ -1,3 +1,4 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
@@ -20,6 +21,10 @@ export class TriggerInSequenceResponse extends Response {
   addResponse(...responses: Response[]): this {
     this.r = this.r.concat(responses);
     return this;
+  }
+
+  override getInvolvedCollectibles(): CollectibleType[] {
+    return this.r.flatMap((response) => response.getInvolvedCollectibles());
   }
 
   /**

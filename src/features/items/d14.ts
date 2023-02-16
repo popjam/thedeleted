@@ -1,8 +1,8 @@
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { getCollectibles } from "isaacscript-common";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
+import { setPedestalInversion } from "../../helper/deletedSpecific/inversion/pedestalInversion";
 import { generateInvertedItemActionSetFromPlayer } from "../corruption/corruptionGeneration";
-import { setPedestalInversion } from "../corruption/inversion/pickupInversion";
 
 const D14_SFX = SoundEffectCustom.ROLL_DICE;
 

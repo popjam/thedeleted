@@ -9,17 +9,16 @@ import {
   getPlayers,
   PlayerIndex,
 } from "isaacscript-common";
-import {
-  Action,
-  ActionOrigin,
-  isAction,
-} from "../../../classes/corruption/actions/Action";
+import { Action, isAction } from "../../../classes/corruption/actions/Action";
 import { Response } from "../../../classes/corruption/responses/Response";
+import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 
+/** The total number of actions between all players before additional Actions are throttled. */
+const TOTAL_NUM_ACTIONS = 5;
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
 
 const v = {
@@ -46,6 +45,27 @@ export function removeActionFromPlayer(
   origin?: [ActionOrigin, number],
 ): void {}
 
+/** Get the total number of Actions between all players. */
+export function getTotalNumActions(): int {
+  let totalNumActions = 0;
+  for (const player of getPlayers()) {
+    totalNumActions += getNumActions(player);
+  }
+  return totalNumActions;
+}
+
+/** Get the total number of Actions the player has. */
+export function getNumActions(player: EntityPlayer): int {
+  let numActions = 0;
+  for (const [, actionsOfType] of defaultMapGetPlayer(
+    v.run.playerActions,
+    player,
+  )) {
+    numActions += actionsOfType.length;
+  }
+  return numActions;
+}
+
 /**
  * Add actions to the player. If an Action is of type ActionType.ON_OBTAIN, will trigger it instead
  * of adding it to the player. Does not deepCopy!
@@ -59,6 +79,12 @@ export function addActionsToPlayer(
     if (action.actionType === ActionType.ON_OBTAIN) {
       action.trigger({ player, action });
     } else {
+      if (getTotalNumActions() >= TOTAL_NUM_ACTIONS) {
+        fprint(
+          `Throttling action, ${TOTAL_NUM_ACTIONS} action limit exceeded.`,
+        );
+        return;
+      }
       playerActionsOfType.push(action);
     }
   });
@@ -81,11 +107,95 @@ export function addActionOrResponseToPlayer(
   });
 }
 
-/** Removes an action from the player. */
+/** Removes actions that are flagged for removal from the player. */
 export function removeFlaggedActionsOfType(
   player: EntityPlayer,
   actionType: ActionType,
-): void {}
+): void {
+  removeAllActionsWithPredicate(
+    (action: Action) => action.getFlagForRemoval(),
+    player,
+    actionType,
+  );
+}
+
+/** Get an array of ActionTypes that the player has Actions of. */
+export function getPlayerActionTypes(player: EntityPlayer): ActionType[] {
+  return Array.from(defaultMapGetPlayer(v.run.playerActions, player).keys());
+}
+
+/**
+ * Removes one Action that matches the predicate, player and ActionType. If an Action is found, the
+ * function returns it. If not, it returns undefined. If a player is not specified, it looks through
+ * all players. If an actionType is not specified, it looks through all actionTypes.
+ */
+export function removeActionWithPredicate(
+  predicate: (action: Action) => boolean,
+  player?: EntityPlayer,
+  actionType?: ActionType,
+): Action | undefined {
+  const playersLoop = player !== undefined ? [player] : getPlayers();
+
+  for (const playerLoop of playersLoop) {
+    const actionTypesLoop =
+      actionType !== undefined
+        ? [actionType]
+        : getPlayerActionTypes(playerLoop);
+    for (const actionTypeLoop of actionTypesLoop) {
+      const playerActionsOfType = getAndSetActionArray(
+        playerLoop,
+        actionTypeLoop,
+      );
+      let index = playerActionsOfType.length - 1;
+      while (index >= 0) {
+        const action = playerActionsOfType[index];
+        if (action !== undefined && predicate(action)) {
+          playerActionsOfType.splice(index, 1);
+          return action;
+        }
+        index--;
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Removes all actions that match the predicate, player and actionType specified. If no player is
+ * mentioned, will remove from all players. If no actionType is mentioned, will remove from all
+ * actionTypes. Returns an array of the removed actions, which will be empty if nothing matches.
+ */
+export function removeAllActionsWithPredicate(
+  predicate: (action: Action) => boolean,
+  player?: EntityPlayer,
+  actionType?: ActionType,
+): Action[] {
+  const playersLoop = player !== undefined ? [player] : getPlayers();
+  const removedActions: Action[] = [];
+
+  for (const playerLoop of playersLoop) {
+    const actionTypesLoop =
+      actionType !== undefined
+        ? [actionType]
+        : getPlayerActionTypes(playerLoop);
+    for (const actionTypeLoop of actionTypesLoop) {
+      const playerActionsOfType = getAndSetActionArray(
+        playerLoop,
+        actionTypeLoop,
+      );
+      let index = playerActionsOfType.length - 1;
+      while (index >= 0) {
+        const action = playerActionsOfType[index];
+        if (action !== undefined && predicate(action)) {
+          playerActionsOfType.splice(index, 1);
+          removedActions.push(action);
+        }
+        index--;
+      }
+    }
+  }
+  return removedActions;
+}
 
 /** Triggers all Actions of the specified actionType for all Players. */
 export function triggerPlayersActionsByType(
@@ -155,7 +265,7 @@ function getAndSetActionArray(
     actionType,
   );
   if (actions === undefined) {
-    throw new Error("getAndSetActionArray: Something went wrong!");
+    error("getAndSetActionArray: Something went wrong!");
   } else {
     return actions;
   }

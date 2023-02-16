@@ -27,22 +27,24 @@
 - Minimum -30 VP (?)
 
     Example challenges
-- Kill delirium (+5 VP)
-- Kill Isaac (+3 VP)
-- Blow up 20 shopkeepers (+2 VP)
-- Visit a planetarium (+2 VP)
-- Survive a floor without taking damage (+3 VP)
+- Kill delirium (+8 VP)
+- Kill Isaac (+5 VP)
+- Blow up 5 shopkeepers (+1 VP / 4)
+- Visit a planetarium (+3 VP / 6)
+- Survive a floor without taking damage (+2 VP / 6)
 - Use an active 3 times in one room (+1 VP)
-- Complete a floor in 60 seconds (+1 VP / 2)
-- Pick up an item you already have (+1 VP / 3)
-- Get a transformation (+1 VP / 3)
-- Visit every room on the map (+1 VP / 3)
-- Access the next floor from a non-boss room trapdoor (+2 VP)
-- Reach 0.1 or 2 speed (+2 VP)
+- Complete a floor in 60 seconds (+1 VP / 3)
+- Pick up an item you already have (+2 VP / 4)
+- Get a transformation (+2 VP / 6)
+- Reach 0.1 or 2 speed (+4 VP)
 - Pick up 3 food items in a row (+3 VP)
-- Use an active item in the starting room (+1 VP / 2)
+- Use an active item in the starting room (+1 VP / 5)
 - Pick up 15 coins without leaving the room (+2 VP)
-- End the game with 3 angel items (+3 VP)
+- End the game with exactly 3 angel items (+5 VP)
+- Menagerie: +3 VP per set of Angel, Devil, Shop, Item Room, Planetarium (max 9).
+- Fields: +1 VP if you visited all rooms on the map (max 5).
+- +3 VP if you pick up 3 unique items without leaving a room (max 6).
+
 
     Example Curses
 - Taking damage to a floor boss, -1 VP.
@@ -64,7 +66,9 @@
 - Reaching 0 coins, -1 VP.
 - Reaching 0 bombs, -1 VP.
 - Ending the game with more than 50 coins, -3 VP.
--
+- -1 VP if you pick up two items in the same room.
+- -1 VP if you visit every room on the map.
+- -1 VP per teleport.
 
     Example Error Shop Items
 These come in two forms, 'royals' and 'curses'.

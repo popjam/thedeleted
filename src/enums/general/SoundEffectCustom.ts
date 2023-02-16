@@ -3,4 +3,5 @@ export const SoundEffectCustom = {
   BITFLIP_OUT: Isaac.GetSoundIdByName("thedeleted_Glitch Out"),
   ROLL_DICE: Isaac.GetSoundIdByName("thedeleted_diceroll"),
   TRASH: Isaac.GetSoundIdByName("thedeleted_Trash"),
+  PC_LOG_IN: Isaac.GetSoundIdByName("thedeleted_pc_login"),
 } as const;

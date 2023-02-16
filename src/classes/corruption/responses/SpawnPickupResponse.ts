@@ -31,10 +31,14 @@ export class SpawnPickupResponse extends Response {
   rst?: EntityRandomSpawnType;
 
   construct(
+    entityID?: EntityID,
     rst?: EntityRandomSpawnType,
     overridePos?: Vector,
     overrideVel?: Vector,
   ): this {
+    if (entityID !== undefined) {
+      this.setEntityID(entityID);
+    }
     if (rst !== undefined) {
       this.setRandomSpawnType(rst);
     }

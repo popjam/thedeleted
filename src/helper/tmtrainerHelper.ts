@@ -1,5 +1,6 @@
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
 import { getCollectibleItemType } from "isaacscript-common";
+import { TMTRAINER_THRESHOLD } from "../constants/generalConstants";
 import { mod } from "../mod";
 
 /** No of TMTRAINER items to spawn when searching for an Active TMTRAINER item. */
@@ -28,6 +29,13 @@ export function getRandomTMTRAINERItem(
   }
 
   return tmtCollectible;
+}
+
+/** Returns true if the subType of a Collectible dictates it as a TMTRAINER item. */
+export function isGlitchedCollectibleSubType(
+  subType: CollectibleType,
+): boolean {
+  return (subType as number) > TMTRAINER_THRESHOLD;
 }
 
 /**

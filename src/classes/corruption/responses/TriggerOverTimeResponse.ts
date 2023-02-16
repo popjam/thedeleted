@@ -1,3 +1,4 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import { GAME_FRAMES_PER_SECOND } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -39,6 +40,10 @@ export class TriggerOverTimeResponse extends Response {
     this.ct = this.getTotalTimeSec();
     this.r = response;
     return this;
+  }
+
+  override getInvolvedCollectibles(): CollectibleType[] {
+    return this.getResponse()?.getInvolvedCollectibles() ?? [];
   }
 
   /** Ticks down the timer. If below or equal to 0, returns false. */

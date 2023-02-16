@@ -1,4 +1,6 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
+import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
 import { Action, isAction } from "../actions/Action";
 import { isResponse, Response } from "../responses/Response";
@@ -13,6 +15,14 @@ export abstract class ActionSet {
   /** Returns Actions + Responses, does not deepCopy! */
   getEffects(): Array<Action | Response> {
     return this.effects;
+  }
+
+  getInvolvedCollectibles(): CollectibleType[] {
+    const collectibles: CollectibleType[] = [];
+    this.effects.forEach((actionOrResponse) => {
+      collectibles.push(...actionOrResponse.getInvolvedCollectibles());
+    });
+    return collectibles;
   }
 
   /** Gets only the Responses (does not deepCopy!). */
@@ -32,18 +42,25 @@ export abstract class ActionSet {
 
   /**
    * Adds one or more actions or responses to the ActionSet. Can provide one action or response,
-   * multiple actions or responses or an array of actions or responses.
+   * multiple actions or responses or an array of actions or responses. Probably need to update the
+   * pickup after calling this function. Does not deepCopy!
    */
   addEffects(...effects: Array<Action | Response>): this {
     this.effects = this.effects.concat(effects);
     return this;
   }
 
-  getText(): string {
+  getText(eid = true): string {
     let text = "";
     this.effects.forEach((actionOrResponse) => {
       text += "#";
+      if (eid) {
+        text += getEIDMarkupFromShortcut(actionOrResponse.getTextColor());
+      }
       text += legibleString(actionOrResponse.getText());
+      if (eid) {
+        text += "{{CR}}";
+      }
     });
     if (text === "") {
       return NO_EFFECTS_DEFAULT_TEXT;

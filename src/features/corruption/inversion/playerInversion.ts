@@ -1,17 +1,12 @@
+/** Functions related to player and hence game inversion status. */
+
 import {
   DefaultMap,
   getPlayerIndex,
   getPlayers,
-  getRandomArrayElement,
   PlayerIndex,
 } from "isaacscript-common";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/InvertedItemActionSet";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";
-import {
-  generateDefaultInvertedItemActionSet,
-  generateInvertedItemActionSetFromPlayer,
-} from "../corruptionGeneration";
 
 /**
  * Tracks player inversion status. Non-Deleted's always start off un-inverted, while some Deleted
@@ -55,22 +50,6 @@ export function getInvertedPlayers(): EntityPlayer[] {
     }
   }
   return invertedPlayers;
-}
-
-/**
- * Returns an InvertedItemActionSet based on the game circumstances. If the game is inverted,
- * randomly chooses between inverted players to generate an ActionSet based on their preferences.
- * Otherwise, uses a default ActionSetBuilder.
- */
-export function getGameInvertedItemActionSet(
-  inputs?: ActionSetBuilderInput,
-): InvertedItemActionSet {
-  if (isGameInverted()) {
-    const invertedPlayers = getInvertedPlayers();
-    const chosenRandomPlayer = getRandomArrayElement(invertedPlayers);
-    return generateInvertedItemActionSetFromPlayer(chosenRandomPlayer, inputs);
-  }
-  return generateDefaultInvertedItemActionSet(inputs);
 }
 
 /** Returns true if the Game is in an inverted state. */

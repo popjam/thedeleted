@@ -9,8 +9,8 @@ import {
   removeAllCostumes,
   restoreAllCostumes,
 } from "../../helper/costumeHelper";
+import { setAllPedestalsOnLevelInversion } from "../../helper/deletedSpecific/inversion/pedestalInversion";
 import { fprint } from "../../helper/printHelper";
-import { setAllPedestalsOnLevelInversion } from "../corruption/inversion/pickupInversion";
 import {
   isPlayerInverted,
   setPlayerInversion,
@@ -48,7 +48,7 @@ function bitFlipUse(player: EntityPlayer): boolean {
     }`,
   );
   setPlayerInversion(player, !isInverted);
-  setAllPedestalsOnLevelInversion(!isInverted);
+  setAllPedestalsOnLevelInversion(!isInverted, undefined, { player });
   game.ShakeScreen(SCREEN_SHAKE_TIMEOUT);
   if (!isInverted) {
     // NON-INVERTED --> INVERTED

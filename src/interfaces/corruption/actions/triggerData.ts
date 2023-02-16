@@ -9,6 +9,8 @@ import { Response } from "../../../classes/corruption/responses/Response";
 export interface TriggerData {
   // If an Action has started the 'trigger' chain, this will contain that Action.
   action?: Action;
+  // If the Response was triggered by a non-inverted pickup.
+  nonInvertedPickup?: EntityPickup;
   // Responses that are triggered will be added to the end of this array.
   responses?: Response[];
   // If the Action / Response takes a player input.
@@ -21,5 +23,9 @@ export interface TriggerData {
     source: EntityRef;
     amount: float;
     countdownFrames: int;
+  };
+  // If the player has corrupted bombs or onBombExplode Actions.
+  onBombExplodedAction?: {
+    bomb: EntityBomb;
   };
 }

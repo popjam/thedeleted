@@ -7,6 +7,7 @@ import { ModUpgraded } from "isaacscript-common";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 import { bitflipPostUseItem } from "../features/items/bitflip";
 import { d14PostUseItem } from "../features/items/d14";
+import { extractPostUseItem } from "../features/items/extract";
 import { trashPostUseItem } from "../features/items/trash";
 
 export function postUseItemInit(mod: ModUpgraded): void {
@@ -29,6 +30,11 @@ export function postUseItemInit(mod: ModUpgraded): void {
     ModCallback.POST_USE_ITEM,
     mainTrash,
     CollectibleTypeCustom.TRASH,
+  );
+  mod.AddCallback(
+    ModCallback.POST_USE_ITEM,
+    mainExtract,
+    CollectibleTypeCustom.EXTRACT,
   );
 }
 
@@ -77,6 +83,24 @@ function mainTrash(
   customVarData: int,
 ) {
   return trashPostUseItem(
+    collectibleType,
+    rng,
+    player,
+    useFlags,
+    activeSlot,
+    customVarData,
+  );
+}
+
+function mainExtract(
+  collectibleType: CollectibleType,
+  rng: RNG,
+  player: EntityPlayer,
+  useFlags: BitFlags<UseFlag>,
+  activeSlot: int,
+  customVarData: int,
+) {
+  return extractPostUseItem(
     collectibleType,
     rng,
     player,

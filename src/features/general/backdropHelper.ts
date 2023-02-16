@@ -1,9 +1,6 @@
-import { BackdropType, SoundEffect } from "isaac-typescript-definitions";
+import { BackdropType } from "isaac-typescript-definitions";
 import { game, setBackdrop } from "isaacscript-common";
 import { mod } from "../../mod";
-
-const FRAME_COUNT = 0;
-const BACKDROP_SOUND = SoundEffect.DEATH_CARD;
 
 const v = {
   run: {

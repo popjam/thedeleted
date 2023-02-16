@@ -1,12 +1,27 @@
+import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { pickupEffectPostPickupCollect } from "../features/corruption/effects/pickupEffects";
-import { fprint } from "../helper/printHelper";
+import { playPickupAnimationWithCustomSprite } from "../classes/facets/RenderOverHeadFacet";
+import { nonInvertedBombPostPickupCollect } from "../features/corruption/inversion/callbacks/bombCollection";
+import { nonInvertedCoinPostPickupCollect } from "../features/corruption/inversion/callbacks/coinCollection";
 
 export function postPickupCollectInit(mod: ModUpgraded): void {
-  mod.AddCallbackCustom(ModCallbackCustom.POST_PICKUP_COLLECT, main);
+  mod.AddCallbackCustom(
+    ModCallbackCustom.POST_PICKUP_COLLECT,
+    mainCoinCollection,
+    PickupVariant.COIN,
+  );
+  mod.AddCallbackCustom(
+    ModCallbackCustom.POST_PICKUP_COLLECT,
+    mainBombCollection,
+    PickupVariant.BOMB,
+  );
 }
 
-function main(pickup: EntityPickup, player: EntityPlayer) {
-  fprint(`Player has picked up pickup of Variant: ${pickup.Variant}`);
-  pickupEffectPostPickupCollect(pickup, player);
+function mainCoinCollection(pickup: EntityPickup, player: EntityPlayer) {
+  playPickupAnimationWithCustomSprite(player, CollectibleType.ABADDON);
+  nonInvertedCoinPostPickupCollect(pickup, player);
+}
+
+function mainBombCollection(pickup: EntityPickup, player: EntityPlayer) {
+  nonInvertedBombPostPickupCollect(pickup, player);
 }

@@ -1,5 +1,6 @@
 import { ActiveSlot, PlayerType } from "isaac-typescript-definitions";
 import {
+  getPlayerIndex,
   playerAddCollectible,
   setActiveItem,
   setPlayerHealth,
@@ -14,6 +15,7 @@ import {
   setPlayerCoins,
   setPlayerKeys,
 } from "../../helper/playerHelper";
+import { fprint } from "../../helper/printHelper";
 import { getModeFin, getModeInit } from "../../maps/modes/modeInitMap";
 import {
   getModeData,
@@ -42,11 +44,14 @@ export function modeInit(): void {
  * Get the real mode of the deleted player. Returns undefined if player is not a PlayerType which
  * corresponds to a mode (e.g not a Deleted).
  */
-export function getCurrentMode(player: EntityPlayer): Mode | undefined {
+export function getCurrentPlayerMode(player: EntityPlayer): Mode | undefined {
   return getModeFromPlayerType(player.GetPlayerType());
 }
 
-/** Set the current mode of the Deleted player. Set up any mode specific settings. */
+/**
+ * Set the current mode of the Deleted player. Set up any mode specific settings. If the player is
+ * not Deleted, does nothing.
+ */
 export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
   if (!isPlayerDeleted(player)) {
     return;
@@ -109,6 +114,7 @@ export function getPersistentTaintedMode(): Mode {
 export function modePostPlayerInitFirst(player: EntityPlayer): void {
   const mode = getModeFromPlayerType(player.GetPlayerType());
   if (mode !== undefined) {
+    fprint(`Starting up mode: ${mode} for player ${getPlayerIndex(player)}`);
     setPlayerMode(player, mode);
   }
 }
@@ -124,10 +130,14 @@ export function postPlayerChangeTypeMode(
 ): void {
   const oldMode = getModeFromPlayerType(oldCharacter);
   if (oldMode !== undefined) {
+    fprint(
+      `Finishing up mode: ${oldMode} for player ${getPlayerIndex(player)}`,
+    );
     getModeFin(oldMode)(player);
   }
   const newMode = getModeFromPlayerType(newCharacter);
   if (newMode !== undefined) {
+    fprint(`Starting up mode: ${newMode} for player ${getPlayerIndex(player)}`);
     setPlayerMode(player, newMode);
   }
 }
@@ -135,7 +145,7 @@ export function postPlayerChangeTypeMode(
 /** Sets the Deleted Mode's tear color. */
 // CACHE_UPDATE, CacheFlag.TEAR_COLOR
 export function modeEvaluateCacheTearColor(player: EntityPlayer): void {
-  const mode = getCurrentMode(player);
+  const mode = getCurrentPlayerMode(player);
   if (mode !== undefined) {
     const { mainColor } = getModeData(mode);
     if (mainColor !== undefined) {

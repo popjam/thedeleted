@@ -1,7 +1,5 @@
-import { PickupVariant } from "isaac-typescript-definitions";
-import { PickupIndex, spawnPickup } from "isaacscript-common";
-import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInvertedPickupActionSet";
-import { fprint } from "../../../helper/printHelper";
+import { PickupIndex } from "isaacscript-common";
+import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { mod } from "../../../mod";
 
 const v = {
@@ -22,8 +20,8 @@ export function pickupEffectsInit(): void {
 }
 
 /**
- * Retrieves the non-inverted Pickup ActionSet (which is unique per PickupIndex), setting it to an
- * empty ActionSet if non-existent.
+ * Retrieves the non-inverted pickup ActionSet (which is unique per PickupIndex). This will still
+ * work as intended if called on an inverted pickup.
  */
 export function getNonInvertedPickupActionSet(
   pickup: EntityPickup,
@@ -31,39 +29,11 @@ export function getNonInvertedPickupActionSet(
   return v.run.pickup.get(mod.getPickupIndex(pickup));
 }
 
-export function setNonInvertedPickupActionSet(
-  pickup: EntityPickup,
+/** Don't use this function. */
+// eslint-disable-next-line no-underscore-dangle
+export function _setPickupIndexActionSet(
+  pickupIndex: PickupIndex,
   actionSet: NonInvertedPickupActionSet,
 ): void {
-  v.run.pickup.set(mod.getPickupIndex(pickup), actionSet);
-}
-
-export function spawnPickupWithActionSet(
-  pickupVariant: PickupVariant,
-  subType: number,
-  position: Vector,
-  actionSet: NonInvertedPickupActionSet,
-): EntityPickup {
-  const pickup = spawnPickup(pickupVariant, subType, position);
-  setNonInvertedPickupActionSet(pickup, actionSet);
-  return pickup;
-}
-
-// POST_PICKUP_COLLECT.
-/**
- * When a non-inverted pickup (only works with some pickups, e.g ones which disappear when you touch
- * them) is picked up, if it has an ActionSet, trigger it.
- */
-export function pickupEffectPostPickupCollect(
-  pickup: EntityPickup,
-  player: EntityPlayer,
-): void {
-  const pickupActionSet = getNonInvertedPickupActionSet(pickup);
-  if (pickupActionSet === undefined) {
-    return;
-  }
-  pickupActionSet.trigger(player);
-  fprint(
-    `pickupEffect: Pickup of variant ${pickup.Variant} collected with corrupted effects.`,
-  );
+  v.run.pickup.set(pickupIndex, actionSet);
 }

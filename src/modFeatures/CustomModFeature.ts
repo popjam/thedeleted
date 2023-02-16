@@ -1,6 +1,6 @@
-import { ModCallback } from "isaac-typescript-definitions";
-import { Callback, ModFeature } from "isaacscript-common";
-import { CMFInstance } from "../types/CMFInstance";
+import { getTSTLClassName, ModFeature } from "isaacscript-common";
+import { fprint } from "../helper/printHelper";
+import { CMFInputs, CMFInstance } from "../types/CMFInstance";
 
 /**
  * A parent class for all custom mod features. This differentiates from 'ModFeature' in that:
@@ -16,8 +16,11 @@ export class CustomModFeature<T extends CMFInstance> extends ModFeature {
     },
   };
 
+  /** Will init the CMF if it isn't already. */
   protected addInstance(instance: T): number {
     if (!this.initialized) {
+      const className = getTSTLClassName(this);
+      fprint(`Initializing ${className}...`);
       this.init();
     }
 
@@ -27,8 +30,20 @@ export class CustomModFeature<T extends CMFInstance> extends ModFeature {
     return id;
   }
 
+  /** Will unsubscribe from CMF if there are no instances. */
   protected removeInstance(id: number): void {
     this.v.run.subscribers.delete(id);
+
+    if (this.v.run.subscribers.size === 0) {
+      fprint(`Uninitialising ${getTSTLClassName(this)}...`);
+      this.uninit();
+    }
+  }
+
+  /** Will unsubscribe from CMF. */
+  protected removeAllInstances(): void {
+    this.v.run.subscribers.clear();
+    this.uninit();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -37,7 +52,7 @@ export class CustomModFeature<T extends CMFInstance> extends ModFeature {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  subscribeWithInstance(instance: T): number {
+  subscribeWithInput(input: CMFInputs): number {
     error("Should not call this function, it acts as an abstract function.");
   }
 
@@ -46,11 +61,6 @@ export class CustomModFeature<T extends CMFInstance> extends ModFeature {
     error("Should not call this function, it acts as an abstract function.");
   }
 
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    this.uninit();
-  }
+  // @Callback(ModCallback.PRE_GAME_EXIT) preGameExit(shouldSave: boolean): void { if (shouldSave) {
+  //           return; } this.uninit(); }
 }

@@ -17,6 +17,9 @@ const MOD_FEATURES = [
   ISCFeature.MODDED_ELEMENT_DETECTION,
   ISCFeature.MODDED_ELEMENT_SETS,
   ISCFeature.COLLECTIBLE_ITEM_POOL_TYPE,
+  ISCFeature.PERSISTENT_ENTITIES,
+  ISCFeature.PAUSE,
 ] as const;
+// export const ItemDisplayLibrary = CCO.ItemDisplay.API;
 
 export const mod = upgradeMod(modVanilla, MOD_FEATURES);

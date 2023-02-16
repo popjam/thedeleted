@@ -122,3 +122,17 @@ export function useActiveItemAtPosition(
   );
   player.Position = currentPos;
 }
+
+/** Checks if the player is currently playing an animation. Can provide more than one. */
+export function isPlayerPlayingAnimation(
+  player: EntityPlayer,
+  ...animation: string[]
+): boolean {
+  const sprite = player.GetSprite();
+  const playerAnimation = sprite.GetAnimation();
+  if (animation.includes(playerAnimation)) {
+    return true;
+  }
+
+  return false;
+}

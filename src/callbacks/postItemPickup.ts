@@ -7,7 +7,7 @@ import {
   PickingUpItemCollectible,
   PickingUpItemTrinket,
 } from "isaacscript-common";
-import { corruptItemsPreItemPickupCollectible } from "../features/corruption/inversion/pickupInversion";
+import { invertedPostItemPickupCollectible } from "../features/corruption/inversion/callbacks/invertedPostItemPickupCollectible";
 import { fprint } from "../helper/printHelper";
 
 export function postItemPickupInit(mod: ModUpgraded): void {
@@ -26,7 +26,7 @@ function mainCollectiblePickup(
   player: EntityPlayer,
   pickingUpItem: PickingUpItemCollectible,
 ) {
-  corruptItemsPreItemPickupCollectible(player, pickingUpItem);
+  invertedPostItemPickupCollectible(player, pickingUpItem);
 }
 
 function mainTrinketPickup(

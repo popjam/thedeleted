@@ -1,7 +1,10 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
+import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
 import {
   createPercentage,
   Percentage,
@@ -35,6 +38,31 @@ export abstract class Response {
   aoa?: number | Range;
   /** Percentage chance to activate (100% will always pass). */
   cta?: Percentage;
+  /** Overridden color of the Response. Default is derived from the Morality. */
+  oc?: EIDColorShortcut;
+
+  /**
+   * Get the assigned EID Color Shortcut used to represent the Response. This can either be derived
+   * from the Morality or overridden with overrideTextColor(). Note if this Response is wrapped in
+   * an Action, it will use the Actions textColor instead.
+   */
+  getTextColor(): EIDColorShortcut {
+    return this.oc ?? getEIDColorShortcutFromMorality(this.getMorality());
+  }
+
+  /**
+   * Override the text color generated to this Response through its Morality. Note if this Response
+   * is wrapped in an Action, it will use the Actions textColor instead.
+   */
+  overrideTextColor(color: EIDColorShortcut): this {
+    this.oc = color;
+    return this;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getInvolvedCollectibles(): CollectibleType[] {
+    return [];
+  }
 
   // Use calculateAmountOfActivations() instead!
   getAmountOfActivations(): number | Range {

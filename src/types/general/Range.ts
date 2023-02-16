@@ -9,11 +9,27 @@ export function randomInRange(range: Range): number {
 }
 
 /**
+ * Get a random number in the range, inclusive on both ends. If a number is inputted to the
+ * function, it will be returned.
+ */
+export function randomInRangeOrNumber(rangeOrNumber: Range | number): number {
+  if (typeof rangeOrNumber === "number") {
+    return rangeOrNumber;
+  }
+
+  return randomInRange(rangeOrNumber);
+}
+
+/**
  * Modifies the range to make sure the right number is equal or higher to the left.
  *
+ * @param range
+ * @param config
  * @param minValue The minimum value (default 1).
  * @param notSame Ensures values are not same (default true) Increments right side if they are the
  *                same.
+ * @param config.minValue
+ * @param config.notSame
  */
 export function validifyRange(
   range: Range,
@@ -65,4 +81,12 @@ export function multiplyRangesOrNumbers(
 /** Multiply two Ranges together, like a matrix. */
 export function multiplyRanges(range1: Range, range2: Range): Range {
   return [range1[0] * range2[0], range1[1] * range2[1]];
+}
+
+/** Multiply a Range by a number, e.g [1,1] * 5 = [5,5]. */
+export function multiplyRangeConstituents(
+  range: Range,
+  multiplier: number,
+): Range {
+  return [range[0] * multiplier, range[1] * multiplier];
 }

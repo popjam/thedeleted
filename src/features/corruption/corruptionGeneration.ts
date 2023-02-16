@@ -6,7 +6,7 @@ import {
   defaultMapSetPlayer,
   PlayerIndex,
 } from "isaacscript-common";
-import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/InvertedActiveActionSet";
+import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE } from "../../constants/corruptionConstants";
 import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";

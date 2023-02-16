@@ -1,13 +1,20 @@
-import { EntityType, PickupVariant } from "isaac-typescript-definitions";
+import {
+  EntityFlag,
+  EntityType,
+  PickupVariant,
+} from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
   game,
+  getPickups,
   getPlayers,
   getRandom,
   getRandomVector,
+  spawn,
   spawnNPC,
   spawnPickup,
 } from "isaacscript-common";
+import { mod } from "../mod";
 
 const RANDOM_POSITION_AVOID_PLAYER_DISTANCE = DISTANCE_OF_GRID_TILE * 2;
 
@@ -20,15 +27,15 @@ export function getDistanceBetweenEntities(
 }
 
 /**
- * Spawn an Entity in a random position within a circle.
+ * Get a random position within a circle.
  *
- * @param excludeRadius Will add an area to the radius where the entity cannot spawn. This area
- *                      originates from the origin point and increases the radius of the circle.
+ * @param centerPos
+ * @param radius
+ * @param excludeRadius Will add an area to the radius where the chosen position can not be. This
+ *                      area originates from the origin point and increases the radius of the
+ *                      circle.
  */
 export function getRandomPositionInRadius(
-  entityType: EntityType,
-  variant: number,
-  subType: number,
   centerPos: Vector,
   radius: number,
   excludeRadius = 0,
@@ -167,4 +174,52 @@ export function isPositionAccessible(
   const hasPath = pathfinder.HasPathToPos(accessorPos, ignorePoop);
   npc.Remove();
   return hasPath;
+}
+
+/**
+ * Spawns an Entity which is invisible. Note: This will not mute sounds, make it friendly or make it
+ * be invisible upon exiting / entering game / room.
+ */
+export function spawnInvisibleEntity(
+  entityType: EntityType,
+  variant: number,
+  subType: number,
+  position: Vector,
+  velocity?: Vector | undefined,
+  spawner?: Entity | undefined,
+): Entity {
+  const entity = spawn(
+    entityType,
+    variant,
+    subType,
+    position,
+    velocity,
+    spawner,
+  );
+  entity.ClearEntityFlags(EntityFlag.APPEAR);
+  entity.Visible = false;
+  mod.runInNGameFrames(() => {
+    entity.Visible = false;
+  }, 5);
+  return entity;
+}
+
+/**
+ * Retrieves the closest pickup to a reference position. If there are no pickups in the room,
+ * returns undefined.
+ */
+export function getClosestPickupTo(
+  referencePosition: Vector,
+): EntityPickup | undefined {
+  let closestPickup: undefined | EntityPickup;
+  let closestDistance = 10000;
+  const pickupsInRoom = getPickups();
+  pickupsInRoom.forEach((pickup: EntityPickup) => {
+    const pickupDistance = pickup.Position.Distance(referencePosition);
+    if (pickupDistance < closestDistance) {
+      closestPickup = pickup;
+      closestDistance = pickupDistance;
+    }
+  });
+  return closestPickup;
 }

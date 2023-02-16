@@ -15,7 +15,6 @@ Traits apply to specific players.
 
   Negative ()
 - Player can not buy or pickup anything in X room.
-- Every new room, 50% chance to lose a coin.
 - DID: Every floor, randomly change characters.
 - Amnesia: After seeing a pickup for the first time, it will disappear
 - ASPD: You can harm your familiars, friendly enemies, friendly players, etc.
@@ -23,7 +22,107 @@ Traits apply to specific players.
 
   Worlds
 Worlds are floors that have unique rulesets and design.
-- Cotton candy world: Half the enemies
+  + Cotton Candy Land
+    Half the enemies exist in this world.
+    You cannot go in special rooms such as secret rooms, arcades, shops. You can go in devil
+    and angel rooms. Spikes are set down.
+
+  + Trivia Room
+    No items. At the end of the world, Trivia man asks you 5 multiple choice questions
+    about the floor, e.g:
+      - How many keys did you pick up?
+      - What was the boss called?
+      - How many rooms did you visit?
+      - How many tinted rocks were seen?
+    Reward Structure (million dollar hot seat):
+      - Auto: 1 treasure item, 1 boss item (safety).
+      - Easy: 1 treasure item, 1 boss item, 1 shop item.
+      - Easy: 1 treasure item, 1 boss item, 1 shop item, 1 random item.
+      - Medium: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item.
+      - Medium: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item,
+        1 secret room item.
+      - Hard: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item,
+        1 secret room item, 1 library item.
+      - Hard: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item,
+        1 secret room item, 1 library item, 1 devil item.
+      - Extreme: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item,
+        1 secret room item, 1 library item, 1 devil item, 1 angel item.
+      - Extreme: 1 treasure item, 1 boss item, 1 shop item, 1 random item, 1 planetarium item,
+        1 secret room item, 1 library item, 1 devil item, 1 angel item, x3 Godhead.
+      - God: Spawn the trophy.
+
+    Easy:
+      - What boss did you face?
+      - Did you visit the shop?
+      - Did you get hurt?
+      - How many times did you use your active item?
+      - Did you see X monster?
+      - How many shop items were for sale?
+    Medium:
+      - How long did the floor take?
+      - How many tinted rocks did you see?
+      - How many times did you get hit?
+      - How many times did you see X monster?
+      - How many times did you see X pickup?
+      - What was the initial combined price of every shop item?
+      - How many shopkeepers did you see?
+    Hard:
+      - How many rooms did you enter without being hit?
+      - How many poops did you squish?
+      - How many fireplaces did you see?
+      - Who was the 7th monster you killed?
+      - How many doors did you enter?
+    Extreme:
+      -
+
+  + Hazardberry Hills
+    Golf world: Golf ball spawns on one empty, accessible grid location. The 'cup' spawns
+    somewhere else on the map. One golf ball per player. Enemies cannot push ball once stationary,
+    but once in motion can move it / hit them. Each room will have a randomly generated 'par'.
+    And your total score will be totalled for the floor. Every players pocket item swaps out for the
+    'golf club' item, a timed rechargeable item which when used, fires your ball. You can
+    hold down this item for more power, and you must be next to your ball to fire it. If a room
+    finishes before the players have finished putting, golf balls/cups disappear and the score is
+    disqualified (unless player has hit the ball, then it is )
+
+    At the end of the floor, the total is added up:
+
+    -5 points: 2 golf items.
+    -4 points: 1 golf item.
+    -3 points: 10 pickups.
+    -2 points: 3 pickups.
+    -1 point: 1 pickup.
+    0 points: Nothing.
+    1 point: -1 coin.
+    2 points: -1 coin, -1 bomb.
+    3 points: -1 coin, -1 bomb, -1 key.
+    4 points: -1 coin, -1 bomb, -1 key, +1 broken heart.
+    5 points: -1 coin, -1 bomb, -1 key, +3 broken heart.
+
+  + The Underground
+    London Underground Theme.
+    Every room, game pauses and a question is asked.
+    Two groups of enemies are displayed, one is the original enemies in the room and the other
+    is a new group of enemies. Sometimes they are both completely different.
+    Player chooses which ones they want to face. Enemies are then placed back.
+    A 'train' animation runs over the group you didn't choose, 'killing' them.
+    In boss rooms, the original boss + another similar boss are suggested. Same for mini-boss rooms.
+
+  + Pica Paradise
+    Every pedestal gives the player 3 - 5 trinkets instead of the item. The higher
+    the quality the bigger the haul. Every pill is a gulp pill.
+
+    In the super secret room, 33% chance to find Mom's Purse.
+
+    Every trinket drop is instead a 'trinket item'.
+
+    Lose your trinkets upon traveling to this world.
+
+    Mr: Iron -
+    'Welcome to Pica Paradise!'
+    'I have a feeling you'll like it here.'
+    'What are you craving?'.
+
 
   Quest
 Quests are

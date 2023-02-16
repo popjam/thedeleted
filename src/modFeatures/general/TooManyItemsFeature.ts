@@ -4,13 +4,17 @@ import {
   getPlayerIndex,
   ModCallbackCustom,
   PlayerIndex,
-  sfxManager,
 } from "isaacscript-common";
 import { fprint } from "../../helper/printHelper";
 import { CustomModFeature } from "../CustomModFeature";
 
 export interface TooManyItemsInstance {
-  playerIndex?: PlayerIndex;
+  player: PlayerIndex;
+  limit: number;
+}
+
+export interface TooManyItemsInput {
+  player: PlayerIndex;
   limit: number;
 }
 
@@ -39,16 +43,19 @@ export class TooManyItemsFeature extends CustomModFeature<TooManyItemsInstance> 
    * If there are multiple subscribers, it will favor the most recent addition.
    */
   override subscribe(player: EntityPlayer, limit: number): number {
-    return this.subscribeWithInstance({
-      playerIndex: getPlayerIndex(player),
+    return this.subscribeWithInput({
+      player: getPlayerIndex(player),
       limit,
     });
   }
 
-  override subscribeWithInstance(instance: TooManyItemsInstance): number {
+  override subscribeWithInput(input: TooManyItemsInput): number {
     fprint("Subscribing to TooManyItemsFeature!");
 
-    return this.addInstance(instance);
+    return this.addInstance({
+      player: input.player,
+      limit: input.limit,
+    });
   }
 
   override unsubscribe(id: number): void {
@@ -66,14 +73,14 @@ export class TooManyItemsFeature extends CustomModFeature<TooManyItemsInstance> 
     const playerCollectiblesCount = player.GetCollectibleCount();
     // TODO: Account for pocket item / actives.
     const playerLimits = [...this.v.run.subscribers.values()]
-      .filter(
-        (value: TooManyItemsInstance) => value.playerIndex === playerIndex,
-      )
+      .filter((value: TooManyItemsInstance) => value.player === playerIndex)
       .map((value) => value.limit);
     const minLimit = Math.min(...playerLimits);
     if (playerCollectiblesCount > minLimit) {
       player.RemoveCollectible(collectibleType);
-      sfxManager.Play(POST_REMOVAL_SFX);
+      // ItemDisplayLibrary.queueItemDisplay(player, collectibleType);
+
+      // sfxManager.Play(POST_REMOVAL_SFX);
       // TODO: Add floating item animation.
     }
   }

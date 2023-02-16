@@ -2,7 +2,10 @@ import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { getRandomCollectibleType } from "../../../helper/collectibleHelper";
+import {
+  getRandomAssortmentOfCollectibles,
+  getRandomCollectibleType,
+} from "../../../helper/collectibleHelper";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { useActiveItemAtPosition } from "../../../helper/playerHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -37,6 +40,15 @@ export class UseActiveItemResponse extends Response {
     }
     this.aT = activeItem;
     return this;
+  }
+
+  /** Get collectibles mentioned. */
+  override getInvolvedCollectibles(): CollectibleType[] {
+    const active = this.getActiveItem();
+    if (typeof active === "object") {
+      return getRandomAssortmentOfCollectibles([1, 3], active);
+    }
+    return [active];
   }
 
   /**
@@ -105,6 +117,12 @@ export class UseActiveItemResponse extends Response {
       useActiveItemAtPosition(
         this.calculateActiveItem(),
         triggerData.onKillAction.Position,
+        player,
+      );
+    } else if (triggerData.onBombExplodedAction !== undefined) {
+      useActiveItemAtPosition(
+        this.calculateActiveItem(),
+        triggerData.onBombExplodedAction.bomb.Position,
         player,
       );
     } else {

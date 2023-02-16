@@ -19,6 +19,10 @@ import {
   sophosModeFin,
   sophosModeSetup,
 } from "../../features/modes/SOPHOS/SOPHOS";
+import {
+  zipbomberModeFin,
+  zipbomberModeSetup,
+} from "../../features/modes/ZIPBOMBER/ZIPBOMBER";
 
 /** Maps each Mode type to their respective setup function. */
 const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
@@ -26,6 +30,7 @@ const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
     [Mode.HAPPY99, (player: EntityPlayer) => happy99ModeSetup(player)],
     [Mode.ILOVEYOU, (player: EntityPlayer) => iLoveYouModeSetup(player)],
     [Mode.MORRIS, (player: EntityPlayer) => morrisModeSetup(player)],
+    [Mode.ZIPBOMBER, (player: EntityPlayer) => zipbomberModeSetup(player)],
     [Mode.SOPHOS, (player: EntityPlayer) => sophosModeSetup(player)],
     [Mode.BATTLEYE, (player: EntityPlayer) => battleyeModeSetup(player)],
   ]);
@@ -36,6 +41,7 @@ const MODE_FIN_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> = new Map(
     [Mode.HAPPY99, (player: EntityPlayer) => happy99ModeFin(player)],
     [Mode.ILOVEYOU, (player: EntityPlayer) => iLoveYouModeFin(player)],
     [Mode.MORRIS, (player: EntityPlayer) => morrisModeFin(player)],
+    [Mode.ZIPBOMBER, (player: EntityPlayer) => zipbomberModeFin(player)],
     [Mode.SOPHOS, (player: EntityPlayer) => sophosModeFin(player)],
     [Mode.BATTLEYE, (player: EntityPlayer) => battleyeModeFin(player)],
   ],

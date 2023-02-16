@@ -23,6 +23,15 @@ export class TemporaryCollectibleResponse extends Response {
   ro?: Action;
   c?: CollectibleType;
 
+  /** Remove On will be deep-copied. */
+  construct(collectible: CollectibleType, removeOn: Action): this {
+    return this.setCollectible(collectible).setRemoveOn(removeOn);
+  }
+
+  override getInvolvedCollectibles(): CollectibleType[] {
+    return [this.getCollectible()];
+  }
+
   getCollectible(): CollectibleType {
     return this.c ?? DEFAULT_COLLECTIBLE;
   }
@@ -32,10 +41,7 @@ export class TemporaryCollectibleResponse extends Response {
     return this;
   }
 
-  /**
-   * When to remove the collectible. When the action fires, the collectible will be removed. The
-   * provided Action will be deep-copied.
-   */
+  /** When to remove the collectible. When the action fires, the collectible will be removed. */
   getRemoveOn(): Action {
     return this.ro ?? DEFAULT_REMOVE_ON;
   }
@@ -45,7 +51,7 @@ export class TemporaryCollectibleResponse extends Response {
    * provided Action will be deep-copied.
    */
   setRemoveOn(action: Action): this {
-    this.ro = action;
+    this.ro = deepCopy<Action>(action);
     return this;
   }
 

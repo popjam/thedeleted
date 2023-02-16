@@ -11,6 +11,10 @@ export interface EveryItemIsInstance {
   collectibleType: CollectibleType;
 }
 
+export interface EveryItemIsInput {
+  collectibleType: CollectibleType;
+}
+
 /**
  * Once this feature is enabled, every item spawned will be of one CollectibleType.
  *
@@ -31,13 +35,13 @@ export class EveryItemIsFeature extends CustomModFeature<EveryItemIsInstance> {
    * If there are multiple subscribers, it will favor the most recent addition.
    */
   override subscribe(collectibleType: CollectibleType): number {
-    return this.subscribeWithInstance({ collectibleType });
+    return this.subscribeWithInput({ collectibleType });
   }
 
-  override subscribeWithInstance(instance: EveryItemIsInstance): number {
+  override subscribeWithInput(input: EveryItemIsInput): number {
     fprint("Subscribing to EveryItemIsFeature!");
 
-    return this.addInstance(instance);
+    return this.addInstance({ ...input });
   }
 
   override unsubscribe(id: number): void {

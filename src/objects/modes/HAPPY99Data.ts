@@ -34,5 +34,5 @@ export const HAPPY99Data: ModeData = {
     [CacheFlag.SPEED, 0.9],
   ]),
   itemActionSetBuilderReference:
-    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY99_DEFAULT,
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY_DEFAULT,
 };

@@ -29,3 +29,25 @@ export function getObjectKeyByValue<T>(
 ): string | undefined {
   return Object.keys(obj).find((key) => obj[key] === value);
 }
+
+/** Converts an object to a key:value printable string, taking into account objects in objects. */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+export function objectToString<T>(obj: any): string {
+  if (typeof obj !== "object") {
+    error(
+      `ObjectHelper.objectToString() was passed a non-object, it was passed a ${typeof obj}`,
+    );
+  }
+  const keys = Object.keys(obj as Record<string, T>);
+  const values = Object.values(obj as Record<string, T>);
+  let output = "";
+  for (let i = 0; i < keys.length; i++) {
+    const value = values[i];
+    if (typeof value === "object") {
+      output += `${keys[i]}: { ${objectToString(value)} }, `;
+    } else {
+      output += `${keys[i]}: ${values[i]}, `;
+    }
+  }
+  return output;
+}

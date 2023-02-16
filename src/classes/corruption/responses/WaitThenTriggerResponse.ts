@@ -1,3 +1,4 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import { GAME_FRAMES_PER_SECOND } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -27,6 +28,10 @@ export class WaitThenTriggerResponse extends Response {
     }
     this.r = response;
     return this;
+  }
+
+  override getInvolvedCollectibles(): CollectibleType[] {
+    return this.getResponse()?.getInvolvedCollectibles() ?? [];
   }
 
   /** The amount of seconds to wait before the Response triggers. */

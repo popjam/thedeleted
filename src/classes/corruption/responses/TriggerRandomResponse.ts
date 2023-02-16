@@ -1,3 +1,4 @@
+import { CollectibleType } from "isaac-typescript-definitions";
 import {
   getRandomFromWeightedArray,
   isArray,
@@ -26,6 +27,15 @@ export class TriggerRandomResponse extends Response {
     ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
   ): this {
     return this.addResponses(...responseOrWeightedArrayTuple);
+  }
+
+  override getInvolvedCollectibles(): CollectibleType[] {
+    const collectibles: CollectibleType[] = [];
+    for (const responseData of this.r) {
+      const [response] = responseData;
+      collectibles.push(...response.getInvolvedCollectibles());
+    }
+    return collectibles;
   }
 
   addResponses(

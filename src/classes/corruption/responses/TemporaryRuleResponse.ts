@@ -5,8 +5,11 @@ import { Rule } from "../../../enums/customModFeatures/rules";
 import { addActionsToPlayer } from "../../../features/corruption/effects/playerEffects";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getCMFFromRule } from "../../../maps/rules/ruleCMFMap";
-import { EveryItemIsInstance } from "../../../modFeatures/general/EveryItemIsFeature";
-import { CMFInstance, RulePlusInstance } from "../../../types/CMFInstance";
+import { EveryItemIsInput } from "../../../modFeatures/general/EveryItemIsFeature";
+import {
+  CMFInputs,
+  RulePlusInstance as RulePlusInput,
+} from "../../../types/CMFInstance";
 import { Action } from "../actions/Action";
 import { OnRoomAction } from "../actions/OnRoomAction";
 import { RemoveRuleResponse } from "./RemoveRuleResponse";
@@ -14,9 +17,9 @@ import { Response } from "./Response";
 
 const DEFAULT_REMOVE_ON = new OnRoomAction();
 const DEFAULT_REMOVAL_RESPONSE = new RemoveRuleResponse();
-const DEFAULT_RPI: RulePlusInstance = [
+const DEFAULT_RPI: RulePlusInput = [
   Rule.EVERY_ITEM_IS_RULE,
-  { collectibleType: CollectibleType.ABEL } as EveryItemIsInstance,
+  { collectibleType: CollectibleType.ABEL } as EveryItemIsInput,
 ];
 
 /**
@@ -28,9 +31,9 @@ const DEFAULT_RPI: RulePlusInstance = [
 export class TemporaryRuleResponse extends Response {
   override responseType: ResponseType = ResponseType.TEMPORARY_RULE;
   ro?: Action;
-  rpi?: RulePlusInstance;
+  rpi?: RulePlusInput;
 
-  construct<T extends CMFInstance>(
+  construct<T extends CMFInputs>(
     rule: Rule,
     instance: T,
     removeOn: Action,
@@ -40,18 +43,18 @@ export class TemporaryRuleResponse extends Response {
     return this;
   }
 
-  getRulePlusInstance(): RulePlusInstance {
+  getRulePlusInstance(): RulePlusInput {
     return this.rpi ?? DEFAULT_RPI;
   }
 
-  setRulePlusInstance(rule: Rule, instance: CMFInstance): this {
-    this.rpi = [rule, instance];
+  setRulePlusInstance(rule: Rule, input: CMFInputs): this {
+    this.rpi = [rule, input];
     return this;
   }
 
   /**
-   * When to remove the collectible. When the action fires, the collectible will be removed. The
-   * provided Action will be deep-copied.
+   * When to remove the collectible. When the action fires, the collectible will be removed. Does
+   * not deepCopy.
    */
   getRemoveOn(): Action {
     return this.ro ?? DEFAULT_REMOVE_ON;
@@ -62,7 +65,7 @@ export class TemporaryRuleResponse extends Response {
    * provided Action will be deep-copied.
    */
   setRemoveOn(action: Action): this {
-    this.ro = action;
+    this.ro = deepCopy<Action>(action);
     return this;
   }
 
@@ -89,7 +92,7 @@ export class TemporaryRuleResponse extends Response {
     const rule = rpi[0];
     const instance = rpi[1];
     const CMF = getCMFFromRule(rule);
-    const id = CMF.subscribeWithInstance(instance);
+    const id = CMF.subscribeWithInput(instance);
 
     // Add removal Action.
     addActionsToPlayer(player, this.generateRemoveOn(rule, id));

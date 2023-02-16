@@ -1,4 +1,5 @@
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import { facetPostGameStartedReordered } from "../classes/Facet";
 import { runIndexPostGameStartedReordered } from "../features/runIndex";
 
 export function postGameStartedReorderedInit(mod: ModUpgraded): void {
@@ -6,5 +7,6 @@ export function postGameStartedReorderedInit(mod: ModUpgraded): void {
 }
 
 function main(isContinued: boolean) {
+  facetPostGameStartedReordered(isContinued);
   runIndexPostGameStartedReordered(isContinued);
 }

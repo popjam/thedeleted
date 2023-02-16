@@ -1,10 +1,11 @@
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
-import { InvertedItemActionSet } from "../../classes/corruption/actionSets/InvertedItemActionSet";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/InvertedPassiveActionSet";
+import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { happy99DefaultBuilder } from "../../helper/builders/modes/HAPPY99Builders";
 import { getRandomCollectibleType } from "../../helper/collectibleHelper";
+import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   Builder,
   InvertedItemActionSetBuilder,
@@ -25,8 +26,8 @@ const INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE_MAP: ReadonlyMap<
       ),
   ],
   [
-    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY99_DEFAULT,
-    () => happy99DefaultBuilder(),
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY_DEFAULT,
+    (inputs: ActionSetBuilderInput) => happy99DefaultBuilder(inputs),
   ],
 ]);
 

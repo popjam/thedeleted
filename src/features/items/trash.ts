@@ -1,17 +1,20 @@
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { sfxManager } from "isaacscript-common";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
-import { mod } from "../../mod";
+import {
+  getLatestItemInPlayerInventory,
+  isPlayerInventoryEmpty,
+} from "../../helper/inventoryHelper";
 
 const SUCCESSFUL_TRASH_SFX = SoundEffectCustom.TRASH;
 
 export function trashPostUseItem(
-  collectibleType: CollectibleType,
-  rng: RNG,
+  _collectibleType: CollectibleType,
+  _rng: RNG,
   player: EntityPlayer,
-  useFlags: BitFlags<UseFlag>,
-  activeSlot: int,
-  customVarData: int,
+  _useFlags: BitFlags<UseFlag>,
+  _activeSlot: int,
+  _customVarData: int,
 ):
   | boolean
   | { Discharge: boolean; Remove: boolean; ShowAnim: boolean }
@@ -19,18 +22,22 @@ export function trashPostUseItem(
   return trashUse(player);
 }
 
+/**
+ * Trashes the latest item the player has picked up. This can include active items.
+ *
+ * TODO?: Stop it removing pocket items, and add rewards.
+ */
 function trashUse(
   player: EntityPlayer,
 ):
   | boolean
   | { Discharge: boolean; Remove: boolean; ShowAnim: boolean }
   | undefined {
-  const inventory = mod.getPlayerInventory(player);
-  if (inventory.length === 0) {
+  if (isPlayerInventoryEmpty(player)) {
     return;
   }
 
-  const latestItemInInventory = inventory[inventory.length - 1];
+  const latestItemInInventory = getLatestItemInPlayerInventory(player);
   if (latestItemInInventory === undefined) {
     return;
   }

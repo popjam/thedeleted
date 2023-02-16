@@ -1,5 +1,5 @@
+import { isPCActive } from "../../classes/facets/pc/PCFacet";
 import { mod } from "../../mod";
-import { isPCActive } from "./mainPC";
 
 /**
  * This file is responsible for the UI of the PC:

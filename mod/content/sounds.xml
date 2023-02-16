@@ -71,4 +71,9 @@
   <sound name="thedeleted_lock">
     <sample weight="1" path="thedeleted_lock.wav" />
   </sound>
+
+  <!-- PC Sound Effects -->
+  <sound name="thedeleted_pc_login">
+    <sample weight="1" path="thedeleted_pc_login.wav" />
+  </sound>
 </sounds>
