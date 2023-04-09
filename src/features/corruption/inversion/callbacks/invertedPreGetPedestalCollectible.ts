@@ -3,18 +3,28 @@
  * the player.
  */
 
-import { ColorDefault, getPlayerIndex } from "isaacscript-common";
+import {
+  clearCollectibleSprite,
+  ColorDefault,
+  getPlayerIndex,
+  isColor,
+} from "isaacscript-common";
+import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { fprint } from "../../../../helper/printHelper";
 import { stopPickupSounds } from "../../../../helper/soundHelper";
 import { isGlitchedCollectibleSubType } from "../../../../helper/tmtrainerHelper";
 import { mod } from "../../../../mod";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import { getAndSetInvertedItemActionSet } from "../../effects/itemEffects";
+import { getNonInvertedPickupActionSet } from "../../effects/pickupEffects";
 import {
-  getLastPickedUpInvertedCollectible,
-  setLastPickedUpInvertedCollectible,
+  getLastPickedUpCollectible,
+  isPedestalInPreGetPedestalStage,
+  PickupStage,
+  setLastPickedUpCollectible,
+  setLastPickedUpNonInvertedCollectibleActionSet,
 } from "../lastPickedUpInverted";
-import { isPedestalInverted } from "../pickupInversion";
+import { isPickupInverted } from "../pickupInversion";
 
 /**
  * Upon picking up an item, but before it is added to ItemQueue. If the item pedestal is inverted,
@@ -25,12 +35,28 @@ export function pickupInversionPreGetPedestalCollectible(
   player: EntityPlayer,
   pickup: EntityPickupCollectible,
 ): boolean | undefined {
-  const isInverted = isPedestalInverted(pickup);
+  if (isPedestalInPreGetPedestalStage(pickup)) {
+    return undefined;
+  }
+
+  const isInverted = isPickupInverted(pickup);
   if (isZazzinatorAny(pickup.SubType)) {
+    const lastPickedUpInvertedCollectible = getLastPickedUpCollectible(player);
+    if (lastPickedUpInvertedCollectible === undefined) {
+      return undefined;
+    }
+    const iconIsColor = isColor(
+      getAndSetInvertedItemActionSet(
+        lastPickedUpInvertedCollectible.collectibleType,
+      ).getIcon(),
+    );
+
     // Stop pickup sound. We will play our own sound effect later.
     mod.runNextGameFrame(() => {
       stopPickupSounds();
-      pickup.GetSprite().Color = ColorDefault;
+      if (!iconIsColor) {
+        pickup.GetSprite().Color = ColorDefault;
+      }
     });
 
     /**
@@ -38,21 +64,43 @@ export function pickupInversionPreGetPedestalCollectible(
      * sprite doesn't render behind it.
      */
     if (
-      isGlitchedCollectibleSubType(getLastPickedUpInvertedCollectible(player))
+      isGlitchedCollectibleSubType(
+        lastPickedUpInvertedCollectible.collectibleType,
+      )
     ) {
       pickup.GetSprite().Color = Color(0, 0, 0, 0);
+    } else if (!iconIsColor) {
+      clearCollectibleSprite(pickup);
     }
     return undefined;
   }
   if (isInverted) {
     const itemActionSet = getAndSetInvertedItemActionSet(pickup.SubType);
     fprint(
-      `pickupInversion: ${getPlayerIndex(
-        player,
-      )} picked up an inverted item of subType: ${pickup.SubType}`,
+      `pickupInversion: ${getPlayerIndex(player)} picked up an inverted ${
+        itemActionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM
+          ? "active"
+          : "passive"
+      } of subType: ${pickup.SubType}`,
     );
-    setLastPickedUpInvertedCollectible(player, pickup.SubType);
     return itemActionSet.preGetPedestal(player, pickup);
   }
+  const itemActionSet = getNonInvertedPickupActionSet(pickup);
+  if (itemActionSet !== undefined) {
+    setLastPickedUpNonInvertedCollectibleActionSet(player, itemActionSet);
+    setLastPickedUpCollectible(player, {
+      collectibleType: pickup.SubType,
+      pickupStage: PickupStage.PRE_GET_PEDESTAL,
+      pickupIndex: mod.getPickupIndex(pickup),
+      inverted: false,
+    });
+    fprint(
+      `pickupInversion: ${getPlayerIndex(
+        player,
+      )} picked up a regular item with action set`,
+    );
+    return undefined;
+  }
+
   return undefined;
 }

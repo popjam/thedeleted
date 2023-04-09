@@ -44,7 +44,13 @@ export function doesFacetHaveSubscribers(facet: Facet | string): boolean {
   return count > 0;
 }
 
+/**
+ * Extension of ModFeature, to facilitate individual subscribers. Facets also auto-uninitialize upon
+ * the run ending, as they do not do it automatically, as well as auto-init upon exit/continue if
+ * there are subscribers.
+ */
 export class Facet extends ModFeature {
+  /** Subscribe to the Facet, if the Facet is not initialized, will do so. */
   subscribe(): void {
     const className = getTSTLClassName(this);
     if (className === undefined) {
@@ -59,6 +65,10 @@ export class Facet extends ModFeature {
     }
   }
 
+  /**
+   * Unsubscribe from the Facet, if the Facet is initialized and there are no more subscribers, will
+   * uninitialize it.
+   */
   unsubscribe(): void {
     const className = getTSTLClassName(this);
     if (className === undefined) {
@@ -74,6 +84,32 @@ export class Facet extends ModFeature {
     if (count - 1 <= 0 && this.initialized) {
       fprint(`Uninitialising ${className} due to unsubscribe().`);
       this.uninit();
+    }
+  }
+
+  /** Unsubscribes all subscribers from the Facet, uninitialising it if not already. */
+  unsubscribeAll(): void {
+    const className = getTSTLClassName(this);
+    if (className === undefined) {
+      error("Failed to get the class name.");
+    }
+    const count = v.run.facetSubscriberCount.get(className) ?? 0;
+    if (count <= 0) {
+      fprint("Tried to unsubscribe from a Facet that had no subscribers.");
+    } else {
+      fprint(`Unsubscribed from ${className} (sub count: ${count - 1}).`);
+      v.run.facetSubscriberCount.set(className, 0);
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${className} due to unsubscribeAll().`);
+      this.uninit();
+    }
+  }
+
+  /** Subscribes to the Facet if it has no subscribers and is uninitialized. */
+  subscribeIfNotAlready(): void {
+    if (!this.isInitialized()) {
+      this.subscribe();
     }
   }
 
@@ -105,6 +141,10 @@ export class Facet extends ModFeature {
   }
 }
 
+/**
+ * Function to easily set up a Facet (NOT initialize the actual Facet), this should be called in
+ * each Facet class file in an init() function.
+ */
 export function initGenericFacet(facet: typeof Facet, vObject?: object): Facet {
   // eslint-disable-next-line new-cap
   const newFacet = new facet(mod, false);
@@ -121,12 +161,9 @@ export function initGenericFacet(facet: typeof Facet, vObject?: object): Facet {
   return newFacet;
 }
 
-// POST_GAME_STARTED_REORDERED
-export function facetPostGameStartedReordered(isContinued: boolean): void {
-  if (!isContinued) {
-    return;
-  }
-
+// POST_GAME_STARTED_REORDERED, isContinued: TRUE. This is called when the game is exited and then
+// continued, and is used to reinitialize Facets.
+export function facetPostGameContinuedReordered(): void {
   // Reinitialize all Facets that have subscribers.
   for (const facet of allFacets) {
     fprint(`Trying to Re-Init Facet: ${getTSTLClassName(facet)}.`);

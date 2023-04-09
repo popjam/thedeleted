@@ -6,7 +6,7 @@ import {
   getConstituentsFromEntityID,
   VectorZero,
 } from "isaacscript-common";
-import { NPCID } from "../../enums/general/NPCID";
+import { NPCID } from "../../enums/general/ID/NPCID";
 import { getRandomAccessiblePosition } from "../../helper/entityHelper";
 import { fprint } from "../../helper/printHelper";
 import { mod } from "../../mod";
@@ -56,7 +56,7 @@ export class HybridNPCFeature extends CustomModFeature<HybridNPCInstance> {
     const instance = {
       npcs: [...input.npcs],
       current: 1,
-      index: persistentEntity[1],
+      index: persistentEntity.persistentIndex,
       time: GAME_FRAMES_PER_SECOND * 3,
     };
 

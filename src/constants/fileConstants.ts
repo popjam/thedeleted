@@ -11,6 +11,7 @@ export const TRANSITIONAL_GLITCH_SPRITESHEETS_PREFIX =
   "gfx/characters/costumes/bitflipTransition/";
 
 /** An array of all transitional glitch spritesheets. */
+// eslint-disable-next-line isaacscript/require-capital-const-assertions, isaacscript/require-capital-read-only
 export const TRANSITIONAL_GLITCH_SPRITES_ARRAY = [
   `${TRANSITIONAL_GLITCH_SPRITESHEETS_PREFIX}thedeleted_glitch2`,
   `${TRANSITIONAL_GLITCH_SPRITESHEETS_PREFIX}thedeleted_glitch3`,

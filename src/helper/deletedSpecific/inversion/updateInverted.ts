@@ -3,18 +3,20 @@
  * matches their inversion status and ActionSets.
  */
 
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
+import { CollectibleType } from "isaac-typescript-definitions";
 import {
   ColorDefault,
   getCollectibleGfxFilename,
   getCollectibles,
+  isCollectible,
   isGlitchedCollectible,
   setCollectibleSprite,
 } from "isaacscript-common";
 import { returnCorruptedCollectibleSpriteToNormal } from "../../../classes/facets/CorruptedCollectibleSpriteFacet";
 import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import { getNonInvertedPickupActionSet } from "../../../features/corruption/effects/pickupEffects";
-import { isPedestalInverted } from "../../../features/corruption/inversion/pickupInversion";
+import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
+import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
@@ -31,14 +33,28 @@ import { fprint } from "../../printHelper";
  * If a pedestal is a 'ZAZZ' item, it needs to be changed. This is done by tracking the most
  * recently removed inverted items from the player.
  */
-export function updatePedestal(pedestal: EntityPickupCollectible): void {
+export function updatePedestal(
+  pedestal: EntityPickupCollectible,
+  inputs?: ActionSetBuilderInput,
+): void {
   fprint(
-    `updatePedestal: ${pedestal.SubType}, is inverted: ${isPedestalInverted(
+    `updatePedestal: ${pedestal.SubType}, is inverted: ${isPickupInverted(
       pedestal,
     )}`,
   );
-  if (isPedestalInverted(pedestal)) {
-    const invertedActionSet = getAndSetInvertedItemActionSet(pedestal.SubType);
+  /** If pedestal has a custom sprite, return it to normal. */
+  returnCorruptedCollectibleSpriteToNormal(pedestal);
+
+  /** Update the appearance. */
+  if (pedestal.SubType === CollectibleType.NULL) {
+    return;
+  }
+  if (isPickupInverted(pedestal)) {
+    fprint(`updatePedestal: ${pedestal.SubType} is inverted`);
+    const invertedActionSet = getAndSetInvertedItemActionSet(
+      pedestal.SubType,
+      inputs,
+    );
     invertedActionSet.updateAppearance(pedestal);
   } else {
     const nonInvertedActionSet = getNonInvertedPickupActionSet(pedestal);
@@ -53,7 +69,9 @@ export function updatePedestal(pedestal: EntityPickupCollectible): void {
 
 /** Scans all pedestals in the room. */
 export function updatePedestalsInRoom(): void {
-  getCollectibles().forEach((pedestal) => updatePedestal(pedestal));
+  getCollectibles().forEach((pedestal) => {
+    updatePedestal(pedestal);
+  });
 }
 
 /**
@@ -79,15 +97,21 @@ function returnPedestalAppearanceToNormal(pedestal: EntityPickupCollectible) {
 }
 
 /**
- * This function is called whenever a pickup inits, or whenever a pickups inversion or ActionSet
- * changes. For example upon bitflipping, all the pedestals in the room are updated to account for
- * the new EID description and change in pedestal appearance.
+ * This function is called whenever a pickup inits, or whenever a pickups inversion or subType or
+ * ActionSet changes. For example upon bitflipping, all the pedestals in the room are updated to
+ * account for the new EID description and change in pedestal appearance.
  */
 export function updatePickup(pickup: EntityPickup): void {
-  if (pickup.Variant === PickupVariant.COLLECTIBLE) {
-    updatePedestal(pickup as EntityPickupCollectible);
+  if (isCollectible(pickup)) {
+    updatePedestal(pickup);
     return;
   }
-  const actionSet = getNonInvertedPickupActionSet(pickup);
-  actionSet?.updateAppearance(pickup);
+  fprint(
+    `Updating pickup: ${pickup.Type}, ${pickup.Variant}, ${pickup.SubType}.`,
+  );
+  const nonInvertedActionSet = getNonInvertedPickupActionSet(pickup);
+  if (nonInvertedActionSet === undefined) {
+    return;
+  }
+  nonInvertedActionSet.updateAppearance(pickup);
 }

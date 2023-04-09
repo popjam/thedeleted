@@ -66,11 +66,11 @@ const ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP: ReadonlyMap<string, CollectibleType> =
   ]);
 
 /**
- * Get the Zazzinator active item that corresponds to the given charge type and charge. Returns
- * undefined if there is no corresponding Zazzinator active item.
+ * Get the Zazzinator active item that corresponds to the given charge type and charge.
  *
  * @param chargeType The charge type of the active item.
  * @param charge The charge of the active item.
+ * @param copied
  * @returns The Zazzinator active item that corresponds to the given charge type and charge.
  */
 export function getZazzActiveFromCharge(
@@ -91,11 +91,10 @@ export function getZazzActiveFromCharge(
 /** Get the ZAZZ active based on the Inverted Action Set. */
 export function getZazzActiveFromInvertedActiveActionSet(
   actionSet: InvertedActiveActionSet,
-  copied = false,
 ): CollectibleType {
   return getZazzActiveFromCharge(
     actionSet.getChargeType(),
     actionSet.getCharges(),
-    copied,
+    actionSet.copy,
   );
 }

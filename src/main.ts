@@ -8,10 +8,10 @@ import { postBombInitLateInit } from "./callbacks/postBombInitLate";
 import { postEntityKillInit } from "./callbacks/postEntityKill";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
 import { postItemPickupInit } from "./callbacks/postItemPickup";
+import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
 import { postNewLevelReorderedInit } from "./callbacks/postNewLevelReordered";
 import { postNewRoomInit } from "./callbacks/postNewRoom";
 import { postNewRoomReorderedInit } from "./callbacks/postNewRoomReordered";
-import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
 import { postPeffectUpdateReorderedInit } from "./callbacks/postPeffectUpdateReordered";
 import { postPickupChangedInit } from "./callbacks/postPickupChanged";
 import { postPickupCollectInit } from "./callbacks/postPickupCollect";
@@ -29,23 +29,21 @@ import { preGetPedestalInit } from "./callbacks/preGetPedestal";
 import { preItemPickupInit } from "./callbacks/preItemPickup";
 import { preNewLevelReorderedInit } from "./callbacks/preNewLevel";
 import { prePickupCollisionInit } from "./callbacks/prePickupCollision";
+import { prePlayerCollisionInit } from "./callbacks/prePlayerCollision";
+import { InvertedActiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import { InvertedPassiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import { NonInvertedPickupActionSet } from "./classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { OnDamageAction } from "./classes/corruption/actions/OnDamageAction";
 import { OnFloorAction } from "./classes/corruption/actions/OnFloorAction";
 import { OnKillAction } from "./classes/corruption/actions/OnKillAction";
 import { OnObtainAction } from "./classes/corruption/actions/OnObtainAction";
 import { OnRoomAction } from "./classes/corruption/actions/OnRoomAction";
-import { InvertedActiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedPassiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { NonInvertedPickupActionSet } from "./classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { RemoveActionResponse } from "./classes/corruption/responses/RemoveActionResponse";
 import { RemoveCollectibleResponse } from "./classes/corruption/responses/RemoveCollectibleResponse";
 import { RemoveRuleResponse } from "./classes/corruption/responses/RemoveRuleResponse";
 import { SpawnNPCResponse } from "./classes/corruption/responses/SpawnNPCResponse";
 import { SpawnPickupResponse } from "./classes/corruption/responses/SpawnPickupResponse";
-import {
-  TemporaryActionResponse,
-  temporaryActionResponseInit,
-} from "./classes/corruption/responses/TemporaryActionResponse";
+import { TemporaryActionResponse } from "./classes/corruption/responses/TemporaryActionResponse";
 import { TemporaryCollectibleResponse } from "./classes/corruption/responses/TemporaryCollectibleResponse";
 import { TemporaryRuleResponse } from "./classes/corruption/responses/TemporaryRuleResponse";
 import { TriggerInSequenceResponse } from "./classes/corruption/responses/TriggerInSequence";
@@ -53,38 +51,22 @@ import { TriggerOverTimeResponse } from "./classes/corruption/responses/TriggerO
 import { TriggerRandomResponse } from "./classes/corruption/responses/TriggerRandomResponse";
 import { UseActiveItemResponse } from "./classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "./classes/corruption/responses/WaitThenTriggerResponse";
-import { facetInit } from "./classes/Facet";
 import { initCorruptedCollectibleSpriteFacet } from "./classes/facets/CorruptedCollectibleSpriteFacet";
+import { initHUDRenderingFacet } from "./classes/facets/CustomActiveFacet";
 import { initExampleFacet } from "./classes/facets/ExampleFacet";
-import { initPCFacet } from "./classes/facets/pc/PCFacet";
 import { initRenderOverHeadFacet } from "./classes/facets/RenderOverHeadFacet";
+import { initBolsterNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
+import { initFreezeNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
+import { initHybridNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/HybridNPCFacet";
+import { initUnstableEntityFacet } from "./classes/facets/entityModifiers.ts/UnstableEntityFacet";
+import { initEveryItemIsFacet } from "./classes/facets/entityModifiers.ts/pickupModifiers/EveryItemIsFacet";
+import { initPCFacet } from "./classes/facets/pc/PCFacet";
+import { LevelOneWorm } from "./classes/worms/LevelOneWorm";
 import { Mode } from "./enums/modes/Mode";
+import { FEATURE_INIT_FUNCTIONS } from "./features";
 import { initEID } from "./features/compatibility/EID/EIDInit";
 import { addTestingCommands } from "./features/console/testing";
-import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
-import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
-import { pickupEffectsInit } from "./features/corruption/effects/pickupEffects";
-import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
-import { bombInventoryInit } from "./features/corruption/inventory/bombInventory";
-import { invertedItemCorruptInit } from "./features/corruption/inventory/itemInventory";
-import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
-import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
-import { inversionInit } from "./features/corruption/inversion/playerInversion";
-import { backdropInit } from "./features/general/backdropHelper";
-import { playerStatsInit } from "./features/general/playerStats";
-import { RNGHelperInit } from "./features/general/RNGHelper";
-import { temporaryItemsInit } from "./features/general/temporaryItems";
-import { happy99Init } from "./features/modes/HAPPY99/HAPPY99";
-import { iLoveYouInit } from "./features/modes/ILOVEYOU/ILOVEYOU";
-import { modeInit } from "./features/modes/mode";
-import { zipbomberInit } from "./features/modes/ZIPBOMBER/ZIPBOMBER";
-import { uiPCInit } from "./features/pc/uiPC";
-import { runIndexInit } from "./features/runIndex";
-import { EIDSettingsInit } from "./features/settings/EIDSettings";
-import { GeneralSettingsInit } from "./features/settings/GeneralSettings";
-import { happy99SettingsInit } from "./features/settings/HAPPY99Settings";
-import { sophosSettingsInit } from "./features/settings/SOPHOSSettings";
-import { getModePlayerType, MODE_DATA_MAP } from "./maps/modes/modeMap";
+import { MODE_DATA_MAP, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
 
 const IS_DEV = true;
@@ -106,31 +88,10 @@ function initFeatures() {
   if (IS_DEV) {
     devInit();
   }
-  uiPCInit();
-  backdropInit();
-  inversionInit();
-  modeInit();
-  happy99Init();
-  iLoveYouInit();
-  pickupInversionInit();
-  playerEffectsInit();
-  itemEffectsInit();
-  corruptionGenerationInit();
-  EIDSettingsInit();
-  runIndexInit();
-  temporaryItemsInit();
-  playerStatsInit();
-  happy99SettingsInit();
-  sophosSettingsInit();
-  pickupEffectsInit();
-  invertedItemCorruptInit();
-  zipbomberInit();
-  bombInventoryInit();
-  temporaryActionResponseInit();
-  RNGHelperInit();
-  GeneralSettingsInit();
-  lastPickedUpInvertedCollectibleInit();
-  facetInit();
+
+  FEATURE_INIT_FUNCTIONS.forEach((initFunction) => {
+    initFunction();
+  });
 }
 
 /** Initialize mod features for dev. */
@@ -171,6 +132,7 @@ function initCallbacks() {
   preItemPickupInit(mod);
   preGameExitInit(mod);
   postPickupChangedInit(mod);
+  prePlayerCollisionInit(mod);
 }
 
 /** Initialize External mods if they exist. */
@@ -218,6 +180,7 @@ function initClasses() {
     RemoveActionResponse,
     SpawnNPCResponse,
     SpawnPickupResponse,
+    LevelOneWorm,
   );
 }
 
@@ -226,4 +189,10 @@ function initFacets() {
   initCorruptedCollectibleSpriteFacet();
   initRenderOverHeadFacet();
   initPCFacet();
+  initUnstableEntityFacet();
+  initHybridNPCFacet();
+  initFreezeNPCFacet();
+  initBolsterNPCFacet();
+  initEveryItemIsFacet();
+  initHUDRenderingFacet();
 }

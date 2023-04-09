@@ -1,29 +1,5 @@
-import {
-  BackdropType,
-  CollectibleType,
-  UseFlag,
-} from "isaac-typescript-definitions";
-import { game, getPlayerIndex } from "isaacscript-common";
-import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
-import {
-  removeAllCostumes,
-  restoreAllCostumes,
-} from "../../helper/costumeHelper";
-import { setAllPedestalsOnLevelInversion } from "../../helper/deletedSpecific/inversion/pedestalInversion";
-import { fprint } from "../../helper/printHelper";
-import {
-  isPlayerInverted,
-  setPlayerInversion,
-} from "../corruption/inversion/playerInversion";
-import {
-  overrideBackdrop,
-  removeOverriddenBackdrop,
-} from "../general/backdropHelper";
-
-const NORMAL_TO_INVERTED_SFX = SoundEffectCustom.BITFLIP_IN;
-const INVERTED_TO_NORMAL_SFX = SoundEffectCustom.BITFLIP_OUT;
-const SCREEN_SHAKE_TIMEOUT = 10;
-const INVERTED_WORLD_BACKDROP = BackdropType.ERROR_ROOM;
+import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import { invertPlayer } from "../../helper/deletedSpecific/inversion/playerInversion";
 
 export function bitflipPostUseItem(
   collectibleType: CollectibleType,
@@ -41,25 +17,6 @@ export function bitflipPostUseItem(
  * pre-existing items on the floor to that of the players' new inversion status.
  */
 function bitFlipUse(player: EntityPlayer): boolean {
-  const isInverted = isPlayerInverted(player);
-  fprint(
-    `${getPlayerIndex(player)} is bitflipping to become ${
-      isInverted ? "non-inverted" : "inverted"
-    }`,
-  );
-  setPlayerInversion(player, !isInverted);
-  setAllPedestalsOnLevelInversion(!isInverted, undefined, { player });
-  game.ShakeScreen(SCREEN_SHAKE_TIMEOUT);
-  if (!isInverted) {
-    // NON-INVERTED --> INVERTED
-    SFXManager().Play(NORMAL_TO_INVERTED_SFX);
-    overrideBackdrop(INVERTED_WORLD_BACKDROP);
-    removeAllCostumes(player);
-  } else {
-    // INVERTED --> NON-INVERTED
-    SFXManager().Play(INVERTED_TO_NORMAL_SFX);
-    removeOverriddenBackdrop();
-    restoreAllCostumes(player);
-  }
+  invertPlayer(player);
   return false;
 }

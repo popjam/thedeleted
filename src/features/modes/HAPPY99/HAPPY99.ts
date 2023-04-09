@@ -1,16 +1,5 @@
-import {
-  CollectibleType,
-  DamageFlag,
-  EffectVariant,
-  EntityType,
-  PickupVariant,
-} from "isaac-typescript-definitions";
-import {
-  getPlayerIndex,
-  playerAddCollectible,
-  spawn,
-  spawnEffect,
-} from "isaacscript-common";
+import { EffectVariant } from "isaac-typescript-definitions";
+import { getPlayerIndex, spawnEffect } from "isaacscript-common";
 import { Mode } from "../../../enums/modes/Mode";
 import { fprint } from "../../../helper/printHelper";
 import { getModeData } from "../../../maps/modes/modeMap";
@@ -39,31 +28,5 @@ export function happy99PostPlayerFatalDamage(
 ): boolean | undefined {
   spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
   spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
-  return undefined;
-}
-
-/** Triggers all OnDamageActions for all players. */
-export function happyTestDMG(
-  entity: Entity,
-  amount: float,
-  damageFlags: BitFlags<DamageFlag>,
-  source: EntityRef,
-  countdownFrames: int,
-): boolean | undefined {
-  const player = entity.ToPlayer();
-  if (player === undefined) {
-    return;
-  }
-
-  player.AddCollectible(CollectibleType.TMTRAINER, 0, false);
-  const collectible = spawn(
-    EntityType.PICKUP,
-    PickupVariant.COLLECTIBLE,
-    CollectibleType.SAD_ONION,
-    Vector(0, 0),
-  );
-  player.RemoveCollectible(CollectibleType.TMTRAINER);
-  collectible.Remove();
-  playerAddCollectible(player, collectible.SubType as CollectibleType);
   return undefined;
 }

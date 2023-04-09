@@ -1,6 +1,6 @@
 import { PickupVariant } from "isaac-typescript-definitions";
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { sophosPostPickupInitFirst } from "../features/modes/SOPHOS/SOPHOS";
+import { sophosPostCollectibleInitFirst } from "../features/modes/SOPHOS/SOPHOS";
 
 export function postPickupInitFirst(mod: ModUpgraded): void {
   mod.AddCallbackCustom(
@@ -11,5 +11,5 @@ export function postPickupInitFirst(mod: ModUpgraded): void {
 }
 
 function main(pickup: EntityPickup) {
-  sophosPostPickupInitFirst(pickup as EntityPickupCollectible);
+  sophosPostCollectibleInitFirst(pickup as EntityPickupCollectible);
 }

@@ -11,7 +11,12 @@ function main(shouldSave: boolean) {
   if (!shouldSave) {
     // The run has ended:
     runEndedMain();
+  } else {
+    // The run has been saved, but not ended:
+    runSavedMain();
   }
 }
 
 function runEndedMain() {}
+
+function runSavedMain() {}

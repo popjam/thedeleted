@@ -33,8 +33,12 @@ export function isPlayerInverted(player: EntityPlayer): boolean {
   return v.run.inversionStatus.getAndSetDefault(getPlayerIndex(player));
 }
 
-/** Set the specified players' inversion status. */
-export function setPlayerInversion(
+/**
+ * Set the specified players' inversion status. This should NOT be used as a general function to
+ * invert the player as it does not update the world. Should use 'invertPlayer' instead.
+ */
+// eslint-disable-next-line no-underscore-dangle
+export function _setPlayerInversion(
   player: EntityPlayer,
   inversion: boolean,
 ): void {

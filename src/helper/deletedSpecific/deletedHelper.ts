@@ -25,3 +25,15 @@ export function isPlayerTaintedDeleted(player: EntityPlayer): boolean {
 export function isModeTainted(mode: Mode): boolean {
   return getModeData(mode).characterType === CharacterType.TAINTED;
 }
+
+/**
+ * Get the color associated with the Deleted mode. If the player is not a Deleted or the mode does
+ * not have a main color, returns undefined.
+ */
+export function getPlayerMainColor(player: EntityPlayer): Color | undefined {
+  const mode = PLAYERTYPE_MODE_MAP.get(player.GetPlayerType());
+  if (mode !== undefined) {
+    return getModeData(mode).mainColor;
+  }
+  return undefined;
+}

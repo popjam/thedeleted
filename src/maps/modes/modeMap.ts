@@ -6,6 +6,7 @@ import { BATTLEYEData } from "../../objects/modes/BATTLEYEData";
 import { HAPPY99Data } from "../../objects/modes/HAPPY99Data";
 import { ILOVEYOUData } from "../../objects/modes/ILOVEYOUData";
 import { MORRISData } from "../../objects/modes/MORRISData";
+import { MYDOOMData } from "../../objects/modes/MYDOOMData";
 import { SOPHOSData } from "../../objects/modes/SOPHOSData";
 import { ZIPBOMBERData } from "../../objects/modes/ZIPBOMBERData";
 
@@ -15,6 +16,7 @@ export const MODE_DATA_MAP: ReadonlyMap<Mode, ModeData> = new Map([
   [Mode.ILOVEYOU, ILOVEYOUData],
   [Mode.MORRIS, MORRISData],
   [Mode.ZIPBOMBER, ZIPBOMBERData],
+  [Mode.MYDOOM, MYDOOMData],
   [Mode.SOPHOS, SOPHOSData],
   [Mode.BATTLEYE, BATTLEYEData],
   // [Mode.ILOVEYOU, ILOVEYOUData], [Mode.MORRIS, MORRISData], [Mode.ZIPBOMBER, ZIPBOMBERData],
@@ -29,6 +31,7 @@ export const MODE_PLAYERTYPE_MAP: ReadonlyMap<Mode, PlayerType> = new Map([
   [Mode.ILOVEYOU, PlayerTypeCustom.DELETED_ILOVEYOU],
   [Mode.MORRIS, PlayerTypeCustom.DELETED_MORRIS],
   [Mode.ZIPBOMBER, PlayerTypeCustom.DELETED_ZIPBOMBER],
+  [Mode.MYDOOM, PlayerTypeCustom.DELETED_MYDOOM],
   [Mode.SOPHOS, PlayerTypeCustom.T_DELETED_SOPHOS],
   [Mode.BATTLEYE, PlayerTypeCustom.T_DELETED_BATTLEYE],
 ]);
@@ -39,6 +42,7 @@ export const PLAYERTYPE_MODE_MAP: ReadonlyMap<PlayerType, Mode> = new Map([
   [PlayerTypeCustom.DELETED_ILOVEYOU, Mode.ILOVEYOU],
   [PlayerTypeCustom.DELETED_MORRIS, Mode.MORRIS],
   [PlayerTypeCustom.DELETED_ZIPBOMBER, Mode.ZIPBOMBER],
+  [PlayerTypeCustom.DELETED_MYDOOM, Mode.MYDOOM],
   [PlayerTypeCustom.T_DELETED_SOPHOS, Mode.SOPHOS],
   [PlayerTypeCustom.T_DELETED_BATTLEYE, Mode.BATTLEYE],
 ]);

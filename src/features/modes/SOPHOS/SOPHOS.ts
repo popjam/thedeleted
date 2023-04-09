@@ -4,10 +4,11 @@ import { getPlayersOfType, setCollectibleGlitched } from "isaacscript-common";
 import { PlayerTypeCustom } from "../../../enums/general/PlayerTypeCustom";
 import { fprint } from "../../../helper/printHelper";
 import { rollPercentage } from "../../../types/general/Percentage";
-import { randomInRange, Range } from "../../../types/general/Range";
+import { Range, randomInRange } from "../../../types/general/Range";
 import { getSOPHOSChanceForNormalItemSetting } from "../../settings/SOPHOSSettings";
 
 const PLAYER_TYPE = PlayerTypeCustom.T_DELETED_SOPHOS;
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 const SHOP_PRICE_RANGE: Range = [1, 30];
 
 /** Initiate the player to the SOPHOS mode. */
@@ -21,7 +22,7 @@ export function sophosModeFin(player: EntityPlayer): void {}
  * will not become a glitched item, specified by SOPHOSChanceForNormalItemSetting.
  */
 // POST_PICKUP_INIT_LATE, PickupVariant.COLLECTIBLE
-export function sophosPostPickupInitFirst(
+export function sophosPostCollectibleInitFirst(
   collectible: EntityPickupCollectible,
 ): void {
   if (getPlayersOfType(PLAYER_TYPE).length === 0) {

@@ -1,12 +1,6 @@
 import { SoundEffect } from "isaac-typescript-definitions";
 import { getRandomEnumValue, sfxManager } from "isaacscript-common";
-
-const PICKUP_SOUNDS = [
-  SoundEffect.POWER_UP_1,
-  SoundEffect.POWER_UP_2,
-  SoundEffect.POWER_UP_3,
-  SoundEffect.CHOIR_UNLOCK,
-] as const;
+import { PICKUP_SOUNDS } from "../constants/soundConstants";
 
 /**
  * Stops the sounds that run after picking up any sort of item. You may need to run this in the next
@@ -14,7 +8,7 @@ const PICKUP_SOUNDS = [
  */
 export function stopPickupSounds(): void {
   PICKUP_SOUNDS.forEach((sound) => {
-    sfxManager.Stop(sound);
+    sfxManager.Stop(sound as SoundEffect);
   });
 }
 

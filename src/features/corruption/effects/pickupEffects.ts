@@ -5,11 +5,10 @@ import { mod } from "../../../mod";
 const v = {
   run: {
     /**
-     * Pickups with corrupted effects attached. Pickups do not spawn with default ActionSets, and
-     * need to have them added manually through other means.
+     * Non-inverted pickups with corrupted effects attached. Pickups do not spawn with default
+     * ActionSets, and need to have them added manually through other means.
      *
-     * These effects do not affect Inverted items (and differ in that they apply to a singular
-     * Entity instead of being shared for the same CollectibleType.)
+     * These effects do not affect inverted pickups.
      */
     pickup: new Map<PickupIndex, NonInvertedPickupActionSet>(),
   },

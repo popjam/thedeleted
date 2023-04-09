@@ -1,31 +1,38 @@
-import { CollectibleType, ModCallback } from "isaac-typescript-definitions";
 import {
-  Callback,
+  CollectibleSpriteLayer,
+  CollectibleType,
+  PlayerItemAnimation,
+} from "isaac-typescript-definitions";
+import {
+  CallbackCustom,
+  ModCallbackCustom,
+  PlayerIndex,
+  getEnumValues,
   getPlayerIndex,
   newCollectibleSprite,
-  PlayerIndex,
 } from "isaacscript-common";
 import { PLAYER_PICKUP_ANIMATION_RENDER_OFFSET } from "../../constants/renderConstants";
-import { renderCustomCollectibleSprite } from "../../helper/deletedSpecific/funnySprites";
+import { renderCorruptedCollectibleSprite } from "../../helper/deletedSpecific/funnySprites";
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
+import { newSparkleSprite } from "../../helper/spriteHelper";
 import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { Facet, initGenericFacet } from "../Facet";
 
-const SPARKLE_LAYER = "Sparkle";
-
+// eslint-disable-next-line isaacscript/require-v-registration
 const v = {
   room: {
     currentlyPickingUp: new Map<
       PlayerIndex,
-      [CorruptedCollectibleSprite | CollectibleType, boolean]
+      [CorruptedCollectibleSprite | CollectibleType, boolean, number]
     >(),
+    sparkleSprite: new Map<PlayerIndex, Sprite>(),
   },
 };
 
 let FACET: Facet | undefined;
 class RenderOverHeadFacet extends Facet {
-  @Callback(ModCallback.POST_PLAYER_RENDER)
+  @CallbackCustom(ModCallbackCustom.POST_PLAYER_RENDER_REORDERED)
   postPlayerRender(player: EntityPlayer, _renderOffset: Vector): void {
     const playerData = v.room.currentlyPickingUp.get(getPlayerIndex(player));
     if (playerData === undefined) {
@@ -34,34 +41,24 @@ class RenderOverHeadFacet extends Facet {
 
     const spriteToRender = playerData[0];
     const override = playerData[1];
+    const speed = playerData[2];
 
-    if (override) {
-      /** Only render if the Item Queue has something in it. */
-      if (!player.IsItemQueueEmpty()) {
-        renderAboveHead(player, spriteToRender);
-      } else {
-        fprint(
-          `Unsubscribing from RenderOverHeadFacet for player ${getPlayerIndex(
-            player,
-          )} (Item Queue is empty).`,
-        );
-        v.room.currentlyPickingUp.delete(getPlayerIndex(player));
-        FACET?.unsubscribe();
+    if (shouldRenderPickupSprite(player, override)) {
+      renderSparkleAboveHead(player);
+      for (let i = 1; i < speed; i++) {
+        player.GetSprite().Update();
       }
+      renderCollectibleAboveHead(player, spriteToRender);
     } else {
-      const playerSprite = player.GetSprite();
-      const animation = playerSprite.GetAnimation();
-      if (animation === "Pickup") {
-        renderAboveHead(player, spriteToRender);
-      } else {
-        fprint(
-          `Unsubscribing from RenderOverHeadFacet for player ${getPlayerIndex(
-            player,
-          )} (Animation is not 'Pickup').`,
-        );
-        v.room.currentlyPickingUp.delete(getPlayerIndex(player));
-        FACET?.unsubscribe();
-      }
+      fprint(
+        `Unsubscribing from RenderOverHeadFacet for player ${getPlayerIndex(
+          player,
+        )} (Pickup animation is finished).`,
+      );
+      const playerIndex = getPlayerIndex(player);
+      v.room.currentlyPickingUp.delete(playerIndex);
+      v.room.sparkleSprite.delete(playerIndex);
+      FACET?.unsubscribe();
     }
   }
 }
@@ -74,8 +71,18 @@ export function initRenderOverHeadFacet(): void {
 export function playPickupAnimationWithCustomSprite(
   player: EntityPlayer,
   spriteToRender: CorruptedCollectibleSprite | CollectibleType,
+  speed = 1,
+  sparkle = true,
 ): void {
-  player.PlayExtraAnimation("Pickup");
+  /** Pickup animation. */
+  player.PlayExtraAnimation(PlayerItemAnimation.PICKUP);
+
+  /** Sparkle. */
+  if (sparkle) {
+    const sparkleSprite = newSparkleSprite();
+    v.room.sparkleSprite.set(getPlayerIndex(player), sparkleSprite);
+  }
+
   fprint(
     `Subscribed to RenderOverHeadFacet for player ${getPlayerIndex(
       player,
@@ -85,6 +92,7 @@ export function playPickupAnimationWithCustomSprite(
   v.room.currentlyPickingUp.set(getPlayerIndex(player), [
     spriteToRender,
     false,
+    speed,
   ]);
   FACET?.subscribe();
 }
@@ -99,30 +107,80 @@ export function overridePickupAnimationWithCustomSprite(
       player,
     )} (overridePickupAnimationWithCustomSprite).`,
   );
-  v.room.currentlyPickingUp.set(getPlayerIndex(player), [spriteToRender, true]);
+  v.room.currentlyPickingUp.set(getPlayerIndex(player), [
+    spriteToRender,
+    true,
+    1,
+  ]);
   FACET?.subscribe();
 }
 
 /**
  * Renders the sprite above the players' head, in the same position where you'd find the sprite
  * during the 'Pickup' animation.
- * TODO: Add Sparkle.
+ *
+ * @param player The player to render the sprite above.
+ * @param spriteToRender The sprite to render.
+ * @param addSparkle Whether to add a sparkle effect to the sprite. When calling this function the
+ *                   sparkle effect may be already added (e.g for an invisible item), so set it to
+ *                   false.
  */
-function renderAboveHead(
+function renderCollectibleAboveHead(
   player: EntityPlayer,
   spriteToRender: CorruptedCollectibleSprite | CollectibleType,
 ) {
   if (typeof spriteToRender === "number") {
     const newSprite = newCollectibleSprite(spriteToRender);
     newSprite.Render(
-      worldToRenderPosition(player.Position.add(Vector(0, -20))),
+      worldToRenderPosition(
+        player.Position.add(PLAYER_PICKUP_ANIMATION_RENDER_OFFSET),
+      ),
     );
   } else {
-    renderCustomCollectibleSprite(
+    renderCorruptedCollectibleSprite(
       worldToRenderPosition(
         player.Position.add(PLAYER_PICKUP_ANIMATION_RENDER_OFFSET),
       ),
       spriteToRender,
     );
   }
+}
+
+function renderSparkleAboveHead(player: EntityPlayer) {
+  const sparkle = v.room.sparkleSprite.get(getPlayerIndex(player));
+  if (sparkle !== undefined) {
+    fprint(`Updating sparkle sprite for player ${getPlayerIndex(player)}.`);
+    sparkle.Update();
+    sparkle.RenderLayer(
+      CollectibleSpriteLayer.SPARKLE,
+      worldToRenderPosition(player.Position.add(Vector(0, -40))),
+    );
+  }
+}
+
+function shouldRenderPickupSprite(
+  player: EntityPlayer,
+  override: boolean,
+): boolean {
+  if (override) {
+    if (player.IsItemQueueEmpty()) {
+      return false;
+    }
+    return true;
+  }
+
+  const playerSprite = player.GetSprite();
+  const animation = playerSprite.GetAnimation();
+
+  /** Check if animation is in PlayerItemAnimation enum. */
+  const pickupAnimations: string[] = getEnumValues(PlayerItemAnimation);
+  if (!pickupAnimations.includes(animation)) {
+    return false;
+  }
+
+  if (playerSprite.GetFrame() > 34) {
+    return false;
+  }
+
+  return true;
 }

@@ -9,50 +9,52 @@
   <active description="Trash Passive" gfx="trash.png" maxcharges="6" name="Trash" chargetype="normal" hidden="true" tags="quest" />
   <!-- Extract !-->
   <active description="40 days remaining" gfx="thedeleted_extract.png" maxcharges="0" name="Extract" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Extract Fire!-->
+  <active description="20 days remaining" gfx="thedeleted_extract_fire.png" maxcharges="0" name=" Extract" chargetype="normal" hidden="true" tags="quest" />
   <!-- zzazzinator passive-->
   <passive description="Be careful.." gfx="zazzinator.png" name="Corrupted Passive" quality="2" hidden="true" />
 
   <!-- zazzinator actives !-->
 
   <!-- 0 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="0" name=" " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="0" name=" " chargetype="normal" hidden="true" />
 
   <!-- 0 normal charge part 2 !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="0" name=" ." chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="0" name=" ." chargetype="normal" hidden="true" />
 
   <!-- 1 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="1" name="  " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="1" name="  " chargetype="normal" hidden="true" />
 
   <!-- 2 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="2" name="   " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="2" name="   " chargetype="normal" hidden="true" />
 
   <!-- 3 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="3" name="    " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="3" name="    " chargetype="normal" hidden="true" />
 
   <!-- 4 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="4" name="     " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="4" name="     " chargetype="normal" hidden="true" />
 
   <!-- 5 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="5" name="      " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="5" name="      " chargetype="normal" hidden="true" />
 
   <!-- 6 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="6" name="       " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="6" name="       " chargetype="normal" hidden="true" />
 
   <!-- 7 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="7" name="        " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="7" name="        " chargetype="normal" hidden="true" />
 
   <!-- 8 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="8" name="         " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="8" name="         " chargetype="normal" hidden="true" />
 
   <!-- 9 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="9" name="          " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="9" name="          " chargetype="normal" hidden="true" />
 
   <!-- 10 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="10" name="           " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="10" name="           " chargetype="normal" hidden="true" />
 
   <!-- 11 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="11" name="            " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="11" name="            " chargetype="normal" hidden="true" />
 
   <!-- 12 normal charge !-->
-  <active description="Be careful.." gfx="zazzinator.png" maxcharges="12" name="             " chargetype="normal" hidden="true" />
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="12" name="             " chargetype="normal" hidden="true" />
 </items>

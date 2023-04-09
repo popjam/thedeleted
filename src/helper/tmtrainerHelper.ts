@@ -10,9 +10,8 @@ const TMTRAINER_FIND_ACTIVE_ITEM_LIMIT = 200;
  * Returns a random TMTRAINER CollectibleType. This is done by temporarily giving the player
  * TMTRAINER, and spawning collectibles, giving them to the player then removing them.
  */
-export function getRandomTMTRAINERItem(
-  player: EntityPlayer,
-): EntityPickupCollectible {
+export function getRandomTMTRAINERItem(): EntityPickupCollectible {
+  const player = Isaac.GetPlayer();
   const hasTMTRAINER = player.HasCollectible(CollectibleType.TMTRAINER);
   if (!hasTMTRAINER) {
     player.AddCollectible(CollectibleType.TMTRAINER, 0, false);

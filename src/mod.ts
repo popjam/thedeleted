@@ -19,6 +19,8 @@ const MOD_FEATURES = [
   ISCFeature.COLLECTIBLE_ITEM_POOL_TYPE,
   ISCFeature.PERSISTENT_ENTITIES,
   ISCFeature.PAUSE,
+  ISCFeature.ROOM_HISTORY,
+  ISCFeature.DISABLE_INPUTS,
 ] as const;
 // export const ItemDisplayLibrary = CCO.ItemDisplay.API;
 

@@ -1,7 +1,7 @@
 import { ActiveSlot, PlayerType } from "isaac-typescript-definitions";
 import {
+  addCollectible,
   getPlayerIndex,
-  playerAddCollectible,
   setActiveItem,
   setPlayerHealth,
 } from "isaacscript-common";
@@ -75,7 +75,7 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
     setActiveItem(player, modeData.startingPocket, ActiveSlot.POCKET);
   }
   if (modeData.startingItems !== undefined) {
-    playerAddCollectible(player, ...modeData.startingItems);
+    addCollectible(player, ...modeData.startingItems);
   }
   if (modeData.itemActionSetBuilderReference !== undefined) {
     setPlayerInvertedItemActionSetBuilderReference(

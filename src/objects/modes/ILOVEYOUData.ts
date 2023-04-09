@@ -1,11 +1,12 @@
 import { CacheFlag } from "isaac-typescript-definitions";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about ILOVEYOU. */
-// eslint-disable-next-line isaacscript/require-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const ILOVEYOUData: ModeData = {
   description: "This is ILOVEYOU's description",
   birthright: "This is ILOVEYOU's birthright description",
@@ -15,8 +16,8 @@ export const ILOVEYOUData: ModeData = {
   startingKeys: 0,
   startingCoins: 0,
   startingHealth: {
-    maxHearts: 6,
-    hearts: 6,
+    maxHearts: 4,
+    hearts: 4,
     eternalHearts: 0,
     soulHearts: 0,
     boneHearts: 0,
@@ -32,4 +33,6 @@ export const ILOVEYOUData: ModeData = {
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],
   ]),
+  itemActionSetBuilderReference:
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_ILOVEYOU_DEFAULT,
 };

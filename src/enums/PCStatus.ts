@@ -1,9 +1,9 @@
 /** Tracks state of PC in starting room. */
 export enum PCState {
-  /** Player/s have left starting room, rendering it unusable. */
+  /** Player/s have left starting room, rendering it unusable, or before the PC spawns in. */
   OFFLINE,
 
-  /** PC is online, but there are no current users. */
+  /** PC is online, and there may or may not be an active user. */
   ACCOUNT,
 
   OTHER,

@@ -11,47 +11,62 @@ import {
 import { fprint } from "../../printHelper";
 
 /**
- * Remove the most recent Inverted Item from the player that follows the predicate. Returns true if
- * an item was removed, false otherwise.
+ * Remove the most recent Inverted Item from the player that follows the predicate. Returns the
+ * CollectibleType of the corrupted item that was removed, or undefined if no item was removed.
  */
 export function removeInvertedItemFromPlayerWithPredicate(
   player: EntityPlayer,
   predicate: (actionSet: InvertedItemActionSet) => boolean,
-): boolean {
+  removeLogo?: boolean,
+  removeFromInventory?: boolean,
+): CollectibleType | undefined {
   const playerInventory = getPlayerInvertedItemInventory(player);
   for (let i = playerInventory.length - 1; i >= 0; i--) {
     const currentCollectible = playerInventory[i];
     if (currentCollectible === undefined) {
-      return false;
+      return undefined;
     }
     const actionSet = getAndSetInvertedItemActionSet(currentCollectible);
     if (predicate(actionSet)) {
-      removeInvertedItemFromPlayer(player, currentCollectible);
-      return true;
+      removeInvertedItemFromPlayer(
+        player,
+        currentCollectible,
+        removeLogo,
+        removeFromInventory,
+      );
+      return currentCollectible;
     }
   }
-  return false;
+  return undefined;
 }
 
 /** Removes recent inverted passive, returns True if one was removed. */
 export function removePlayerMostRecentInvertedPassiveItem(
   player: EntityPlayer,
-): boolean {
+  removeLogo?: boolean | undefined,
+  removeFromInventory?: boolean | undefined,
+): CollectibleType | undefined {
   return removeInvertedItemFromPlayerWithPredicate(
     player,
     (actionSet) =>
       actionSet.actionSetType === ActionSetType.INVERTED_PASSIVE_ITEM,
+    removeLogo,
+    removeFromInventory,
   );
 }
 
 /** Removes recent inverted active, returns True if one was removed. */
 export function removePlayerMostRecentInvertedActiveItem(
   player: EntityPlayer,
-): boolean {
+  removeLogo?: boolean | undefined,
+  removeFromInventory?: boolean | undefined,
+): CollectibleType | undefined {
   return removeInvertedItemFromPlayerWithPredicate(
     player,
     (actionSet) =>
       actionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM,
+    removeLogo,
+    removeFromInventory,
   );
 }
 
@@ -120,6 +135,5 @@ export function addInvertedItemToPlayer(
     collectibleType,
     addLogo,
     addToInventory,
-    pocket,
   );
 }

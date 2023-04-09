@@ -1,3 +1,5 @@
+import { getRandomArrayIndex, getRandomSeed } from "isaacscript-common";
+
 /**
  * Returns the element with the most frequent occurrence in the provided Array. If the array is
  * empty, returns undefined. If there are equal occurrences, returns the first found.
@@ -62,4 +64,18 @@ export function findLastIndexOfArray<T>(
     }
   }
   return -1;
+}
+
+export function getRandomArrayElementFast<T>(
+  array: T[] | readonly T[],
+  seedOrRNG: Seed | RNG = getRandomSeed(),
+): T {
+  const randomIndex = getRandomArrayIndex(array, seedOrRNG);
+  const randomElement = array[randomIndex];
+  if (randomElement === undefined) {
+    error(
+      `Failed to get a random array element fast since the random index of ${randomIndex} was not valid.`,
+    );
+  }
+  return randomElement;
 }

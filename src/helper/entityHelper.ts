@@ -5,7 +5,9 @@ import {
 } from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
+  EntityID,
   game,
+  getEntityIDFromConstituents,
   getPickups,
   getPlayers,
   getRandom,
@@ -222,4 +224,13 @@ export function getClosestPickupTo(
     }
   });
   return closestPickup;
+}
+
+/** Get an EntityID from an Entity. */
+export function getEntityIDFromEntity(entity: Entity): EntityID {
+  return getEntityIDFromConstituents(
+    entity.Type,
+    entity.Variant,
+    entity.SubType,
+  );
 }

@@ -13,6 +13,9 @@ import { isGameInverted } from "./playerInversion";
  * Keeps track of and manages 'inverted items'. When an item spawns, the game checks if it should be
  * inverted or not by looking at the game inversion status. If the item should be inverted, inverts
  * it.
+ *
+ * Non-pedestal inverted items do not automatically invert when the game is inverted. They must be
+ * inverted manually and have unique properties depending on the pickup type.
  */
 // TODO: Update to track all pickup inversions.
 
@@ -27,15 +30,11 @@ export function pickupInversionInit(): void {
   mod.saveDataManager("pickupInversion", v);
 }
 
-/** Check if the collectible entity is inverted. */
-export function isPedestalInverted(
-  collectible: EntityPickupCollectible,
-): boolean {
-  if (collectible.SubType === CollectibleType.NULL) {
-    return false;
-  }
+/** Check if the pickup is inverted. */
+export function isPickupInverted(pickup: EntityPickup): boolean {
+  // if (isUselessPickup(pickup)) { return false; }
 
-  return v.level.isInverted.getAndSetDefault(mod.getPickupIndex(collectible));
+  return v.level.isInverted.getAndSetDefault(mod.getPickupIndex(pickup));
 }
 
 /** Do not use. */

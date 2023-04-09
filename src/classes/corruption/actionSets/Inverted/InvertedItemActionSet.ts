@@ -1,10 +1,17 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import { ColorDefault, PickingUpItemCollectible } from "isaacscript-common";
+import { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
+import {
+  ColorDefault,
+  PickingUpItemCollectible,
+  game,
+  isColor,
+} from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,
 } from "../../../../constants/corruptionConstants";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
+import { _invertedPickupHasBeenSeen } from "../../../../features/corruption/inversion/seenInvertedPickups";
+import { getAdvancedInvertedItemIconSetting } from "../../../../features/settings/GeneralSettings";
 import { setSpecificEntityEIDDescriptionObject } from "../../../../helper/compatibility/EIDHelper";
 import {
   generateCorruptedSound,
@@ -19,18 +26,38 @@ import { replaceCollectibleSpriteWithCorrupted } from "../../../facets/Corrupted
 import { overridePickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import { ActionSet } from "../ActionSet";
 
-const DEFAULT_COLOR = ColorDefault;
 const DEFAULT_QUALITY = 0;
-const DEFAULT_NAME = "Corrupted Item";
 const DEFAULT_DESCRIPTION = "Beware...";
+const DEFAULT_NAME = "Corrupted Item";
 
-/** ActionSet class. */
+/** ActionSet class for Inverted. */
 export abstract class InvertedItemActionSet extends ActionSet {
   q?: number;
-  n?: string;
-  ic?: CorruptedCollectibleSprite;
   d?: string;
+  n?: string;
+  ic?: CorruptedCollectibleSprite | Color;
   sfx?: CorruptedSoundEffect;
+
+  // Attributes.
+
+  /** The Origin Item, which CollectibleType the ActionSet resides on. */
+  oi?: number;
+
+  /** Negatives carry over. */
+  ngo?: boolean;
+
+  /**
+   * If this is not undefined, negative effects will carry over to the non-inverted pedestal the
+   * first time that the pedestal changes from inverted -> non-inverted.
+   */
+  getNegativesCarryOver(): boolean {
+    return this.ngo ?? false;
+  }
+
+  setNegativesCarryOver(negativesCarryOver: boolean): this {
+    this.ngo = negativesCarryOver;
+    return this;
+  }
 
   /**
    * The sound effect that will be played upon picking up the corrupted item. If the corrupted item
@@ -69,44 +96,37 @@ export abstract class InvertedItemActionSet extends ActionSet {
     playCorruptedSound(soundEffect);
   }
 
-  /** Get the description of the corrupted item. */
-  getDescription(): string {
-    return this.d ?? DEFAULT_DESCRIPTION;
-  }
-
-  /** Set the description of the corrupted item. */
-  setDescription(description: string): this {
-    this.d = description;
-    return this;
-  }
-
   /** Will generate an Icon if none exists. */
-  getIcon(): CorruptedCollectibleSprite {
+  getIcon(): CorruptedCollectibleSprite | Color {
     return this.ic ?? this.generateIcon();
   }
 
-  generateIcon(): CorruptedCollectibleSprite {
-    this.ic = generateCorruptedCollectibleSprite();
+  generateIcon(): CorruptedCollectibleSprite | Color {
+    const advancedIconSetting = getAdvancedInvertedItemIconSetting();
+    if (advancedIconSetting) {
+      this.ic = generateCorruptedCollectibleSprite();
+    } else {
+      this.ic = ColorDefault;
+    }
     return this.ic;
   }
 
   /** Depending on the Icon form, does the relevant actions. If no icon exist, will generate one. */
-  updateIcon(collectible: EntityPickupCollectible): void {
+  updateIcon(pickup: EntityPickup): void {
     const icon = this.getIcon();
-    replaceCollectibleSpriteWithCorrupted(collectible, icon);
+    if (isColor(icon)) {
+      const sprite = pickup.GetSprite();
+      sprite.Color = icon;
+      sprite.FlipX = true;
+    } else {
+      replaceCollectibleSpriteWithCorrupted(pickup as EntityPickupCollectible, {
+        ...icon,
+      });
+    }
   }
 
-  setIcon(icon: CorruptedCollectibleSprite): this {
+  setIcon(icon: CorruptedCollectibleSprite | Color): this {
     this.ic = icon;
-    return this;
-  }
-
-  getQuality(): number {
-    return this.q ?? DEFAULT_QUALITY;
-  }
-
-  setQuality(quality: number): this {
-    this.q = quality;
     return this;
   }
 
@@ -121,10 +141,33 @@ export abstract class InvertedItemActionSet extends ActionSet {
     return this;
   }
 
+  /** Get the description of the corrupted item. */
+  getDescription(): string {
+    return this.d ?? DEFAULT_DESCRIPTION;
+  }
+
+  /** Set the description of the corrupted item. */
+  setDescription(description: string): this {
+    this.d = description;
+    return this;
+  }
+
+  getQuality(): number {
+    return this.q ?? DEFAULT_QUALITY;
+  }
+
+  setQuality(quality: number): this {
+    this.q = quality;
+    return this;
+  }
+
   /** Updates the EID Description and appearance of the collectible. */
   updateAppearance(collectible: EntityPickupCollectible): void {
     fprint(`Updating appearance of inverted item ${this.getName()}.`);
     this.updateIcon(collectible);
+
+    /** When the pedestal is updating appearance, register it as being seen. */
+    _invertedPickupHasBeenSeen(collectible);
 
     const descObj = {
       Description: legibleString(this.getText()),
@@ -140,7 +183,7 @@ export abstract class InvertedItemActionSet extends ActionSet {
     collectible: CollectibleType,
     addLogo: boolean,
     addToInventory: boolean,
-    pocket: boolean,
+    slot?: ActiveSlot,
   ): void;
 
   abstract removeFromPlayer(
@@ -160,7 +203,12 @@ export abstract class InvertedItemActionSet extends ActionSet {
     _collectible: PickingUpItemCollectible,
   ): void {
     this.playSoundEffect();
-    overridePickupAnimationWithCustomSprite(player, this.getIcon());
+    game.GetHUD().ShowItemText(this.getName(), this.getDescription());
+    const icon = this.getIcon();
+    if (isColor(icon)) {
+    } else {
+      overridePickupAnimationWithCustomSprite(player, icon);
+    }
     return undefined;
   }
 }

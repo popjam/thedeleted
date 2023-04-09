@@ -3,7 +3,7 @@
 import { BombSubType } from "isaac-typescript-definitions";
 import { fprint } from "../../../../helper/printHelper";
 import { getNonInvertedPickupActionSet } from "../../effects/pickupEffects";
-import { queueCorruptedBomb } from "../../inventory/bombInventory";
+import { addCorruptedBombToPlayer } from "../../inventory/bombInventory";
 
 /**
  * Non-Inverted Bomb with corrupted effects. Corrupted bombs get added to the end of the corrupted
@@ -24,12 +24,12 @@ export function nonInvertedBombPostPickupCollect(
   }
   // Trigger Responses immediately.
   if ((pickup.SubType as BombSubType) === BombSubType.NORMAL) {
-    queueCorruptedBomb(player, pickupActionSet);
+    addCorruptedBombToPlayer(player, pickupActionSet);
   } else if ((pickup.SubType as BombSubType) === BombSubType.DOUBLE_PACK) {
-    queueCorruptedBomb(player, pickupActionSet);
-    queueCorruptedBomb(player, pickupActionSet);
+    addCorruptedBombToPlayer(player, pickupActionSet);
+    addCorruptedBombToPlayer(player, pickupActionSet);
   } else if ((pickup.SubType as BombSubType) === BombSubType.GIGA) {
-    queueCorruptedBomb(player, pickupActionSet);
+    addCorruptedBombToPlayer(player, pickupActionSet);
   }
   // const actions = pickupActionSet.getActions();
 

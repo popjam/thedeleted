@@ -1,6 +1,7 @@
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
 import { triggerOnRoomActions } from "../classes/corruption/actions/OnRoomAction";
-import { postNewRoomReorderedBackdrop } from "../features/general/backdropHelper";
+import { backdropHelperPostNewRoomReordered } from "../features/general/backdropHelper";
+import { lastRoomVisitedPostNewRoomReordered } from "../features/general/lastRoomVisited";
 import { temporaryItemsPostNewRoomReordered } from "../features/general/temporaryItems";
 import { iLoveYouPostNewRoom as iLoveYouPostNewRoomReordered } from "../features/modes/ILOVEYOU/ILOVEYOU";
 
@@ -9,7 +10,8 @@ export function postNewRoomReorderedInit(mod: ModUpgraded): void {
 }
 
 function main() {
-  postNewRoomReorderedBackdrop();
+  lastRoomVisitedPostNewRoomReordered();
+  backdropHelperPostNewRoomReordered();
   temporaryItemsPostNewRoomReordered();
   iLoveYouPostNewRoomReordered();
   triggerOnRoomActions();

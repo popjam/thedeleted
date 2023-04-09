@@ -1,9 +1,13 @@
 import { CollectibleType } from "isaac-typescript-definitions";
+import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import { Morality } from "../../../enums/corruption/Morality";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
+import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";
 import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
+import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
 import { Action, isAction } from "../actions/Action";
-import { isResponse, Response } from "../responses/Response";
+import { Response, isResponse } from "../responses/Response";
 
 const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
 
@@ -11,10 +15,85 @@ const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
 export abstract class ActionSet {
   readonly actionSetType!: ActionSetType;
   effects: Array<Action | Response> = [];
+  c:
+    | EIDColorShortcut
+    | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
+    | undefined;
 
   /** Returns Actions + Responses, does not deepCopy! */
   getEffects(): Array<Action | Response> {
     return this.effects;
+  }
+
+  getSortedEffects(): Array<Action | Response> {
+    return this.effects.sort((a, b) => {
+      const aMorality = a.getMorality();
+      const bMorality = b.getMorality();
+      if (aMorality === bMorality) {
+        return 0;
+      }
+      if (aMorality === Morality.POSITIVE) {
+        return -1;
+      }
+      if (bMorality === Morality.POSITIVE || bMorality === Morality.NEUTRAL) {
+        return 1;
+      }
+      return -1;
+    });
+  }
+
+  /**
+   * The color/s the ActionSet will adhere to. If no color is specified, will resort to default
+   * Morality colors. If an Action or Response has its own color, that will override the color this
+   * ActionSet provides it.
+   *
+   * If a triplet is specified, the first color will be used for positive effects, the second for
+   * neutral effects, and the third for negative effects.
+   */
+  getTheme():
+    | EIDColorShortcut
+    | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
+    | undefined {
+    return this.c;
+  }
+
+  /**
+   * Get the EIDColorShortcut for a specific Action or Response in the ActionSet.
+   *
+   * - If the Action/Response has an overridden color, that will be used.
+   * - If the ActionSet has a color set, that will be used.
+   * - If the ActionSet has no color set, the default morality color will be used.
+   */
+  getActionOrResponseColor(
+    actionOrResponse: Action | Response,
+  ): EIDColorShortcut {
+    const overriddenTextColor = actionOrResponse.getTextColor();
+    if (overriddenTextColor !== undefined) {
+      return overriddenTextColor;
+    }
+    const morality = actionOrResponse.getMorality();
+    if (this.c === undefined || !getActionSetThemeSetting()) {
+      return getEIDColorShortcutFromMorality(morality);
+    }
+    if (typeof this.c === "string") {
+      return this.c;
+    }
+    return this.c[morality as number]!;
+  }
+
+  /**
+   * The color/s the ActionSet will adhere to. If no color is specified, will resort to default
+   * Morality colors. If an Action or Response has its own color, that will override the color this
+   * ActionSet provides it.
+   */
+  setTheme(
+    c:
+      | EIDColorShortcut
+      | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
+      | undefined,
+  ): this {
+    this.c = c;
+    return this;
   }
 
   getInvolvedCollectibles(): CollectibleType[] {
@@ -52,10 +131,14 @@ export abstract class ActionSet {
 
   getText(eid = true): string {
     let text = "";
-    this.effects.forEach((actionOrResponse) => {
+    const sortedEffects = this.getSortedEffects();
+    sortedEffects.forEach((actionOrResponse) => {
       text += "#";
       if (eid) {
-        text += getEIDMarkupFromShortcut(actionOrResponse.getTextColor());
+        text += getEIDMarkupFromShortcut(
+          actionOrResponse.getTextColor() ??
+            this.getActionOrResponseColor(actionOrResponse),
+        );
       }
       text += legibleString(actionOrResponse.getText());
       if (eid) {

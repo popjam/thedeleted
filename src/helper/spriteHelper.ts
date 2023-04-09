@@ -1,11 +1,33 @@
 import { EntityType } from "isaac-typescript-definitions";
-import { copyColor, EntityID, spawnEntityID } from "isaacscript-common";
-import { NPCID } from "../enums/general/NPCID";
+import { EntityID, copyColor, spawnEntityID } from "isaacscript-common";
+import { NPCID } from "../enums/general/ID/NPCID";
 
-/** Copies a sprite into a new fresh sprite. Does not play an animation. */
-export function copySprite(oldSprite: Sprite): Sprite {
+/**
+ * Copies a sprite into a new fresh sprite.
+ *
+ * @param oldSprite The sprite to copy.
+ * @param play If true, will not play the animation the oldSprite is playing.
+ * @param copyData If true, will copy attributes from the old sprite such as Color, Scale, Frame,
+ *                 etc.
+ */
+export function copySprite(
+  oldSprite: Sprite,
+  play = true,
+  copyData = true,
+): Sprite {
   const nSprite = Sprite();
   nSprite.Load(oldSprite.GetFilename(), true);
+  if (!play) {
+    nSprite.Play(oldSprite.GetAnimation(), true);
+  }
+  if (!copyData) {
+    nSprite.Color = oldSprite.Color;
+    nSprite.FlipX = oldSprite.FlipX;
+    nSprite.FlipY = oldSprite.FlipY;
+    nSprite.Scale = oldSprite.Scale;
+    nSprite.Rotation = oldSprite.Rotation;
+    nSprite.SetFrame(oldSprite.GetFrame());
+  }
   return nSprite;
 }
 
@@ -52,4 +74,15 @@ export function invertSpriteColors(sprite: Sprite): Sprite {
   newColor.SetColorize(1, 1, 1, 2);
   sprite.Color = newColor;
   return sprite;
+}
+
+/**
+ * Create a Collectible Sprite set to 'PlayerPickupSparkle' with the correct playback speed. Needs
+ * to be updated every render frame.
+ */
+export function newSparkleSprite(): Sprite {
+  const sparkleSprite = newSprite("gfx/005.100_collectible.anm2");
+  sparkleSprite.PlaybackSpeed = 0.5;
+  sparkleSprite.Play("PlayerPickupSparkle", true);
+  return sparkleSprite;
 }

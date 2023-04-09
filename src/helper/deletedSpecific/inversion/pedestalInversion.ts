@@ -6,42 +6,72 @@
 import { CollectibleType } from "isaac-typescript-definitions";
 import { getCollectibles } from "isaacscript-common";
 import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import { Morality } from "../../../enums/corruption/Morality";
+import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import {
   _setAllPedestalInversion,
   _setPedestalInversion,
+  isPickupInverted,
 } from "../../../features/corruption/inversion/pickupInversion";
+import { hasInvertedPickupBeenSeen } from "../../../features/corruption/inversion/seenInvertedPickups";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { InvertedItemActionSetBuilder } from "../../../types/general/Builder";
 import { setInvertedItemActionSetIfNone } from "./itemEffects";
+import { addEffectsToNonInvertedPickup } from "./pickupEffects";
 import { updatePedestal } from "./updateInverted";
 
 /**
  * Set one pedestal to a specific inversion status. This will also update the pedestal.
  *
- * @param inverted
+ * @param toInverted
  * @param collectible
  * @param invertedItemActionSet Optional, will set the inverted items ActionSet if the item does not
  *                              have an ActionSet (does not DeepCopy).
+ * @param inputs
  */
 export function setPedestalInversion(
-  inverted: boolean,
+  toInverted: boolean,
   collectible: EntityPickupCollectible,
   invertedItemActionSet?: InvertedItemActionSet,
+  inputs?: ActionSetBuilderInput,
 ): void {
   if (collectible.SubType === CollectibleType.NULL) {
     return;
   }
 
-  _setPedestalInversion(inverted, collectible);
+  if (isPickupInverted(collectible) === toInverted) {
+    return;
+  }
+
+  /** Force the inverted ActionSet if one is not set. */
   if (invertedItemActionSet !== undefined) {
-    if (inverted) {
+    if (toInverted) {
       setInvertedItemActionSetIfNone(
         collectible.SubType,
         invertedItemActionSet,
       );
     }
   }
-  updatePedestal(collectible);
+
+  /** Carry over the negative effects if the inverted ActionSet has carryOver attribute. */
+  if (!toInverted) {
+    if (hasInvertedPickupBeenSeen(collectible)) {
+      const invertedActionSet = getAndSetInvertedItemActionSet(
+        collectible.SubType,
+      );
+      if (invertedActionSet.getNegativesCarryOver()) {
+        addEffectsToNonInvertedPickup(
+          collectible,
+          ...invertedActionSet
+            .getEffects()
+            .filter((effect) => effect.getMorality() === Morality.NEGATIVE),
+        );
+      }
+    }
+  }
+
+  _setPedestalInversion(toInverted, collectible);
+  updatePedestal(collectible, inputs);
 }
 
 /**

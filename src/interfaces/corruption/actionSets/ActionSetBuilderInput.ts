@@ -6,4 +6,6 @@ export interface ActionSetBuilderInput {
   player?: EntityPlayer;
   /** Collectible the ActionSet is based on (even if inverted). */
   collectible?: CollectibleType;
+  /** Set to true to force an active, and false to force a passive. */
+  forceActiveOrPassive?: boolean;
 }

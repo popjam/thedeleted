@@ -1,0 +1,6 @@
+import { RESOLUTION_FULL_SCREEN } from "isaacscript-common";
+
+export const LOWER_HUD_QUADRANTS_X_POSITION_CUTOFF =
+  RESOLUTION_FULL_SCREEN.X / 2;
+
+export const RIGHT_HUD_QUADRANTS_Y_POSITION_CUTOFF = 242;

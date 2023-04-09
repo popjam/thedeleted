@@ -6,61 +6,75 @@ import {
 } from "isaac-typescript-definitions";
 import {
   Callback,
-  clearSprite,
+  CallbackCustom,
   ColorDefault,
-  getCollectibleGfxFilename,
-  isGlitchedCollectible,
+  ModCallbackCustom,
   PickupIndex,
+  clearSprite,
+  getCollectibleGfxFilename,
+  isCollectible,
+  isGlitchedCollectible,
   setCollectibleSprite,
 } from "isaacscript-common";
-import { renderCustomCollectibleSpriteOverCollectible } from "../../helper/deletedSpecific/funnySprites";
+import { renderCorruptedCollectibleSpriteOverCollectible } from "../../helper/deletedSpecific/funnySprites";
+import { getEntityIDFromEntity } from "../../helper/entityHelper";
 import { isCollectibleFree } from "../../helper/priceHelper";
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
 import { copySprite } from "../../helper/spriteHelper";
-import { isGlitchedCollectibleSubType } from "../../helper/tmtrainerHelper";
 import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { mod } from "../../mod";
 import { isZazzinatorAny } from "../../sets/zazzSets";
 import { Facet, initGenericFacet } from "../Facet";
 
+// eslint-disable-next-line isaacscript/require-v-registration
 const v = {
   level: {
-    replacedCollectibles: new Map<
-      PickupIndex,
-      [CollectibleType, CorruptedCollectibleSprite]
-    >(),
+    replacedPickups: new Map<PickupIndex, CorruptedCollectibleSprite>(),
   },
 };
 
+/**
+ * This Facet facilitates the rendering of custom 'TMTRAINER'-esque sprites on pedestals, that are
+ * represented by the object CorruptedCollectibleSprite. To use this Facet, simply call
+ * replaceCollectibleSpriteWithCorrupted() with the desired sprite and pedestal. Then when you no
+ * longer want to render the sprite, call returnCorruptedCollectibleSpriteToNormal(). The sprite
+ * will be removed upon picking up or rerolling the item.
+ *
+ * This will handle TMTRAINER sprites, handle leaving the room, leaving the run, diplopia, and other
+ * edge cases.
+ */
 let FACET: Facet | undefined;
 class CorruptedCollectibleSpriteFacet extends Facet {
+  @CallbackCustom(ModCallbackCustom.POST_PICKUP_CHANGED)
+  postPickupChanged(
+    pickup: EntityPickup,
+    oldVariant: PickupVariant,
+    oldSubType: number,
+    newVariant: PickupVariant,
+    newSubType: number,
+  ): void {
+    fprint(
+      `CorruptedCollectibleSpriteFacet: ${mod.getPickupIndex(
+        pickup,
+      )} changed, unsubscribing.`,
+    );
+    if ((newSubType as CollectibleType) === CollectibleType.NULL) {
+      returnCorruptedCollectibleSpriteToNormal(
+        pickup as EntityPickupCollectible,
+      );
+    }
+  }
+
   /** This is where we render the CorruptedCollectibleSprites. */
   @Callback(ModCallback.POST_PICKUP_RENDER, PickupVariant.COLLECTIBLE)
   postPickupRender(pickup: EntityPickup, _renderOffset: Vector): void {
-    const corruptedCollectibleSprite = v.level.replacedCollectibles.get(
+    const corruptedSprite = v.level.replacedPickups.get(
       mod.getPickupIndex(pickup),
     );
 
-    /** If the pedestal is not subscribed. */
-    if (corruptedCollectibleSprite === undefined) {
-      return;
-    }
-
-    const collectibleType = corruptedCollectibleSprite[0];
-    const sprite = corruptedCollectibleSprite[1];
-
-    /** If the pedestal has been changed. */
-    if ((pickup.SubType as CollectibleType) !== collectibleType) {
-      fprint(
-        `The pedestal: ${pickup.SubType} does not match the original request: ${collectibleType}`,
-      );
-      v.level.replacedCollectibles.delete(mod.getPickupIndex(pickup));
-      // returnCorruptedCollectibleSpriteToNormal( pickup as EntityPickupCollectible, );
-      if (isGlitchedCollectibleSubType(collectibleType)) {
-        fprint("Removing Corrupted Collectible Sprite! (TMTRAINER)");
-        pickup.GetSprite().Color = ColorDefault;
-      }
+    /** If the pickup is not subscribed. */
+    if (corruptedSprite === undefined) {
       return;
     }
 
@@ -75,9 +89,9 @@ class CorruptedCollectibleSpriteFacet extends Facet {
     }
 
     /** Render the new sprite. */
-    renderCustomCollectibleSpriteOverCollectible(
+    renderCorruptedCollectibleSpriteOverCollectible(
       pickup as EntityPickupCollectible,
-      sprite,
+      corruptedSprite,
     );
   }
 }
@@ -97,30 +111,41 @@ export function initCorruptedCollectibleSpriteFacet(): void {
  * To return the sprite to normal, call returnCollectibleSpriteToNormal().
  */
 export function replaceCollectibleSpriteWithCorrupted(
-  collectible: EntityPickupCollectible,
+  pickup: EntityPickupCollectible,
   sprite: CorruptedCollectibleSprite,
 ): void {
-  const pickupIndex = mod.getPickupIndex(collectible);
-  const pickupAlreadyHasCorruptedSprite =
-    v.level.replacedCollectibles.has(pickupIndex);
-
-  v.level.replacedCollectibles.set(mod.getPickupIndex(collectible), [
-    collectible.SubType,
-    sprite,
-  ]);
-  fprint(
-    `Replacing Collectible of Sub-Type ${collectible.SubType} Sprite with Corrupted!`,
-  );
+  const pickupIndex = mod.getPickupIndex(pickup);
 
   /**
-   * If the pedestal is a TMTRAINER item, additional measures need to be taken as once a TMTRAINER
-   * sprite is cleared it can not be retrieved. Otherwise, just clear the sprite.
+   * If the pickup is a TMTRAINER collectible or non-trinket non-collectible pickup, we need to set
+   * the sprite to be invisible, as once the sprite is removed there is no way to get it back. With
+   * trinkets and standard collectibles, we can just remove the sprites as there is a way to
+   * generate new sprites.
    */
-  if (isGlitchedCollectible(collectible)) {
-    collectible.GetSprite().Color = Color(0, 0, 0, 0);
-  } else {
-    clearSprite(collectible.GetSprite(), CollectibleSpriteLayer.HEAD);
+  if (isCollectible(pickup)) {
+    if (pickup.SubType === CollectibleType.NULL) {
+      fprint("Cannot Remove Corrupted Collectible Sprite! (Null)");
+      return;
+    }
+    if (isZazzinatorAny(pickup.SubType)) {
+      fprint("Cannot Remove Corrupted Collectible Sprite! (Zazzinator)");
+      return;
+    }
+    if (isGlitchedCollectible(pickup)) {
+      pickup.GetSprite().Color = Color(0, 0, 0, 0);
+    } else {
+      clearSprite(pickup.GetSprite(), CollectibleSpriteLayer.HEAD);
+    }
   }
+
+  /** Save. */
+  const pickupAlreadyHasCorruptedSprite =
+    v.level.replacedPickups.has(pickupIndex);
+
+  v.level.replacedPickups.set(mod.getPickupIndex(pickup), sprite);
+  fprint(
+    `Replacing item ${getEntityIDFromEntity(pickup)}'s sprite with Corrupted!`,
+  );
 
   /**
    * If the pickup already has a corrupted sprite and we are updating the design, there is no need
@@ -132,48 +157,36 @@ export function replaceCollectibleSpriteWithCorrupted(
 }
 
 /**
- * Returns a Corrupted Collectible sprite created from replaceCollectibleSpriteWithCorrupted() to
- * its normal sprite, if it exists.
+ * Returns a Corrupted Collectible sprite created from replacePickupSpriteWithCorrupted() to its
+ * normal sprite, if it exists. We need to allow non-Collectible pickups to be passed in because a
+ * Corrupted Collectible can be transformed into a non-Collectible pickup.
  */
 export function returnCorruptedCollectibleSpriteToNormal(
-  collectible: EntityPickupCollectible,
+  pickup: EntityPickup,
 ): void {
-  const corruptedCollectibleData = v.level.replacedCollectibles.get(
-    mod.getPickupIndex(collectible),
+  const corruptedCollectibleSprite = v.level.replacedPickups.get(
+    mod.getPickupIndex(pickup),
   );
-  if (corruptedCollectibleData === undefined) {
+  if (corruptedCollectibleSprite === undefined) {
     fprint("Tried to return a non-corrupted collectible to normal but failed!");
     return;
   }
+  fprint(
+    `Returning pickup ${pickup.SubType} to normal! (Corrupted Collectible Sprite)`,
+  );
 
-  const collectibleType = corruptedCollectibleData[0];
-  v.level.replacedCollectibles.delete(mod.getPickupIndex(collectible));
+  v.level.replacedPickups.delete(mod.getPickupIndex(pickup));
 
-  if (isZazzinatorAny(collectible.SubType)) {
-    fprint("Removing Corrupted Collectible Sprite! (Zazzinator)");
-    return;
-  }
+  if (isCollectible(pickup)) {
+    /** Should not t */
+    // if (isZazzinatorAny(pickup.SubType)) { fprint("Removing Corrupted Collectible Sprite!
+    // (Zazzinator)"); return; }
 
-  /** If the pedestal is null, no need to do anything. */
-  fprint(`Pedestal Sub-Type at time of removal: ${collectible.SubType}`);
-  if (collectible.SubType === CollectibleType.NULL) {
-    fprint("Removing Corrupted Collectible Sprite! (Null)");
-    collectible.GetSprite().Color = ColorDefault;
-    return;
-  }
-
-  /** If the pedestal is a TMTRAINER item, we need to make it visible again. */
-  if (isGlitchedCollectible(collectible)) {
-    fprint("Removing Corrupted Collectible Sprite! (TMTRAINER)");
-    collectible.GetSprite().Color = ColorDefault;
-  } else {
-    /** Otherwise, just set the sprite to the normal sprite. */
-    fprint("Removing Corrupted Collectible Sprite! (Changed Sub-Type)");
-    collectible.GetSprite().Color = ColorDefault;
-    setCollectibleSprite(
-      collectible,
-      getCollectibleGfxFilename(collectibleType),
-    );
+    if (isGlitchedCollectible(pickup)) {
+      pickup.GetSprite().Color = ColorDefault;
+    } else {
+      setCollectibleSprite(pickup, getCollectibleGfxFilename(pickup.SubType));
+    }
   }
 
   FACET?.unsubscribe();

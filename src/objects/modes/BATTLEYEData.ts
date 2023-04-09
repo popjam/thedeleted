@@ -3,7 +3,7 @@ import { CharacterType } from "../../enums/general/CharacterType";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
-// eslint-disable-next-line isaacscript/require-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const BATTLEYEData: ModeData = {
   description: "This is BATTLEYE's description",
   birthright: "This is BATTLEYE's birthright description",

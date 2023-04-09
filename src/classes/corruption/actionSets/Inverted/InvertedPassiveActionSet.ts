@@ -1,8 +1,8 @@
 import { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
+import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { ActionOrigin } from "../../../../enums/corruption/actions/ActionOrigin";
 import { ActionType } from "../../../../enums/corruption/actions/ActionType";
-import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { CollectibleTypeCustom } from "../../../../enums/general/CollectibleTypeCustom";
 import {
   addActionsToPlayer,
@@ -12,6 +12,11 @@ import {
   addInvertedItemToCorruptInventory,
   removeInvertedItemFromCorruptInventory,
 } from "../../../../features/corruption/inventory/itemInventory";
+import {
+  PickupStage,
+  setLastPickedUpCollectible,
+} from "../../../../features/corruption/inversion/lastPickedUpInverted";
+import { mod } from "../../../../mod";
 import { Action, isAction } from "../../actions/Action";
 import { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
@@ -31,7 +36,6 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
     collectible: CollectibleType,
     addLogo: boolean,
     addToInventory: boolean,
-    pocket: boolean,
   ): void {
     const actionsAndResponses = deepCopy<Array<Action | Response>>(
       this.getEffects(),
@@ -87,6 +91,12 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
     player: EntityPlayer,
     pedestal: EntityPickupCollectible,
   ): boolean | undefined {
+    setLastPickedUpCollectible(player, {
+      collectibleType: pedestal.SubType,
+      pickupStage: PickupStage.PRE_GET_PEDESTAL,
+      pickupIndex: mod.getPickupIndex(pedestal),
+      inverted: true,
+    });
     pedestal.SubType = CollectibleTypeCustom.ZAZZ;
     return false;
   }

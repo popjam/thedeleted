@@ -1,14 +1,14 @@
 import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
-import { Action } from "../../../classes/corruption/actions/Action";
 import { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
 import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import { Action } from "../../../classes/corruption/actions/Action";
 import { Response } from "../../../classes/corruption/responses/Response";
 import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import {
-  getNonInvertedPickupActionSet,
   _setPickupIndexActionSet,
+  getNonInvertedPickupActionSet,
 } from "../../../features/corruption/effects/pickupEffects";
-import { isPedestalInverted } from "../../../features/corruption/inversion/pickupInversion";
+import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { mod } from "../../../mod";
 import { updatePickup } from "./updateInverted";
 
@@ -23,6 +23,22 @@ export function setNonInvertedPickupActionSet(
   _setPickupIndexActionSet(mod.getPickupIndex(pickup), actionSet);
   updatePickup(pickup);
   // if (isPickupInverted(pickup)) { }
+}
+
+/**
+ * Retrieves the PickupActionSet of a non-inverted pickup. If one does not exist, an empty one will
+ * be created.
+ */
+export function getAndSetNonInvertedPickupActionSet(
+  pickup: EntityPickup,
+): NonInvertedPickupActionSet {
+  const actionSet = getNonInvertedPickupActionSet(pickup);
+  if (actionSet !== undefined) {
+    return actionSet;
+  }
+  const newActionSet = new NonInvertedPickupActionSet();
+  setNonInvertedPickupActionSet(pickup, newActionSet);
+  return newActionSet;
 }
 
 /**
@@ -55,19 +71,9 @@ export function getPickupActionSet(
 ): ActionSet | undefined {
   if (pickup.Variant === PickupVariant.COLLECTIBLE) {
     // Inverted Items.
-    if (isPedestalInverted(pickup as EntityPickupCollectible)) {
+    if (isPickupInverted(pickup as EntityPickupCollectible)) {
       return getAndSetInvertedItemActionSet(pickup.SubType as CollectibleType);
     }
   }
   return getNonInvertedPickupActionSet(pickup);
-}
-
-/** Checks if the pickup is inverted. Currently only collectibles can be inverted. */
-export function isPickupInverted(pickup: EntityPickup): boolean {
-  if (pickup.Variant === PickupVariant.COLLECTIBLE) {
-    if (isPedestalInverted(pickup as EntityPickupCollectible)) {
-      return true;
-    }
-  }
-  return false;
 }

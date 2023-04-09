@@ -1,12 +1,16 @@
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { facetPostGameStartedReordered } from "../classes/Facet";
-import { runIndexPostGameStartedReordered } from "../features/runIndex";
+import { facetPostGameContinuedReordered } from "../classes/Facet";
+import { runIndexPostGameContinuedFacet } from "../features/runIndex";
 
 export function postGameStartedReorderedInit(mod: ModUpgraded): void {
-  mod.AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main);
+  mod.AddCallbackCustom(
+    ModCallbackCustom.POST_GAME_STARTED_REORDERED,
+    postGameContinuedReordered,
+    true,
+  );
 }
 
-function main(isContinued: boolean) {
-  facetPostGameStartedReordered(isContinued);
-  runIndexPostGameStartedReordered(isContinued);
+function postGameContinuedReordered(_isContinued: boolean) {
+  facetPostGameContinuedReordered();
+  runIndexPostGameContinuedFacet();
 }

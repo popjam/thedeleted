@@ -40,7 +40,7 @@ export function bombInventoryInit(): void {
  *
  * Does Deep Copy.
  */
-export function queueCorruptedBomb(
+export function addCorruptedBombToPlayer(
   player: EntityPlayer,
   actionSet: NonInvertedPickupActionSet,
 ): void {

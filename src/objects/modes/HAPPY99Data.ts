@@ -6,7 +6,7 @@ import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about HAPPY99. */
-// eslint-disable-next-line isaacscript/require-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const HAPPY99Data: ModeData = {
   description: "This is HAPPY99's description",
   birthright: "This is HAPPY99's birthright description",

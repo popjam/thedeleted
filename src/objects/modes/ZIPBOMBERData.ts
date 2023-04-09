@@ -5,7 +5,7 @@ import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
-// eslint-disable-next-line isaacscript/require-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const ZIPBOMBERData: ModeData = {
   description: "This is ZIP BOMBER's description",
   birthright: "This is ZIP BOMBER's birthright description",
@@ -18,7 +18,7 @@ export const ZIPBOMBERData: ModeData = {
     maxHearts: 2,
     hearts: 2,
     eternalHearts: 0,
-    soulHearts: 0,
+    soulHearts: 2,
     boneHearts: 0,
     goldenHearts: 0,
     rottenHearts: 0,

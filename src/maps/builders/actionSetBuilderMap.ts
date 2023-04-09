@@ -1,10 +1,9 @@
-import { CollectibleType, ItemType } from "isaac-typescript-definitions";
 import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
+import { defaultInvertedItemActionSetBuilder } from "../../helper/builders/genericBuilders";
 import { happy99DefaultBuilder } from "../../helper/builders/modes/HAPPY99Builders";
-import { getRandomCollectibleType } from "../../helper/collectibleHelper";
+import { iLoveYouDefaultBuilder } from "../../helper/builders/modes/ILOVEYOUBuilders";
+import { morrisDefaultBuilder } from "../../helper/builders/modes/MORRISBuilders";
 import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   Builder,
@@ -17,17 +16,20 @@ const INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE_MAP: ReadonlyMap<
 > = new Map([
   [
     InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT,
-    () =>
-      new InvertedPassiveActionSet().addEffects(
-        new UseActiveItemResponse().construct(
-          getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
-            CollectibleType.POOP,
-        ),
-      ),
+    (inputs: ActionSetBuilderInput) =>
+      defaultInvertedItemActionSetBuilder(inputs),
   ],
   [
     InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY_DEFAULT,
     (inputs: ActionSetBuilderInput) => happy99DefaultBuilder(inputs),
+  ],
+  [
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_ILOVEYOU_DEFAULT,
+    (inputs: ActionSetBuilderInput) => iLoveYouDefaultBuilder(inputs),
+  ],
+  [
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_MORRIS_DEFAULT,
+    (inputs: ActionSetBuilderInput) => morrisDefaultBuilder(inputs),
   ],
 ]);
 

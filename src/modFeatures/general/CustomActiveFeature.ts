@@ -1,15 +1,15 @@
 import { ActiveSlot, ModCallback } from "isaac-typescript-definitions";
 import {
   Callback,
+  PlayerIndex,
   getPlayerIndex,
   mapSetPlayer,
-  PlayerIndex,
 } from "isaacscript-common";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { fprint } from "../../helper/printHelper";
 import {
-  isCustomActiveACopy,
   ZAZZINATOR_ACTIVE_SET,
+  isZazzinatorActiveCopy,
 } from "../../sets/zazzSets";
 import { CustomModFeature } from "../CustomModFeature";
 
@@ -71,7 +71,7 @@ export class CustomActiveFeature extends CustomModFeature<CustomActiveInstance> 
 
   isPrimarySlotCopy(player: EntityPlayer): boolean {
     const primarySlot = player.GetActiveItem(ActiveSlot.PRIMARY);
-    return isCustomActiveACopy(primarySlot);
+    return isZazzinatorActiveCopy(primarySlot);
   }
 
   /**
@@ -102,13 +102,13 @@ export class CustomActiveFeature extends CustomModFeature<CustomActiveInstance> 
         copiedSlot.getChargeType() === nonCopiedSlot.getChargeType() &&
         copiedSlot.getCharges() === nonCopiedSlot.getCharges()
       ) {
-        const isPrimaryCopy = isCustomActiveACopy(primarySlot);
+        const isPrimaryCopy = isZazzinatorActiveCopy(primarySlot);
         return isPrimaryCopy ? copiedSlot : nonCopiedSlot;
       }
       if (slot === ActiveSlot.PRIMARY) {
-        return isCustomActiveACopy(primarySlot) ? copiedSlot : nonCopiedSlot;
+        return isZazzinatorActiveCopy(primarySlot) ? copiedSlot : nonCopiedSlot;
       }
-      return isCustomActiveACopy(secondarySlot) ? copiedSlot : nonCopiedSlot;
+      return isZazzinatorActiveCopy(secondarySlot) ? copiedSlot : nonCopiedSlot;
     }
     return nonCopiedSlot;
   }

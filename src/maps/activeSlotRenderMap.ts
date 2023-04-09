@@ -1,8 +1,8 @@
 import { ActiveSlot } from "isaac-typescript-definitions";
-import { PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION } from "../constants/renderConstants";
+import { PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1 } from "../constants/renderConstants";
 
 const ACTIVE_SLOT_RENDER_MAP: ReadonlyMap<ActiveSlot, Vector> = new Map([
-  [ActiveSlot.PRIMARY, PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION],
+  [ActiveSlot.PRIMARY, PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1],
 ]);
 
 /**

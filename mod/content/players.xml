@@ -11,6 +11,9 @@
   <!-- ZIPBOMBER Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_ZIPBOMBER" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ZIPBOMBER.png" hidden="true" skinColor="0" birthright="Patched" />
 
+  <!-- MYDOOM Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_MYDOOM" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_MYDOOM.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="MYDOOM" />
+
   <!-- T. SOPHOS Mode -->
   <player black="6" coins="1" name="Deleted" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />
 

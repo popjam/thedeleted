@@ -1,4 +1,4 @@
-import { game } from "isaacscript-common";
+import { game, GAME_FRAMES_PER_SECOND } from "isaacscript-common";
 import { mod } from "../mod";
 
 /**
@@ -19,4 +19,9 @@ export function fireFunctionConstantly(func: () => void, frameDelay = 1): void {
     func();
     fireFunctionConstantly(func, frameDelay);
   }, frameDelay);
+}
+
+/** Converts seconds to game frames. */
+export function secondsToGameFrames(seconds: number): int {
+  return seconds * GAME_FRAMES_PER_SECOND;
 }

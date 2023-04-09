@@ -1,11 +1,12 @@
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
+import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
 import { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
-// eslint-disable-next-line isaacscript/require-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const MORRISData: ModeData = {
   description: "This is ILOVEYOU's description",
   birthright: "This is ILOVEYOU's birthright description",
@@ -18,7 +19,7 @@ export const MORRISData: ModeData = {
     maxHearts: 2,
     hearts: 2,
     eternalHearts: 0,
-    soulHearts: 0,
+    soulHearts: 2,
     boneHearts: 0,
     goldenHearts: 0,
     rottenHearts: 0,
@@ -32,4 +33,6 @@ export const MORRISData: ModeData = {
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],
   ]),
+  itemActionSetBuilderReference:
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_MORRIS_DEFAULT,
 };

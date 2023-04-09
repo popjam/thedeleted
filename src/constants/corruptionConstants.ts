@@ -6,7 +6,7 @@ export const DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE: InvertedItemAct
   InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT;
 
 /** A weighted spread of how many segments an inverted collectible's sprite should have. */
-// eslint-disable-next-line isaacscript/require-capital-const-assertions
+// eslint-disable-next-line isaacscript/require-capital-const-assertions, isaacscript/require-capital-read-only
 export const INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD: WeightedArray<number> =
   [
     [1, 0.5],
@@ -24,3 +24,5 @@ export const INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD: WeightedA
 export const DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT: Range = [1, 3];
 // eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH: Range = [0.4, 2];
+
+export const CORRUPTED_BACKDROP_COLOR_TRANSPARENCY_VALUE = 0.1;

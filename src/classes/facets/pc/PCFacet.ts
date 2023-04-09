@@ -1,39 +1,44 @@
 import {
   ButtonAction,
-  ModCallback,
   SlotVariant,
   SoundEffect,
 } from "isaac-typescript-definitions";
 import {
-  Callback,
   CallbackCustom,
+  ModCallbackCustom,
+  PlayerIndex,
   getPlayerFromIndex,
   getPlayerIndex,
   getSlots,
   gridCoordinatesToWorldPosition,
-  ModCallbackCustom,
-  PlayerIndex,
   sfxManager,
   spawnSlot,
 } from "isaacscript-common";
-import { SoundEffectCustom } from "../../../enums/general/SoundEffectCustom";
 import { PCState } from "../../../enums/PCStatus";
+import { SoundEffectCustom } from "../../../enums/general/SoundEffectCustom";
 import { switchToNextModeOnCarousel } from "../../../helper/deletedSpecific/modeHelper";
 import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
 
 /**
- * Handles everything to do with the physical spawn PC. PC only spawns when first Deleted spawns in.
- * PC can only be used at the start of the run, before exiting the starting room. PC only has one
- * user at a time, who must be standing close to it. Once another user logs on or user logs off, the
- * now-logged-off user is physically booted from the PC.
+ * Handles everything to do with the physical spawn PC. PC only spawns when the first Deleted spawns
+ * in. The PC can only be used at the start of the run, before exiting the starting room.
+ *
+ * The PC only has one user at a time, who must be standing close to it. Once another user logs on
+ * or user logs off, the now-logged-off user is physically booted from the PC.
  */
 
+/** The distance that the PC can detect a User. */
 const DETECTION_RADIUS = 35;
+
+/** Sound effect when a User logs on to the PC. */
 const ACTIVATION_SFX = SoundEffectCustom.PC_LOG_IN;
+
+/** Sound effect when a User logs off the PC. */
 const DEACTIVATION_SFX = SoundEffect.CHARACTER_SELECT_RIGHT;
 
+// eslint-disable-next-line isaacscript/require-v-registration
 const v = {
   run: {
     /** Index of player using PC, or null if no users. */
@@ -52,30 +57,38 @@ const v = {
 
 let FACET: Facet | undefined;
 class PCFacet extends Facet {
-  @Callback(ModCallback.POST_PEFFECT_UPDATE)
-  postPeffectUpdate(player: EntityPlayer): void {
+  /**
+   * In this callback, PC state is determined, and current user is continuously pinged to make sure
+   * they are still in range.
+   */
+  @CallbackCustom(ModCallbackCustom.POST_PEFFECT_UPDATE_REORDERED)
+  postPeffectUpdateReordered(player: EntityPlayer): void {
     const { state } = v.run;
-    if (isPCActive()) {
-      const pc = getPC();
-      if (pc !== undefined) {
-        if (state === PCState.ACCOUNT) {
-          if (isPCBeingUsed()) {
-            const currentPCUser = getCurrentPCUser();
-            if (currentPCUser !== undefined) {
-              if (!(isPlayerInPCRange(currentPCUser, pc) ?? false)) {
-                bootCurrentUserFromPC();
-              }
-            } else {
-              v.run.user = null;
-            }
-          } else if (isPlayerInPCRange(player, pc) ?? false) {
-            logOnToPC(player);
+    if (!isPCActive()) {
+      return;
+    }
+
+    /** If the PC can not be found (e.g out of the starting room), switch it to "OFFLINE". */
+    const pc = getPC();
+    if (pc === undefined) {
+      fprint("Can not find the active PC anymore, unsubscribing from PCFacet.");
+      v.run.state = PCState.OFFLINE;
+      return;
+    }
+
+    /** If the PC is in Account mode (mode it is set up in), continuously check for user. */
+    if (state === PCState.ACCOUNT) {
+      if (isPCBeingUsed()) {
+        const currentPCUser = getCurrentPCUser();
+        if (currentPCUser !== undefined) {
+          if (!(isPlayerInPCRange(currentPCUser, pc) ?? false)) {
+            bootCurrentUserFromPC();
           }
+        } else {
+          v.run.user = null;
         }
-      } else {
-        fprint("Can not find the active PC anymore, unsubscribing.");
-        v.run.state = PCState.OFFLINE;
-        this.unsubscribe();
+      } else if (isPlayerInPCRange(player, pc) ?? false) {
+        logOnToPC(player);
       }
     }
   }
@@ -85,7 +98,7 @@ class PCFacet extends Facet {
     if (!isPlayerPCUser(player)) {
       return;
     }
-    /** Player can't shoot while using PC. */
+    /** User can't shoot. */
     player.SetShootingCooldown(1);
     if (
       Input.IsActionTriggered(ButtonAction.SHOOT_RIGHT, player.ControllerIndex)
@@ -103,8 +116,9 @@ export function initPCFacet(): void {
 
 /**
  * Spawns the PC in the top left grid index.
- * TODO: Sort out EntitySlotCustom and adjust position.
+ * TODO: Sort out EntitySlotCustom and adjust position for greed mode.
  */
+// POST_PLAYER_INIT_FIRST
 export function setupPC(): void {
   if (hasPCSpawned()) {
     fprint("PC has already spawned, not setting it up.");
@@ -153,6 +167,7 @@ export function getCurrentPCUser(): EntityPlayer | undefined {
 }
 
 /** Removes the user by physically pushing them away. */
+// TODO: Physically boot user from PC and play 'boot' animation.
 export function bootCurrentUserFromPC(): void {
   sfxManager.Play(DEACTIVATION_SFX);
   v.run.user = null;
@@ -174,8 +189,9 @@ function getPC(): EntitySlot | undefined {
   return getSlots(SlotVariant.SLOT_MACHINE, 200)[0];
 }
 
-/** Checks if the PC has spawned at the start of the game. It will spawn when any Deleted
- * player spawns in (only once).
+/**
+ * Checks if the PC has spawned at the start of the game. It will spawn when any Deleted player
+ * spawns in (only once).
  */
 export function hasPCSpawned(): boolean {
   return v.run.spawned;

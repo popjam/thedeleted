@@ -4,6 +4,7 @@ export const CollectibleTypeCustom = {
   D14: Isaac.GetItemIdByName("D-14"),
   TRASH: Isaac.GetItemIdByName("Trash"),
   EXTRACT: Isaac.GetItemIdByName("Extract"),
+  EXTRACT_FIRE: Isaac.GetItemIdByName(" Extract"),
   ZAZZ: Isaac.GetItemIdByName("Corrupted Passive"),
   ZAZZ_ACTIVE_NORMAL_0: Isaac.GetItemIdByName(" "),
   ZAZZ_ACTIVE_NORMAL_0_COPY: Isaac.GetItemIdByName(" ."),

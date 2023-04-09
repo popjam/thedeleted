@@ -8,6 +8,7 @@ import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 import { bitflipPostUseItem } from "../features/items/bitflip";
 import { d14PostUseItem } from "../features/items/d14";
 import { extractPostUseItem } from "../features/items/extract";
+import { extractFirePostUseItem } from "../features/items/extractVariants/extractFire";
 import { trashPostUseItem } from "../features/items/trash";
 
 export function postUseItemInit(mod: ModUpgraded): void {
@@ -35,6 +36,11 @@ export function postUseItemInit(mod: ModUpgraded): void {
     ModCallback.POST_USE_ITEM,
     mainExtract,
     CollectibleTypeCustom.EXTRACT,
+  );
+  mod.AddCallback(
+    ModCallback.POST_USE_ITEM,
+    mainExtractFire,
+    CollectibleTypeCustom.EXTRACT_FIRE,
   );
 }
 
@@ -101,6 +107,24 @@ function mainExtract(
   customVarData: int,
 ) {
   return extractPostUseItem(
+    collectibleType,
+    rng,
+    player,
+    useFlags,
+    activeSlot,
+    customVarData,
+  );
+}
+
+function mainExtractFire(
+  collectibleType: CollectibleType,
+  rng: RNG,
+  player: EntityPlayer,
+  useFlags: BitFlags<UseFlag>,
+  activeSlot: int,
+  customVarData: int,
+) {
+  return extractFirePostUseItem(
     collectibleType,
     rng,
     player,

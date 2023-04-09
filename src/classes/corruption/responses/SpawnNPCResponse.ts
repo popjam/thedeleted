@@ -5,7 +5,7 @@ import {
   spawnEntityID,
 } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { NPCID } from "../../../enums/general/NPCID";
+import { NPCID } from "../../../enums/general/ID/NPCID";
 import {
   getRandomAccessiblePosition,
   isPositionAccessible,

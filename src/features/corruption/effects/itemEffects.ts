@@ -9,6 +9,7 @@ import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/In
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getGameInvertedItemActionSet } from "../../../helper/deletedSpecific/inversion/corruptionGeneration";
 import { fprint } from "../../../helper/printHelper";
+import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";
 
 const v = {
@@ -31,25 +32,21 @@ export function itemEffectsInit(): void {
 /** Get the ActionSet attached to the inverted collectibleType. */
 export function getAndSetInvertedItemActionSet(
   collectibleType: CollectibleType,
+  inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
   const invertedActionSet = v.run.invertedItems.get(collectibleType);
   if (invertedActionSet !== undefined) {
     return invertedActionSet;
   }
 
-  fprint("Inverted item action set not found, creating one...");
-  const newInvertedActionSet = getGameInvertedItemActionSet({
-    collectible: collectibleType,
-  });
+  fprint(
+    `Inverted item action set not found, creating one for collectibleType: ${collectibleType}`,
+  );
+  inputs = inputs ?? {};
+  inputs.collectible = collectibleType;
+  const newInvertedActionSet = getGameInvertedItemActionSet(inputs);
   v.run.invertedItems.set(collectibleType, newInvertedActionSet);
   return newInvertedActionSet;
-}
-
-/** Check if the collectibleType has an ActionSet attached to it. */
-export function doesCollectibleHaveInvertedItemActionSet(
-  collectibleType: CollectibleType,
-): boolean {
-  return v.run.invertedItems.has(collectibleType);
 }
 
 /**
@@ -60,6 +57,13 @@ export function getAndSetInvertedPedestalActionSet(
   collectible: EntityPickupCollectible,
 ): InvertedItemActionSet {
   return getAndSetInvertedItemActionSet(collectible.SubType);
+}
+
+/** If the Inverted Item */
+export function getInvertedPedestalActionSet(
+  collectible: EntityPickupCollectible,
+): InvertedItemActionSet | undefined {
+  return v.run.invertedItems.get(collectible.SubType);
 }
 
 /** Returns true if the Inverted Item is a passive item. */

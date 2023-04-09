@@ -49,7 +49,7 @@ export const ZAZZINATOR_ACTIVE_COPY_SET: ReadonlySet<CollectibleType> = new Set(
 );
 
 /** Checks if collectibleType is a ZAZZ active copy. */
-export function isCustomActiveACopy(collectible: CollectibleType): boolean {
+export function isZazzinatorActiveCopy(collectible: CollectibleType): boolean {
   return ZAZZINATOR_ACTIVE_COPY_SET.has(collectible);
 }
 

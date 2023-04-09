@@ -6,6 +6,7 @@ import {
 } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { rangeToString } from "../../../types/general/Range";
@@ -20,7 +21,6 @@ const BETWEEN_RESPONSES_TEXT = " or ";
  */
 export class TriggerRandomResponse extends Response {
   override responseType: ResponseType = ResponseType.TRIGGER_RANDOM;
-  override mo: Morality = Morality.NEUTRAL;
   r: WeightedArray<Response> = [];
 
   construct(
@@ -36,6 +36,14 @@ export class TriggerRandomResponse extends Response {
       collectibles.push(...response.getInvolvedCollectibles());
     }
     return collectibles;
+  }
+
+  override getMorality(): Morality {
+    return (
+      this.mo ??
+      getMostFrequentElementInArray(this.r.map((r) => r[0].getMorality())) ??
+      Morality.NEUTRAL
+    );
   }
 
   addResponses(

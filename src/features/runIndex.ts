@@ -12,13 +12,11 @@ export function runIndexInit(): void {
   mod.saveDataManager("runIndex", v);
 }
 
-export function runIndexPostGameStartedReordered(isContinued: boolean): void {
-  if (!isContinued) {
-    if (v.persistent.runIndex > RUN_INDEX_LIMIT) {
-      v.persistent.runIndex = 0;
-    }
-    v.persistent.runIndex++;
+export function runIndexPostGameContinuedFacet(): void {
+  if (v.persistent.runIndex > RUN_INDEX_LIMIT) {
+    v.persistent.runIndex = 0;
   }
+  v.persistent.runIndex++;
 }
 
 /** A random number that is different each run. */

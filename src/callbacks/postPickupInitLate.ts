@@ -1,4 +1,6 @@
+import { PickupVariant } from "isaac-typescript-definitions";
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import { postCollectibleInitLateZazzinator } from "../features/corruption/inventory/callbacks/postPickupChangedToInverted";
 import { updatePickup } from "../helper/deletedSpecific/inversion/updateInverted";
 
 export function postPickupInitLate(mod: ModUpgraded): void {
@@ -6,5 +8,8 @@ export function postPickupInitLate(mod: ModUpgraded): void {
 }
 
 function all(pickup: EntityPickup) {
+  if (pickup.Variant === PickupVariant.COLLECTIBLE) {
+    postCollectibleInitLateZazzinator(pickup);
+  }
   updatePickup(pickup);
 }

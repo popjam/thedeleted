@@ -1,11 +1,14 @@
-import { ColorDefault } from "isaacscript-common";
+import { ColorDefault, deepCopy } from "isaacscript-common";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
+import { addActionsToPlayer } from "../../../../features/corruption/effects/playerEffects";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
 } from "../../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
+import { Action, isAction } from "../../actions/Action";
+import { Response } from "../../responses/Response";
 import { ActionSet } from "../ActionSet";
 
 /**
@@ -17,6 +20,9 @@ export class NonInvertedPickupActionSet extends ActionSet {
   /** This color will be reflected in the entity which the ActionSet belongs to. */
   color?: Color;
   n?: string;
+
+  /** Amount extracted by the 'Extract' item. */
+  ext?: number;
 
   getColor(): Color | undefined {
     return this.color;
@@ -56,6 +62,19 @@ export class NonInvertedPickupActionSet extends ActionSet {
       Description: newDesc,
       ModName: MOD_NAME,
       Name: this.getName() ?? genericName,
+    });
+  }
+
+  addToPlayer(player: EntityPlayer): void {
+    const actionsAndResponses = deepCopy<Array<Action | Response>>(
+      this.getEffects(),
+    );
+    actionsAndResponses.forEach((actionOrResponse) => {
+      if (isAction(actionOrResponse)) {
+        addActionsToPlayer(player, actionOrResponse);
+      } else {
+        actionOrResponse.trigger({ player });
+      }
     });
   }
 

@@ -3,6 +3,7 @@
 import { fprint } from "../../../../helper/printHelper";
 import { getNonInvertedPickupActionSet } from "../../effects/pickupEffects";
 
+// eslint-disable-next-line isaacscript/complete-sentences-jsdoc
 /**
  * Non-Inverted Coins with corrupted effects.
  *

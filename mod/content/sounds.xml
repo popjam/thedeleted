@@ -76,4 +76,13 @@
   <sound name="thedeleted_pc_login">
     <sample weight="1" path="thedeleted_pc_login.wav" />
   </sound>
+
+  <!-- ILOVEYOU Mode Sound Effects -->
+  <sound name="thedeleted_kiss">
+    <sample weight="1" path="thedeleted_kiss.wav" />
+  </sound>
+
+  <sound name="thedeleted_iloveyou_hurt">
+    <sample weight="1" path="thedeleted_iloveyou_hurt.wav" />
+  </sound>
 </sounds>

@@ -1,38 +1,45 @@
 import { BackdropType } from "isaac-typescript-definitions";
 import { game, setBackdrop } from "isaacscript-common";
 import { mod } from "../../mod";
+import { hasEnteredSameRoomTwice } from "./lastRoomVisited";
 
 const v = {
   run: {
-    /** If set to true, the backdrop will permanently be overridden. */
-    overrideBackdrop: false,
-    /** What to override the backdrop to. */
-    overriddenBackdrop: BackdropType.DUNGEON,
-  },
-  room: {
-    /** Backdrop of the room before it changes to an overridden backdrop. */
-    realBackdrop: BackdropType.DUNGEON,
+    /** Overrides the overridden backdrop, used for the corrupted world. */
+    corruptedBackdrop: false,
+    realBackdrop: BackdropType.CAVES,
   },
 };
 
-export function backdropInit(): void {
-  mod.saveDataManager("backdrop", v);
+export function backdropHelperInit(): void {
+  mod.saveDataManager("backdropHelper", v);
 }
 
 /**
- * Override the backdrop permanently. Calling this function will immediately change the backdrop.
- * This will override the backdrop in every room, until removeOverriddenBackdrop() is called.
+ * Permanently set the backdrop to the 'error room' backdrop. Should not use outside turning the
+ * world corrupted.
  */
-export function overrideBackdrop(backdropType: BackdropType): void {
-  v.run.overriddenBackdrop = backdropType;
-  v.run.overrideBackdrop = true;
-  setBackdrop(backdropType);
+// eslint-disable-next-line no-underscore-dangle
+export function _setCorruptedBackdrop(): void {
+  if (v.run.corruptedBackdrop) {
+    return;
+  }
+  v.run.realBackdrop = getBackdrop();
+  v.run.corruptedBackdrop = true;
+  setBackdrop(BackdropType.ERROR_ROOM);
 }
 
-/** Removes the overridden backdrop. */
-export function removeOverriddenBackdrop(): void {
-  v.run.overrideBackdrop = false;
-  setBackdrop(v.room.realBackdrop);
+/**
+ * Remove the permanent corrupted backdrop set by 'setCorruptedBackdrop()'. Should not use outside
+ * removing the corrupted status of the world.
+ */
+// eslint-disable-next-line no-underscore-dangle
+export function _removeCorruptedBackdrop(): void {
+  if (!v.run.corruptedBackdrop) {
+    return;
+  }
+  v.run.corruptedBackdrop = false;
+  setBackdrop(v.run.realBackdrop);
 }
 
 /** Returns the BackdropType of the room. */
@@ -40,20 +47,13 @@ export function getBackdrop(): BackdropType {
   return game.GetRoom().GetBackdropType();
 }
 
-export function postNewRoomReorderedBackdrop(): void {
-  // Tracks backdrop the room originally has before modification.
-  updateRealBackdrop();
-
-  // Overridden backdrop overrides everything.
-  if (v.run.overrideBackdrop) {
-    setBackdrop(v.run.overriddenBackdrop);
+// POST_NEW_ROOM_REORDERED
+export function backdropHelperPostNewRoomReordered(): void {
+  if (!hasEnteredSameRoomTwice()) {
+    v.run.realBackdrop = getBackdrop();
   }
-}
 
-/**
- * Updates the realBackdrop variable which tracks the BackdropType the room had before the backdrop
- * is manually changed.
- */
-function updateRealBackdrop() {
-  v.room.realBackdrop = getBackdrop();
+  if (v.run.corruptedBackdrop) {
+    setBackdrop(BackdropType.ERROR_ROOM);
+  }
 }

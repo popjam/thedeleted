@@ -3,8 +3,8 @@ import { deepCopy } from "isaacscript-common";
 import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { fprint } from "../../../helper/printHelper";
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
 import {
   createPercentage,
   Percentage,
@@ -46,8 +46,8 @@ export abstract class Response {
    * from the Morality or overridden with overrideTextColor(). Note if this Response is wrapped in
    * an Action, it will use the Actions textColor instead.
    */
-  getTextColor(): EIDColorShortcut {
-    return this.oc ?? getEIDColorShortcutFromMorality(this.getMorality());
+  getTextColor(): EIDColorShortcut | undefined {
+    return this.oc;
   }
 
   /**
@@ -59,7 +59,6 @@ export abstract class Response {
     return this;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getInvolvedCollectibles(): CollectibleType[] {
     return [];
   }
@@ -154,6 +153,8 @@ export abstract class Response {
    * this function to fire the Responses tied to them.
    */
   trigger(triggerData: TriggerData): void {
+    fprint(`Triggering Response: ${this.getText()}.`);
+
     // Percentage
     if (!rollPercentage(this.getChanceToActivate())) {
       return;
@@ -162,6 +163,7 @@ export abstract class Response {
     // Firing + AmountOfActivations
     const amountOfActivations = this.calculateAmountOfActivations();
     for (let i = 0; i < amountOfActivations; i++) {
+      fprint(`Firing Response: ${this.getText()}.`);
       this.fire(triggerData);
     }
   }

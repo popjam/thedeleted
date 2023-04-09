@@ -1,7 +1,11 @@
 import { PickingUpItemCollectible } from "isaacscript-common";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import { getAndSetInvertedItemActionSet } from "../../effects/itemEffects";
-import { getLastPickedUpInvertedCollectible } from "../lastPickedUpInverted";
+import {
+  getLastPickedUpCollectible,
+  PickupStage,
+  updateLastPickedUpCollectible,
+} from "../lastPickedUpInverted";
 
 /**
  * When the inverted item goes into ItemQueue. This is used to render the inverted item's name onto
@@ -14,10 +18,17 @@ export function invertedPreItemPickupCollectible(
   pickingUpItem: PickingUpItemCollectible,
 ): void {
   if (isZazzinatorAny(pickingUpItem.subType)) {
-    const pickedUpCollectibleType = getLastPickedUpInvertedCollectible(player);
+    const pickedUpCollectibleType = getLastPickedUpCollectible(player);
+
+    if (pickedUpCollectibleType === undefined) {
+      return;
+    }
     const invertedActionSet = getAndSetInvertedItemActionSet(
-      pickedUpCollectibleType,
+      pickedUpCollectibleType.collectibleType,
     );
+    updateLastPickedUpCollectible(player, PickupStage.PRE_ITEM_PICKUP);
     invertedActionSet.prePickupCollectible(player, pickingUpItem);
+  } else {
+    updateLastPickedUpCollectible(player, PickupStage.PRE_ITEM_PICKUP);
   }
 }

@@ -74,8 +74,6 @@ export function getPlayerMostRecentInvertedItem(
 /**
  * Add an inverted item into the players' inventory tracker. This does not actually give the item to
  * the player, and should probably not get called outside specific functions.
- *
- * TODO: Update for actives!
  */
 export function addInvertedItemToCorruptInventory(
   player: EntityPlayer,

@@ -21,8 +21,13 @@ export function switchToNextModeOnCarousel(player: EntityPlayer): void {
   }
 
   const nextMode = carousel[(carousel.indexOf(mode) + 1) % carousel.length];
+  /** If the next mode is undefined, wrap around to the first mode. */
   if (nextMode === undefined) {
-    fprint("Cannot switch to an undefined mode.");
+    const firstMode = carousel[0];
+    if (firstMode === undefined) {
+      error("The carousel is empty.");
+    }
+    setPlayerMode(player, firstMode);
     return;
   }
 

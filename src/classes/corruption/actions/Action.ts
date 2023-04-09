@@ -5,7 +5,6 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
 
 import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
 import {
   randomInRange,
   Range,
@@ -80,8 +79,8 @@ export abstract class Action {
    * Get the assigned EID Color used to represent the Action. This can either be derived from the
    * Morality or overridden with overrideTextColor().
    */
-  getTextColor(): EIDColorShortcut {
-    return this.oc ?? getEIDColorShortcutFromMorality(this.getMorality());
+  getTextColor(): EIDColorShortcut | undefined {
+    return this.oc;
   }
 
   /** Override the text color generated to this Action through its Morality. */
@@ -262,7 +261,7 @@ export abstract class Action {
       if (
         this.ic >
         (typeof this.i === "number"
-          ? interval
+          ? (interval as number)
           : randomInRange(interval as Range))
       ) {
         this.ic = 1;

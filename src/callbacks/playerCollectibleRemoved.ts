@@ -24,8 +24,11 @@ function mainZazzRemoved(
 ) {
   fprint(`Collectible removed: ${getCollectibleName(collectibleType)}`);
   if (isZazzinatorPassive(collectibleType)) {
-    invertedItemEffectsPostZazzActiveCollectibleRemoved(player);
+    invertedItemEffectsPostZazzPassiveCollectibleRemoved(
+      player,
+      collectibleType,
+    );
   } else if (isZazzinatorActive(collectibleType)) {
-    invertedItemEffectsPostZazzPassiveCollectibleRemoved(player);
+    invertedItemEffectsPostZazzActiveCollectibleRemoved(player);
   }
 }
