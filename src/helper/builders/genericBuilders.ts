@@ -8,6 +8,7 @@ import {
   getRandomFromWeightedArray,
   getRandomInt,
   getRandomSeed,
+  shuffleArrayInPlace,
 } from "isaacscript-common";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
@@ -67,7 +68,7 @@ export function generateDefaultCorruptedCollectibleSprite(
   if (involvedCollectibles.length < amountOfSegments) {
     for (let i = 0; i < amountOfSegments - involvedCollectibles.length; i++) {
       involvedCollectibles.push(
-        getRandomCollectibleType({}) ?? CollectibleType.POOP,
+        getRandomCollectibleType() ?? CollectibleType.POOP,
       );
     }
   } else if (involvedCollectibles.length > amountOfSegments) {
@@ -76,11 +77,12 @@ export function generateDefaultCorruptedCollectibleSprite(
       involvedCollectibles.length - amountOfSegments,
     );
   }
-
+  shuffleArrayInPlace(involvedCollectibles);
   return {
     collectibles: involvedCollectibles,
-    color: true,
+    color: "random",
     seed: getRandomSeed(),
+    horizontal: getRandomInt(0, 1) === 0,
   };
 }
 
@@ -107,7 +109,7 @@ export function defaultInvertedItemActionSetBuilder(
 
 /**
  * Generates a default actionSet for an inverted active item. Will not add name, description and
- * icon properties, these can be added afterwards or left black to be auto-generated.
+ * icon properties, these can be added afterwards or left blank to be auto-generated.
  */
 export function defaultInvertedActiveActionSetBuilder(
   inputs?: ActionSetBuilderInput,

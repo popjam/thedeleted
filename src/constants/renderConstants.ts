@@ -5,10 +5,25 @@
 export const PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1 = Vector(20, 38);
 
 /**
+ * The coordinates to render a Collectible sprite on the HUD in the Primary Active Slot. Note: you
+ * should call `renderPositionToHUDPosition` on this value to get the adjusted render position.
+ */
+export const PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2 = Vector(141, 34);
+
+/**
  * The coordinates to render a Collectible sprite on the HUD in the Secondary Active Slot. Note: you
  * should call `renderPositionToHUDPosition` on this value to get the adjusted render position.
  */
 export const SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1 = Vector(3, 19);
+
+/**
+ * The coordinates to render a Collectible sprite on the HUD in the Secondary Active Slot. Note: you
+ * should call `renderPositionToHUDPosition` on this value to get the adjusted render position.
+ */
+export const SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2 = Vector(
+  159,
+  15,
+);
 
 /**
  * The coordinates to render a Collectible sprite on the HUD in the bottom pocket slot position.
@@ -73,3 +88,19 @@ export const SECONDARY_ACTIVE_SLOT_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1 =
 
 export const POCKET_SLOT_UNFOCUSSED_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1 =
   Vector(0.5, 0.5);
+
+export const PRIMARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1 = Vector(
+  0.25,
+  0.25,
+);
+
+export const SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1 =
+  Vector(0.1, 0.1);
+
+export const POCKET_SLOT_UNFOCUSSED_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1 =
+  Vector(0.1, 0.1);
+
+export const POCKET_SLOT_FOCUSSED_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1 =
+  Vector(0.25, 0.25);
+
+export const PEDESTAL_HEIGHT = 45;

@@ -9,9 +9,9 @@ import {
   PlayerIndex,
   getEnumValues,
   getPlayerIndex,
-  newCollectibleSprite,
 } from "isaacscript-common";
 import { PLAYER_PICKUP_ANIMATION_RENDER_OFFSET } from "../../constants/renderConstants";
+import { getCollectibleSpriteFromCache } from "../../features/general/spriteCache";
 import { renderCorruptedCollectibleSprite } from "../../helper/deletedSpecific/funnySprites";
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
@@ -130,7 +130,7 @@ function renderCollectibleAboveHead(
   spriteToRender: CorruptedCollectibleSprite | CollectibleType,
 ) {
   if (typeof spriteToRender === "number") {
-    const newSprite = newCollectibleSprite(spriteToRender);
+    const newSprite = getCollectibleSpriteFromCache(spriteToRender);
     newSprite.Render(
       worldToRenderPosition(
         player.Position.add(PLAYER_PICKUP_ANIMATION_RENDER_OFFSET),

@@ -9,7 +9,7 @@ export const DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE: InvertedItemAct
 // eslint-disable-next-line isaacscript/require-capital-const-assertions, isaacscript/require-capital-read-only
 export const INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD: WeightedArray<number> =
   [
-    [1, 0.5],
+    [1, 5],
     [2, 50],
     [3, 50],
     [4, 50],

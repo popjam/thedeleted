@@ -86,3 +86,42 @@ export function newSparkleSprite(): Sprite {
   sparkleSprite.Play("PlayerPickupSparkle", true);
   return sparkleSprite;
 }
+
+/**
+ * Use this instead of the sprite.Render function if you want to clamp the sprite, while it is
+ * flipped in the X and Y axis. Doing this with sprite.Render() will move the sprite in the opposite
+ * direction.
+ */
+export function renderSprite(
+  sprite: Sprite,
+  position: Vector,
+  topLeftClamp: Vector,
+  bottomRightClamp: Vector,
+): void {
+  if (!sprite.FlipX && !sprite.FlipY) {
+    sprite.Render(position, topLeftClamp, bottomRightClamp);
+  } else if (sprite.FlipX && !sprite.FlipY) {
+    sprite.Render(
+      position.add(Vector(topLeftClamp.X - bottomRightClamp.X, 0)),
+      bottomRightClamp,
+      topLeftClamp,
+    );
+  } else if (!sprite.FlipX && sprite.FlipY) {
+    sprite.Render(
+      position.add(Vector(0, topLeftClamp.Y - bottomRightClamp.Y)),
+      bottomRightClamp,
+      topLeftClamp,
+    );
+  } else {
+    sprite.Render(
+      position.add(
+        Vector(
+          topLeftClamp.X - bottomRightClamp.X,
+          topLeftClamp.Y - bottomRightClamp.Y,
+        ),
+      ),
+      bottomRightClamp,
+      topLeftClamp,
+    );
+  }
+}

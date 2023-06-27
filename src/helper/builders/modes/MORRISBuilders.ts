@@ -1,6 +1,7 @@
 import { getRandomInt, isColor } from "isaacscript-common";
 import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { DeletedColor } from "../../../enums/general/DeletedColor";
+import { MORRISInvertedItemSpriteColor } from "../../../constants/modes/MORRISConstants";
+import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,
@@ -22,14 +23,19 @@ export function morrisDefaultBuilder(
   }
 
   /** Set the name and description. */
-  actionSet.setName("MORRIS").setDescription("MORRIS DESCRIPTION");
+  actionSet
+    .setName(`MORRIS ${active ? "ACTIVE" : "PASSIVE"}`)
+    .setDescription("MORRIS DESCRIPTION");
 
   /** Set the icon. */
   const sprite = generateDefaultCorruptedCollectibleSprite(actionSet, inputs);
   if (!isColor(sprite)) {
-    sprite.color = DeletedColor.WORM_TURQUOISE;
+    sprite.color = MORRISInvertedItemSpriteColor;
   }
   actionSet.setIcon(sprite);
+
+  /** Set the text color. */
+  actionSet.setTheme(EIDColorTriplet.MORRIS_TRIPLET);
 
   return actionSet;
 }

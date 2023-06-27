@@ -4,6 +4,7 @@ import { CollectibleType } from "isaac-typescript-definitions";
 import { getPlayerIndex, PickupIndex, PlayerIndex } from "isaacscript-common";
 import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { getPickupWithPickupIndex } from "../../../helper/entityHelper/pickupIndexHelper";
+import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
 
 export enum PickupStage {
@@ -182,11 +183,16 @@ export function updateLastPickedUpCollectible(
   }
 }
 
+/**
+ * Gets the last pedestal the player has picked up an item from, or undefined if it cannot find one.
+ * The player may be in the process of picking up an item from it.
+ */
 export function getLastPickedUpPedestal(
   player: EntityPlayer,
 ): EntityPickupCollectible | undefined {
   const pickupData = getLastPickedUpCollectible(player);
   if (pickupData === undefined) {
+    fprint("Failed to get the last picked up pedestal for the player.");
     return undefined;
   }
 

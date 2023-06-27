@@ -1,6 +1,6 @@
 <entities anm2root="gfx/" version="5">
-	<!-- Sewing Machines -->
-	<entity anm2path="thedeleted_computer.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="6" name="Deleted Computer" numGridCollisionPoints="24" shadowSize="33" stageHP="0" variant="722" subtype="0">
-		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-	</entity>
+  <!-- Deleted PC-->
+  <entity anm2path="Items/slots/thedeleted_pc.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="6" name="Deleted Computer" numGridCollisionPoints="24" shadowSize="33" stageHP="0" variant="722" subtype="0">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
 </entities>

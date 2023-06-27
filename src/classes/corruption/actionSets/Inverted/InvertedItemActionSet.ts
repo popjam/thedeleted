@@ -30,7 +30,7 @@ const DEFAULT_QUALITY = 0;
 const DEFAULT_DESCRIPTION = "Beware...";
 const DEFAULT_NAME = "Corrupted Item";
 
-/** ActionSet class for Inverted. */
+/** ActionSet class for Inverted Items. */
 export abstract class InvertedItemActionSet extends ActionSet {
   q?: number;
   d?: string;
@@ -209,6 +209,10 @@ export abstract class InvertedItemActionSet extends ActionSet {
     } else {
       overridePickupAnimationWithCustomSprite(player, icon);
     }
+
+    fprint(`  Picked up inverted item ${this.getName()}.
+    With Description: ${this.getDescription()}`);
+
     return undefined;
   }
 }

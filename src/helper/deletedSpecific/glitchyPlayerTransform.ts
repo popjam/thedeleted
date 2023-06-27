@@ -2,6 +2,7 @@ import {
   DEFAULT_NORMAL_STARTING_SPRITESHEET_PATH,
   TRANSITIONAL_GLITCH_SPRITES_ARRAY,
 } from "../../constants/fileConstants";
+import { mod } from "../../mod";
 
 const v = {
   run: {
@@ -10,6 +11,10 @@ const v = {
     transitionalSpritesheetPaths: TRANSITIONAL_GLITCH_SPRITES_ARRAY,
   },
 };
+
+export function glitchyReplacePlayerSpritesheetInit(): void {
+  mod.saveDataManager("glitchyPlayerTransform", v);
+}
 
 /**
  * Transforms the player into the specified character spritesheet with a glitchy transition. Can

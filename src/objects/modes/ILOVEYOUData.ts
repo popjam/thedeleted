@@ -29,6 +29,7 @@ export const ILOVEYOUData: ModeData = {
     soulHeartTypes: [],
   },
   mainColor: DeletedColor.LOVE_PINK,
+  anm2File: "gfx/001.000_player_ILOVEYOU.anm2",
   characterStats: new Map<CacheFlag, number>([
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],

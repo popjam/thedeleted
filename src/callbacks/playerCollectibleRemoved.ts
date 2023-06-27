@@ -22,7 +22,17 @@ function mainZazzRemoved(
   player: EntityPlayer,
   collectibleType: CollectibleType,
 ) {
-  fprint(`Collectible removed: ${getCollectibleName(collectibleType)}`);
+  fprint(
+    `
+
+    O------O START POST_PLAYER_COLLECTIBLE_REMOVED O------O
+    Collectible removed: ${getCollectibleName(collectibleType)}
+    Passive: ${isZazzinatorPassive(collectibleType)}
+    Active: ${isZazzinatorActive(collectibleType)}
+    O------O END POST_PLAYER_COLLECTIBLE_REMOVED O------O
+
+    `,
+  );
   if (isZazzinatorPassive(collectibleType)) {
     invertedItemEffectsPostZazzPassiveCollectibleRemoved(
       player,

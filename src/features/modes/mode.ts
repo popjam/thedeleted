@@ -4,12 +4,17 @@ import {
   getPlayerIndex,
   setActiveItem,
   setPlayerHealth,
+  sfxManager,
 } from "isaacscript-common";
 import { Mode } from "../../enums/modes/Mode";
 import {
   isModeTainted,
   isPlayerDeleted,
 } from "../../helper/deletedSpecific/deletedHelper";
+import {
+  invertPlayerToInversion,
+  updateWorldInversion,
+} from "../../helper/deletedSpecific/inversion/playerInversion";
 import {
   setPlayerBombs,
   setPlayerCoins,
@@ -21,6 +26,7 @@ import {
   getModeData,
   getModeFromPlayerType,
   getModePlayerType,
+  getModeVoiceover,
 } from "../../maps/modes/modeMap";
 import { mod } from "../../mod";
 import { setPlayerInvertedItemActionSetBuilderReference } from "../corruption/corruptionGeneration";
@@ -64,6 +70,12 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
   setPersistentMode(mode);
   // Setup player.
   const modeData = getModeData(mode);
+  // Load anm2:
+  if (modeData.anm2File !== undefined) {
+    player.GetSprite().Load(modeData.anm2File, true);
+    // We have to play an animation to prevent body from temporarily disappearing.
+    player.PlayExtraAnimation("Glitch");
+  }
   // Consumables:
   setPlayerBombs(player, modeData.startingBombs);
   setPlayerKeys(player, modeData.startingKeys);
@@ -83,6 +95,16 @@ export function setPlayerMode(player: EntityPlayer, mode: Mode): void {
       modeData.itemActionSetBuilderReference,
     );
   }
+  // Voiceover
+  const vo = getModeVoiceover(mode);
+  if (vo !== undefined) {
+    fprint(`Playing voiceover: ${vo}`);
+    sfxManager.Play(vo);
+  }
+  // Player Inversion:
+  invertPlayerToInversion(player, modeData.startInverted ?? false, true);
+  // Game Inversion:
+  updateWorldInversion(true);
   // Init mode:
   getModeInit(mode)(player);
 }
@@ -139,6 +161,8 @@ export function postPlayerChangeTypeMode(
   if (newMode !== undefined) {
     fprint(`Starting up mode: ${newMode} for player ${getPlayerIndex(player)}`);
     setPlayerMode(player, newMode);
+  } else {
+    invertPlayerToInversion(player, false, true);
   }
 }
 

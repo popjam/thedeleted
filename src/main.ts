@@ -1,4 +1,5 @@
-import { getEnumValues } from "isaacscript-common";
+import { ModCallback } from "isaac-typescript-definitions";
+import { Callback, ModFeature, getEnumValues } from "isaacscript-common";
 import { evaluateCacheInit } from "./callbacks/evaluateCache";
 import { postPlayerCollectibleAddedInit } from "./callbacks/playerCollectibleAdded";
 import { postPlayerCollectibleRemovedInit } from "./callbacks/playerCollectibleRemoved";
@@ -6,6 +7,7 @@ import { playerTakeDMGInit } from "./callbacks/playerTakeDMG";
 import { postBombExplodedInit } from "./callbacks/postBombExploded";
 import { postBombInitLateInit } from "./callbacks/postBombInitLate";
 import { postEntityKillInit } from "./callbacks/postEntityKill";
+import { postFireTearInit } from "./callbacks/postFireTear";
 import { postGameStartedReorderedInit } from "./callbacks/postGameStartedReordered";
 import { postItemPickupInit } from "./callbacks/postItemPickup";
 import { postNPCInitLateInit } from "./callbacks/postNPCInitLate";
@@ -30,6 +32,7 @@ import { preItemPickupInit } from "./callbacks/preItemPickup";
 import { preNewLevelReorderedInit } from "./callbacks/preNewLevel";
 import { prePickupCollisionInit } from "./callbacks/prePickupCollision";
 import { prePlayerCollisionInit } from "./callbacks/prePlayerCollision";
+import { preSpawnClearAwardInit } from "./callbacks/preSpawnClearAward";
 import { InvertedActiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { InvertedPassiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import { NonInvertedPickupActionSet } from "./classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
@@ -38,14 +41,13 @@ import { OnFloorAction } from "./classes/corruption/actions/OnFloorAction";
 import { OnKillAction } from "./classes/corruption/actions/OnKillAction";
 import { OnObtainAction } from "./classes/corruption/actions/OnObtainAction";
 import { OnRoomAction } from "./classes/corruption/actions/OnRoomAction";
+import { GetCollectibleResponse } from "./classes/corruption/responses/GetCollectibleResponse";
 import { RemoveActionResponse } from "./classes/corruption/responses/RemoveActionResponse";
 import { RemoveCollectibleResponse } from "./classes/corruption/responses/RemoveCollectibleResponse";
-import { RemoveRuleResponse } from "./classes/corruption/responses/RemoveRuleResponse";
 import { SpawnNPCResponse } from "./classes/corruption/responses/SpawnNPCResponse";
 import { SpawnPickupResponse } from "./classes/corruption/responses/SpawnPickupResponse";
 import { TemporaryActionResponse } from "./classes/corruption/responses/TemporaryActionResponse";
 import { TemporaryCollectibleResponse } from "./classes/corruption/responses/TemporaryCollectibleResponse";
-import { TemporaryRuleResponse } from "./classes/corruption/responses/TemporaryRuleResponse";
 import { TriggerInSequenceResponse } from "./classes/corruption/responses/TriggerInSequence";
 import { TriggerOverTimeResponse } from "./classes/corruption/responses/TriggerOverTimeResponse";
 import { TriggerRandomResponse } from "./classes/corruption/responses/TriggerRandomResponse";
@@ -58,6 +60,7 @@ import { initRenderOverHeadFacet } from "./classes/facets/RenderOverHeadFacet";
 import { initBolsterNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
 import { initFreezeNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
 import { initHybridNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/HybridNPCFacet";
+import { initNonMandatoryNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/NonMandatoryNPCFacet";
 import { initUnstableEntityFacet } from "./classes/facets/entityModifiers.ts/UnstableEntityFacet";
 import { initEveryItemIsFacet } from "./classes/facets/entityModifiers.ts/pickupModifiers/EveryItemIsFacet";
 import { initPCFacet } from "./classes/facets/pc/PCFacet";
@@ -66,11 +69,13 @@ import { Mode } from "./enums/modes/Mode";
 import { FEATURE_INIT_FUNCTIONS } from "./features";
 import { initEID } from "./features/compatibility/EID/EIDInit";
 import { addTestingCommands } from "./features/console/testing";
+import { fprint } from "./helper/printHelper";
 import { MODE_DATA_MAP, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
 
 const IS_DEV = true;
 
+fprint("Loading 'main.ts'...");
 main();
 
 function main() {
@@ -133,6 +138,8 @@ function initCallbacks() {
   preGameExitInit(mod);
   postPickupChangedInit(mod);
   prePlayerCollisionInit(mod);
+  preSpawnClearAwardInit(mod);
+  postFireTearInit(mod);
 }
 
 /** Initialize External mods if they exist. */
@@ -173,14 +180,13 @@ function initClasses() {
     TriggerOverTimeResponse,
     TriggerInSequenceResponse,
     TemporaryCollectibleResponse,
-    TemporaryRuleResponse,
     TemporaryActionResponse,
     RemoveCollectibleResponse,
-    RemoveRuleResponse,
     RemoveActionResponse,
     SpawnNPCResponse,
     SpawnPickupResponse,
     LevelOneWorm,
+    GetCollectibleResponse,
   );
 }
 
@@ -195,4 +201,12 @@ function initFacets() {
   initBolsterNPCFacet();
   initEveryItemIsFacet();
   initHUDRenderingFacet();
+  initNonMandatoryNPCFacet();
+}
+
+class TestModFeature extends ModFeature {
+  @Callback(ModCallback.POST_RENDER)
+  postUpdate() {
+    Isaac.DebugString("Callback triggered: POST_UPDATE");
+  }
 }

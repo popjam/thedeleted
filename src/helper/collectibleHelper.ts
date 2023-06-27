@@ -20,6 +20,7 @@ import {
   getRandomArrayElement,
   getRandomSeed,
   getRoomItemPoolType,
+  isHiddenCollectible,
   isRNG,
   newRNG,
   setCollectibleGlitched,
@@ -37,9 +38,44 @@ import {
   bitFlagsContainsAtLeastOneBitflags,
 } from "./bitflagHelper";
 import { isCollectibleFree } from "./priceHelper";
-import { fprint } from "./printHelper";
 import { worldToRenderPosition } from "./renderHelper";
 import { copySprite } from "./spriteHelper";
+
+/** Replace an active item with another in a specific ActiveSlot. */
+export function replaceActiveItem(
+  player: EntityPlayer,
+  activeSlot: ActiveSlot,
+  replaceWith: CollectibleType,
+  keepInPoolsIfApplicable = true,
+  firstTimePickingUpIfApplicable = true,
+): void {
+  if (player.GetActiveItem(activeSlot) === CollectibleType.NULL) {
+    return;
+  }
+
+  if (
+    activeSlot === ActiveSlot.POCKET ||
+    activeSlot === ActiveSlot.POCKET_SINGLE_USE
+  ) {
+    player.SetPocketActiveItem(
+      replaceWith,
+      activeSlot,
+      keepInPoolsIfApplicable,
+    );
+  } else {
+    player.RemoveCollectible(
+      player.GetActiveItem(activeSlot),
+      true,
+      activeSlot,
+    );
+    player.AddCollectible(
+      replaceWith,
+      0,
+      firstTimePickingUpIfApplicable,
+      activeSlot,
+    );
+  }
+}
 
 /**
  * Add a collectible to the player. If the collectible is a working collectible effect, add that
@@ -147,6 +183,16 @@ export function doesCollectibleTypeMatchAttributes(
 ): boolean {
   // Item Type.
   const { itemType } = collectibleAttributes;
+
+  // Forced.
+  const { forced } = collectibleAttributes;
+  if (forced !== undefined) {
+    if (forced.includes(collectibleType)) {
+      return true;
+    }
+  }
+
+  // Item Type.
   if (itemType !== undefined) {
     if (
       !isInArrayOrEquals<ItemType>(
@@ -273,6 +319,14 @@ export function doesCollectibleTypeMatchAttributes(
     }
   }
 
+  // Hidden.
+  const { hidden } = collectibleAttributes;
+  if (hidden === undefined || !hidden) {
+    if (isHiddenCollectible(collectibleType)) {
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -307,11 +361,6 @@ export function getRandomCollectibleType(
         collectibleAttributes,
       )
     ) {
-      fprint(
-        `Found collectible: ${getCollectibleName(
-          currentCollectible,
-        )}, with ${i} iterations`,
-      );
       break;
     }
   }

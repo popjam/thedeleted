@@ -3,7 +3,7 @@
   <player hp="2" armor="2" bombs="1" name="Deleted" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
 
   <!-- ILOVEYOU Mode -->
-  <player hp="2" armor="2" bombs="1" name="Deleted_ILOVEYOU" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ILOVEYOU.png" hidden="true" skinColor="0" birthright="Patched" />
+  <player hp="2" armor="2" bombs="1" name="Deleted_ILOVEYOU" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ILOVEYOU.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="ILOVEYOU" />
 
   <!-- MORRIS Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_MORRIS" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_MORRIS.png" hidden="true" skinColor="0" birthright="Patched" />
@@ -11,8 +11,29 @@
   <!-- ZIPBOMBER Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_ZIPBOMBER" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_ZIPBOMBER.png" hidden="true" skinColor="0" birthright="Patched" />
 
+  <!-- CRYPTOLOCKER Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_CRYPTOLOCKER" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_CRYPTOLOCKER.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- SPYWIPER Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_SPYWIPER" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_SPYWIPER.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- JERUSALEM Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_JERUSALEM" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_JERUSALEM.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- HICURDISMOS Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_HICURDISMOS" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HICURDISMOS.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- VCS Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_VCS" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_VCS.png" hidden="true" skinColor="0" birthright="Patched" />
+
+  <!-- MEMZ Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_MEMZ" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_MEMZ.png" hidden="true" skinColor="0" birthright="Patched" />
+
   <!-- MYDOOM Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_MYDOOM" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_MYDOOM.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="MYDOOM" />
+
+  <!-- REVETON Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_REVETON" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_REVETON.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="REVETON" />
 
   <!-- T. SOPHOS Mode -->
   <player black="6" coins="1" name="Deleted" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />

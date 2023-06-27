@@ -10,4 +10,4 @@ export function memzInit(): void {
 export function memzModeInit(player: EntityPlayer): void {}
 
 /** Initiate the player to be HAPPY99 in the MEMZ mode. */
-export function memz99MemzInit(player: EntityPlayer): void {}
+export function memzModeFin(player: EntityPlayer): void {}

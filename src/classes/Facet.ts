@@ -1,6 +1,6 @@
 /**
  * Facet class, an extension of 'ModFeature' which facilitates tracking number of subscribers,
- * resubscribing upon exiting and entering the game on a continued save, as automatically
+ * resubscribing upon exiting and entering the game on a continued save, and automatically
  * uninitialising the Facet upon a new run.
  */
 

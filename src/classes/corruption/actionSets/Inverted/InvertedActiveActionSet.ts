@@ -6,23 +6,32 @@ import {
 import { deepCopy, isColor } from "isaacscript-common";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { ActionOrigin } from "../../../../enums/corruption/actions/ActionOrigin";
-import { addActionOrResponseToPlayer } from "../../../../features/corruption/effects/playerEffects";
-import { addInvertedItemToCorruptInventory } from "../../../../features/corruption/inventory/itemInventory";
+import { ActionType } from "../../../../enums/corruption/actions/ActionType";
+import {
+  addActionOrResponseToPlayer,
+  removeActionWithPredicate,
+} from "../../../../features/corruption/effects/playerEffects";
+import {
+  addInvertedItemToCorruptInventory,
+  removeInvertedItemFromCorruptInventory,
+} from "../../../../features/corruption/inventory/itemInventory";
 import {
   PickupStage,
   setLastPickedUpCollectible,
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
+import { getPedestalCharges } from "../../../../features/corruption/inversion/pedestalCharges";
+import { shouldZazzActiveBeACopy } from "../../../../helper/deletedSpecific/inversion/customActive";
 import { fprint } from "../../../../helper/printHelper";
 import {
   getZazzActiveFromCharge,
   getZazzActiveFromInvertedActiveActionSet,
 } from "../../../../maps/activeChargeToZazzActive";
 import { mod } from "../../../../mod";
-import {
-  _addInvertedActiveToPlayer,
-  shouldZazzActiveBeACopy,
-} from "../../../facets/CustomActiveFacet";
+import { isZazzinatorActiveCopy } from "../../../../sets/zazzSets";
+import { _addInvertedActiveToPlayer } from "../../../facets/CustomActiveFacet";
 import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
+import { Action } from "../../actions/Action";
+import { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
 
 const DEFAULT_NAME = "Corrupted Active Item";
@@ -34,6 +43,38 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
   override actionSetType: ActionSetType = ActionSetType.INVERTED_ACTIVE_ITEM;
   ch?: number;
   chT?: ItemConfigChargeType;
+
+  /** Remove after X uses attribute. */
+  rX?: number;
+
+  /** Number of times the item has been used. */
+  nu?: number;
+
+  /**
+   * Transform after use attribute. After the Inverted Active Item is used, it will immediately
+   * transform itself into the specified inverted/non-inverted item (preserving the same slot if it
+   * is an active).
+   */
+  tu?: {
+    /** The item to transform into: */
+    i: CollectibleType;
+    /** Whether the new item should be inverted or non-inverted. */
+    iI?: boolean;
+    /** How many uses until transformation (undefined is equal to 1). */
+    u?: number;
+  };
+
+  /**
+   * Charge with - if this is enabled, item will not charge normally, instead charging when the
+   * Action is triggered.
+   */
+  cw?: Action;
+
+  /**
+   * On use condition - E.g requires a key to use. If the condition is not satisfied, will not be
+   * used.
+   */
+  uc?: Response;
 
   /** Is the physical zazzinator item a copy or not. */
   copy?: boolean;
@@ -101,6 +142,9 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
           slot,
         );
       }
+    } else {
+      actionSet.copy = isZazzinatorActiveCopy(player.GetActiveItem());
+      fprint(`Is copy: ${actionSet.copy}`);
     }
 
     // Inventory.
@@ -126,7 +170,29 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     collectible: CollectibleType,
     removeLogo: boolean,
     removeFromInventory: boolean,
-  ): void {}
+  ): void {
+    // Remove the Actions using advanced GPT-5 AI technology.
+    const actionTypes = this.getActions().map((action) => action.actionType);
+    actionTypes.forEach((actionType: ActionType) => {
+      removeActionWithPredicate(
+        (action) =>
+          action.o?.[0] === ActionOrigin.INVERTED_COLLECTIBLE &&
+          action.o[1] === (collectible as number),
+        player,
+        actionType,
+      );
+    });
+
+    // Remove the logo from player item tracker.
+    if (removeLogo) {
+      // player.RemoveCollectible(CollectibleTypeCustom.ZAZZ);
+    }
+
+    // Remove most recent from inventory.
+    if (removeFromInventory) {
+      removeInvertedItemFromCorruptInventory(player, collectible);
+    }
+  }
 
   /** Use the Inverted Active item. */
   // POST_USE_ITEM
@@ -142,12 +208,16 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       } responses..`,
     );
 
-    /** Trigger responses. */
-    this.getResponses().forEach((response) => {
-      response.trigger({
-        player,
+    /** Trigger responses. Do it twice if they have car battery. */
+    const hasCarBattery = player.HasCollectible(CollectibleType.CAR_BATTERY);
+    const repeatAmount = hasCarBattery ? 2 : 1;
+    for (let i = 0; i < repeatAmount; i++) {
+      this.getResponses().forEach((response) => {
+        response.trigger({
+          player,
+        });
       });
-    });
+    }
 
     /** Play sound. */
     this.playSoundEffect();
@@ -158,7 +228,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       playPickupAnimationWithCustomSprite(player, icon, 2);
     }
 
-    return undefined;
+    return { Discharge: true, Remove: false, ShowAnim: false };
   }
 
   preGetPedestal(
@@ -171,10 +241,20 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       pickupIndex: mod.getPickupIndex(pedestal),
       inverted: true,
     });
+    const shouldBeCopy = shouldZazzActiveBeACopy(player);
     pedestal.SubType = getZazzActiveFromCharge(
       this.getChargeType(),
       this.getCharges(),
+      shouldBeCopy,
     );
+    pedestal.Charge = getPedestalCharges(pedestal) ?? this.getCharges();
+    fprint(`Pedestal charge: ${pedestal.Charge}
+    Inverted Active charge: ${this.getCharges()}
+    Inverted Active chargeType: ${this.getChargeType()}
+    Should be copy: ${shouldBeCopy}
+    X-----X END PRE_GET_PEDESTAL X-----X
+
+    `);
     return false;
   }
 }

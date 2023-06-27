@@ -17,6 +17,7 @@ import { getAndSetInvertedItemActionSet } from "../../../features/corruption/eff
 import { getNonInvertedPickupActionSet } from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import { isZazzinatorAny } from "../../../sets/zazzSets";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
@@ -46,7 +47,10 @@ export function updatePedestal(
   returnCorruptedCollectibleSpriteToNormal(pedestal);
 
   /** Update the appearance. */
-  if (pedestal.SubType === CollectibleType.NULL) {
+  if (
+    pedestal.SubType === CollectibleType.NULL ||
+    isZazzinatorAny(pedestal.SubType)
+  ) {
     return;
   }
   if (isPickupInverted(pedestal)) {

@@ -2,7 +2,9 @@
   <!-- BitFlip !-->
   <active description="Ones and Zeros" gfx="bitflip.png" maxcharges="0" name="Bitflip" chargetype="normal" hidden="true" tags="quest" />
   <!-- Pink BitFlip !-->
-  <active description="Ones and Zeroes" gfx="bitflip_pink.png" maxcharges="0" name="Bitflip " chargetype="normal" hidden="true" tags="quest" />
+  <active description="Ones and Zeroes" gfx="bitflip_pink.png" maxcharges="0" name=" Bitflip" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Blue BitFlip !-->
+  <active description="Ones and Zeroes" gfx="bitflip_blue.png" maxcharges="0" name="  Bitflip" chargetype="normal" hidden="true" tags="quest" />
   <!-- D-13 !-->
   <active description="128.32.137.13 " gfx="d14.png" maxcharges="6" name="D-14" chargetype="normal" hidden="true" tags="quest" />
   <!-- Passive Trash !-->
@@ -11,6 +13,14 @@
   <active description="40 days remaining" gfx="thedeleted_extract.png" maxcharges="0" name="Extract" chargetype="normal" hidden="true" tags="quest" />
   <!-- Extract Fire!-->
   <active description="20 days remaining" gfx="thedeleted_extract_fire.png" maxcharges="0" name=" Extract" chargetype="normal" hidden="true" tags="quest" />
+  <!-- Mydoom Eye 1 -->
+  <active description="Vuub co mhqjx  " gfx="eyes/thedeleted_eye1.png" maxcharges="0" name="Qdwho Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Mydoom Eye 2 -->
+  <active description="Jurer ner lbhe cneragf?  " gfx="eyes/thedeleted_eye2.png" maxcharges="0" name="Kfiuj Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Mydoom Eye 3 -->
+  <active description="Jurer qb lbh yvir?  " gfx="eyes/thedeleted_eye3.png" maxcharges="0" name="Cyhqsbu Uou  " chargetype="normal" hidden="true" tags="quest" />
+  <!-- Mydoom Eye 4 -->
+  <active description="Qyyn wybxsxq!  " gfx="eyes/thedeleted_eye4.png" maxcharges="0" name="Xkdwho Uou  " chargetype="normal" hidden="true" tags="quest" />
   <!-- zzazzinator passive-->
   <passive description="Be careful.." gfx="zazzinator.png" name="Corrupted Passive" quality="2" hidden="true" />
 
@@ -25,36 +35,72 @@
   <!-- 1 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="1" name="  " chargetype="normal" hidden="true" />
 
+  <!-- 1 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="1" name="  ." chargetype="normal" hidden="true" />
+
   <!-- 2 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="2" name="   " chargetype="normal" hidden="true" />
+
+  <!-- 2 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="2" name="   ." chargetype="normal" hidden="true" />
 
   <!-- 3 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="3" name="    " chargetype="normal" hidden="true" />
 
+  <!-- 3 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="3" name="    ." chargetype="normal" hidden="true" />
+
   <!-- 4 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="4" name="     " chargetype="normal" hidden="true" />
+
+  <!-- 4 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="4" name="     ." chargetype="normal" hidden="true" />
 
   <!-- 5 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="5" name="      " chargetype="normal" hidden="true" />
 
+  <!-- 5 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="5" name="      ." chargetype="normal" hidden="true" />
+
   <!-- 6 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="6" name="       " chargetype="normal" hidden="true" />
+
+  <!-- 6 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="6" name="       ." chargetype="normal" hidden="true" />
 
   <!-- 7 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="7" name="        " chargetype="normal" hidden="true" />
 
+  <!-- 7 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="7" name="        ." chargetype="normal" hidden="true" />
+
   <!-- 8 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="8" name="         " chargetype="normal" hidden="true" />
+
+  <!-- 8 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="8" name="         ." chargetype="normal" hidden="true" />
 
   <!-- 9 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="9" name="          " chargetype="normal" hidden="true" />
 
+  <!-- 9 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="9" name="          ." chargetype="normal" hidden="true" />
+
   <!-- 10 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="10" name="           " chargetype="normal" hidden="true" />
+
+  <!-- 10 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="10" name="           ." chargetype="normal" hidden="true" />
 
   <!-- 11 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="11" name="            " chargetype="normal" hidden="true" />
 
+  <!-- 11 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="11" name="            ." chargetype="normal" hidden="true" />
+
   <!-- 12 normal charge !-->
   <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="12" name="             " chargetype="normal" hidden="true" />
+
+  <!-- 12 normal charge part 2 !-->
+  <active description="Be careful.." gfx="zazzinator_active.png" maxcharges="12" name="             ." chargetype="normal" hidden="true" />
 </items>

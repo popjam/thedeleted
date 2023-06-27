@@ -3,14 +3,13 @@ import {
   CollectibleType,
   PocketItemSlot,
 } from "isaac-typescript-definitions";
-import { game, newCollectibleSprite } from "isaacscript-common";
-import {
-  POCKET_SLOT_UNFOCUSSED_COLLECTIBLE_SPRITE_SCALE_PLAYER_1,
-  SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_1,
-} from "../constants/renderConstants";
+import { game } from "isaacscript-common";
+import { POCKET_SLOT_UNFOCUSSED_COLLECTIBLE_SPRITE_SCALE_PLAYER_1 } from "../constants/renderConstants";
+import { getCollectibleSpriteFromCache } from "../features/general/spriteCache";
 import { mod } from "../mod";
 import {
   getActiveRenderPosition,
+  getActiveRenderSize,
   getPocketActiveRenderPosition,
 } from "./HUDHelper";
 
@@ -51,15 +50,12 @@ export function renderCollectibleInActiveSlot(
   bottomRightClamp?: Vector,
   flipX?: boolean,
 ): void {
-  const collectibleSprite = newCollectibleSprite(collectibleType);
+  const collectibleSprite = getCollectibleSpriteFromCache(collectibleType);
   if (flipX !== undefined) {
     collectibleSprite.FlipX = flipX;
   }
   const position = getActiveRenderPosition(slot, player);
-  if (slot === ActiveSlot.SECONDARY) {
-    collectibleSprite.Scale =
-      SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_1;
-  }
+  collectibleSprite.Scale = getActiveRenderSize(slot, player);
   collectibleSprite.Render(position, topLeftClamp, bottomRightClamp);
 }
 
@@ -84,7 +80,7 @@ export function renderCollectibleInPocketSlot(
   bottomRightClamp?: Vector,
   flipX?: boolean,
 ): void {
-  const collectibleSprite = newCollectibleSprite(collectibleType);
+  const collectibleSprite = getCollectibleSpriteFromCache(collectibleType);
   if (flipX !== undefined) {
     collectibleSprite.FlipX = flipX;
   }

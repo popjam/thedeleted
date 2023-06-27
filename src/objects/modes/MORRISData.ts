@@ -29,6 +29,7 @@ export const MORRISData: ModeData = {
     soulHeartTypes: [HeartSubType.SOUL],
   },
   mainColor: DeletedColor.WORM_TURQUOISE,
+  anm2File: "gfx/001.000_player_MORRIS.anm2",
   characterStats: new Map<CacheFlag, number>([
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],

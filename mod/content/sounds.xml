@@ -85,4 +85,93 @@
   <sound name="thedeleted_iloveyou_hurt">
     <sample weight="1" path="thedeleted_iloveyou_hurt.wav" />
   </sound>
+
+  <!-- Voiceovers -->
+  <sound name="thedeleted_voiceover_Spywiper">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Spywiper.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Animal">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Animal.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Reveton">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Reveton.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_MyDoom">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_MyDoom.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_VCS">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_VCS.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_ZipBomber">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_ZipBomber.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_ILoveYou">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_ILoveYou.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_MyLife">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_MyLife.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Morris">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Morris.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Memz">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Memz.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_MadMan">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_MadMan.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Jerusalem">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Jerusalem.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Hicurdismos">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Hicurdismos.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Happy99">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Happy99.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Dreamworld">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Dreamworld.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_CryptoLocker">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_CryptoLocker.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Dozer">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Dozer.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Creeper">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Creeper.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_CodeRed">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_CodeRed.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_YouAreAnIdiot">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_YouAreAnIdiot.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Bagle1">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Bagle1.wav" />
+  </sound>
+
+  <sound name="thedeleted_voiceover_Bagle2">
+    <sample weight="1" path="voiceover/thedeleted_voiceover_Bagle2.wav" />
+  </sound>
 </sounds>

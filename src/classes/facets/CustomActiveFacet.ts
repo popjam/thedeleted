@@ -82,71 +82,127 @@ class CustomActiveFacet extends Facet {
     const activeSlot1 = v.run.activeSlot1.get(playerIndex);
     const activeSlot2 = v.run.activeSlot2.get(playerIndex);
     const pocketSlot = v.run.pocketSlot.get(playerIndex);
+    const hasSchoolbag = player.HasCollectible(CollectibleType.SCHOOLBAG);
     // const singleUsePocketSlot = v.run.singleUsePocketSlot.get(playerIndex);
+
+    fprint(`
+
+    ******* CustomActiveFacet.postPlayerCollectibleRemoved() *******
+    PlayerIndex: ${playerIndex}`);
 
     if (
       pocketSlot !== undefined &&
       player.GetActiveItem(ActiveSlot.POCKET) === CollectibleType.NULL
     ) {
       fprint(
-        "Pocket slot inverted item was removed, updating HUDRenderingFacet...",
+        ` Slot: pocketSlot
+        Reference: ${pocketSlot.oi ?? CollectibleType.SAD_ONION}}`,
+      );
+      pocketSlot.removeFromPlayer(
+        player,
+        pocketSlot.oi as CollectibleType,
+        false,
+        true,
       );
       addRemovedInvertedItemToTracker(
         player,
         collectibleType as CollectibleType,
         (pocketSlot.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
       );
-      v.run.pocketSlot.set(playerIndex, undefined);
+      v.run.pocketSlot.delete(playerIndex);
     }
 
-    if (
-      activeSlot1 !== undefined &&
-      player.GetActiveItem(ActiveSlot.PRIMARY) === CollectibleType.NULL
-    ) {
-      fprint(
-        `Active slot inverted item with chargeType: ${activeSlot1.getChargeType()}, charge: ${activeSlot1.getCharges()}, isCopy: ${
-          activeSlot1.copy ?? false
-        } was removed from activeSlot1, updating HUDRenderingFacet...`,
-      );
-      addRemovedInvertedItemToTracker(
-        player,
-        collectibleType as CollectibleType,
-        (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
-      );
-      v.run.activeSlot1.set(playerIndex, undefined);
-    }
+    if (hasSchoolbag) {
+      if (activeSlot2 !== undefined && activeSlot1 !== undefined) {
+        /**
+         * If the custom active in slot1 has been removed (e.g when a new active is picked up), and
+         * the player had 2 custom actives, the physical active from slot2 will immediately move
+         * down to slot1 after slot1 collectible is removed.
+         */
 
-    if (activeSlot2 !== undefined) {
-      if (player.GetActiveItem(ActiveSlot.SECONDARY) === CollectibleType.NULL) {
-        fprint(
-          `Active slot inverted item with chargeType: ${activeSlot2.getChargeType()}, charge: ${activeSlot2.getCharges()}, isCopy: ${
-            activeSlot2.copy ?? false
-          } was removed from activeSlot2, updating HUDRenderingFacet...`,
+        // There will be nothing in slot2 at this time.
+        if (
+          player.GetActiveItem(ActiveSlot.SECONDARY) === CollectibleType.NULL
+        ) {
+          const itemInSlot1 = player.GetActiveItem(ActiveSlot.PRIMARY);
+
+          // Item in slot1 should be replica of slot2 custom active.
+          if (isZazzinatorActive(itemInSlot1)) {
+            // Check if the physical item from slot2 is now found in slot1.
+            if (
+              doesInvertedActiveActionSetMatchZazzActive(
+                activeSlot2,
+                itemInSlot1,
+              )
+            ) {
+              // The ActiveSet that was in slot1 has been removed.
+              activeSlot1.removeFromPlayer(
+                player,
+                activeSlot1.oi as CollectibleType,
+                false,
+                true,
+              );
+              addRemovedInvertedItemToTracker(
+                player,
+                collectibleType as CollectibleType,
+                (activeSlot1.oi ??
+                  CollectibleType.SAD_ONION) as CollectibleType,
+              );
+              v.run.activeSlot1.set(playerIndex, activeSlot2);
+              v.run.activeSlot2.delete(playerIndex);
+            }
+          }
+        }
+      } else if (activeSlot2 === undefined && activeSlot1 !== undefined) {
+        /** If there is a custom active in slot1, but a non-custom active in slot2. */
+        const itemInSlot1 = player.GetActiveItem(ActiveSlot.PRIMARY);
+        if (!isZazzinatorActive(itemInSlot1)) {
+          // The ActiveSet that was in slot1 has been removed.
+          activeSlot1.removeFromPlayer(
+            player,
+            activeSlot1.oi as CollectibleType,
+            false,
+            true,
+          );
+          addRemovedInvertedItemToTracker(
+            player,
+            collectibleType as CollectibleType,
+            (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
+          );
+          v.run.activeSlot1.delete(playerIndex);
+        }
+      }
+    } else if (activeSlot1 !== undefined) {
+      if (!isZazzinatorActive(player.GetActiveItem(ActiveSlot.PRIMARY))) {
+        activeSlot1.removeFromPlayer(
+          player,
+          activeSlot1.oi as CollectibleType,
+          false,
+          true,
         );
         addRemovedInvertedItemToTracker(
           player,
           collectibleType as CollectibleType,
-          (activeSlot2.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
+          (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
         );
-        v.run.activeSlot2.set(playerIndex, undefined);
-
-        /**
-         * If the item in item slot 2 has moved to slot 1 due to the item in slot 1 being removed.
-         */
-        const itemInSlot1 = player.GetActiveItem(ActiveSlot.PRIMARY);
-        if (itemInSlot1 !== CollectibleType.NULL) {
-          if (
-            doesInvertedActiveActionSetMatchZazzActive(activeSlot2, itemInSlot1)
-          ) {
-            fprint(
-              `Inverted Active Item with chargeType: ${activeSlot2.getChargeType()}, charge: ${activeSlot2.getCharges()}, isCopy: ${
-                activeSlot2.copy ?? false
-              } in Slot 2 has moved to Slot 1, updating HUDRenderingFacet...`,
-            );
-            v.run.activeSlot1.set(playerIndex, activeSlot2);
-          }
-        }
+        v.run.activeSlot1.delete(playerIndex);
       }
+    }
+
+    // Unsubscribe if there are no more inverted actives.
+    fprint(`Trying to unsubscribe from CustomActiveFacet...
+
+    activeSlot1: ${v.run.activeSlot1.size},
+    activeSlot2: ${v.run.activeSlot2.size},
+    pocketSlot: ${v.run.pocketSlot.size},
+    singleUsePocketSlot: ${v.run.singleUsePocketSlot.size}`);
+    if (
+      v.run.activeSlot1.size === 0 &&
+      v.run.activeSlot2.size === 0 &&
+      v.run.pocketSlot.size === 0 &&
+      v.run.singleUsePocketSlot.size === 0
+    ) {
+      this.unsubscribeAll();
     }
   }
 
@@ -185,6 +241,11 @@ class CustomActiveFacet extends Facet {
       return undefined;
     }
 
+    fprint(
+      `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getCharges()}, isCopy: ${
+        actionSet.copy ?? false
+      }`,
+    );
     return actionSet.use(player);
   }
 
@@ -195,22 +256,46 @@ class CustomActiveFacet extends Facet {
   postRender(): void {
     for (const player of getPlayers()) {
       const playerIndex = getPlayerIndex(player);
+
       let activeSlot1 = v.run.activeSlot1.get(playerIndex);
       let activeSlot2 = v.run.activeSlot2.get(playerIndex);
       const pocketSlot = v.run.pocketSlot.get(playerIndex);
       const singleUsePocketSlot = v.run.singleUsePocketSlot.get(playerIndex);
 
       /** Update the data if the player has switched active items. */
-      if (activeSlot1 !== undefined && activeSlot2 !== undefined) {
-        if (
-          Input.IsActionTriggered(ButtonAction.DROP, player.ControllerIndex)
-        ) {
-          // Swap the active slots.
-          fprint("Swapping inverted active slots...");
-          v.run.activeSlot1.set(playerIndex, activeSlot2);
-          v.run.activeSlot2.set(playerIndex, activeSlot1);
-          [activeSlot1, activeSlot2] = [activeSlot2, activeSlot1];
+
+      // Swap the active slots.
+      if (Input.IsActionTriggered(ButtonAction.DROP, player.ControllerIndex)) {
+        if (activeSlot1 !== undefined) {
+          if (
+            doesInvertedActiveActionSetMatchZazzActive(
+              activeSlot1,
+              player.GetActiveItem(ActiveSlot.SECONDARY),
+            )
+          ) {
+            fprint("Swapping activeSlot1 to activeSlot2...");
+            v.run.activeSlot2.set(playerIndex, activeSlot1);
+            if (activeSlot2 === undefined) {
+              v.run.activeSlot1.delete(playerIndex);
+            }
+          }
         }
+        if (activeSlot2 !== undefined) {
+          if (
+            doesInvertedActiveActionSetMatchZazzActive(
+              activeSlot2,
+              player.GetActiveItem(ActiveSlot.PRIMARY),
+            )
+          ) {
+            fprint("Swapping activeSlot2 to activeSlot1...");
+            v.run.activeSlot1.set(playerIndex, activeSlot2);
+            if (activeSlot1 === undefined) {
+              v.run.activeSlot2.delete(playerIndex);
+            }
+          }
+        }
+        activeSlot1 = v.run.activeSlot1.get(playerIndex);
+        activeSlot2 = v.run.activeSlot2.get(playerIndex);
       }
 
       if (activeSlot1 !== undefined) {
@@ -241,7 +326,7 @@ class CustomActiveFacet extends Facet {
           renderCollectibleInActiveSlot(
             player,
             collectibleType as CollectibleType,
-            ActiveSlot.PRIMARY,
+            ActiveSlot.SECONDARY,
             undefined,
             undefined,
             true,
@@ -250,7 +335,7 @@ class CustomActiveFacet extends Facet {
           renderCorruptedCollectibleSpriteInActiveSlot(
             player,
             icon,
-            ActiveSlot.PRIMARY,
+            ActiveSlot.SECONDARY,
           );
         }
       }
@@ -284,6 +369,25 @@ class CustomActiveFacet extends Facet {
       }
     }
   }
+
+  /** Edge case where normal active is added, push corrupted item in slot1 to slot2. */
+  @CallbackCustom(ModCallbackCustom.POST_PLAYER_COLLECTIBLE_ADDED)
+  postPlayerCollectibleAdded(
+    player: EntityPlayer,
+    collectibleType: CollectibleType,
+  ): void {
+    if (player.HasCollectible(CollectibleType.SCHOOLBAG)) {
+      if (!isZazzinatorActive(collectibleType)) {
+        const activeSlot1 = v.run.activeSlot1.get(getPlayerIndex(player));
+        if (activeSlot1 !== undefined) {
+          if (!isZazzinatorActive(player.GetActiveItem(ActiveSlot.PRIMARY))) {
+            v.run.activeSlot2.set(getPlayerIndex(player), activeSlot1);
+            v.run.activeSlot1.delete(getPlayerIndex(player));
+          }
+        }
+      }
+    }
+  }
 }
 
 export function initHUDRenderingFacet(): void {
@@ -299,6 +403,7 @@ export function _addInvertedActiveToPlayer(
     | ActiveSlot.POCKET
     | ActiveSlot.POCKET_SINGLE_USE = ActiveSlot.PRIMARY,
 ): void {
+  const playerIndex = getPlayerIndex(player);
   fprint(
     `Adding inverted active to player slot ${slot}, isCopy: ${
       actionSet.copy ?? false
@@ -308,17 +413,21 @@ export function _addInvertedActiveToPlayer(
     case ActiveSlot.PRIMARY:
       // eslint-disable-next-line no-case-declarations
       const hasSchoolbag = player.HasCollectible(CollectibleType.SCHOOLBAG);
-      if (!hasSchoolbag || hasOpenActiveItemSlot(player)) {
-        v.run.activeSlot2.set(getPlayerIndex(player), undefined);
+      if (!hasSchoolbag) {
+        v.run.activeSlot2.delete(getPlayerIndex(player));
+        v.run.activeSlot1.set(getPlayerIndex(player), actionSet);
+        break;
+      } else if (hasOpenActiveItemSlot(player)) {
+        v.run.activeSlot2.delete(getPlayerIndex(player));
         v.run.activeSlot1.set(getPlayerIndex(player), actionSet);
         break;
       }
 
-      // If they have schoolbag and no empty slots...
-      v.run.activeSlot2.set(
-        getPlayerIndex(player),
-        v.run.activeSlot1.get(getPlayerIndex(player)),
-      );
+      fprint("Player has schoolbag and no empty slots...");
+      if (v.run.activeSlot1.has(playerIndex)) {
+        fprint("_addInvertedActive: Pushing activeSlot1 to activeSlot2...");
+        v.run.activeSlot2.set(playerIndex, v.run.activeSlot1.get(playerIndex));
+      }
       v.run.activeSlot1.set(getPlayerIndex(player), actionSet);
       break;
     case ActiveSlot.POCKET:
@@ -328,27 +437,21 @@ export function _addInvertedActiveToPlayer(
       v.run.singleUsePocketSlot.set(getPlayerIndex(player), actionSet);
   }
 
-  FACET?.subscribe();
+  fprint(`Subscribing to Custom Active facet if not already...
+
+  activeSlot1: ${v.run.activeSlot1.size},
+  activeSlot2: ${v.run.activeSlot2.size},
+  pocketSlot: ${v.run.pocketSlot.size},
+  singleUsePocketSlot: ${v.run.singleUsePocketSlot.size}
+  `);
+  FACET?.subscribeIfNotAlready();
 }
 
-/** Determines if the physical Zazz Active added to ActiveSlot.PRIMARY should be a copy or not. */
-export function shouldZazzActiveBeACopy(player: EntityPlayer): boolean {
-  const playerIndex = getPlayerIndex(player);
-  const activeSlot1 = v.run.activeSlot1.get(playerIndex);
-  const activeSlot2 = v.run.activeSlot2.get(playerIndex);
-  const hasSchoolbag = player.HasCollectible(CollectibleType.SCHOOLBAG);
-
-  if (activeSlot1 === undefined || !hasSchoolbag) {
-    return false;
-  }
-
-  // From this point on, has schoolbag and activeSlot1 is defined.
-  if (activeSlot2 === undefined) {
-    return !(activeSlot1.copy ?? true);
-  }
-
-  // Both slots full.
-  return !(activeSlot2.copy ?? true);
+export function getCustomActiveData(): string {
+  return `activeSlot1: ${v.run.activeSlot1.size},
+  activeSlot2: ${v.run.activeSlot2.size},
+  pocketSlot: ${v.run.pocketSlot.size},
+  singleUsePocketSlot: ${v.run.singleUsePocketSlot.size}`;
 }
 
 /**
@@ -376,4 +479,49 @@ function doesInvertedActiveActionSetMatchZazzActive(
   }
 
   return true;
+}
+
+// eslint-disable-next-line no-underscore-dangle
+export function _getCustomActiveActiveSlot1(
+  player: EntityPlayer,
+): InvertedActiveActionSet | undefined {
+  return v.run.activeSlot1.get(getPlayerIndex(player));
+}
+
+// eslint-disable-next-line no-underscore-dangle
+export function _getCustomActiveActiveSlot2(
+  player: EntityPlayer,
+): InvertedActiveActionSet | undefined {
+  return v.run.activeSlot2.get(getPlayerIndex(player));
+}
+
+// eslint-disable-next-line no-underscore-dangle
+export function _getCustomActivePocketSlot(
+  player: EntityPlayer,
+): InvertedActiveActionSet | undefined {
+  return v.run.pocketSlot.get(getPlayerIndex(player));
+}
+
+// eslint-disable-next-line no-underscore-dangle
+export function _getCustomActiveSingleUsePocketSlot(
+  player: EntityPlayer,
+): InvertedActiveActionSet | undefined {
+  return v.run.singleUsePocketSlot.get(getPlayerIndex(player));
+}
+
+export function getPlayerInvertedActive(
+  player: EntityPlayer,
+  slot: ActiveSlot = ActiveSlot.PRIMARY,
+): CollectibleType | undefined {
+  const playerIndex = getPlayerIndex(player);
+  switch (slot) {
+    case ActiveSlot.PRIMARY:
+      return v.run.activeSlot1.get(playerIndex)?.oi;
+    case ActiveSlot.SECONDARY:
+      return v.run.activeSlot2.get(playerIndex)?.oi;
+    case ActiveSlot.POCKET:
+      return v.run.pocketSlot.get(playerIndex)?.oi;
+    case ActiveSlot.POCKET_SINGLE_USE:
+      return v.run.singleUsePocketSlot.get(playerIndex)?.oi;
+  }
 }

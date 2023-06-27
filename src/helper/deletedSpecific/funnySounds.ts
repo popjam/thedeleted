@@ -10,10 +10,10 @@ import { MILLISECONDS_IN_A_SECOND } from "../../constants/generalConstants";
 import { CorruptedSoundEffect } from "../../interfaces/corruption/funny/CorruptedSoundEffect";
 import { mod } from "../../mod";
 import {
+  Range,
   multiplyRangeConstituents,
   randomInRange,
   randomInRangeOrNumber,
-  Range,
 } from "../../types/general/Range";
 import { getRandomSoundEffect } from "../soundHelper";
 
@@ -66,6 +66,7 @@ export function playCorruptedSound(
       if (currentlyPlaying !== undefined) {
         sfxManager.Stop(currentlyPlaying);
       }
+
       sfxManager.Play(
         soundEffect,
         volume,

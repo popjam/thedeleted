@@ -10,7 +10,14 @@ export const NormalModeCarousel = [
   Mode.ILOVEYOU,
   Mode.MORRIS,
   Mode.ZIPBOMBER,
+  Mode.CRYPTOLOCKER,
+  Mode.SPYWIPER,
+  Mode.JERUSALEM,
+  Mode.HICURDISMOS,
+  Mode.VCS,
+  Mode.MEMZ,
   Mode.MYDOOM,
+  Mode.REVETON,
 ];
 
 /**

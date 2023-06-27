@@ -1,7 +1,7 @@
 import { getRandomInt, isColor } from "isaacscript-common";
 import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { HAPPY99_ACTION_SET_COLOR_TRIPLET } from "../../../constants/modes/HAPPY99Constants";
-import { DeletedColor } from "../../../enums/general/DeletedColor";
+import { HAPPY99InvertedItemSpriteColor } from "../../../constants/modes/HAPPY99Constants";
+import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,
@@ -30,12 +30,12 @@ export function happy99DefaultBuilder(
   /** Set the icon. */
   const sprite = generateDefaultCorruptedCollectibleSprite(actionSet, inputs);
   if (!isColor(sprite)) {
-    sprite.color = DeletedColor.HAPPY_YELLOW;
+    sprite.color = HAPPY99InvertedItemSpriteColor;
   }
   actionSet.setIcon(sprite);
 
   /** Set the text color. */
-  actionSet.setTheme(HAPPY99_ACTION_SET_COLOR_TRIPLET);
+  actionSet.setTheme(EIDColorTriplet.HAPPY99_TRIPLET);
 
   return actionSet;
 }

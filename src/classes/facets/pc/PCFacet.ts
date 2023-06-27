@@ -14,8 +14,9 @@ import {
   sfxManager,
   spawnSlot,
 } from "isaacscript-common";
-import { PCState } from "../../../enums/PCStatus";
 import { SoundEffectCustom } from "../../../enums/general/SoundEffectCustom";
+import { PCAnimation } from "../../../enums/pc/PCAnimation";
+import { PCState } from "../../../enums/pc/PCStatus";
 import { switchToNextModeOnCarousel } from "../../../helper/deletedSpecific/modeHelper";
 import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
@@ -37,6 +38,14 @@ const ACTIVATION_SFX = SoundEffectCustom.PC_LOG_IN;
 
 /** Sound effect when a User logs off the PC. */
 const DEACTIVATION_SFX = SoundEffect.CHARACTER_SELECT_RIGHT;
+
+/** The PC's variant. */
+const PC_VARIANT = Isaac.GetEntityVariantByName(
+  "Deleted Computer",
+) as SlotVariant;
+
+/** The PC's SubType. */
+const PC_SUBTYPE = 0;
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
@@ -126,8 +135,8 @@ export function setupPC(): void {
   }
   v.run.spawned = true;
   const PC = spawnSlot(
-    SlotVariant.SLOT_MACHINE,
-    200,
+    PC_VARIANT,
+    PC_SUBTYPE,
     gridCoordinatesToWorldPosition(0, 0),
   );
   v.run.index = GetPtrHash(PC);
@@ -141,9 +150,12 @@ export function logOnToPC(player: EntityPlayer): void {
   const currentPCUser = getCurrentPCUser();
   if (currentPCUser !== undefined) {
     bootCurrentUserFromPC();
+  } else {
+    /** Only play sound effects and animation if there was no one previously using PC. */
+    sfxManager.Play(ACTIVATION_SFX);
+    playInitiateAnimation();
   }
 
-  sfxManager.Play(ACTIVATION_SFX);
   v.run.user = getPlayerIndex(player);
 }
 
@@ -170,6 +182,7 @@ export function getCurrentPCUser(): EntityPlayer | undefined {
 // TODO: Physically boot user from PC and play 'boot' animation.
 export function bootCurrentUserFromPC(): void {
   sfxManager.Play(DEACTIVATION_SFX);
+  playIdleOffAnimation();
   v.run.user = null;
 }
 
@@ -186,7 +199,7 @@ function isPlayerInPCRange(
 
 /** If the PC is in the room, returns it. */
 function getPC(): EntitySlot | undefined {
-  return getSlots(SlotVariant.SLOT_MACHINE, 200)[0];
+  return getSlots(PC_VARIANT, PC_SUBTYPE)[0];
 }
 
 /**
@@ -204,4 +217,28 @@ export function isPlayerPCUser(player: EntityPlayer): boolean {
     return false;
   }
   return getPlayerIndex(currentPCUser) === getPlayerIndex(player);
+}
+
+function playInitiateAnimation() {
+  const pc = getPC();
+  if (pc === undefined) {
+    return;
+  }
+  pc.GetSprite().Play(PCAnimation.INITIATE, true);
+}
+
+function playIdleOffAnimation() {
+  const pc = getPC();
+  if (pc === undefined) {
+    return;
+  }
+  pc.GetSprite().Play(PCAnimation.IDLE_OFF, true);
+}
+
+function playIdleOnAnimation() {
+  const pc = getPC();
+  if (pc === undefined) {
+    return;
+  }
+  pc.GetSprite().Play(PCAnimation.IDLE_ON, true);
 }

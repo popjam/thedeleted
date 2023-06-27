@@ -50,5 +50,5 @@ function d14Use(
     );
   });
   SFXManager().Play(D14_SFX);
-  return undefined;
+  return { Discharge: true, Remove: false, ShowAnim: true };
 }

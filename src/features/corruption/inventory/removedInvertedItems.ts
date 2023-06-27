@@ -48,9 +48,15 @@ export function addRemovedInvertedItemToTracker(
 ): void {
   const playerIndex = getPlayerIndex(player);
   fprint(
-    `Tracking removed item with reference collectible: ${getCollectibleName(
-      referenceCollectible,
-    )}`,
+    `
+      <---------> Tracking removed item <--------->
+      Player: ${playerIndex}
+      Dummy item: ${getCollectibleName(dummyItem)}
+      Reference item: ${getCollectibleName(referenceCollectible)}
+      Position In Queue: ${v.room.removedItems.length}
+      <------------------------------------------>
+
+      `,
   );
   v.room.removedItems.push({
     playerIndex,

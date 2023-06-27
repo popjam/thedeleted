@@ -10,25 +10,28 @@ import {
   getCollectibleName,
   getEntities,
   getEnumValues,
-  getNPCs,
   getRandomArrayElement,
   getRandomArrayIndex,
   getRandomSeed,
+  sfxManager,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 
-import { everyItemIs } from "../../classes/facets/entityModifiers.ts/pickupModifiers/EveryItemIsFacet";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
+import { DeletedColor } from "../../enums/general/DeletedColor";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
+import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
 import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inversion/invertedActives";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
+import { setFloorColor } from "../general/floorColorHelper";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
+const player2 = () => Isaac.GetPlayer(1);
 const del1ID = 2;
 const del2ID = 0;
 
@@ -63,34 +66,12 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const nearestNPC = getClosestEntityTo(player(), getNPCs());
-  if (nearestNPC === undefined) {
-    return;
-  }
-
-  const npc = nearestNPC.ToNPC();
-  if (npc === undefined) {
-    return;
-  }
-
-  // const family = getNPCFamily(npc); fprint(`Family size: ${family.length}`);
-  // family.forEach((member) => { freezeNPC(member); });
-
-  // const child = npc.ChildNPC; if (child === undefined) { fprint("NPC has no child"); } else {
-  // fprint( `NPC has child with type: ${child.Type}.${child.Variant}.${child.SubType}`, ); }
-
-  // const parent = npc.ParentNPC; if (parent === undefined) { fprint("NPC has no parent"); } else {
-  // fprint( `NPC has parent with type: ${parent.Type}.${parent.Variant}.${parent.SubType}`, ); }
-
-  // renderConstantly(() => { npc.Position = accessiblePosition; sprite.Color =
-  // Color(sprite.Color.R, sprite.Color.G, sprite.Color.B, 0); const newSprite = copySprite(sprite);
-  // newSprite.Color = Color(sprite.Color.R, sprite.Color.G, sprite.Color.B, 1);
-  // newSprite.Render(worldToRenderPosition(accessiblePosition)); });
+  setFloorColor(DeletedColor.HAPPY_YELLOW);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  addNewInvertedActiveToPlayer(player(), ActiveSlot.POCKET);
+  sfxManager.Play(SoundEffectCustom.VO_ILOVEYOU, 100);
 }
 
 function getRandomTest<T>(
@@ -119,7 +100,7 @@ function getRandomTest<T>(
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  everyItemIs(CollectibleType.ABEL);
+  addNewInvertedActiveToPlayer(player(), ActiveSlot.POCKET);
 }
 
 /** Test stuff as the developer with command 'eted'. */

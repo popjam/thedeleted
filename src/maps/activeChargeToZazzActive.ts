@@ -20,48 +20,96 @@ const ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP: ReadonlyMap<string, CollectibleType> =
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_1,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${1}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_1_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${2}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_2,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${2}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_2_COPY,
     ],
     [
       `${ItemConfigChargeType.NORMAL}.${3}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_3,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${3}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_3_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${4}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_4,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${4}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_4_COPY,
     ],
     [
       `${ItemConfigChargeType.NORMAL}.${5}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_5,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${5}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_5_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${6}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_6,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${6}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_6_COPY,
     ],
     [
       `${ItemConfigChargeType.NORMAL}.${7}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_7,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${7}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_7_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${8}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_8,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${8}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_8_COPY,
     ],
     [
       `${ItemConfigChargeType.NORMAL}.${9}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_9,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${9}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_9_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${10}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_10,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${10}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_10_COPY,
     ],
     [
       `${ItemConfigChargeType.NORMAL}.${11}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_11,
     ],
     [
+      `${ItemConfigChargeType.NORMAL}.${11}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_11_COPY,
+    ],
+    [
       `${ItemConfigChargeType.NORMAL}.${12}.false`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_12,
+    ],
+    [
+      `${ItemConfigChargeType.NORMAL}.${12}.true`,
+      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_12_COPY,
     ],
   ]);
 

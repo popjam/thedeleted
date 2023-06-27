@@ -1,6 +1,7 @@
 import { getRandomInt, isColor } from "isaacscript-common";
 import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { DeletedColor } from "../../../enums/general/DeletedColor";
+import { ILOVEYOUInvertedItemSpriteColor } from "../../../constants/modes/ILOVEYOUConstants";
+import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
 import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,
@@ -22,14 +23,19 @@ export function iLoveYouDefaultBuilder(
   }
 
   /** Set the name and description. */
-  actionSet.setName("ILOVEYOU").setDescription("ILOVEYOU DESCRIPTION");
+  actionSet
+    .setName(`ILOVEYOU ${active ? "ACTIVE" : "PASSIVE"}`)
+    .setDescription("ILOVEYOU DESCRIPTION");
 
   /** Set the icon. */
   const sprite = generateDefaultCorruptedCollectibleSprite(actionSet, inputs);
   if (!isColor(sprite)) {
-    sprite.color = DeletedColor.LOVE_PINK;
+    sprite.color = ILOVEYOUInvertedItemSpriteColor;
   }
   actionSet.setIcon(sprite);
+
+  /** Set the text color. */
+  actionSet.setTheme(EIDColorTriplet.ILOVEYOU_TRIPLET);
 
   return actionSet;
 }

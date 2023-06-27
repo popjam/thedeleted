@@ -38,6 +38,10 @@ export interface CollectibleAttribute {
   itemTagOne?: ItemConfigTag[];
   /** Banned Collectibles. */
   banned?: CollectibleType[];
+  /** Collectibles that ignore other tags. */
+  forced?: CollectibleType[];
+  /** If you can/can't find it in Death Certificate. */
+  hidden?: boolean;
 }
 
 /** Modifiers to describe a subset of all Active Items. */

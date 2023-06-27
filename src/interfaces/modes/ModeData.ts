@@ -31,10 +31,18 @@ export interface ModeData {
    * do not set the main Color and set it instead in the mode file.
    */
   mainColor?: Color;
+  /** The location of the characters' custom anm2 file. */
+  anm2File?: string;
   /**
    * Any stat included in this map will make the character start with alternate stats to base isaac.
    */
   characterStats?: Map<CacheFlag, number>;
   /** The mode's ItemActionSetBuilder generation method. */
   itemActionSetBuilderReference?: InvertedItemActionSetBuilderReference;
+  /**
+   * If the character starts inverted. If at least one player has this set to true during a run, the
+   * corrupted backdrop will not be displayed to prevent annoyance as the majority of the run would
+   * be in the inverted state.
+   */
+  startInverted?: boolean;
 }

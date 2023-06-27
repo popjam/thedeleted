@@ -1,12 +1,14 @@
-import { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
+import { ColorDefault } from "isaacscript-common";
+import { DeletedColor } from "../../enums/general/DeletedColor";
+import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 
 // eslint-disable-next-line isaacscript/require-capital-const-assertions
-export const HAPPY99_ACTION_SET_COLOR_TRIPLET: [
-  EIDColorShortcut,
-  EIDColorShortcut,
-  EIDColorShortcut,
-] = [
-  EIDColorShortcut.HAPPY_YELLOW,
-  EIDColorShortcut.ANGRY_RED,
-  EIDColorShortcut.HAPPY_YELLOW_DARKEST,
-];
+export const HAPPY99InvertedItemSpriteColor: AdvancedColor = {
+  color: ColorDefault,
+  colorize: [
+    DeletedColor.HAPPY_YELLOW.R * 2,
+    DeletedColor.HAPPY_YELLOW.G * 2,
+    DeletedColor.HAPPY_YELLOW.B * 2,
+    1,
+  ],
+};

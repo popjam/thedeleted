@@ -6,3 +6,5 @@ export function postPlayerCollectibleAddedInit(mod: ModUpgraded): void {
 }
 
 function main(player: EntityPlayer, collectibleType: CollectibleType) {}
+
+const b = (a: number) => a;

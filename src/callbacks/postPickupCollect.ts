@@ -1,6 +1,5 @@
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
+import { PickupVariant } from "isaac-typescript-definitions";
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
-import { playPickupAnimationWithCustomSprite } from "../classes/facets/RenderOverHeadFacet";
 import { nonInvertedBombPostPickupCollect } from "../features/corruption/inversion/callbacks/bombCollection";
 import { nonInvertedCoinPostPickupCollect } from "../features/corruption/inversion/callbacks/coinCollection";
 
@@ -18,7 +17,6 @@ export function postPickupCollectInit(mod: ModUpgraded): void {
 }
 
 function mainCoinCollection(pickup: EntityPickup, player: EntityPlayer) {
-  playPickupAnimationWithCustomSprite(player, CollectibleType.ABADDON);
   nonInvertedCoinPostPickupCollect(pickup, player);
 }
 

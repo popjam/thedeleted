@@ -1,5 +1,9 @@
+import { CacheFlag, PlayerType } from "isaac-typescript-definitions";
 import { ISCFeature, upgradeMod } from "isaacscript-common";
 import { MOD_NAME } from "./constants/mod/modConstants";
+import { fprint } from "./helper/printHelper";
+
+fprint("Loading 'mod.ts'...");
 
 const modVanilla = RegisterMod(MOD_NAME, 1);
 const MOD_FEATURES = [
@@ -25,3 +29,10 @@ const MOD_FEATURES = [
 // export const ItemDisplayLibrary = CCO.ItemDisplay.API;
 
 export const mod = upgradeMod(modVanilla, MOD_FEATURES);
+mod.registerCharacterStats(
+  PlayerType.ISAAC,
+  new Map<CacheFlag, number>([
+    [CacheFlag.DAMAGE, 3.4],
+    [CacheFlag.SPEED, 0.9],
+  ]),
+);

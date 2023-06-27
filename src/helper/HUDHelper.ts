@@ -2,6 +2,7 @@ import { ActiveSlot, PocketItemSlot } from "isaac-typescript-definitions";
 import {
   VectorOne,
   getHUDOffsetVector,
+  getPlayerIndexVanilla,
   getScreenBottomLeftPos,
   getScreenBottomRightPos,
   getScreenTopRightPos,
@@ -11,8 +12,13 @@ import {
   POCKET_SLOT_2_HUD_RENDER_POSITION_PLAYER_1,
   POCKET_SLOT_3_HUD_RENDER_POSITION_PLAYER_1,
   POCKET_SLOT_4_HUD_RENDER_POSITION_PLAYER_1,
+  PRIMARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1,
   PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
+  PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2,
+  SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_1,
+  SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1,
   SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
+  SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2,
 } from "../constants/renderConstants";
 import { HUDQuadrant } from "../enums/general/HUDQuandrant";
 
@@ -74,25 +80,78 @@ export function HUDPositionToRenderPosition(
 }
 
 /**
+ * Get the size of the collectible render when rendering on the HUD. This is different per player
+ * and ActiveSlot.
+ */
+export function getActiveRenderSize(
+  activeSlot: ActiveSlot.PRIMARY | ActiveSlot.SECONDARY,
+  player: EntityPlayer,
+): Vector {
+  const index = getPlayerIndexVanilla(player);
+  if (index === 0) {
+    switch (activeSlot) {
+      case ActiveSlot.PRIMARY:
+        return VectorOne;
+      case ActiveSlot.SECONDARY:
+        return SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_1;
+      default:
+        error(`Invalid active slot: ${activeSlot}, if you want to render in the pocket slot use
+      getPocketActiveRenderSize() instead.`);
+    }
+  } else {
+    switch (activeSlot) {
+      case ActiveSlot.PRIMARY:
+        return PRIMARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1;
+      case ActiveSlot.SECONDARY:
+        return SECONDARY_ACTIVE_SLOT_COLLECTIBLE_SPRITE_SCALE_PLAYER_NOT_1;
+      default:
+        error(`Invalid active slot: ${activeSlot}, if you want to render in the pocket slot use
+      getPocketActiveRenderSize() instead.`);
+    }
+  }
+}
+
+/**
  * Get the render position to render a collectible sprite in ActiveSlot 1 or ActiveSlot 2, unique to
  * each player. TODO: Update for players.
  */
 export function getActiveRenderPosition(
   activeSlot: ActiveSlot.PRIMARY | ActiveSlot.SECONDARY,
-  _player: EntityPlayer,
+  player: EntityPlayer,
 ): Vector {
-  switch (activeSlot) {
-    case ActiveSlot.PRIMARY:
-      return HUDPositionToRenderPosition(
-        PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
-      );
-    case ActiveSlot.SECONDARY:
-      return HUDPositionToRenderPosition(
-        SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
-      );
-    default:
-      error(`Invalid active slot: ${activeSlot}, if you want to render in the pocket slot use
+  const index = getPlayerIndexVanilla(player);
+  if (index === 0) {
+    switch (activeSlot) {
+      case ActiveSlot.PRIMARY:
+        return HUDPositionToRenderPosition(
+          PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
+        );
+      case ActiveSlot.SECONDARY:
+        return HUDPositionToRenderPosition(
+          SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_1,
+        );
+      default:
+        error(`Invalid active slot: ${activeSlot}, if you want to render in the pocket slot use
       getPocketActiveRenderPosition() instead.`);
+    }
+  } else if (index === 1) {
+    switch (activeSlot) {
+      case ActiveSlot.PRIMARY:
+        return HUDPositionToRenderPosition(
+          PRIMARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2,
+          HUDQuadrant.TOP_RIGHT,
+        );
+      case ActiveSlot.SECONDARY:
+        return HUDPositionToRenderPosition(
+          SECONDARY_ACTIVE_SLOT_HUD_RENDER_POSITION_PLAYER_2,
+          HUDQuadrant.TOP_RIGHT,
+        );
+      default:
+        error(`Invalid active slot: ${activeSlot}, if you want to render in the pocket slot use
+      getPocketActiveRenderPosition() instead.`);
+    }
+  } else {
+    error(`Invalid player index: ${index}`);
   }
 }
 

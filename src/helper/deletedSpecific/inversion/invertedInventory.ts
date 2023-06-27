@@ -70,16 +70,6 @@ export function removePlayerMostRecentInvertedActiveItem(
   );
 }
 
-/** Remove all items from the player that follow the predicate. */
-export function removeAllInvertedItemsFromPlayerWithPredicate(
-  player: EntityPlayer,
-  predicate: (actionSet: InvertedItemActionSet) => boolean,
-): void {
-  while (removeInvertedItemFromPlayerWithPredicate(player, predicate)) {
-    // Do nothing
-  }
-}
-
 /**
  * Removes the inverted item from the player (if they have one tracked in their corrupted
  * inventory).

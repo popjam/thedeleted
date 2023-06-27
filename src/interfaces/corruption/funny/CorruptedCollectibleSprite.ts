@@ -1,4 +1,5 @@
 import { CollectibleType } from "isaac-typescript-definitions";
+import { AdvancedColor } from "../../general/AdvancedColor";
 
 /**
  * CorruptedCollectibleSprite is an interface used to represent Corrupted Collectible Sprites in a
@@ -8,6 +9,9 @@ import { CollectibleType } from "isaac-typescript-definitions";
 export interface CorruptedCollectibleSprite {
   collectibles: CollectibleType[];
   horizontal?: boolean;
-  color?: Color | true;
+  color?: Color | Color[] | "random" | AdvancedColor | AdvancedColor[];
   seed: Seed;
+  flipX?: boolean;
+  flipY?: boolean;
+  rotation?: number;
 }

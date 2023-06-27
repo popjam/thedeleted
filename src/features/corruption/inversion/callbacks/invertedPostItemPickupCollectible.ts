@@ -6,7 +6,6 @@ import {
   getLastPickedUpCollectible,
   getLastPickedUpNonInvertedCollectibleActionSet,
   PickupStage,
-  setLastPickedUpCollectible,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
 
@@ -24,7 +23,12 @@ export function invertedPostItemPickupCollectible(
 ): void {
   if (isZazzinatorAny(pickingUpItem.subType)) {
     const pickedUpCollectibleType = getLastPickedUpCollectible(player);
-    if (pickedUpCollectibleType === undefined) {
+
+    // TODO: Error Handling.
+    if (
+      pickedUpCollectibleType === undefined ||
+      pickedUpCollectibleType.pickupStage !== PickupStage.PRE_ITEM_PICKUP
+    ) {
       return;
     }
     fprint(
@@ -41,7 +45,7 @@ export function invertedPostItemPickupCollectible(
     );
 
     /** Item is finished being picked up. */
-    setLastPickedUpCollectible(player, undefined);
+    updateLastPickedUpCollectible(player, PickupStage.POST_ITEM_PICKUP);
   } else {
     // This is a regular item.
     const lastPickedUpCollectibleActionSet =

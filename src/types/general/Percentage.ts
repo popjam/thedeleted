@@ -20,6 +20,9 @@ export function createPercentage(number: number): Percentage {
  * Rolls a percentage chance that can either be true or false. 100% is always true and 0% is always
  * false. Precision up to 2 decimal point (e.g 0.01%).
  */
-export function rollPercentage(percentageChance: Percentage): boolean {
-  return getRandomInt(0, 9999) * 0.01 < percentageChance;
+export function rollPercentage(
+  percentageChance: Percentage,
+  seed?: Seed,
+): boolean {
+  return getRandomInt(0, 9999, seed) * 0.01 < percentageChance;
 }

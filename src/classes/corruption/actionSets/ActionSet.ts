@@ -1,11 +1,15 @@
 import { CollectibleType } from "isaac-typescript-definitions";
 import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";
 import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
-import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
+import {
+  getEIDColorShortcutFromMorality,
+  getEIDColorTupleFromTriplet,
+} from "../../../maps/compatibility/EIDColorMap";
 import { Action, isAction } from "../actions/Action";
 import { Response, isResponse } from "../responses/Response";
 
@@ -15,10 +19,7 @@ const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
 export abstract class ActionSet {
   readonly actionSetType!: ActionSetType;
   effects: Array<Action | Response> = [];
-  c:
-    | EIDColorShortcut
-    | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
-    | undefined;
+  c: EIDColorShortcut | EIDColorTriplet | undefined;
 
   /** Returns Actions + Responses, does not deepCopy! */
   getEffects(): Array<Action | Response> {
@@ -50,10 +51,7 @@ export abstract class ActionSet {
    * If a triplet is specified, the first color will be used for positive effects, the second for
    * neutral effects, and the third for negative effects.
    */
-  getTheme():
-    | EIDColorShortcut
-    | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
-    | undefined {
+  getTheme(): EIDColorShortcut | EIDColorTriplet | undefined {
     return this.c;
   }
 
@@ -78,7 +76,7 @@ export abstract class ActionSet {
     if (typeof this.c === "string") {
       return this.c;
     }
-    return this.c[morality as number]!;
+    return getEIDColorTupleFromTriplet(this.c)[morality as number]!;
   }
 
   /**
@@ -86,12 +84,7 @@ export abstract class ActionSet {
    * Morality colors. If an Action or Response has its own color, that will override the color this
    * ActionSet provides it.
    */
-  setTheme(
-    c:
-      | EIDColorShortcut
-      | [EIDColorShortcut, EIDColorShortcut, EIDColorShortcut]
-      | undefined,
-  ): this {
+  setTheme(c: EIDColorShortcut | EIDColorTriplet | undefined): this {
     this.c = c;
     return this;
   }

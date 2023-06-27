@@ -4,9 +4,11 @@ import {
   UseFlag,
 } from "isaac-typescript-definitions";
 import {
+  game,
   getNPCs,
   getRoomAdjacentGridIndexes,
   getRoomListIndex,
+  openAllDoors,
 } from "isaacscript-common";
 
 /** Check if a specific room is adjacent to the room the player is currently in. */
@@ -21,6 +23,7 @@ export function isRoomAdjacent(roomListIndex: number): boolean {
   return adjacentRoomListIndexes.includes(roomListIndex);
 }
 
+/** Floods a room with water similar to the 'flush' effect, without removing enemies. */
 export function floodRoom(): void {
   const npcs = getNPCs().filter(
     (npc) => !npc.HasEntityFlags(EntityFlag.FRIENDLY),
@@ -32,4 +35,19 @@ export function floodRoom(): void {
   npcs.forEach((npc) => {
     npc.ClearEntityFlags(EntityFlag.FRIENDLY);
   });
+}
+
+/**
+ * If a room is not cleared, this will set the room to clear, spawn the clear reward and activate
+ * any on-clear items, as well as opening all doors. This will not kill any NPCs still alive.
+ */
+export function clearRoom(): void {
+  const room = game.GetRoom();
+  if (room.IsClear()) {
+    return;
+  }
+
+  room.SetClear(true);
+  room.TriggerClear();
+  openAllDoors();
 }

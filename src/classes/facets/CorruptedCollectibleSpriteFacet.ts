@@ -72,12 +72,10 @@ class CorruptedCollectibleSpriteFacet extends Facet {
     const corruptedSprite = v.level.replacedPickups.get(
       mod.getPickupIndex(pickup),
     );
-
     /** If the pickup is not subscribed. */
     if (corruptedSprite === undefined) {
       return;
     }
-
     if (
       isGlitchedCollectible(pickup) &&
       isCollectibleFree(pickup as EntityPickupCollectible)
@@ -87,7 +85,6 @@ class CorruptedCollectibleSpriteFacet extends Facet {
       newSprite.Play("Alternates", true);
       newSprite.Render(worldToRenderPosition(pickup.Position));
     }
-
     /** Render the new sprite. */
     renderCorruptedCollectibleSpriteOverCollectible(
       pickup as EntityPickupCollectible,

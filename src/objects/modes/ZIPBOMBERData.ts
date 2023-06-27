@@ -28,6 +28,7 @@ export const ZIPBOMBERData: ModeData = {
     soulHeartTypes: [HeartSubType.SOUL],
   },
   mainColor: DeletedColor.ANGRY_RED,
+  anm2File: "gfx/001.000_player_ZIPBOMBER.anm2",
   characterStats: new Map<CacheFlag, number>([
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],

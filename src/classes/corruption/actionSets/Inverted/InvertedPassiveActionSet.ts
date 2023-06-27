@@ -16,6 +16,7 @@ import {
   PickupStage,
   setLastPickedUpCollectible,
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
+import { fprint } from "../../../../helper/printHelper";
 import { mod } from "../../../../mod";
 import { Action, isAction } from "../../actions/Action";
 import { Response } from "../../responses/Response";
@@ -98,6 +99,10 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
       inverted: true,
     });
     pedestal.SubType = CollectibleTypeCustom.ZAZZ;
+    fprint(`    SubType changed to ${pedestal.SubType}.
+    X-------X END OF PRE GET PEDESTAL X-------X
+
+    `);
     return false;
   }
 

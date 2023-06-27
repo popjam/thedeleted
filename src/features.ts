@@ -8,9 +8,11 @@ import { bombInventoryInit } from "./features/corruption/inventory/bombInventory
 import { invertedItemCorruptInit } from "./features/corruption/inventory/itemInventory";
 import { removedItemTrackerInit } from "./features/corruption/inventory/removedInvertedItems";
 import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
+import { pedestalChargesInit } from "./features/corruption/inversion/pedestalCharges";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
 import { backdropHelperInit } from "./features/general/backdropHelper";
+import { floorColorHelper } from "./features/general/floorColorHelper";
 import { playerStatsInit } from "./features/general/playerStats";
 import { RNGHelperInit } from "./features/general/RNGHelper";
 import { temporaryItemsInit } from "./features/general/temporaryItems";
@@ -25,6 +27,7 @@ import { EIDSettingsInit } from "./features/settings/ActionSetThemeSetting";
 import { GeneralSettingsInit } from "./features/settings/GeneralSettings";
 import { happy99SettingsInit } from "./features/settings/HAPPY99Settings";
 import { sophosSettingsInit } from "./features/settings/SOPHOSSettings";
+import { glitchyReplacePlayerSpritesheetInit } from "./helper/deletedSpecific/glitchyPlayerTransform";
 
 // eslint-disable-next-line isaacscript/require-capital-const-assertions, isaacscript/require-capital-read-only
 export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
@@ -55,4 +58,7 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   facetInit,
   backdropHelperInit,
   removedItemTrackerInit,
+  pedestalChargesInit,
+  glitchyReplacePlayerSpritesheetInit,
+  floorColorHelper,
 ];
