@@ -5,6 +5,7 @@ import {
   LevelStage,
 } from "isaac-typescript-definitions";
 import {
+  VectorZero,
   arrayRemove,
   getClosestEntityTo,
   getCollectibleName,
@@ -14,20 +15,22 @@ import {
   getRandomArrayIndex,
   getRandomSeed,
   sfxManager,
+  spawnNPC,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { DeletedColor } from "../../enums/general/DeletedColor";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
 import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inversion/invertedActives";
+import { getRandomAccessiblePosition } from "../../helper/entityHelper";
 import { fprint } from "../../helper/printHelper";
+import { renderConstantly } from "../../helper/renderHelper";
+import { copySprite } from "../../helper/spriteHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { setFloorColor } from "../general/floorColorHelper";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -65,9 +68,7 @@ export function addTestingCommands(): void {
 }
 
 /** Test stuff as the developer with command 'del'. */
-export function testingFunction1(): void {
-  setFloorColor(DeletedColor.HAPPY_YELLOW);
-}
+export function testingFunction1(): void {}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
@@ -188,7 +189,7 @@ function combineWords(word1: string, word2: string): string {
     combinedWord.length < Math.ceil((chars1.length + chars2.length) / 2)
   ) {
     iterations++;
-    if (iterations > 100000 && combinedWord !== undefined) {
+    if (iterations > 100_000 && combinedWord !== undefined) {
       break;
     }
 
@@ -199,7 +200,8 @@ function combineWords(word1: string, word2: string): string {
 
     // Combine words at chosen indices.
     combinedWord =
-      word1.substring(0, splitIndex1) + word2.substring(splitIndex2);
+      word1.slice(0, Math.max(0, splitIndex1)) +
+      word2.slice(Math.max(0, splitIndex2));
   }
 
   return combinedWord;
@@ -209,16 +211,16 @@ function combineWords(word1: string, word2: string): string {
 function consonantsInARow(str: string): number {
   let maxConsonantsInARow = 0;
   let currentConsonantsInARow = 0;
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of
-  for (let i = 0; i < str.length; i++) {
-    if (!"aeiouAEIOU".includes(str[i]!)) {
+
+  for (const element of str) {
+    if ("aeiouAEIOU".includes(element)) {
+      currentConsonantsInARow = 0;
+    } else {
       currentConsonantsInARow++;
       maxConsonantsInARow = Math.max(
         maxConsonantsInARow,
         currentConsonantsInARow,
       );
-    } else {
-      currentConsonantsInARow = 0;
     }
   }
   return maxConsonantsInARow;

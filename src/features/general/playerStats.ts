@@ -1,6 +1,5 @@
 import { CacheFlag } from "isaac-typescript-definitions";
 import {
-  addStat,
   DefaultMap,
   defaultMapGetPlayer,
   defaultMapSetPlayer,
@@ -151,6 +150,7 @@ export function playerStatsEvaluateCache(
   cacheFlag: CacheFlag,
 ): void {
   if (STAT_CACHE_FLAGS_SET.has(cacheFlag)) {
-    addStat(player, cacheFlag, getStaticStat(player, cacheFlag));
+    // addStat(player, cacheFlag, getStaticStat(player, cacheFlag));
   }
 }
+

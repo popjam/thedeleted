@@ -1,4 +1,4 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { removePlayerMostRecentInvertedPassiveItem } from "../../../../helper/deletedSpecific/inversion/invertedInventory";
 import { addRemovedInvertedItemToTracker } from "../../inventory/removedInvertedItems";
 

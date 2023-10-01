@@ -1,18 +1,18 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
-import { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
-import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
+import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
 
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { Range } from "../../../types/general/Range";
 import {
   randomInRange,
-  Range,
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
 
-import { Response } from "../responses/Response";
+import type { Response } from "../responses/Response";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
 const TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER = 0;
@@ -225,11 +225,7 @@ export abstract class Action {
   /** Will validify ranges. */
   setInterval(interval: number | Range): this {
     this.ic = STARTING_INTERVAL_COUNTER_NUMBER;
-    if (typeof interval !== "number") {
-      this.i = validifyRange(interval);
-    } else {
-      this.i = interval;
-    }
+    this.i = typeof interval === "number" ? interval : validifyRange(interval);
     return this;
   }
 
@@ -239,7 +235,7 @@ export abstract class Action {
   // Only get the 'Responses' part of the text.
   getResponseText(): string {
     const response = this.getResponse();
-    return response !== undefined ? response.getText() : NO_RESPONSE_TEXT;
+    return response === undefined ? NO_RESPONSE_TEXT : response.getText();
   }
 
   getText(): string {

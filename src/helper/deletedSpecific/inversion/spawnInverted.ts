@@ -1,9 +1,12 @@
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
+import type {
+  CollectibleType,
+  PickupVariant,
+} from "isaac-typescript-definitions";
 import { spawnPickup } from "isaacscript-common";
-import { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";
 import { spawnGlitchedCollectible } from "../../collectibleHelper";
 import { setPedestalInversion } from "./pedestalInversion";
@@ -48,7 +51,7 @@ export function spawnNewInvertedActiveCollectible(
   invertedActionSet?: InvertedActiveActionSet,
   inputs?: ActionSetBuilderInput,
 ): EntityPickupCollectible {
-  inputs = inputs ?? {};
+  inputs ??= {};
   inputs.forceActiveOrPassive = true;
   return spawnNewInvertedCollectible(position, invertedActionSet, inputs);
 }

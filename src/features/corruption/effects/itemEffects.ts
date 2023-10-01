@@ -4,12 +4,12 @@
  * ActionSet.
  */
 
-import { CollectibleType } from "isaac-typescript-definitions";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getGameInvertedItemActionSet } from "../../../helper/deletedSpecific/inversion/corruptionGeneration";
 import { fprint } from "../../../helper/printHelper";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";
 
 const v = {
@@ -29,7 +29,10 @@ export function itemEffectsInit(): void {
   mod.saveDataManager("itemEffects", v);
 }
 
-/** Get the ActionSet attached to the inverted collectibleType. */
+/**
+ * Get the ActionSet attached to the inverted collectibleType. If there is none, will generate a
+ * fresh one with the provided inputs (if any).
+ */
 export function getAndSetInvertedItemActionSet(
   collectibleType: CollectibleType,
   inputs?: ActionSetBuilderInput,
@@ -42,7 +45,7 @@ export function getAndSetInvertedItemActionSet(
   fprint(
     `Inverted item action set not found, creating one for collectibleType: ${collectibleType}`,
   );
-  inputs = inputs ?? {};
+  inputs ??= {};
   inputs.collectible = collectibleType;
   const newInvertedActionSet = getGameInvertedItemActionSet(inputs);
   v.run.invertedItems.set(collectibleType, newInvertedActionSet);
@@ -84,7 +87,7 @@ export function doesInvertedItemHaveActionSet(
 }
 
 /** Do not use. */
-// eslint-disable-next-line no-underscore-dangle
+
 export function _setInvertedItemActionSet(
   collectible: CollectibleType,
   actionSet: InvertedItemActionSet,

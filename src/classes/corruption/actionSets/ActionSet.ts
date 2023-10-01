@@ -26,6 +26,7 @@ export abstract class ActionSet {
     return this.effects;
   }
 
+  /** Sort effects by Morality. */
   getSortedEffects(): Array<Action | Response> {
     return this.effects.sort((a, b) => {
       const aMorality = a.getMorality();
@@ -89,6 +90,7 @@ export abstract class ActionSet {
     return this;
   }
 
+  /** Get collectibles mentioned in any actions or responses. */
   getInvolvedCollectibles(): CollectibleType[] {
     const collectibles: CollectibleType[] = [];
     this.effects.forEach((actionOrResponse) => {
@@ -122,6 +124,7 @@ export abstract class ActionSet {
     return this;
   }
 
+  /** Get the text describing the ActionSet. */
   getText(eid = true): string {
     let text = "";
     const sortedEffects = this.getSortedEffects();

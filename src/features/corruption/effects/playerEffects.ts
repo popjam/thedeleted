@@ -1,20 +1,16 @@
-/**
- * Handles storage and modification of the Players' current corrupted actions / effects.
- * Additionally, handles the triggering of actions in their relevant callbacks.
- */
-
+import type { PlayerIndex } from "isaacscript-common";
 import {
   DefaultMap,
   defaultMapGetPlayer,
   getPlayers,
-  PlayerIndex,
 } from "isaacscript-common";
-import { Action, isAction } from "../../../classes/corruption/actions/Action";
-import { Response } from "../../../classes/corruption/responses/Response";
-import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
+import type { Action } from "../../../classes/corruption/actions/Action";
+import { isAction } from "../../../classes/corruption/actions/Action";
+import type { Response } from "../../../classes/corruption/responses/Response";
+import type { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 
 /** The total number of actions between all players before additional Actions are throttled. */
@@ -34,7 +30,16 @@ const v = {
   },
 };
 
-// TODO: Remove false.
+/**
+ * We are no longer saving player effects to disk. Instead, we save player ActionSets to disk, and
+ * each time the game is loaded, we re-create the player effects from the ActionSets. This allows us
+ * easier management of the players inverted items, while also allowing us to save individual
+ * effects here for increased performance.
+ *
+ * When an ActionSet is added to the player, we also add its Actions here. They both share the same
+ * space in memory, so we can easily access them from either place without having to worry about
+ * syncing them.
+ */
 export function playerEffectsInit(): void {
   mod.saveDataManager("playerEffects", v);
 }
@@ -74,7 +79,7 @@ export function addActionsToPlayer(
   player: EntityPlayer,
   ...actions: Action[]
 ): void {
-  actions.forEach((action) => {
+  for (const action of actions) {
     const playerActionsOfType = getAndSetActionArray(player, action.actionType);
     if (action.actionType === ActionType.ON_OBTAIN) {
       action.trigger({ player, action });
@@ -83,11 +88,11 @@ export function addActionsToPlayer(
         fprint(
           `Throttling action, ${TOTAL_NUM_ACTIONS} action limit exceeded.`,
         );
-        return;
+        continue;
       }
       playerActionsOfType.push(action);
     }
-  });
+  }
 }
 
 /**
@@ -98,13 +103,13 @@ export function addActionOrResponseToPlayer(
   player: EntityPlayer,
   ...effects: Array<Action | Response>
 ): void {
-  effects.forEach((effect) => {
+  for (const effect of effects) {
     if (isAction(effect)) {
       addActionsToPlayer(player, effect);
     } else {
       effect.trigger({ player });
     }
-  });
+  }
 }
 
 /** Removes actions that are flagged for removal from the player. */
@@ -121,7 +126,7 @@ export function removeFlaggedActionsOfType(
 
 /** Get an array of ActionTypes that the player has Actions of. */
 export function getPlayerActionTypes(player: EntityPlayer): ActionType[] {
-  return Array.from(defaultMapGetPlayer(v.run.playerActions, player).keys());
+  return [...defaultMapGetPlayer(v.run.playerActions, player).keys()];
 }
 
 /**
@@ -134,13 +139,13 @@ export function removeActionWithPredicate(
   player?: EntityPlayer,
   actionType?: ActionType,
 ): Action | undefined {
-  const playersLoop = player !== undefined ? [player] : getPlayers();
+  const playersLoop = player === undefined ? getPlayers() : [player];
 
   for (const playerLoop of playersLoop) {
     const actionTypesLoop =
-      actionType !== undefined
-        ? [actionType]
-        : getPlayerActionTypes(playerLoop);
+      actionType === undefined
+        ? getPlayerActionTypes(playerLoop)
+        : [actionType];
     for (const actionTypeLoop of actionTypesLoop) {
       const playerActionsOfType = getAndSetActionArray(
         playerLoop,
@@ -170,14 +175,14 @@ export function removeAllActionsWithPredicate(
   player?: EntityPlayer,
   actionType?: ActionType,
 ): Action[] {
-  const playersLoop = player !== undefined ? [player] : getPlayers();
+  const playersLoop = player === undefined ? getPlayers() : [player];
   const removedActions: Action[] = [];
 
   for (const playerLoop of playersLoop) {
     const actionTypesLoop =
-      actionType !== undefined
-        ? [actionType]
-        : getPlayerActionTypes(playerLoop);
+      actionType === undefined
+        ? getPlayerActionTypes(playerLoop)
+        : [actionType];
     for (const actionTypeLoop of actionTypesLoop) {
       const playerActionsOfType = getAndSetActionArray(
         playerLoop,
@@ -202,9 +207,9 @@ export function triggerPlayersActionsByType(
   actionType: ActionType,
   triggerData: TriggerData,
 ): void {
-  getPlayers().forEach((player) => {
+  for (const player of getPlayers()) {
     triggerPlayerActionsByType(player, actionType, { ...triggerData });
-  });
+  }
 }
 
 /**
@@ -219,14 +224,14 @@ export function triggerPlayerActionsByType(
   triggerData.player ??= player;
   let anyFlaggedForRemoval = false as boolean;
   const playerActionsOfType = getAndSetActionArray(player, actionType);
-  playerActionsOfType.forEach((action) => {
+  for (const action of playerActionsOfType) {
     fprint(`Triggering: ${action.getText()}`);
     triggerData.action = action;
     action.trigger({ ...triggerData });
     if (action.ffR === true) {
       anyFlaggedForRemoval = true;
     }
-  });
+  }
 
   // If there are any actions that are flagged for removal. Don't do this every time as it may cause
   // additional lag. Will not remove actions with 'permanent' tag.

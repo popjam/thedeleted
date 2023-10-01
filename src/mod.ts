@@ -3,8 +3,6 @@ import { ISCFeature, upgradeMod } from "isaacscript-common";
 import { MOD_NAME } from "./constants/mod/modConstants";
 import { fprint } from "./helper/printHelper";
 
-fprint("Loading 'mod.ts'...");
-
 const modVanilla = RegisterMod(MOD_NAME, 1);
 const MOD_FEATURES = [
   ISCFeature.RUN_IN_N_FRAMES,

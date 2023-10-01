@@ -7,6 +7,7 @@ import {
   ColorDefault,
   VectorOne,
   clamp,
+  getActivePocketItemSlot,
   getRandomArrayElement,
   getRandomColor,
   getRandomInt,
@@ -19,9 +20,10 @@ import {
   SECONDARY_ACTIVE_SLOT_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1,
 } from "../../constants/renderConstants";
 import { getCollectibleSpriteFromCache } from "../../features/general/spriteCache";
-import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
-import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
-import { Range, randomInRange } from "../../types/general/Range";
+import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { AdvancedColor } from "../../interfaces/general/AdvancedColor";
+import type { Range } from "../../types/general/Range";
+import { randomInRange } from "../../types/general/Range";
 import {
   getActiveRenderPosition,
   getPocketActiveRenderPosition,
@@ -132,7 +134,7 @@ export function renderTMTRAINERSprite(
   const segmentLength = 30 / len;
   let currentLength = 0;
 
-  horizontal = horizontal ?? getRandomInt(1, 2, seed) === 1;
+  horizontal ??= getRandomInt(1, 2, seed) === 1;
   if (flipX ?? false) {
     // Reverse the array without using array.reverse().
     collectibles = collectibles.reduce(
@@ -143,12 +145,14 @@ export function renderTMTRAINERSprite(
   }
 
   let i = 0;
-  collectibles.forEach((collectible) => {
+  for (const collectible of collectibles) {
     i++;
     const renderPosition = position;
     const sprite = getCollectibleSpriteFromCache(collectible);
 
-    if (color !== false) {
+    if (color === false) {
+      sprite.Color = ColorDefault;
+    } else {
       // Get the color of the portion.
       let portionColor: Color;
       if (isArray(color)) {
@@ -169,8 +173,6 @@ export function renderTMTRAINERSprite(
 
       // Set the color of the sprite.
       sprite.Color = portionColor;
-    } else {
-      sprite.Color = ColorDefault;
     }
 
     sprite.FlipX = flipX ?? getRandomInt(1, 2, nextSeeds(seed, i)) === 1;
@@ -178,15 +180,7 @@ export function renderTMTRAINERSprite(
     sprite.Scale = scale;
     sprite.Rotation = rotation;
 
-    if (horizontal === false) {
-      renderSprite(
-        sprite,
-        // Account for the pedestal offset.
-        renderPosition.add(Vector(0, sprite.FlipY ? -PEDESTAL_HEIGHT : 0)),
-        Vector(currentLength, 0),
-        Vector(30 - (currentLength + segmentLength), 0),
-      );
-    } else {
+    if (horizontal) {
       renderSprite(
         sprite,
         // Account for the pedestal offset.
@@ -194,57 +188,58 @@ export function renderTMTRAINERSprite(
         Vector(0, currentLength),
         Vector(0, 30 - (currentLength + segmentLength)),
       );
+    } else {
+      renderSprite(
+        sprite,
+        // Account for the pedestal offset.
+        renderPosition.add(Vector(0, sprite.FlipY ? -PEDESTAL_HEIGHT : 0)),
+        Vector(currentLength, 0),
+        Vector(30 - (currentLength + segmentLength), 0),
+      );
     }
     currentLength += segmentLength;
-  });
+  }
 }
 
 /**
- * Render a CorruptedCollectibleSprite in the primary or secondary ActiveSlot. If you want to render
- * a CorruptedCollectibleSprite in the PocketSlots, use
- * renderCorruptedCollectibleSpriteInPocketSlot() instead. This function will also account for
- * scaling the sprite. Call this function in a render callback. TODO: Update for players.
+ * Render a CorruptedCollectibleSprite in an ActiveSlot. If ActiveSlot.POCKET is specified, will
+ * adjust depending on currently selected pocket item. This function will also account for scaling
+ * the sprite. Call this function in a render callback. TODO: Update for players.
  *
  * @param player The player to render the sprite for.
  * @param corruptedSprite The CorruptedCollectibleSprite to render.
  * @param slot The ActiveSlot to render the sprite in.
  */
-export function renderCorruptedCollectibleSpriteInActiveSlot(
+export function renderCorruptedCollectibleSpriteInSlot(
   player: EntityPlayer,
   corruptedSprite: CorruptedCollectibleSprite,
-  slot: ActiveSlot.PRIMARY | ActiveSlot.SECONDARY,
+  slot: ActiveSlot,
 ): void {
+  if (slot === ActiveSlot.POCKET) {
+    const pocketSlot = getActivePocketItemSlot(player);
+    if (pocketSlot === undefined) {
+      return;
+    }
+    const position = getPocketActiveRenderPosition(pocketSlot, player);
+    renderCorruptedCollectibleSprite(
+      position,
+      corruptedSprite,
+      pocketSlot === PocketItemSlot.SLOT_1
+        ? VectorOne
+        : POCKET_SLOT_UNFOCUSSED_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1,
+    );
+    return;
+  }
+  if (slot === ActiveSlot.POCKET_SINGLE_USE) {
+    // Unimplemented.
+    return;
+  }
   const position = getActiveRenderPosition(slot, player);
   renderCorruptedCollectibleSprite(
     position,
     corruptedSprite,
     slot === ActiveSlot.SECONDARY
       ? SECONDARY_ACTIVE_SLOT_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1
-      : VectorOne,
-  );
-}
-
-/**
- * Render a CorruptedCollectibleSprite in one of the four PocketItemSlots. If you want to render a
- * CorruptedCollectibleSprite in the primary or secondary ActiveSlots, use
- * renderCorruptedCollectibleSpriteInActiveSlot() instead. This function will also account for
- * scaling the sprite. Call this function in a render callback. TODO: Update for players.
- *
- * @param player The player to render the sprite for.
- * @param corruptedSprite The CorruptedCollectibleSprite to render.
- * @param pocketSlot The PocketItemSlot to render the sprite in.
- */
-export function renderCorruptedCollectibleSpriteInPocketSlot(
-  player: EntityPlayer,
-  corruptedSprite: CorruptedCollectibleSprite,
-  pocketSlot: PocketItemSlot,
-): void {
-  const position = getPocketActiveRenderPosition(pocketSlot, player);
-  renderCorruptedCollectibleSprite(
-    position,
-    corruptedSprite,
-    pocketSlot !== PocketItemSlot.SLOT_1
-      ? POCKET_SLOT_UNFOCUSSED_CORRUPTED_COLLECTIBLE_SCALE_PLAYER_1
       : VectorOne,
   );
 }

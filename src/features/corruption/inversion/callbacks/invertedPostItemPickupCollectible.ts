@@ -1,4 +1,5 @@
-import { getPlayerIndex, PickingUpItemCollectible } from "isaacscript-common";
+import type { PickingUpItemCollectible } from "isaacscript-common";
+import { getPlayerIndex } from "isaacscript-common";
 import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inversion/invertedInventory";
 import { fprint } from "../../../../helper/printHelper";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";

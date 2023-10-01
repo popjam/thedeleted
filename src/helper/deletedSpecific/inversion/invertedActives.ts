@@ -2,12 +2,13 @@
 
 import { ActiveSlot } from "isaac-typescript-definitions";
 import { VectorZero } from "isaacscript-common";
-import { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { isInvertedPassiveActionSet } from "../actionSetHelper";
 import { spawnNewInvertedActiveCollectible } from "./spawnInverted";
+import { addInvertedItemActionSetToPlayer } from "./playerItemEffects";
 
 export function addNewInvertedActiveToPlayer(
   player: EntityPlayer,
@@ -28,11 +29,12 @@ export function addNewInvertedActiveToPlayer(
   if (isInvertedPassiveActionSet(actionSet)) {
     error("Error: The new inverted item is a passive item..");
   }
-  (actionSet as InvertedActiveActionSet).addToPlayer(
+  addInvertedItemActionSetToPlayer(
     player,
+    actionSet,
+    true,
+    true,
     newInvertedPedestal.SubType,
-    true,
-    true,
     slot,
   );
   return actionSet;

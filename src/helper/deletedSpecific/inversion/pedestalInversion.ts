@@ -23,11 +23,11 @@ import { updatePedestal } from "./updateInverted";
 /**
  * Set one pedestal to a specific inversion status. This will also update the pedestal.
  *
- * @param toInverted
- * @param collectible
+ * @param toInverted If true, will set the pedestal to inverted.
+ * @param collectible The pedestal to modify.
  * @param invertedItemActionSet Optional, will set the inverted items ActionSet if the item does not
  *                              have an ActionSet (does not DeepCopy).
- * @param inputs
+ * @param inputs Optional inputs that will be used if a new InvertedItemActionSet is created.
  */
 export function setPedestalInversion(
   toInverted: boolean,

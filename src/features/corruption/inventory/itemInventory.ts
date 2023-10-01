@@ -1,11 +1,11 @@
 /** Keeps track of corrupted items added to the player. */
 
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   DefaultMap,
   defaultMapGetPlayer,
   isPassiveCollectible,
-  PlayerIndex,
 } from "isaacscript-common";
 import { findLastIndexOfArray } from "../../../helper/arrayHelper";
 import { fprint } from "../../../helper/printHelper";
@@ -75,7 +75,8 @@ export function getPlayerMostRecentInvertedItem(
  * Add an inverted item into the players' inventory tracker. This does not actually give the item to
  * the player, and should probably not get called outside specific functions.
  */
-export function addInvertedItemToCorruptInventory(
+
+export function _addInvertedItemToCorruptInventory(
   player: EntityPlayer,
   collectibleType: CollectibleType,
 ): void {
@@ -88,7 +89,8 @@ export function addInvertedItemToCorruptInventory(
  * doesn't exist does nothing. Does not actually remove the physical item from the player, or the
  * corrupted effects, use removeInvertedItemFromPlayer() for that.
  */
-export function removeInvertedItemFromCorruptInventory(
+
+export function _removeInvertedItemFromCorruptInventory(
   player: EntityPlayer,
   collectibleType: CollectibleType,
 ): void {

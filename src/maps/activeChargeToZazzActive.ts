@@ -2,7 +2,6 @@ import {
   CollectibleType,
   ItemConfigChargeType,
 } from "isaac-typescript-definitions";
-import { InvertedActiveActionSet } from "../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 
 const ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP: ReadonlyMap<string, CollectibleType> =
@@ -134,15 +133,4 @@ export function getZazzActiveFromCharge(
     );
   }
   return result;
-}
-
-/** Get the ZAZZ active based on the Inverted Action Set. */
-export function getZazzActiveFromInvertedActiveActionSet(
-  actionSet: InvertedActiveActionSet,
-): CollectibleType {
-  return getZazzActiveFromCharge(
-    actionSet.getChargeType(),
-    actionSet.getCharges(),
-    actionSet.copy,
-  );
 }

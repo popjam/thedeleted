@@ -1,8 +1,9 @@
 /** This file tracks the last picked up inverted collectible that each player has picked up. */
 
-import { CollectibleType } from "isaac-typescript-definitions";
-import { getPlayerIndex, PickupIndex, PlayerIndex } from "isaacscript-common";
-import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { PickupIndex, PlayerIndex } from "isaacscript-common";
+import { getPlayerIndex } from "isaacscript-common";
+import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { getPickupWithPickupIndex } from "../../../helper/entityHelper/pickupIndexHelper";
 import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
@@ -26,6 +27,7 @@ const v = {
         }
       | undefined
     >(),
+
     /**
      * Non-Inverted Pickup ActionSets Attached to collectibles need to be tracked, as they are
      * unique to the specific PickupIndex.
@@ -156,13 +158,14 @@ export function getPedestalPickingUpData(pedestal: EntityPickupCollectible):
   const pickupDatas = [...v.run.lastPickedUpCollectible.values()];
   // eslint-disable-next-line isaacscript/no-let-any
   let match;
-  pickupDatas.forEach((pickupData) => {
-    if (pickupData !== undefined) {
-      if (pickupData.pickupIndex === mod.getPickupIndex(pedestal)) {
-        match = pickupData;
-      }
+  for (const pickupData of pickupDatas) {
+    if (
+      pickupData !== undefined &&
+      pickupData.pickupIndex === mod.getPickupIndex(pedestal)
+    ) {
+      match = pickupData;
     }
-  });
+  }
 
   return match;
 }

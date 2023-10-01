@@ -3,35 +3,32 @@ import {
   CollectibleType,
   ItemConfigChargeType,
 } from "isaac-typescript-definitions";
-import { deepCopy, isColor } from "isaacscript-common";
+import { deepCopy } from "isaacscript-common";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { ActionOrigin } from "../../../../enums/corruption/actions/ActionOrigin";
-import { ActionType } from "../../../../enums/corruption/actions/ActionType";
+import type { ActionType } from "../../../../enums/corruption/actions/ActionType";
 import {
   addActionOrResponseToPlayer,
   removeActionWithPredicate,
 } from "../../../../features/corruption/effects/playerEffects";
 import {
-  addInvertedItemToCorruptInventory,
-  removeInvertedItemFromCorruptInventory,
+  _addInvertedItemToCorruptInventory,
+  _removeInvertedItemFromCorruptInventory,
 } from "../../../../features/corruption/inventory/itemInventory";
 import {
   PickupStage,
   setLastPickedUpCollectible,
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
 import { getPedestalCharges } from "../../../../features/corruption/inversion/pedestalCharges";
-import { shouldZazzActiveBeACopy } from "../../../../helper/deletedSpecific/inversion/customActive";
+import { shouldZazzActiveBeACopy } from "../../../../helper/deletedSpecific/inversion/customActiveHelper";
 import { fprint } from "../../../../helper/printHelper";
-import {
-  getZazzActiveFromCharge,
-  getZazzActiveFromInvertedActiveActionSet,
-} from "../../../../maps/activeChargeToZazzActive";
+import { getZazzActiveFromCharge } from "../../../../maps/activeChargeToZazzActive";
 import { mod } from "../../../../mod";
 import { isZazzinatorActiveCopy } from "../../../../sets/zazzSets";
 import { _addInvertedActiveToPlayer } from "../../../facets/CustomActiveFacet";
 import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
-import { Action } from "../../actions/Action";
-import { Response } from "../../responses/Response";
+import type { Action } from "../../actions/Action";
+import type { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
 
 const DEFAULT_NAME = "Corrupted Active Item";
@@ -58,8 +55,10 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
   tu?: {
     /** The item to transform into: */
     i: CollectibleType;
+
     /** Whether the new item should be inverted or non-inverted. */
     iI?: boolean;
+
     /** How many uses until transformation (undefined is equal to 1). */
     u?: number;
   };
@@ -111,7 +110,26 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     return this;
   }
 
-  /** Add the inverted Active to the player. */
+  /**
+   * Retrieves the correct 'Zazzinator Active' based on the configuration of this ActiveActionSet.
+   */
+  getZazzActive(actionSet: InvertedActiveActionSet): CollectibleType {
+    return getZazzActiveFromCharge(
+      actionSet.getChargeType(),
+      actionSet.getCharges(),
+      actionSet.copy,
+    );
+  }
+
+  /**
+   * Add the inverted Active to the player's inventory.
+   *
+   * @param player The player to add the Active to.
+   * @param collectible The CollectibleType of the Active to add.
+   * @param addLogo Whether to add the Zazz logo to the Active.
+   * @param addToInventory Whether to add the Active to the player's inventory.
+   * @param slot The slot to add the Active to.
+   */
   addToPlayer(
     player: EntityPlayer,
     collectible: CollectibleType,
@@ -131,16 +149,13 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
         const shouldBeCopy = shouldZazzActiveBeACopy(player);
         actionSet.copy = shouldBeCopy;
         player.AddCollectible(
-          getZazzActiveFromInvertedActiveActionSet(actionSet),
+          this.getZazzActive(actionSet),
           this.getCharges(),
           undefined,
           slot,
         );
       } else {
-        player.SetPocketActiveItem(
-          getZazzActiveFromInvertedActiveActionSet(actionSet),
-          slot,
-        );
+        player.SetPocketActiveItem(this.getZazzActive(actionSet), slot);
       }
     } else {
       actionSet.copy = isZazzinatorActiveCopy(player.GetActiveItem());
@@ -149,18 +164,18 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
 
     // Inventory.
     if (addToInventory) {
-      addInvertedItemToCorruptInventory(player, collectible);
+      _addInvertedItemToCorruptInventory(player, collectible);
     }
 
     /**
      * Add the Actions to the player. These Actions will be active while the player holds the
      * inverted active, and be removed once the active is removed.
      */
-    actionSet.getActions().forEach((action) => {
+    for (const action of actionSet.getActions()) {
       action.o = [ActionOrigin.INVERTED_COLLECTIBLE, actionSet.oi ?? 0];
       // Should this deepCopy?
       addActionOrResponseToPlayer(player, action);
-    });
+    }
 
     _addInvertedActiveToPlayer(player, actionSet, slot);
   }
@@ -190,7 +205,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
 
     // Remove most recent from inventory.
     if (removeFromInventory) {
-      removeInvertedItemFromCorruptInventory(player, collectible);
+      _removeInvertedItemFromCorruptInventory(player, collectible);
     }
   }
 
@@ -212,11 +227,11 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     const hasCarBattery = player.HasCollectible(CollectibleType.CAR_BATTERY);
     const repeatAmount = hasCarBattery ? 2 : 1;
     for (let i = 0; i < repeatAmount; i++) {
-      this.getResponses().forEach((response) => {
+      for (const response of this.getResponses()) {
         response.trigger({
           player,
         });
-      });
+      }
     }
 
     /** Play sound. */
@@ -224,9 +239,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
 
     /** Play 'use item' animation. */
     const icon = this.getIcon();
-    if (!isColor(icon)) {
-      playPickupAnimationWithCustomSprite(player, icon, 2);
-    }
+    playPickupAnimationWithCustomSprite(player, icon, 2);
 
     return { Discharge: true, Remove: false, ShowAnim: false };
   }

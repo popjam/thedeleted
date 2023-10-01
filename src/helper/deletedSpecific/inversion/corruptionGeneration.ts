@@ -1,5 +1,5 @@
 import { getRandomArrayElement } from "isaacscript-common";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import {
   generateDefaultInvertedItemActionSet,
   generateInvertedItemActionSetFromPlayer,
@@ -8,7 +8,7 @@ import {
   getInvertedPlayers,
   isGameInverted,
 } from "../../../features/corruption/inversion/playerInversion";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 
 /**
  * Returns an InvertedItemActionSet based on the game circumstances. If the game is inverted,

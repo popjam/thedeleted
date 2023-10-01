@@ -1,10 +1,6 @@
-import { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
-import {
-  ColorDefault,
-  PickingUpItemCollectible,
-  game,
-  isColor,
-} from "isaacscript-common";
+import type { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
+import type { PickingUpItemCollectible } from "isaacscript-common";
+import { ColorDefault, game, isColor } from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,
@@ -20,8 +16,8 @@ import {
 import { generateCorruptedCollectibleSprite } from "../../../../helper/deletedSpecific/funnySprites";
 import { fprint } from "../../../../helper/printHelper";
 import { legibleString } from "../../../../helper/stringHelper";
-import { CorruptedCollectibleSprite } from "../../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
-import { CorruptedSoundEffect } from "../../../../interfaces/corruption/funny/CorruptedSoundEffect";
+import type { CorruptedCollectibleSprite } from "../../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { CorruptedSoundEffect } from "../../../../interfaces/corruption/funny/CorruptedSoundEffect";
 import { replaceCollectibleSpriteWithCorrupted } from "../../../facets/CorruptedCollectibleSpriteFacet";
 import { overridePickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import { ActionSet } from "../ActionSet";
@@ -35,13 +31,13 @@ export abstract class InvertedItemActionSet extends ActionSet {
   q?: number;
   d?: string;
   n?: string;
-  ic?: CorruptedCollectibleSprite | Color;
+  ic?: CorruptedCollectibleSprite;
   sfx?: CorruptedSoundEffect;
 
   // Attributes.
 
   /** The Origin Item, which CollectibleType the ActionSet resides on. */
-  oi?: number;
+  oi?: CollectibleType;
 
   /** Negatives carry over. */
   ngo?: boolean;
@@ -97,17 +93,16 @@ export abstract class InvertedItemActionSet extends ActionSet {
   }
 
   /** Will generate an Icon if none exists. */
-  getIcon(): CorruptedCollectibleSprite | Color {
+  getIcon(): CorruptedCollectibleSprite {
     return this.ic ?? this.generateIcon();
   }
 
-  generateIcon(): CorruptedCollectibleSprite | Color {
+  // TODO.
+  generateIcon(): CorruptedCollectibleSprite {
     const advancedIconSetting = getAdvancedInvertedItemIconSetting();
-    if (advancedIconSetting) {
-      this.ic = generateCorruptedCollectibleSprite();
-    } else {
-      this.ic = ColorDefault;
-    }
+    this.ic = advancedIconSetting
+      ? generateCorruptedCollectibleSprite()
+      : generateCorruptedCollectibleSprite();
     return this.ic;
   }
 
@@ -125,7 +120,7 @@ export abstract class InvertedItemActionSet extends ActionSet {
     }
   }
 
-  setIcon(icon: CorruptedCollectibleSprite | Color): this {
+  setIcon(icon: CorruptedCollectibleSprite): this {
     this.ic = icon;
     return this;
   }

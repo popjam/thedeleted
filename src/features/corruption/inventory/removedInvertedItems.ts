@@ -1,9 +1,6 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import {
-  getCollectibleName,
-  getPlayerIndex,
-  PlayerIndex,
-} from "isaacscript-common";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
+import { getCollectibleName, getPlayerIndex } from "isaacscript-common";
 import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
 
@@ -47,17 +44,6 @@ export function addRemovedInvertedItemToTracker(
   referenceCollectible: CollectibleType,
 ): void {
   const playerIndex = getPlayerIndex(player);
-  fprint(
-    `
-      <---------> Tracking removed item <--------->
-      Player: ${playerIndex}
-      Dummy item: ${getCollectibleName(dummyItem)}
-      Reference item: ${getCollectibleName(referenceCollectible)}
-      Position In Queue: ${v.room.removedItems.length}
-      <------------------------------------------>
-
-      `,
-  );
   v.room.removedItems.push({
     playerIndex,
     dummyItem,
@@ -65,7 +51,6 @@ export function addRemovedInvertedItemToTracker(
   });
 }
 
-// eslint-disable-next-line no-underscore-dangle
 export function _getRemovedInvertedItems(): RemovedZazzItem[] {
   return v.room.removedItems;
 }

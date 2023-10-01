@@ -1,5 +1,5 @@
-import { PickupIndex } from "isaacscript-common";
-import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import type { PickupIndex } from "isaacscript-common";
+import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { mod } from "../../../mod";
 
 const v = {
@@ -29,7 +29,7 @@ export function getNonInvertedPickupActionSet(
 }
 
 /** Don't use this function. */
-// eslint-disable-next-line no-underscore-dangle
+
 export function _setPickupIndexActionSet(
   pickupIndex: PickupIndex,
   actionSet: NonInvertedPickupActionSet,

@@ -1,16 +1,16 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { ActionOrigin } from "../../../../enums/corruption/actions/ActionOrigin";
-import { ActionType } from "../../../../enums/corruption/actions/ActionType";
+import type { ActionType } from "../../../../enums/corruption/actions/ActionType";
 import { CollectibleTypeCustom } from "../../../../enums/general/CollectibleTypeCustom";
 import {
   addActionsToPlayer,
   removeActionWithPredicate,
 } from "../../../../features/corruption/effects/playerEffects";
 import {
-  addInvertedItemToCorruptInventory,
-  removeInvertedItemFromCorruptInventory,
+  _addInvertedItemToCorruptInventory,
+  _removeInvertedItemFromCorruptInventory,
 } from "../../../../features/corruption/inventory/itemInventory";
 import {
   PickupStage,
@@ -18,8 +18,9 @@ import {
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
 import { fprint } from "../../../../helper/printHelper";
 import { mod } from "../../../../mod";
-import { Action, isAction } from "../../actions/Action";
-import { Response } from "../../responses/Response";
+import type { Action } from "../../actions/Action";
+import { isAction } from "../../actions/Action";
+import type { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
 
 const DEFAULT_NAME = "Corrupted Passive Item";
@@ -41,20 +42,20 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
     const actionsAndResponses = deepCopy<Array<Action | Response>>(
       this.getEffects(),
     );
-    actionsAndResponses.forEach((actionOrResponse) => {
+    for (const actionOrResponse of actionsAndResponses) {
       if (isAction(actionOrResponse)) {
         actionOrResponse.o = [ActionOrigin.INVERTED_COLLECTIBLE, collectible];
         addActionsToPlayer(player, actionOrResponse);
       } else {
         actionOrResponse.trigger({ player });
       }
-    });
+    }
 
     if (addLogo) {
       player.AddCollectible(CollectibleTypeCustom.ZAZZ);
     }
     if (addToInventory) {
-      addInvertedItemToCorruptInventory(player, collectible);
+      _addInvertedItemToCorruptInventory(player, collectible);
     }
   }
 
@@ -84,7 +85,7 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
 
     // Remove most recent from inventory.
     if (removeFromInventory) {
-      removeInvertedItemFromCorruptInventory(player, collectible);
+      _removeInvertedItemFromCorruptInventory(player, collectible);
     }
   }
 

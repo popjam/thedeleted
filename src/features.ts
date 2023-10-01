@@ -7,6 +7,7 @@ import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
 import { bombInventoryInit } from "./features/corruption/inventory/bombInventory";
 import { invertedItemCorruptInit } from "./features/corruption/inventory/itemInventory";
 import { removedItemTrackerInit } from "./features/corruption/inventory/removedInvertedItems";
+import { customActivesInit } from "./features/corruption/inversion/customActives";
 import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
 import { pedestalChargesInit } from "./features/corruption/inversion/pedestalCharges";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
@@ -61,4 +62,5 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   pedestalChargesInit,
   glitchyReplacePlayerSpritesheetInit,
   floorColorHelper,
+  customActivesInit,
 ];
