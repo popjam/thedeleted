@@ -110,38 +110,3 @@ export function removeInvertedItemFromPlayer(
     slot,
   );
 }
-
-/**
- * Adds the ActionSet contents attached to the inverted CollectibleType to the player. Also adds a
- * logo to the inventory and updates the inventory.
- *
- * For corrupted passives, actions will be added to the player, and effects will trigger
- * immediately.
- *
- * @param player
- * @param collectibleType The inverted collectible you want to add. If no InvertedItemActionSet is
- *                        assigned, will generate a new one.
- * @param addLogo Whether to add a logo to the inventory. For passives, this will be the warning
- *                sign logo on the item tracker. For actives, this will be the physical Zazzinator
- *                active item. Default true.
- * @param addToInventory Whether to add the item to the inverted item inventory. Default true.
- * @param slot The slot the inverted active item should go into (if it is an
- *             InvertedActiveActionSet).
- */
-export function addInvertedItemToPlayer(
-  player: EntityPlayer,
-  collectibleType: CollectibleType,
-  addLogo = true,
-  addToInventory = true,
-  slot: ActiveSlot = ActiveSlot.PRIMARY,
-): void {
-  const invertedItemActionSet = getAndSetInvertedItemActionSet(collectibleType);
-  addInvertedItemActionSetToPlayer(
-    player,
-    invertedItemActionSet,
-    addLogo,
-    addToInventory,
-    collectibleType,
-    slot,
-  );
-}

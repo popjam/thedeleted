@@ -2,6 +2,7 @@ import { getPlayerIndex, getPlayers } from "isaacscript-common";
 import type { PlayerIndex } from "isaacscript-common";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { mod } from "../../../mod";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActiveSlot } from "isaac-typescript-definitions";
 
 /**
@@ -66,6 +67,24 @@ export function getCustomActiveInSlot(
 }
 
 /**
+ * Returns a list (ordered primary > secondary > pocket > singleUsePocket) of a players custom
+ * actives (if any).
+ */
+export function getAllCustomActives(
+  player: EntityPlayer,
+): InvertedActiveActionSet[] {
+  const playerIndex = getPlayerIndex(player);
+  return [
+    v.run.primarySlot.get(playerIndex),
+    v.run.secondarySlot.get(playerIndex),
+    v.run.pocketSlot.get(playerIndex),
+    v.run.singleUsePocketSlot.get(playerIndex),
+  ].filter(
+    (customActive) => customActive !== undefined,
+  ) as InvertedActiveActionSet[];
+}
+
+/**
  * Sets the Custom Active in the ActiveSlot:
  *
  * - PrimarySlot (always the larger active item)
@@ -103,6 +122,27 @@ export function setCustomActiveInSlot(
       break;
     }
   }
+}
+
+/**
+ * Returns true if the player has the inverted active of the specified type, otherwise returns
+ * false.
+ */
+export function doesPlayerHaveCustomActive(
+  player: EntityPlayer,
+  collectibleType: CollectibleType,
+): boolean {
+  const playerIndex = getPlayerIndex(player);
+  return (
+    v.run.primarySlot.get(playerIndex)?.getCollectibleType() ===
+      collectibleType ||
+    v.run.secondarySlot.get(playerIndex)?.getCollectibleType() ===
+      collectibleType ||
+    v.run.pocketSlot.get(playerIndex)?.getCollectibleType() ===
+      collectibleType ||
+    v.run.singleUsePocketSlot.get(playerIndex)?.getCollectibleType() ===
+      collectibleType
+  );
 }
 
 /** Returns true if the player has any custom actives. */

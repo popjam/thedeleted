@@ -30,11 +30,7 @@ export function facetInit(): void {
  */
 export function doesFacetHaveSubscribers(facet: Facet | string): boolean {
   let className: string | undefined;
-  if (typeof facet === "string") {
-    className = facet;
-  } else {
-    className = getTSTLClassName(facet);
-  }
+  className = typeof facet === "string" ? facet : getTSTLClassName(facet);
 
   if (className === undefined) {
     error("Failed to get the class name.");
@@ -167,15 +163,13 @@ export function facetPostGameContinuedReordered(): void {
   // Reinitialize all Facets that have subscribers.
   for (const facet of allFacets) {
     fprint(`Trying to Re-Init Facet: ${getTSTLClassName(facet)}.`);
-    if (doesFacetHaveSubscribers(facet)) {
-      if (!facet.initialized) {
-        fprint(
-          `Re-initializing ${getTSTLClassName(
-            facet,
-          )} due to POST_GAME_STARTED_REORDERED.`,
-        );
-        facet.init();
-      }
+    if (doesFacetHaveSubscribers(facet) && !facet.initialized) {
+      fprint(
+        `Re-initializing ${getTSTLClassName(
+          facet,
+        )} due to POST_GAME_STARTED_REORDERED.`,
+      );
+      facet.init();
     }
   }
 }

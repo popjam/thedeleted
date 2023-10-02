@@ -79,6 +79,16 @@ export function isInvertedItemPassive(
   );
 }
 
+/** Returns true if the Inverted Item is an active item. */
+export function isInvertedItemActive(
+  collectibleType: CollectibleType,
+): boolean {
+  const invertedItemActionSet = getAndSetInvertedItemActionSet(collectibleType);
+  return (
+    invertedItemActionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM
+  );
+}
+
 /** Returns true if the Inverted CollectibleType is registered with an ActionSet. */
 export function doesInvertedItemHaveActionSet(
   collectibleType: CollectibleType,

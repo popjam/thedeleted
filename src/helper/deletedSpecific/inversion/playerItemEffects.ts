@@ -13,8 +13,8 @@ import type { Response } from "../../../classes/corruption/responses/Response";
 import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
 import {
-  addActionOrResponseToPlayer,
-  addActionsToPlayer,
+  addActionOrResponseToTracker,
+  addActionsToTracker,
   removeActionWithPredicate,
 } from "../../../features/corruption/effects/playerEffects";
 import {
@@ -158,7 +158,7 @@ function addInvertedActiveActionSetToPlayer(
     if (actionSet.oi !== undefined) {
       action.o = [ActionOrigin.INVERTED_COLLECTIBLE, actionSet.oi];
     }
-    addActionOrResponseToPlayer(player, deepCopy(action));
+    addActionOrResponseToTracker(player, deepCopy(action));
   }
 
   _addInvertedActiveToPlayer(player, actionSet, slot);
@@ -190,7 +190,7 @@ function addInvertedPassiveActionSetToPlayer(
       if (collectible !== undefined) {
         actionOrResponse.o = [ActionOrigin.INVERTED_COLLECTIBLE, collectible];
       }
-      addActionsToPlayer(player, actionOrResponse);
+      addActionsToTracker(player, actionOrResponse);
     } else {
       actionOrResponse.trigger({ player });
     }

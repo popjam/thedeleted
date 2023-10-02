@@ -1,114 +1,60 @@
-import {
-  CollectibleType,
-  ItemConfigChargeType,
-} from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { ItemConfigChargeType } from "isaac-typescript-definitions";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 
 const ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP: ReadonlyMap<string, CollectibleType> =
   new Map([
     [
-      `${ItemConfigChargeType.NORMAL}.${0}.false`,
+      `${ItemConfigChargeType.NORMAL}.${0}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_0,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${0}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_0_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${1}.false`,
+      `${ItemConfigChargeType.NORMAL}.${1}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_1,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${1}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_1_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${2}.false`,
+      `${ItemConfigChargeType.NORMAL}.${2}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_2,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${2}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_2_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${3}.false`,
+      `${ItemConfigChargeType.NORMAL}.${3}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_3,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${3}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_3_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${4}.false`,
+      `${ItemConfigChargeType.NORMAL}.${4}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_4,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${4}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_4_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${5}.false`,
+      `${ItemConfigChargeType.NORMAL}.${5}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_5,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${5}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_5_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${6}.false`,
+      `${ItemConfigChargeType.NORMAL}.${6}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_6,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${6}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_6_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${7}.false`,
+      `${ItemConfigChargeType.NORMAL}.${7}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_7,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${7}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_7_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${8}.false`,
+      `${ItemConfigChargeType.NORMAL}.${8}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_8,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${8}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_8_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${9}.false`,
+      `${ItemConfigChargeType.NORMAL}.${9}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_9,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${9}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_9_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${10}.false`,
+      `${ItemConfigChargeType.NORMAL}.${10}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_10,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${10}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_10_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${11}.false`,
+      `${ItemConfigChargeType.NORMAL}.${11}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_11,
     ],
     [
-      `${ItemConfigChargeType.NORMAL}.${11}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_11_COPY,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${12}.false`,
+      `${ItemConfigChargeType.NORMAL}.${12}`,
       CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_12,
-    ],
-    [
-      `${ItemConfigChargeType.NORMAL}.${12}.true`,
-      CollectibleTypeCustom.ZAZZ_ACTIVE_NORMAL_12_COPY,
     ],
   ]);
 
@@ -123,9 +69,8 @@ const ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP: ReadonlyMap<string, CollectibleType> =
 export function getZazzActiveFromCharge(
   chargeType: ItemConfigChargeType,
   charge: number,
-  copied = false,
 ): CollectibleType {
-  const chargeID = `${chargeType.toString()}.${charge.toString()}.${copied.toString()}`;
+  const chargeID = `${chargeType.toString()}.${charge.toString()}`;
   const result = ACTIVE_CHARGE_TO_ZAZZ_ACTIVE_MAP.get(chargeID);
   if (result === undefined) {
     error(

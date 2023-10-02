@@ -1,36 +1,11 @@
-import { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { ActiveSlot } from "isaac-typescript-definitions";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import {
-  isZazzinatorActive,
-  isZazzinatorActiveCopy,
-} from "../../../sets/zazzSets";
+import { isZazzinatorActive } from "../../../sets/zazzSets";
 import {
   getCollectibleChargeType,
   getCollectibleMaxCharges,
 } from "isaacscript-common";
-import { getCustomActiveInSlot } from "../../../features/corruption/inversion/customActives";
-
-/** Determines if the physical Zazz Active added to ActiveSlot.PRIMARY should be a copy or not. */
-export function shouldZazzActiveBeACopy(player: EntityPlayer): boolean {
-  const hasSchoolbag = player.HasCollectible(CollectibleType.SCHOOLBAG);
-  const primarySlotActive = getCustomActiveInSlot(player, ActiveSlot.PRIMARY);
-  const secondarySlotActive = getCustomActiveInSlot(
-    player,
-    ActiveSlot.SECONDARY,
-  );
-
-  if (primarySlotActive === undefined || !hasSchoolbag) {
-    return false;
-  }
-
-  // From this point on, has schoolbag and activeSlot1 is defined.
-  if (secondarySlotActive === undefined) {
-    return !(primarySlotActive.copy ?? true);
-  }
-
-  // Both slots full.
-  return !(secondarySlotActive.copy ?? true);
-}
 
 /**
  * Checks if the InvertedActiveActionSet matches the Zazzinator dummy item by comparing the charge
@@ -42,13 +17,8 @@ export function doesInvertedActiveActionSetMatchZazzActive(
 ): boolean {
   const chargeType = actionSet.getChargeType();
   const charges = actionSet.getCharges();
-  const isCopy = actionSet.copy ?? false;
 
   if (!isZazzinatorActive(zazzActive)) {
-    return false;
-  }
-
-  if (isZazzinatorActiveCopy(zazzActive) !== isCopy) {
     return false;
   }
 
@@ -77,9 +47,7 @@ export function _addZazzActiveToPlayer(
   actionSet: InvertedActiveActionSet,
   slot: ActiveSlot,
 ): void {
-  if (slot === ActiveSlot.PRIMARY) {
-    const shouldBeCopy = shouldZazzActiveBeACopy(player);
-    actionSet.copy = shouldBeCopy;
+  if (slot === ActiveSlot.PRIMARY || slot === ActiveSlot.SECONDARY) {
     player.AddCollectible(
       actionSet.getZazzActive(actionSet),
       actionSet.getCharges(),

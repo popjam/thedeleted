@@ -1,14 +1,15 @@
 import { ColorDefault, deepCopy } from "isaacscript-common";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
-import { addActionsToPlayer } from "../../../../features/corruption/effects/playerEffects";
+import { addActionsToTracker } from "../../../../features/corruption/effects/playerEffects";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
 } from "../../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
-import { Action, isAction } from "../../actions/Action";
-import { Response } from "../../responses/Response";
+import type { Action } from "../../actions/Action";
+import { isAction } from "../../actions/Action";
+import type { Response } from "../../responses/Response";
 import { ActionSet } from "../ActionSet";
 
 /**
@@ -17,6 +18,7 @@ import { ActionSet } from "../ActionSet";
  */
 export class NonInvertedPickupActionSet extends ActionSet {
   override actionSetType: ActionSetType = ActionSetType.NON_INVERTED_PICKUP;
+
   /** This color will be reflected in the entity which the ActionSet belongs to. */
   color?: Color;
   n?: string;
@@ -69,13 +71,13 @@ export class NonInvertedPickupActionSet extends ActionSet {
     const actionsAndResponses = deepCopy<Array<Action | Response>>(
       this.getEffects(),
     );
-    actionsAndResponses.forEach((actionOrResponse) => {
+    for (const actionOrResponse of actionsAndResponses) {
       if (isAction(actionOrResponse)) {
-        addActionsToPlayer(player, actionOrResponse);
+        addActionsToTracker(player, actionOrResponse);
       } else {
         actionOrResponse.trigger({ player });
       }
-    });
+    }
   }
 
   /**

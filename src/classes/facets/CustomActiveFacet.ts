@@ -20,30 +20,34 @@ import { Facet, initGenericFacet } from "../Facet";
 import type { InvertedActiveActionSet } from "../corruption/actionSets/Inverted/InvertedActiveActionSet";
 import {
   doesAnyPlayerHaveAnyCustomActives,
+  getAllCustomActives,
   getCustomActiveInSlot,
   setCustomActiveInSlot,
 } from "../../features/corruption/inversion/customActives";
 import { doesInvertedActiveActionSetMatchZazzActive } from "../../helper/deletedSpecific/inversion/customActiveHelper";
 import { renderCorruptedCollectibleSpriteInSlot } from "../../helper/deletedSpecific/funnySprites";
 import { getZazzActiveFromCharge } from "../../maps/activeChargeToZazzActive";
+import { addActionsToTracker } from "../../features/corruption/effects/playerEffects";
+import { ActionType } from "../../enums/corruption/actions/ActionType";
 
 /**
  * Corrupted Actives are basically custom active items that can have a unique sprite, effects,
  * charge, etc, modified during the game. To simulate this, we need to set up 'dummy' invisible
  * active items that don't have a name, for every possible charge setting. The sprite will then be
- * rendered on top. However, there are a few problems:
+ * rendered on top.
  *
- * 1 - Tracking the custom pocket item active is relatively simple, you can tell exactly what
- * PocketItem position it is in. The only problem occurs when you have the dice bag trinket.
- *
- * 2 - Tracking corrupted active items in Primary and Secondary slot is more difficult, as there is
- * no way to tell which corrupted active is in which slot, if both have the same charge (and hence
- * the same dummy item). To solve this, we need to have two sets of dummy items, and if a player has
- * one from one set the next one should be from the other set.
- *
- * 3 - What happens when a corrupted active is swapped out? It will appear on the floor as the dummy
+ * What happens when a corrupted active is swapped out? It will appear on the floor as the dummy
  * item, which is not what we want. To solve this, we need to track which corrupted actives have
  * just been removed, then quickly swap them for the collectibleType they represent.
+ *
+ * Furthermore, custom actives need a way to retain their state after they have been swapped out /
+ * placed on the floor. Unlike passives, you can put down an active item, and you don't expect it to
+ * instantly have a refreshed charge. To alleviate this, all actives on the floor need to be tracked
+ * and have a state (which is just their InvertedActiveActionSet).
+ *
+ * Custom actives' 'Responses' are triggered upon using the custom active. Custom actives' 'Actions'
+ * are added to the player effect pool upon obtaining the custom active, and removed upon the custom
+ * active's removal.
  */
 let FACET: Facet | undefined;
 class CustomActiveFacet extends Facet {
@@ -137,6 +141,20 @@ class CustomActiveFacet extends Facet {
       ) {
         setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primaryActive);
         setCustomActiveInSlot(player, ActiveSlot.PRIMARY, undefined);
+      }
+    }
+  }
+
+  /** We need to re-add Actions to the tracker, as they aren't saved on disk. */
+  @CallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, true)
+  postGameStartedReordered(): void {
+    for (const player of getPlayers()) {
+      const customActives = getAllCustomActives(player);
+      for (const customActive of customActives) {
+        const actions = customActive
+          .getActions()
+          .filter((action) => action.actionType !== ActionType.ON_OBTAIN);
+        addActionsToTracker(player, ...actions);
       }
     }
   }

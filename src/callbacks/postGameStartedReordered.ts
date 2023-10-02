@@ -1,6 +1,8 @@
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { facetPostGameContinuedReordered } from "../classes/Facet";
 import { runIndexPostGameContinuedFacet } from "../features/runIndex";
+import { itemInventoryPostGameContinuedReordered } from "../features/corruption/inventory/itemInventory2";
 
 export function postGameStartedReorderedInit(mod: ModUpgraded): void {
   mod.AddCallbackCustom(
@@ -13,4 +15,5 @@ export function postGameStartedReorderedInit(mod: ModUpgraded): void {
 function postGameContinuedReordered(_isContinued: boolean) {
   facetPostGameContinuedReordered();
   runIndexPostGameContinuedFacet();
+  itemInventoryPostGameContinuedReordered();
 }

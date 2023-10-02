@@ -8,13 +8,11 @@ import type { Action } from "../../../classes/corruption/actions/Action";
 import { isAction } from "../../../classes/corruption/actions/Action";
 import type { Response } from "../../../classes/corruption/responses/Response";
 import type { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
-import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 
-/** The total number of actions between all players before additional Actions are throttled. */
-const TOTAL_NUM_ACTIONS = 5;
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
 
 const v = {
@@ -41,7 +39,7 @@ const v = {
  * syncing them.
  */
 export function playerEffectsInit(): void {
-  mod.saveDataManager("playerEffects", v);
+  mod.saveDataManager("playerEffects", v, false);
 }
 
 export function removeActionFromPlayer(
@@ -72,40 +70,37 @@ export function getNumActions(player: EntityPlayer): int {
 }
 
 /**
- * Add actions to the player. If an Action is of type ActionType.ON_OBTAIN, will trigger it instead
- * of adding it to the player. Does not deepCopy!
+ * Add actions to the tracker. These actions should be references to the Actions in player-held
+ * ActionSets, and hence will be removed upon exiting the game. They should be re-added every time
+ * the game starts up again. As they need to point to the same object, this does not deepCopy.
+ *
+ * Actions added through this method that are not saved upon exiting, and should generally only be
+ * used upon adding an ActionSet!
  */
-export function addActionsToPlayer(
+export function addActionsToTracker(
   player: EntityPlayer,
   ...actions: Action[]
 ): void {
   for (const action of actions) {
     const playerActionsOfType = getAndSetActionArray(player, action.actionType);
-    if (action.actionType === ActionType.ON_OBTAIN) {
-      action.trigger({ player, action });
-    } else {
-      if (getTotalNumActions() >= TOTAL_NUM_ACTIONS) {
-        fprint(
-          `Throttling action, ${TOTAL_NUM_ACTIONS} action limit exceeded.`,
-        );
-        continue;
-      }
-      playerActionsOfType.push(action);
-    }
+    playerActionsOfType.push(action);
   }
 }
 
 /**
  * This will add any Actions to the player, and trigger any Responses, without adding them. Does not
  * deepCopy!
+ *
+ * Actions added through this method that are not saved upon exiting, and should generally only be
+ * used upon adding an ActionSet!
  */
-export function addActionOrResponseToPlayer(
+export function addActionOrResponseToTracker(
   player: EntityPlayer,
   ...effects: Array<Action | Response>
 ): void {
   for (const effect of effects) {
     if (isAction(effect)) {
-      addActionsToPlayer(player, effect);
+      addActionsToTracker(player, effect);
     } else {
       effect.trigger({ player });
     }

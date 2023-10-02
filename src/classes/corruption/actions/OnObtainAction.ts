@@ -4,8 +4,9 @@ import { FUNNY_ACTION_TEXT_SET } from "../../../sets/funnyActionTexts";
 import { Action } from "./Action";
 
 /**
- * Upon the player obtaining the Action, immediately triggers its responses instead of adding the
- * Action to the player. Functionally the same as adding Responses to the player.
+ * Upon the player obtaining the passive or active inverted item, immediately triggers its responses
+ * instead of adding the Action to the player. Functionally the same as adding Responses to the
+ * player. Will activate every time an Active is picked up, even after putting it down.
  */
 export class OnObtainAction extends Action {
   override actionType = ActionType.ON_OBTAIN;

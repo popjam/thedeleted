@@ -1,10 +1,10 @@
 import { deepCopy } from "isaacscript-common";
 import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { addActionsToPlayer } from "../../../features/corruption/effects/playerEffects";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import { addActionsToTracker } from "../../../features/corruption/effects/playerEffects";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
-import { Action } from "../actions/Action";
+import type { Action } from "../actions/Action";
 import { OnRoomAction } from "../actions/OnRoomAction";
 import { RemoveActionResponse } from "./RemoveActionResponse";
 import { Response } from "./Response";
@@ -114,9 +114,9 @@ export class TemporaryActionResponse extends Response {
     const removeOn = this.generateRemoveOn(id);
 
     // Add temporary Action.
-    addActionsToPlayer(player, temporaryAction);
+    addActionsToTracker(player, temporaryAction);
 
     // Add removal Action.
-    addActionsToPlayer(player, removeOn);
+    addActionsToTracker(player, removeOn);
   }
 }

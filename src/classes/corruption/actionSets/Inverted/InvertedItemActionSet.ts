@@ -55,6 +55,11 @@ export abstract class InvertedItemActionSet extends ActionSet {
     return this;
   }
 
+  /** Returns the inverted collectible type the ActionSet belongs to (or undefined if not set). */
+  getCollectibleType(): CollectibleType | undefined {
+    return this.oi;
+  }
+
   /**
    * The sound effect that will be played upon picking up the corrupted item. If the corrupted item
    * is also an Active item, using the Active item will also play the sound effect.
@@ -172,21 +177,6 @@ export abstract class InvertedItemActionSet extends ActionSet {
     };
     setSpecificEntityEIDDescriptionObject(collectible, descObj);
   }
-
-  abstract addToPlayer(
-    player: EntityPlayer,
-    collectible: CollectibleType,
-    addLogo: boolean,
-    addToInventory: boolean,
-    slot?: ActiveSlot,
-  ): void;
-
-  abstract removeFromPlayer(
-    player: EntityPlayer,
-    collectible: CollectibleType,
-    removeLogo: boolean,
-    removeFromInventory: boolean,
-  ): void;
 
   abstract preGetPedestal(
     player: EntityPlayer,
