@@ -1,25 +1,14 @@
 import {
-  ActiveSlot,
   CollectibleType,
   ItemConfigChargeType,
+  ItemType,
 } from "isaac-typescript-definitions";
-import { deepCopy } from "isaacscript-common";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
-import { ActionOrigin } from "../../../../enums/corruption/actions/ActionOrigin";
-import type { ActionType } from "../../../../enums/corruption/actions/ActionType";
-import {
-  addActionOrResponseToTracker,
-  removeActionWithPredicate,
-} from "../../../../features/corruption/effects/playerEffects";
-import {
-  _addInvertedItemToCorruptInventory,
-  _removeInvertedItemFromCorruptInventory,
-} from "../../../../features/corruption/inventory/itemInventory";
 import {
   PickupStage,
+  getPedestalPickingUpData,
   setLastPickedUpCollectible,
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
-import { getPedestalCharges } from "../../../../features/corruption/inversion/pedestalCharges";
 import { fprint } from "../../../../helper/printHelper";
 import { getZazzActiveFromCharge } from "../../../../maps/activeChargeToZazzActive";
 import { mod } from "../../../../mod";
@@ -28,10 +17,29 @@ import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverH
 import type { Action } from "../../actions/Action";
 import type { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
+import { getEIDMarkupFromShortcut } from "../../../../helper/compatibility/EIDHelper";
+import { legibleString } from "../../../../helper/stringHelper";
+import {
+  INVERTED_ACTIVE_EID_ICON,
+  NO_EFFECTS_DEFAULT_TEXT,
+} from "../../../../constants/actionSetConstants";
+import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/inversion/moralityHelper";
+import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
+import { MOD_NAME } from "../../../../constants/mod/modConstants";
+import type { CustomActiveData } from "../../../../interfaces/corruption/actionSets/CustomActiveData";
+import {
+  getAndRemoveTrackedPedestalInvertedActive,
+  getTrackedPedestalInvertedActive,
+  removeTrackedPedestalInvertedActive,
+  setTrackedPedestalCharge,
+  setTrackedPedestalInvertedActive,
+} from "../../../../features/corruption/effects/activeItemTracker";
 
 const DEFAULT_NAME = "Corrupted Active Item";
 const DEFAULT_CHARGES = 4;
 const DEFAULT_CHARGE_TYPE = ItemConfigChargeType.NORMAL;
+const RESPONSE_EID_TEXT = "#{{Blank}} {{Blank}} {{Blank}} {{Blank}} On Use:";
+const ACTION_EID_TEXT = "#{{Blank}} {{Blank}} {{Blank}} {{Blank}} While held:";
 
 /** ActionSet class. */
 export class InvertedActiveActionSet extends InvertedItemActionSet {
@@ -73,8 +81,105 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
    */
   uc?: Response;
 
+  /** Data related to the custom active item this ActionSet is attached to. */
+  cd?: CustomActiveData;
+
+  /** The current charge count of the custom active item. */
+  cc?: number;
+
+  /**
+   * The current charge count of the non-Inverted Active item that is on the flip side of this one.
+   */
+  fc?: number;
+
   override getName(): string {
     return this.n ?? DEFAULT_NAME;
+  }
+
+  override getDescObject(): EIDDescObject {
+    return {
+      Description: legibleString(this.getText()),
+      Name: this.getName(),
+      ModName: MOD_NAME,
+      Quality: this.getQuality(),
+      Icon: EID?.getIcon(INVERTED_ACTIVE_EID_ICON),
+      ItemType: ItemType.ACTIVE,
+      Charges: this.getCharges(),
+      ChargeType: this.getChargeType(),
+    };
+  }
+
+  /**
+   * Get the text describing the ActionSet. Overridden to separate 'On Use' and 'On Pickup' effects
+   * and to prevent mistaking it for a Passive.
+   */
+  override getText(eid = true): string {
+    let text = "";
+    const actions = sortEffectsByMorality(this.getActions());
+    const responses = sortEffectsByMorality(this.getResponses());
+    for (let i = 0; i < 2; i++) {
+      if (i === 0 && responses.length === 0) {
+        continue;
+      }
+      if (i === 1 && actions.length === 0) {
+        continue;
+      }
+      text += i === 0 ? RESPONSE_EID_TEXT : ACTION_EID_TEXT;
+      for (const actionOrResponse of i === 0 ? responses : actions) {
+        text += "#";
+        if (eid) {
+          // Set color of action / response.
+          text += getEIDMarkupFromShortcut(
+            actionOrResponse.getTextColor() ??
+              this.getActionOrResponseColor(actionOrResponse),
+          );
+        }
+        text += legibleString(actionOrResponse.getText());
+        if (eid) {
+          text += "{{CR}}";
+        }
+      }
+    }
+    if (text === "") {
+      return NO_EFFECTS_DEFAULT_TEXT;
+    }
+    return text;
+  }
+
+  /**
+   * Update the tracking of the custom active's current charge. This does not actually change the
+   * current charge of the custom active.
+   */
+  setCurrentCharge(charge: number): this {
+    this.cc = charge;
+    return this;
+  }
+
+  /**
+   * Get the tracked current charge of the custom active. Will return 0 if there is no current
+   * charge tracked. This does not actually get the current charge of the custom active, but rather
+   * the charge that is tracked.
+   */
+  getCurrentCharge(): number {
+    return this.cc ?? 0;
+  }
+
+  /**
+   * Update the tracking of the non-Inverted active's current charge. This does not actually change
+   * the current charge of the non-Inverted active.
+   */
+  setFlipCharge(charge: number): this {
+    this.fc = charge;
+    return this;
+  }
+
+  /**
+   * Get the tracked current charge of the non-Inverted active. Will return 0 if there is no current
+   * charge tracked (for example, if the flipped item is a passive). This does not actually get the
+   * current charge of the non-Inverted active, but rather the charge that is tracked.
+   */
+  getFlipCharge(): number {
+    return this.fc ?? 0;
   }
 
   /**
@@ -160,11 +265,29 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       pickupIndex: mod.getPickupIndex(pedestal),
       inverted: true,
     });
+
+    // Save the original charge of the item on the pedestal. This should always be the charge of the
+    // non-Inverted active (if the non-Inverted item is a passive, we can ignore this).
+    setTrackedPedestalCharge(pedestal, pedestal.Charge);
+
+    // Quickly change the item on the pedestal to the correct Zazzinator item.
     pedestal.SubType = getZazzActiveFromCharge(
       this.getChargeType(),
       this.getCharges(),
     );
-    pedestal.Charge = getPedestalCharges(pedestal) ?? this.getCharges();
+
+    // If the inverted active item associated with the pedestal already existed and is being
+    // tracked, we use the tracked charge instead of the default charge. We don't remove it as we
+    // still need to track it for postItemPickup.
+    fprint(
+      `tracked inverted active charge upon pickup: ${
+        getTrackedPedestalInvertedActive(pedestal)?.getCurrentCharge() ?? -1
+      }`,
+    );
+    pedestal.Charge =
+      getTrackedPedestalInvertedActive(pedestal)?.getCurrentCharge() ??
+      this.getCharges();
+
     return false;
   }
 }

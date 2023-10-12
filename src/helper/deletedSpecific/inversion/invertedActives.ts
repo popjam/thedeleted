@@ -8,14 +8,11 @@ import { getAndSetInvertedItemActionSet } from "../../../features/corruption/eff
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { isInvertedPassiveActionSet } from "../actionSetHelper";
 import { spawnNewInvertedActiveCollectible } from "./spawnInverted";
-import { addInvertedItemActionSetToPlayer } from "./playerItemEffects";
+import { addInvertedItemToPlayer } from "./invertedInventoryHelper";
 
 export function addNewInvertedActiveToPlayer(
   player: EntityPlayer,
-  slot:
-    | ActiveSlot.PRIMARY
-    | ActiveSlot.POCKET
-    | ActiveSlot.POCKET_SINGLE_USE = ActiveSlot.PRIMARY,
+  slot: ActiveSlot = ActiveSlot.PRIMARY,
   invertedActionSet?: InvertedActiveActionSet,
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
@@ -29,13 +26,6 @@ export function addNewInvertedActiveToPlayer(
   if (isInvertedPassiveActionSet(actionSet)) {
     error("Error: The new inverted item is a passive item..");
   }
-  addInvertedItemActionSetToPlayer(
-    player,
-    actionSet,
-    true,
-    true,
-    newInvertedPedestal.SubType,
-    slot,
-  );
+  addInvertedItemToPlayer(player, newInvertedPedestal.SubType, true, slot);
   return actionSet;
 }

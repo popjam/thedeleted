@@ -8,20 +8,39 @@ import {
 } from "../../../features/corruption/effects/itemEffects";
 import {
   _addInvertedPassiveItemToCorruptInventory,
-  doesPlayerHaveInvertedPassiveItem,
-} from "../../../features/corruption/inventory/itemInventory2";
-import { doesPlayerHaveCustomActive } from "../../../features/corruption/inversion/customActives";
+  _doesPlayerHaveInvertedPassiveItem,
+  _removeInvertedPassiveItemFromCorruptInventory,
+  getPlayerMostRecentInvertedPassiveItem,
+  getPlayerMostRecentInvertedPassiveItemCollectibleType,
+} from "../../../features/corruption/inventory/passiveItemInventory";
+import {
+  doesPlayerHaveCustomActive,
+  getCustomActiveInSlot,
+} from "../../../features/corruption/inversion/customActives";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { deepCopy } from "isaacscript-common";
-import { _addZazzActiveToPlayer } from "./customActiveHelper";
+import { PickupIndex, deepCopy } from "isaacscript-common";
+import {
+  _addZazzActiveToPlayer,
+  _removeZazzActiveFromPlayer,
+} from "./customActiveHelper";
 import { isInvertedActiveActionSet } from "../actionSetHelper";
 import type { InvertedPassiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import { isAction } from "../../../classes/corruption/actions/Action";
-import { addActionsToTracker } from "../../../features/corruption/effects/playerEffects";
+import {
+  addActionsToTracker,
+  removeActionFromTracker,
+} from "../../../features/corruption/effects/playerEffects";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
-import { _addInvertedItemToCorruptInventory } from "../../../features/corruption/inventory/itemInventory";
 import { _addInvertedActiveToPlayer } from "../../../classes/facets/CustomActiveFacet";
+import { addRemovedInvertedItemToTracker } from "../../../features/corruption/inventory/removedInvertedItems";
+import {
+  getAndRemoveTrackedPedestalInvertedActive,
+  getAndRemoveTrackedPedestalInvertedActiveFromPickupIndex,
+  getTrackedPedestalChargeFromPickupIndex,
+  removeTrackedPedestalChargeFromPickupIndex,
+  setTrackedPedestalCharge,
+} from "../../../features/corruption/effects/activeItemTracker";
 
 /**
  * Returns true if the player has at least one inverted item of the provided CollectibleType. Can be
@@ -33,7 +52,7 @@ export function doesPlayerHaveInvertedItem(
 ): boolean {
   const isInverted = isInvertedItemPassive(collectibleType);
   if (isInverted) {
-    return doesPlayerHaveInvertedPassiveItem(player, collectibleType);
+    return _doesPlayerHaveInvertedPassiveItem(player, collectibleType);
   }
   return doesPlayerHaveCustomActive(player, collectibleType);
 }
@@ -45,21 +64,25 @@ export function doesPlayerHaveInvertedItem(
  * For corrupted passives, actions will be added to the player, and effects will trigger
  * immediately.
  *
- * @param player
+ * @param player The player to add the inverted item to.
  * @param collectibleType The inverted collectible you want to add. If no InvertedItemActionSet is
  *                        assigned, will generate a new one.
- * @param addLogo Whether to add a logo to the inventory. For passives, this will be the warning
- *                sign logo on the item tracker. For actives, this will be the physical Zazzinator
- *                active item. Default true.
- * @param addToInventory Whether to add the item to the inverted item inventory. Default true.
+ * @param addLogo Whether to add the physical item. For passives, this will be the warning sign logo
+ *                on the item tracker. For actives, this will be the physical Zazzinator active
+ *                item. Default true.
  * @param slot The slot the inverted active item should go into (if it is an
- *             InvertedActiveActionSet).
+ *             InvertedActiveActionSet). Default primary.
+ * @param pickupIndex The pickup index of the pedestal the inverted item was picked up from (if
+ *                    any). This is necessary to ascertain if the item on the pedestal is being
+ *                    tracked through the activeItemTracker, and if so, the tracked ActionSet should
+ *                    be given to the player.
  */
 export function addInvertedItemToPlayer(
   player: EntityPlayer,
   collectibleType: CollectibleType,
   addLogo = true,
   slot: ActiveSlot = ActiveSlot.PRIMARY,
+  pickupIndex?: PickupIndex,
 ): void {
   const invertedItemActionSet = getAndSetInvertedItemActionSet(collectibleType);
   if (isInvertedActiveActionSet(invertedItemActionSet)) {
@@ -69,6 +92,7 @@ export function addInvertedItemToPlayer(
       collectibleType,
       addLogo,
       slot,
+      pickupIndex,
     );
   } else {
     addInvertedPassiveToPlayer(
@@ -86,7 +110,6 @@ export function addInvertedItemToPlayer(
  * @param player The player to add the InvertedActionSet to.
  * @param invertedActionSet The InvertedActionSet to add.
  * @param addLogo Whether to add the physical item (should be true).
- * @param addToInventory Whether to add the item to the inverted item inventory.
  * @param collectible The collectible the InvertedActionSet refers to.
  * @param slot The slot the inverted active item should go into (default primary).
  */
@@ -96,10 +119,29 @@ function addInvertedActiveToPlayer(
   collectible: CollectibleType,
   addLogo = true,
   slot: ActiveSlot = ActiveSlot.PRIMARY,
+  pickupIndex?: PickupIndex,
 ) {
-  // Create a Deep Copy and add reference Collectible.
-  const actionSet = deepCopy<InvertedActiveActionSet>(invertedActionSet);
+  let actionSet: InvertedActiveActionSet | undefined;
+
+  // If the pedestal has a tracked custom active on it, use that instead.
+  if (pickupIndex !== undefined) {
+    actionSet =
+      getAndRemoveTrackedPedestalInvertedActiveFromPickupIndex(pickupIndex);
+  }
+
+  // Otherwise, clone the assigned ActionSet.
+  actionSet ??= deepCopy(invertedActionSet);
   actionSet.oi = collectible;
+
+  // If we know the charge of the non-Inverted active item on the pedestal, track it on the
+  // InvertedActiveActionSet object.
+  if (pickupIndex !== undefined) {
+    const flippedCharge = getTrackedPedestalChargeFromPickupIndex(pickupIndex);
+    if (flippedCharge !== undefined) {
+      actionSet.setFlipCharge(flippedCharge);
+      removeTrackedPedestalChargeFromPickupIndex(pickupIndex);
+    }
+  }
 
   // Add actions to tracker.
   for (const actionOrResponse of actionSet.getActions()) {
@@ -126,7 +168,6 @@ function addInvertedActiveToPlayer(
  * @param invertedPassiveActionSet The InvertedActiveActionSet to add.
  * @param collectible The CollectibleType that the passive item refers to.
  * @param addLogo Whether to add the physical item to the inventory (default true).
- * @param addToInventory Whether to add the passive to the player's inventory (default true).
  */
 function addInvertedPassiveToPlayer(
   player: EntityPlayer,
@@ -159,4 +200,76 @@ function addInvertedPassiveToPlayer(
     /** Will be refined eventually. */
     player.AddCollectible(CollectibleTypeCustom.ZAZZ);
   }
+}
+
+/**
+ * Removes the most recent passive item of the specified collectibleType (if the player has it). It
+ * will achieve this by removing the Actions from the tracker, and removing the physical item from
+ * the inventory (if removeLogo is true), then finally removing the item from the corrupt inventory.
+ *
+ * @param player The player to remove the item from.
+ * @param collectibleType The CollectibleType of the item to remove. If undefined, will remove the
+ *                        most recent item.
+ * @param removeLogo Whether to remove the physical item from the inventory (default true).
+ * @returns True if an item was removed.
+ */
+export function removePlayerMostRecentInvertedPassive(
+  player: EntityPlayer,
+  collectibleType?: CollectibleType,
+  removeLogo = true,
+): CollectibleType | undefined {
+  // If collectibleType is undefined, get the most recent item.
+  if (collectibleType === undefined) {
+    collectibleType =
+      getPlayerMostRecentInvertedPassiveItemCollectibleType(player);
+    if (collectibleType === undefined) {
+      return undefined;
+    }
+  } else if (!_doesPlayerHaveInvertedPassiveItem(player, collectibleType)) {
+    return undefined;
+  }
+
+  // Remove the Actions from the tracker.
+  const actionSet = getAndSetInvertedItemActionSet(collectibleType);
+  for (const action of actionSet.getActions()) {
+    removeActionFromTracker(player, action);
+  }
+
+  // Remove physical item.
+  if (removeLogo) {
+    // Disabled currently due to triggering 'postZazzRemoved' callback.
+    // player.RemoveCollectible(CollectibleTypeCustom.ZAZZ);
+  }
+
+  // Track the item that was removed.
+  addRemovedInvertedItemToTracker(
+    player,
+    CollectibleTypeCustom.ZAZZ,
+    collectibleType,
+  );
+
+  _removeInvertedPassiveItemFromCorruptInventory(player, collectibleType);
+  return collectibleType;
+}
+
+/**
+ * Removes an inverted active from the specified slot, if it exists (default primary).
+ *
+ * @returns True if an item was removed.
+ */
+export function removePlayerInvertedActive(
+  player: EntityPlayer,
+  slot = ActiveSlot.PRIMARY,
+): boolean {
+  const invertedActive = getCustomActiveInSlot(player, slot);
+  if (invertedActive === undefined) {
+    return false;
+  }
+
+  /**
+   * Remove physical item. The CustomActiveFacet will detect this and perform the necessary actions.
+   */
+  _removeZazzActiveFromPlayer(player, invertedActive, slot);
+
+  return true;
 }

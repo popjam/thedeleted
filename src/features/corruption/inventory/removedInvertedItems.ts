@@ -1,10 +1,9 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { PlayerIndex } from "isaacscript-common";
-import { getCollectibleName, getPlayerIndex } from "isaacscript-common";
-import { fprint } from "../../../helper/printHelper";
+import { getPlayerIndex } from "isaacscript-common";
 import { mod } from "../../../mod";
+import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 
-// eslint-disable-next-line isaacscript/complete-sentences-jsdoc
 /**
  * This feature tracks corrupted items that have been removed from the player in the room, in the
  * hopes that when a rogue dummy-zazzinator item is spawned, we can identify which player it came
@@ -22,6 +21,7 @@ interface RemovedZazzItem {
   playerIndex: PlayerIndex;
   dummyItem: CollectibleType;
   referenceCollectible: CollectibleType;
+  InvertedActiveActionSet?: InvertedActiveActionSet;
 }
 
 const v = {
@@ -42,12 +42,14 @@ export function addRemovedInvertedItemToTracker(
   player: EntityPlayer,
   dummyItem: CollectibleType,
   referenceCollectible: CollectibleType,
+  actionSet?: InvertedActiveActionSet,
 ): void {
   const playerIndex = getPlayerIndex(player);
   v.room.removedItems.push({
     playerIndex,
     dummyItem,
     referenceCollectible,
+    InvertedActiveActionSet: actionSet,
   });
 }
 

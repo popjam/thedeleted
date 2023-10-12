@@ -58,3 +58,18 @@ export function _addZazzActiveToPlayer(
     player.SetPocketActiveItem(actionSet.getZazzActive(actionSet), slot);
   }
 }
+
+/**
+ * Removes the physical Zazz Active that correlates with the provided InvertedActiveActionSet from
+ * the player. Note: This shouldn't be used as it only removes a dead item from the player.
+ */
+export function _removeZazzActiveFromPlayer(
+  player: EntityPlayer,
+  actionSet: InvertedActiveActionSet,
+  slot: ActiveSlot,
+): void {
+  const zazzActive = actionSet.getZazzActive(actionSet);
+  if (player.GetActiveItem(slot) === zazzActive) {
+    player.RemoveCollectible(zazzActive);
+  }
+}

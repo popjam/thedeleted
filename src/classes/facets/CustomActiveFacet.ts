@@ -3,15 +3,16 @@ import {
   ActiveSlot,
   ButtonAction,
   CollectibleType,
+  InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   Callback,
   CallbackCustom,
   ModCallbackCustom,
   getEnumEntries,
   getPlayers,
-  hasOpenActiveItemSlot,
 } from "isaacscript-common";
 import { addRemovedInvertedItemToTracker } from "../../features/corruption/inventory/removedInvertedItems";
 import { fprint } from "../../helper/printHelper";
@@ -20,14 +21,22 @@ import { Facet, initGenericFacet } from "../Facet";
 import type { InvertedActiveActionSet } from "../corruption/actionSets/Inverted/InvertedActiveActionSet";
 import {
   doesAnyPlayerHaveAnyCustomActives,
+  doesPlayerHaveCustomActive,
+  doesPlayerHaveCustomActiveInSlot,
   getAllCustomActives,
+  getAllCustomActivesWithSlot,
   getCustomActiveInSlot,
   setCustomActiveInSlot,
 } from "../../features/corruption/inversion/customActives";
-import { doesInvertedActiveActionSetMatchZazzActive } from "../../helper/deletedSpecific/inversion/customActiveHelper";
+import {
+  _removeZazzActiveFromPlayer,
+  doesInvertedActiveActionSetMatchZazzActive,
+} from "../../helper/deletedSpecific/inversion/customActiveHelper";
 import { renderCorruptedCollectibleSpriteInSlot } from "../../helper/deletedSpecific/funnySprites";
-import { getZazzActiveFromCharge } from "../../maps/activeChargeToZazzActive";
-import { addActionsToTracker } from "../../features/corruption/effects/playerEffects";
+import {
+  addActionsToTracker,
+  removeActionFromTracker,
+} from "../../features/corruption/effects/playerEffects";
 import { ActionType } from "../../enums/corruption/actions/ActionType";
 
 /**
@@ -59,14 +68,28 @@ class CustomActiveFacet extends Facet {
   ): void {
     /** We only care about zazzinator actives. */
     if (!isZazzinatorActive(collectibleType)) {
+      /**
+       * Edge case where slot 2 is a custom active, and a non-inverted item from slot 1 is removed.
+       */
+      const slot2Active = getCustomActiveInSlot(player, ActiveSlot.SECONDARY);
+      if (
+        slot2Active !== undefined &&
+        player.GetActiveItem(ActiveSlot.SECONDARY) === CollectibleType.NULL
+      ) {
+        setCustomActiveInSlot(player, ActiveSlot.PRIMARY, slot2Active);
+        setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
+      }
       return;
     }
 
-    checkPocketActiveRemoved(player, collectibleType);
+    fprint(
+      `Player removed active item with type: ${collectibleType}. Trying to remove custom active...`,
+    );
     checkActiveRemoved(player, collectibleType);
 
     /** If no one is using the CustomActiveFacet, we unsubscribe. */
-    if (doesAnyPlayerHaveAnyCustomActives()) {
+    if (!doesAnyPlayerHaveAnyCustomActives()) {
+      fprint("No players have custom actives, unsubscribing.");
       this.unsubscribeAll();
     }
   }
@@ -97,9 +120,7 @@ class CustomActiveFacet extends Facet {
     }
 
     fprint(
-      `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getCharges()}, isCopy: ${
-        actionSet.copy ?? false
-      }`,
+      `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getCharges()}`,
     );
     return actionSet.use(player);
   }
@@ -111,15 +132,19 @@ class CustomActiveFacet extends Facet {
    */
   @Callback(ModCallback.POST_RENDER)
   postRender(): void {
-    for (const player of getPlayers()) {
-      // Handle drop (swap) button being pressed.
-      if (Input.IsActionTriggered(ButtonAction.DROP, player.ControllerIndex)) {
-        dropKeyPressed(player);
-      }
+    // For some reason this callback always runs.
+    if (!(FACET?.isInitialized() ?? false)) {
+      return;
+    }
 
-      // Loop through ActiveSlots and render the custom actives.
+    for (const player of getPlayers()) {
+      // Loop through ActiveSlots and render the custom actives, as well as updating charge
+      // tracking.
       for (const activeSlot of getEnumEntries(ActiveSlot)) {
-        renderPlayerCustomActive(player, activeSlot[1]);
+        if (doesPlayerHaveCustomActiveInSlot(player, activeSlot[1])) {
+          renderPlayerCustomActive(player, activeSlot[1]);
+          updateCustomActiveCurrentCharge(player, activeSlot[1]);
+        }
       }
     }
   }
@@ -158,9 +183,24 @@ class CustomActiveFacet extends Facet {
       }
     }
   }
+
+  /** Listen out for item switching with schoolbag. */
+  @CallbackCustom(
+    ModCallbackCustom.INPUT_ACTION_PLAYER,
+    undefined,
+    undefined,
+    InputHook.IS_ACTION_TRIGGERED,
+    ButtonAction.DROP,
+  )
+  inputActionPlayer(player: EntityPlayer): boolean | undefined {
+    if (Input.IsActionTriggered(ButtonAction.DROP, player.ControllerIndex)) {
+      dropKeyPressed(player);
+    }
+    return undefined;
+  }
 }
 
-export function initHUDRenderingFacet(): void {
+export function initCustomActiveFacet(): void {
   FACET = initGenericFacet(CustomActiveFacet);
 }
 
@@ -175,6 +215,8 @@ export function _addInvertedActiveToPlayer(
   actionSet: InvertedActiveActionSet,
   slot: ActiveSlot = ActiveSlot.PRIMARY,
 ): void {
+  FACET?.subscribeIfNotAlready();
+
   // Pocket item.
   if (slot === ActiveSlot.POCKET) {
     fprint("Adding inverted active to pocket slot...");
@@ -189,60 +231,31 @@ export function _addInvertedActiveToPlayer(
     return;
   }
 
-  // Primary or secondary slot.
-  if (
-    !player.HasCollectible(CollectibleType.SCHOOLBAG) ||
-    hasOpenActiveItemSlot(player)
-  ) {
-    fprint("Adding inverted active to primary slot...");
-    setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet);
-    return;
-  }
+  // Primary or secondary slot. if ( !player.HasCollectible(CollectibleType.SCHOOLBAG) ||
+  // hasOpenActiveItemSlot(player) ) { fprint("Adding inverted active to primary slot...");
+  // setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet); return; }
 
-  // Player has schoolbag and no empty slots...
-  const customActivePrimary = getCustomActiveInSlot(player, ActiveSlot.PRIMARY);
-  if (customActivePrimary !== undefined) {
-    fprint("Switching inverted active in primary slot to secondary slot...");
-    setCustomActiveInSlot(player, ActiveSlot.SECONDARY, customActivePrimary);
-    return;
+  // // Player has schoolbag and no empty slots... const customActivePrimary =
+  // getCustomActiveInSlot(player, ActiveSlot.PRIMARY); if (customActivePrimary !== undefined) {
+  // fprint("Switching inverted active in primary slot to secondary slot...");
+  // setCustomActiveInSlot(player, ActiveSlot.SECONDARY, customActivePrimary); return; }
+
+  if (player.HasCollectible(CollectibleType.SCHOOLBAG)) {
+    fprint("Player has schoolbag, switching primary slot to secondary slot...");
+    setCustomActiveInSlot(
+      player,
+      ActiveSlot.SECONDARY,
+      getCustomActiveInSlot(player, ActiveSlot.PRIMARY),
+    );
   }
   fprint("Adding inverted active to primary slot...");
   setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet);
-
-  FACET?.subscribeIfNotAlready();
-}
-
-/** Removes the InvertedActiveActionSet */
-export function _removeInvertedActiveFromPlayer(
-  player: EntityPlayer,
-  actionSet: InvertedActiveActionSet,
-  collectibleType: CollectibleType,
-  slot: ActiveSlot = ActiveSlot.PRIMARY,
-): void {
-  const active = getCustomActiveInSlot(player, slot);
-
-  if (active === undefined) {
-    return false;
-  }
-
-  addRemovedInvertedItemToTracker(
-    player,
-    collectibleType ??
-      getZazzActiveFromCharge(
-        active.getChargeType(),
-        active.getCharges(),
-        active.copy,
-      ),
-    active.oi ?? CollectibleType.SAD_ONION,
-  );
-
-  setCustomActiveInSlot(player, slot, undefined);
 }
 
 /** This function fires when the 'drop' (switch active) key is pressed. */
 function dropKeyPressed(player: EntityPlayer) {
-  // If player has schoolbag, do nothing.
-  if (player.HasCollectible(CollectibleType.SCHOOLBAG)) {
+  // If player doesn't have schoolbag, do nothing.
+  if (!player.HasCollectible(CollectibleType.SCHOOLBAG)) {
     return;
   }
 
@@ -269,6 +282,7 @@ function dropKeyPressed(player: EntityPlayer) {
   }
 
   // Switch the custom actives.
+  fprint("Switching custom actives in primary and secondary slot...");
   setCustomActiveInSlot(player, ActiveSlot.PRIMARY, secondarySlotCustomActive);
   setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primarySlotCustomActive);
 }
@@ -290,113 +304,180 @@ function renderPlayerCustomActive(
   renderCorruptedCollectibleSpriteInSlot(player, icon, activeSlot);
 }
 
-/**
- * Given a player and a removed collectibleType, tries to remove the corresponding custom active (if
- * it exists).
- */
-function checkPocketActiveRemoved(
+/** Update the tracking of the custom active's current charge. */
+function updateCustomActiveCurrentCharge(
   player: EntityPlayer,
-  collectibleType: CollectibleType,
+  slot: ActiveSlot,
 ) {
-  const pocketSlot = getCustomActiveInSlot(player, ActiveSlot.POCKET);
-  if (pocketSlot === undefined) {
+  const actionSet = getCustomActiveInSlot(player, slot);
+  if (actionSet === undefined) {
     return;
   }
 
-  if (player.GetActiveItem(ActiveSlot.POCKET) !== CollectibleType.NULL) {
-    return;
-  }
-
-  if (
-    !doesInvertedActiveActionSetMatchZazzActive(pocketSlot, collectibleType)
-  ) {
-    return;
-  }
-
-  // There is no custom active in the pocket slot, but there is a dummy item.
-  addRemovedInvertedItemToTracker(
-    player,
-    collectibleType,
-    pocketSlot.oi ?? CollectibleType.SAD_ONION,
-  );
-  setCustomActiveInSlot(player, ActiveSlot.POCKET, undefined);
+  const charge = player.GetActiveCharge(slot);
+  actionSet.setCurrentCharge(charge);
 }
 
 /**
  * Given a player and a removed CollectibleType, checks if they have removed a custom active in the
- * primary or secondary slot, and if so, adds it to the removed inverted item tracker.
+ * and if so, handles it.
+ *
+ * POST_PLAYER_COLLECTIBLE_REMOVED.
+ *
+ * @returns True if a custom active was removed.
  */
 function checkActiveRemoved(
   player: EntityPlayer,
   collectibleType: CollectibleType,
-) {
-  if (hasSchoolbag) {
-    if (activeSlot2 !== undefined && activeSlot1 !== undefined) {
-      /**
-       * If the custom active in slot1 has been removed (e.g when a new active is picked up), and
-       * the player had 2 custom actives, the physical active from slot2 will immediately move down
-       * to slot1 after slot1 collectible is removed.
-       */
+): boolean {
+  const removedActiveSlot = findRemovedCustomActiveSlot(
+    player,
+    collectibleType,
+  );
+  fprint(`Removed active slot: ${removedActiveSlot}.`);
 
-      // There will be nothing in slot2 at this time.
-      if (player.GetActiveItem(ActiveSlot.SECONDARY) === CollectibleType.NULL) {
-        const itemInSlot1 = player.GetActiveItem(ActiveSlot.PRIMARY);
+  if (removedActiveSlot === undefined) {
+    return false;
+  }
 
-        // Item in slot1 should be replica of slot2 custom active.
-        if (
-          isZazzinatorActive(itemInSlot1) && // Check if the physical item from slot2 is now found in slot1.
-          doesInvertedActiveActionSetMatchZazzActive(activeSlot2, itemInSlot1)
-        ) {
-          // The ActiveSet that was in slot1 has been removed.
-          activeSlot1.removeFromPlayer(
-            player,
-            activeSlot1.oi as CollectibleType,
-            false,
-            true,
-          );
-          addRemovedInvertedItemToTracker(
-            player,
-            collectibleType,
-            (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
-          );
-          v.run.activeSlot1.set(playerIndex, activeSlot2);
-          v.run.activeSlot2.delete(playerIndex);
-        }
-      }
-    } else if (activeSlot2 === undefined && activeSlot1 !== undefined) {
-      /** If there is a custom active in slot1, but a non-custom active in slot2. */
-      const itemInSlot1 = player.GetActiveItem(ActiveSlot.PRIMARY);
-      if (!isZazzinatorActive(itemInSlot1)) {
-        // The ActiveSet that was in slot1 has been removed.
-        activeSlot1.removeFromPlayer(
-          player,
-          activeSlot1.oi as CollectibleType,
-          false,
-          true,
-        );
-        addRemovedInvertedItemToTracker(
-          player,
-          collectibleType,
-          (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
-        );
-        v.run.activeSlot1.delete(playerIndex);
-      }
-    }
-  } else if (
-    activeSlot1 !== undefined &&
-    !isZazzinatorActive(player.GetActiveItem(ActiveSlot.PRIMARY))
+  const active = getCustomActiveInSlot(player, removedActiveSlot);
+
+  // If the active is undefined, something has gone wrong.
+  if (active === undefined) {
+    return false;
+  }
+
+  // Remove the Actions from the tracker.
+  for (const action of active.getActions()) {
+    removeActionFromTracker(player, action);
+  }
+
+  // Track removed item.
+  addRemovedInvertedItemToTracker(
+    player,
+    collectibleType,
+    active.oi ?? CollectibleType.SAD_ONION,
+    active,
+  );
+
+  fprint(
+    `removed custom active charge at time of removal: ${active.getCurrentCharge()}`,
+  );
+
+  // Edge case where custom active in slot1 is removed, and player has schoolbag. In this case, we
+  // need to move the custom active in slot2 to slot1 (if there is one).
+  if (
+    player.HasCollectible(CollectibleType.SCHOOLBAG) &&
+    removedActiveSlot === ActiveSlot.PRIMARY
   ) {
-    activeSlot1.removeFromPlayer(
+    setCustomActiveInSlot(
       player,
-      activeSlot1.oi as CollectibleType,
-      false,
-      true,
+      ActiveSlot.PRIMARY,
+      getCustomActiveInSlot(player, ActiveSlot.SECONDARY),
     );
-    addRemovedInvertedItemToTracker(
-      player,
-      collectibleType,
-      (activeSlot1.oi ?? CollectibleType.SAD_ONION) as CollectibleType,
+    setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
+
+    fprint(
+      `Removed custom active with type: ${active.oi} in slot1, moving slot2 to slot1.`,
     );
-    v.run.activeSlot1.delete(playerIndex);
+    return true;
+  }
+
+  // Update data.
+  setCustomActiveInSlot(player, removedActiveSlot, undefined);
+
+  fprint(
+    `Removed custom active with type: ${active.oi} from slot ${removedActiveSlot}.`,
+  );
+  return true;
+}
+
+/**
+ * POST_PLAYER_COLLECTIBLE_REMOVED
+ *
+ * Given a player and a removed collectibleType, find which slot the removed item was in, given that
+ * it was a custom active.
+ */
+function findRemovedCustomActiveSlot(
+  player: EntityPlayer,
+  collectibleType: CollectibleType,
+): ActiveSlot | undefined {
+  if (!isZazzinatorActive(collectibleType)) {
+    return undefined;
+  }
+
+  const slot1Active = getCustomActiveInSlot(player, ActiveSlot.PRIMARY);
+  const slot2Active = getCustomActiveInSlot(player, ActiveSlot.SECONDARY);
+  const pocketSlot = getCustomActiveInSlot(player, ActiveSlot.POCKET);
+  const singleUsePocket = getCustomActiveInSlot(
+    player,
+    ActiveSlot.POCKET_SINGLE_USE,
+  );
+
+  // Pocket.
+  if (
+    pocketSlot !== undefined &&
+    !isZazzinatorActive(player.GetActiveItem(ActiveSlot.POCKET))
+  ) {
+    return ActiveSlot.POCKET;
+  }
+
+  // Single use pocket.
+  if (
+    singleUsePocket !== undefined &&
+    !isZazzinatorActive(player.GetActiveItem(ActiveSlot.POCKET_SINGLE_USE))
+  ) {
+    return ActiveSlot.POCKET_SINGLE_USE;
+  }
+
+  // Primary no schoolbag.
+  if (!player.HasCollectible(CollectibleType.SCHOOLBAG)) {
+    if (
+      slot1Active !== undefined &&
+      !isZazzinatorActive(player.GetActiveItem(ActiveSlot.PRIMARY))
+    ) {
+      return ActiveSlot.PRIMARY;
+    }
+    return undefined;
+  }
+
+  // Primary schoolbag.
+  if (
+    slot1Active !== undefined &&
+    doesInvertedActiveActionSetMatchZazzActive(slot1Active, collectibleType)
+  ) {
+    return ActiveSlot.PRIMARY;
+  }
+  if (
+    slot2Active !== undefined &&
+    doesInvertedActiveActionSetMatchZazzActive(slot2Active, collectibleType)
+  ) {
+    return ActiveSlot.SECONDARY;
+  }
+
+  fprint(`Failed to find removed custom active slot for ${collectibleType}.`);
+  return undefined;
+}
+
+export function printCustomActiveStatus(player: EntityPlayer): void {
+  const getAllCustomActivesResult = getAllCustomActivesWithSlot(player);
+  if (getAllCustomActivesResult.length === 0) {
+    fprint(
+      `Player has no custom actives. Facet sub count: ${
+        FACET?.getSubscriberCount() ?? -1
+      }. Initialized: ${FACET?.isInitialized() ?? false}`,
+    );
+    return;
+  }
+
+  for (const customActive of getAllCustomActivesResult) {
+    FACET?.subscribe();
+    fprint(
+      `Player has custom active in slot ${
+        customActive[0]
+      }: ${customActive[1].getCollectibleType()}. Facet sub count: ${
+        FACET?.getSubscriberCount() ?? -1
+      }. Initialized: ${FACET?.isInitialized() ?? false}`,
+    );
   }
 }

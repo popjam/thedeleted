@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getPlayerIndex, getPlayers } from "isaacscript-common";
 import type { PlayerIndex } from "isaacscript-common";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
@@ -85,6 +86,39 @@ export function getAllCustomActives(
 }
 
 /**
+ * Retrieve all custom actives the player has in an array of tuples [ActiveSlot,
+ * InvertedActiveActionSet].
+ */
+export function getAllCustomActivesWithSlot(
+  player: EntityPlayer,
+): Array<[ActiveSlot, InvertedActiveActionSet]> {
+  const playerIndex = getPlayerIndex(player);
+  const customActives: Array<[ActiveSlot, InvertedActiveActionSet]> = [];
+  if (v.run.primarySlot.get(playerIndex) !== undefined) {
+    customActives.push([
+      ActiveSlot.PRIMARY,
+      v.run.primarySlot.get(playerIndex)!,
+    ]);
+  }
+  if (v.run.secondarySlot.get(playerIndex) !== undefined) {
+    customActives.push([
+      ActiveSlot.SECONDARY,
+      v.run.secondarySlot.get(playerIndex)!,
+    ]);
+  }
+  if (v.run.pocketSlot.get(playerIndex) !== undefined) {
+    customActives.push([ActiveSlot.POCKET, v.run.pocketSlot.get(playerIndex)!]);
+  }
+  if (v.run.singleUsePocketSlot.get(playerIndex) !== undefined) {
+    customActives.push([
+      ActiveSlot.POCKET_SINGLE_USE,
+      v.run.singleUsePocketSlot.get(playerIndex)!,
+    ]);
+  }
+  return customActives;
+}
+
+/**
  * Sets the Custom Active in the ActiveSlot:
  *
  * - PrimarySlot (always the larger active item)
@@ -143,6 +177,33 @@ export function doesPlayerHaveCustomActive(
     v.run.singleUsePocketSlot.get(playerIndex)?.getCollectibleType() ===
       collectibleType
   );
+}
+
+/**
+ * Returns true if the player has a custom active in the specified slot, otherwise returns false.
+ */
+export function doesPlayerHaveCustomActiveInSlot(
+  player: EntityPlayer,
+  slot: ActiveSlot,
+): boolean {
+  const playerIndex = getPlayerIndex(player);
+  switch (slot) {
+    case ActiveSlot.PRIMARY: {
+      return v.run.primarySlot.get(playerIndex) !== undefined;
+    }
+
+    case ActiveSlot.SECONDARY: {
+      return v.run.secondarySlot.get(playerIndex) !== undefined;
+    }
+
+    case ActiveSlot.POCKET: {
+      return v.run.pocketSlot.get(playerIndex) !== undefined;
+    }
+
+    case ActiveSlot.POCKET_SINGLE_USE: {
+      return v.run.singleUsePocketSlot.get(playerIndex) !== undefined;
+    }
+  }
 }
 
 /** Returns true if the player has any custom actives. */

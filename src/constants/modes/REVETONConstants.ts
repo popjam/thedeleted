@@ -1,6 +1,6 @@
 import { ColorDefault } from "isaacscript-common";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
+import type { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 
 export const NUM_ACTIVE_ITEMS_IN_INVERTED_ACTIVES = 2;
 

@@ -86,7 +86,7 @@ export function renderCorruptedCollectibleSprite(
     customSprite.horizontal ?? false,
     scale,
     customSprite.flipX,
-    customSprite.flipY,
+    false,
     customSprite.rotation,
   );
 }
@@ -135,14 +135,9 @@ export function renderTMTRAINERSprite(
   let currentLength = 0;
 
   horizontal ??= getRandomInt(1, 2, seed) === 1;
-  if (flipX ?? false) {
-    // Reverse the array without using array.reverse().
-    collectibles = collectibles.reduce(
-      (acc, val) => [val, ...acc],
-      // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
-      [] as CollectibleType[],
-    );
-  }
+  // if (flipX ?? false) { // Reverse the array without using array.reverse(). collectibles =
+  // collectibles.reduce( (acc, val) => [val, ...acc], // eslint-disable-next-line
+  // @typescript-eslint/prefer-reduce-type-parameter [] as CollectibleType[], ); }
 
   let i = 0;
   for (const collectible of collectibles) {
@@ -175,8 +170,8 @@ export function renderTMTRAINERSprite(
       sprite.Color = portionColor;
     }
 
-    sprite.FlipX = flipX ?? getRandomInt(1, 2, nextSeeds(seed, i)) === 1;
-    sprite.FlipY = flipY ?? getRandomInt(1, 2, nextSeeds(seed, i)) === 1;
+    // sprite.FlipX = flipX ?? getRandomInt(1, 2, nextSeeds(seed, i)) === 1; sprite.FlipY = flipY ??
+    // getRandomInt(1, 2, nextSeeds(seed, i)) === 1;
     sprite.Scale = scale;
     sprite.Rotation = rotation;
 

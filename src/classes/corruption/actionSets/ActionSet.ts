@@ -1,8 +1,8 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
-import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
 import { Morality } from "../../../enums/corruption/Morality";
-import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
+import type { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";
 import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
@@ -10,10 +10,12 @@ import {
   getEIDColorShortcutFromMorality,
   getEIDColorTupleFromTriplet,
 } from "../../../maps/compatibility/EIDColorMap";
-import { Action, isAction } from "../actions/Action";
-import { Response, isResponse } from "../responses/Response";
-
-const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
+import type { Action } from "../actions/Action";
+import { isAction } from "../actions/Action";
+import type { Response } from "../responses/Response";
+import { isResponse } from "../responses/Response";
+import { NO_EFFECTS_DEFAULT_TEXT } from "../../../constants/actionSetConstants";
+import { sortEffectsByMorality } from "../../../helper/deletedSpecific/inversion/moralityHelper";
 
 /** ActionSet class. */
 export abstract class ActionSet {
@@ -28,20 +30,7 @@ export abstract class ActionSet {
 
   /** Sort effects by Morality. */
   getSortedEffects(): Array<Action | Response> {
-    return this.effects.sort((a, b) => {
-      const aMorality = a.getMorality();
-      const bMorality = b.getMorality();
-      if (aMorality === bMorality) {
-        return 0;
-      }
-      if (aMorality === Morality.POSITIVE) {
-        return -1;
-      }
-      if (bMorality === Morality.POSITIVE || bMorality === Morality.NEUTRAL) {
-        return 1;
-      }
-      return -1;
-    });
+    return sortEffectsByMorality(this.effects);
   }
 
   /**
@@ -77,6 +66,7 @@ export abstract class ActionSet {
     if (typeof this.c === "string") {
       return this.c;
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return getEIDColorTupleFromTriplet(this.c)[morality as number]!;
   }
 
@@ -93,9 +83,9 @@ export abstract class ActionSet {
   /** Get collectibles mentioned in any actions or responses. */
   getInvolvedCollectibles(): CollectibleType[] {
     const collectibles: CollectibleType[] = [];
-    this.effects.forEach((actionOrResponse) => {
+    for (const actionOrResponse of this.effects) {
       collectibles.push(...actionOrResponse.getInvolvedCollectibles());
-    });
+    }
     return collectibles;
   }
 
@@ -120,7 +110,7 @@ export abstract class ActionSet {
    * pickup after calling this function. Does not deepCopy!
    */
   addEffects(...effects: Array<Action | Response>): this {
-    this.effects = this.effects.concat(effects);
+    this.effects = [...this.effects, ...effects];
     return this;
   }
 
@@ -128,9 +118,10 @@ export abstract class ActionSet {
   getText(eid = true): string {
     let text = "";
     const sortedEffects = this.getSortedEffects();
-    sortedEffects.forEach((actionOrResponse) => {
+    for (const actionOrResponse of sortedEffects) {
       text += "#";
       if (eid) {
+        // Set color of action / response.
         text += getEIDMarkupFromShortcut(
           actionOrResponse.getTextColor() ??
             this.getActionOrResponseColor(actionOrResponse),
@@ -140,7 +131,7 @@ export abstract class ActionSet {
       if (eid) {
         text += "{{CR}}";
       }
-    });
+    }
     if (text === "") {
       return NO_EFFECTS_DEFAULT_TEXT;
     }

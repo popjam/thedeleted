@@ -5,11 +5,10 @@ import {
   getRandomSeed,
   isColor,
 } from "isaacscript-common";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
-import { getAdvancedInvertedItemIconSetting } from "../../../features/settings/GeneralSettings";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { getRandomCollectibleType } from "../../collectibleHelper";
 import {
   defaultInvertedActiveActionSetBuilder,
@@ -23,11 +22,9 @@ export function mydoomDefaultBuilder(
   let actionSet: InvertedItemActionSet | undefined;
 
   /** Generate the ActionSet using default properties. */
-  if (active) {
-    actionSet = defaultInvertedActiveActionSetBuilder(inputs);
-  } else {
-    actionSet = defaultInvertedPassiveActionSetBuilder(inputs);
-  }
+  actionSet = active
+    ? defaultInvertedActiveActionSetBuilder(inputs)
+    : defaultInvertedPassiveActionSetBuilder(inputs);
 
   /** Set the name and description. */
   actionSet
@@ -51,11 +48,7 @@ export function mydoomDefaultBuilder(
 function generateMydoomCorruptedCollectibleSprite(
   actionSet: InvertedItemActionSet,
   inputs?: ActionSetBuilderInput,
-): CorruptedCollectibleSprite | Color {
-  const advancedIcons = getAdvancedInvertedItemIconSetting();
-  if (!advancedIcons) {
-    return COLORS.Black;
-  }
+): CorruptedCollectibleSprite {
   const sprite: CorruptedCollectibleSprite = {
     collectibles: [
       inputs?.collectible ?? getRandomCollectibleType() ?? CollectibleType.POOP,
@@ -64,10 +57,7 @@ function generateMydoomCorruptedCollectibleSprite(
     color: COLORS.Black,
   };
   const multipleSegments = getRandomInt(0, 1) === 0;
-  if (!multipleSegments) {
-    sprite.flipX = getRandomInt(0, 1) === 0;
-    sprite.flipY = getRandomInt(0, 1) === 0;
-  } else {
+  if (multipleSegments) {
     sprite.flipX = undefined;
     sprite.flipY = undefined;
 
@@ -88,6 +78,9 @@ function generateMydoomCorruptedCollectibleSprite(
       // Randomize the order of the collectibles.
       sprite.collectibles.sort(() => Math.random() - 0.5);
     }
+  } else {
+    sprite.flipX = getRandomInt(0, 1) === 0;
+    sprite.flipY = getRandomInt(0, 1) === 0;
   }
   return sprite;
 }

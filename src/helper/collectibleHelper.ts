@@ -1,9 +1,8 @@
+import type { ItemType, TrinketType } from "isaac-typescript-definitions";
 import {
   ActiveSlot,
   CollectibleType,
   ItemPoolType,
-  ItemType,
-  TrinketType,
 } from "isaac-typescript-definitions";
 import {
   VectorZero,
@@ -29,9 +28,10 @@ import {
 import { SHOP_ITEM_RENDER_OFFSET } from "../constants/renderConstants";
 import { TemporaryEffectType } from "../enums/general/TemporaryEffectType";
 import { playerAddTemporaryCollectible } from "../features/general/temporaryItems";
-import { CollectibleAttribute } from "../interfaces/general/CollectibleAttribute";
+import type { CollectibleAttribute } from "../interfaces/general/CollectibleAttribute";
 import { mod } from "../mod";
-import { Range, randomInRange } from "../types/general/Range";
+import type { Range } from "../types/general/Range";
+import { randomInRange } from "../types/general/Range";
 import { isInArrayOrEquals } from "./arrayHelper";
 import {
   bitFlagsContainsAllBitflags,
@@ -367,3 +367,46 @@ export function getRandomCollectibleType(
 
   return filteredCollectibles.length === 0 ? undefined : currentCollectible;
 }
+
+// export function collectibleAttributeToText(
+//   collectibleAttribute: CollectibleAttribute,
+// ): string {
+//   let text = "";
+//   if (collectibleAttribute.itemType !== undefined) {
+//     text += `Item Type: ${collectibleAttribute.itemType.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.poolType !== undefined) {
+//     text += `Pool Type: ${collectibleAttribute.poolType.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.quality !== undefined) {
+//     text += `Quality: ${collectibleAttribute.quality.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.chargeType !== undefined) {
+//     text += `Charge Type: ${collectibleAttribute.chargeType.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.maxCharges !== undefined) {
+//     text += `Max Charges: ${collectibleAttribute.maxCharges.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.playerHas !== undefined) {
+//     text += `Player Has: ${collectibleAttribute.playerHas.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.startsWith !== undefined) {
+//     text += `Starts With: ${collectibleAttribute.startsWith}\n`;
+//   }
+//   if (collectibleAttribute.endsWith !== undefined) {
+//     text += `Ends With: ${collectibleAttribute.endsWith}\n`;
+//   }
+//   if (collectibleAttribute.itemTagAll !== undefined) {
+//     text += `Item Tag (All): ${collectibleAttribute.itemTagAll.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.itemTagOne !== undefined) {
+//     text += `Item Tag (One): ${collectibleAttribute.itemTagOne.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.banned !== undefined) {
+//     text += `Banned: ${collectibleAttribute.banned.join(", ")}\n`;
+//   }
+//   if (collectibleAttribute.hidden !== undefined) {
+//     text += `Hidden: ${collectibleAttribute.hidden}\n`;
+//   }
+//   return text;
+// }

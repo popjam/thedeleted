@@ -1,12 +1,12 @@
+import type { CollectibleType } from "isaac-typescript-definitions";
 import {
   CollectibleSpriteLayer,
-  CollectibleType,
   PlayerItemAnimation,
 } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   CallbackCustom,
   ModCallbackCustom,
-  PlayerIndex,
   getEnumValues,
   getPlayerIndex,
 } from "isaacscript-common";
@@ -16,7 +16,7 @@ import { renderCorruptedCollectibleSprite } from "../../helper/deletedSpecific/f
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
 import { newSparkleSprite } from "../../helper/spriteHelper";
-import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { Facet, initGenericFacet } from "../Facet";
 
 // eslint-disable-next-line isaacscript/require-v-registration
@@ -149,7 +149,6 @@ function renderCollectibleAboveHead(
 function renderSparkleAboveHead(player: EntityPlayer) {
   const sparkle = v.room.sparkleSprite.get(getPlayerIndex(player));
   if (sparkle !== undefined) {
-    fprint(`Updating sparkle sprite for player ${getPlayerIndex(player)}.`);
     sparkle.Update();
     sparkle.RenderLayer(
       CollectibleSpriteLayer.SPARKLE,

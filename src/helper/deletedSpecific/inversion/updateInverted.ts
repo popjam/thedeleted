@@ -16,13 +16,14 @@ import { returnCorruptedCollectibleSpriteToNormal } from "../../../classes/facet
 import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import { getNonInvertedPickupActionSet } from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { isZazzinatorAny } from "../../../sets/zazzSets";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
 } from "../../compatibility/EIDHelper";
 import { fprint } from "../../printHelper";
+import { getTrackedPedestalCharge } from "../../../features/corruption/effects/activeItemTracker";
 
 /**
  * Update pedestal is unique from the 'update pickup' function in that it needs to take into account
@@ -43,6 +44,7 @@ export function updatePedestal(
       pedestal,
     )}`,
   );
+
   /** If pedestal has a custom sprite, return it to normal. */
   returnCorruptedCollectibleSpriteToNormal(pedestal);
 
@@ -90,6 +92,13 @@ function returnPedestalAppearanceToNormal(pedestal: EntityPickupCollectible) {
   pedestal.FlipX = false;
   pedestal.SetColor(ColorDefault, 0, 1);
   returnCorruptedCollectibleSpriteToNormal(pedestal);
+
+  // Set charge if it's a normal active and it's being tracked.
+  // const trackedCharge = getTrackedPedestalCharge(pedestal);
+  // if (trackedCharge !== undefined) {
+  //   pedestal.Charge = trackedCharge;
+  // }
+
   if (!isGlitchedCollectible(pedestal)) {
     setCollectibleSprite(pedestal, getCollectibleGfxFilename(pedestal.SubType));
   }

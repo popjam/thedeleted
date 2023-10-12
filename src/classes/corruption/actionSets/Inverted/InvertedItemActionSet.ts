@@ -1,6 +1,11 @@
-import type { ActiveSlot, CollectibleType } from "isaac-typescript-definitions";
+import {
+  CollectibleAnimation,
+  ItemConfigChargeType,
+  type CollectibleType,
+  ItemType,
+} from "isaac-typescript-definitions";
 import type { PickingUpItemCollectible } from "isaacscript-common";
-import { ColorDefault, game, isColor } from "isaacscript-common";
+import { game, isColor, newCollectibleSprite } from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,
@@ -21,6 +26,11 @@ import type { CorruptedSoundEffect } from "../../../../interfaces/corruption/fun
 import { replaceCollectibleSpriteWithCorrupted } from "../../../facets/CorruptedCollectibleSpriteFacet";
 import { overridePickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import { ActionSet } from "../ActionSet";
+import { createNilLiteral } from "typescript-to-lua";
+import { CollectibleTypeCustom } from "../../../../enums/general/CollectibleTypeCustom";
+import { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
+import { INVERTED_ACTIVE_EID_ICON } from "../../../../constants/actionSetConstants";
+import { getTrackedPedestalInvertedActive } from "../../../../features/corruption/effects/activeItemTracker";
 
 const DEFAULT_QUALITY = 0;
 const DEFAULT_DESCRIPTION = "Beware...";
@@ -161,6 +171,17 @@ export abstract class InvertedItemActionSet extends ActionSet {
     return this;
   }
 
+  getDescObject(): EIDDescObject {
+    return {
+      Description: legibleString(this.getText()),
+      Name: this.getName(),
+      ModName: MOD_NAME,
+      Quality: this.getQuality(),
+      Icon: EID?.getIcon(INVERTED_ACTIVE_EID_ICON),
+      ItemType: ItemType.PASSIVE,
+    };
+  }
+
   /** Updates the EID Description and appearance of the collectible. */
   updateAppearance(collectible: EntityPickupCollectible): void {
     fprint(`Updating appearance of inverted item ${this.getName()}.`);
@@ -169,13 +190,13 @@ export abstract class InvertedItemActionSet extends ActionSet {
     /** When the pedestal is updating appearance, register it as being seen. */
     _invertedPickupHasBeenSeen(collectible);
 
-    const descObj = {
-      Description: legibleString(this.getText()),
-      Name: this.getName(),
-      ModName: MOD_NAME,
-      Quality: this.getQuality(),
-    };
-    setSpecificEntityEIDDescriptionObject(collectible, descObj);
+    /** Set the pedestal's charges if it's being tracked in the activeItemTracker. */
+    // const trackedInvertedActive = getTrackedPedestalInvertedActive(collectible);
+    // if (trackedInvertedActive !== undefined) {
+    //   collectible.Charge = trackedInvertedActive.getActiveData().i ?? 0;
+    // }
+
+    setSpecificEntityEIDDescriptionObject(collectible, this.getDescObject());
   }
 
   abstract preGetPedestal(
@@ -190,13 +211,11 @@ export abstract class InvertedItemActionSet extends ActionSet {
     this.playSoundEffect();
     game.GetHUD().ShowItemText(this.getName(), this.getDescription());
     const icon = this.getIcon();
-    if (isColor(icon)) {
-    } else {
-      overridePickupAnimationWithCustomSprite(player, icon);
-    }
+    overridePickupAnimationWithCustomSprite(player, icon);
 
-    fprint(`  Picked up inverted item ${this.getName()}.
-    With Description: ${this.getDescription()}`);
+    fprint(
+      `Picked up inverted item ${this.getName()}, With Description: ${this.getDescription()}`,
+    );
 
     return undefined;
   }

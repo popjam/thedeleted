@@ -1,6 +1,6 @@
-import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { NonInvertedPickupActionSet } from "../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import type { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import type { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import type { NonInvertedPickupActionSet } from "../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import { ActionSetType } from "../../enums/corruption/actionSets/ActionSetType";
 
 /** Type guard to check if ActionSet is for an Inverted Active Item. */

@@ -1,13 +1,10 @@
-import { CollectibleType } from "isaac-typescript-definitions";
-import {
-  EntityID,
-  getConstituentsFromEntityID,
-  getEntityID,
-} from "isaacscript-common";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
+import { getConstituentsFromEntityID, getEntityID } from "isaacscript-common";
 import { EID_ENTITY_DATA_KEY } from "../../constants/eidConstants";
-import { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
-import { Morality } from "../../enums/corruption/Morality";
-import { EIDDescObject } from "../../interfaces/compatibility/EIDDescObject";
+import type { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
+import type { Morality } from "../../enums/corruption/Morality";
+import type { EIDDescObject } from "../../interfaces/compatibility/EIDDescObject";
 import { getEIDColorShortcutFromMorality } from "../../maps/compatibility/EIDColorMap";
 
 /** Returns the Collectible icon for EID. */

@@ -1,11 +1,7 @@
 import { CollectibleType } from "isaac-typescript-definitions";
-import {
-  PickingUpItemCollectible,
-  getCollectibleName,
-} from "isaacscript-common";
+import type { PickingUpItemCollectible } from "isaacscript-common";
 import { setPedestalInversion } from "../../../../helper/deletedSpecific/inversion/pedestalInversion";
 import { setZazzinatorToRemovedItem } from "../../../../helper/deletedSpecific/inversion/removedItems";
-import { fprint } from "../../../../helper/printHelper";
 import { mod } from "../../../../mod";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import { getAndSetInvertedItemActionSet } from "../../effects/itemEffects";
@@ -28,10 +24,6 @@ export function invertedPreItemPickupCollectible(
   pickingUpItem: PickingUpItemCollectible,
 ): void {
   const pickingUpItemInverted = isZazzinatorAny(pickingUpItem.subType);
-
-  fprint(`
-
-  W------W START PRE_ITEM_PICKUP_COLLECTIBLE W------W`);
 
   /** Call inverted item ActionSet 'prePickupCollectible' function. */
   if (pickingUpItemInverted) {
@@ -67,23 +59,10 @@ export function invertedPreItemPickupCollectible(
    */
   const pedestal = getLastPickedUpPedestal(player);
   if (pedestal === undefined || pedestal.SubType === CollectibleType.NULL) {
-    fprint(
-      `   Put down pedestal: ${
-        pedestal === undefined ? "pedestal is undefined" : "pedestal is null"
-      }
-      W------W END PRE_ITEM_PICKUP_COLLECTIBLE W------W
-
-      `,
-    );
     return;
   }
 
   const putDownItemInverted = isZazzinatorAny(pedestal.SubType);
-
-  fprint(`   Put down pedestal: ${pedestal.SubType}
-  Was put down inverted: ${putDownItemInverted}
-  Put down subType: ${pedestal.SubType}
-  Put down name: ${getCollectibleName(pedestal.SubType)}`);
 
   setPedestalInversion(putDownItemInverted, pedestal);
   if (putDownItemInverted) {
@@ -91,12 +70,4 @@ export function invertedPreItemPickupCollectible(
       setZazzinatorToRemovedItem(pedestal);
     }, 1);
   }
-
-  fprint(`   Post-change put down pedestal~
-  Post-change was put down inverted: ${putDownItemInverted}
-  Post-change put down subType: ${pedestal.SubType}
-  Post-change put down name: ${getCollectibleName(pedestal.SubType)}
-  W------W END PRE_ITEM_PICKUP_COLLECTIBLE W------W
-
-  `);
 }

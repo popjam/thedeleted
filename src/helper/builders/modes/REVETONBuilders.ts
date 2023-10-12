@@ -1,13 +1,13 @@
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
 import { COLORS, getRandomInt, getRandomSeed } from "isaacscript-common";
 import { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { InvertedPassiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import {
   GetCollectibleResponse,
   isGetCollectibleResponse,
 } from "../../../classes/corruption/responses/GetCollectibleResponse";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { Response } from "../../../classes/corruption/responses/Response";
 import { UseActiveItemResponse } from "../../../classes/corruption/responses/UseActiveItemResponse";
 import {
   REVETONInvertedItemBlueSpriteColor,
@@ -18,8 +18,8 @@ import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetTyp
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { DeletedColor } from "../../../enums/general/DeletedColor";
 import { getAdvancedInvertedItemIconSetting } from "../../../features/settings/GeneralSettings";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { getRandomCollectibleType } from "../../collectibleHelper";
 
 /** Default Builder to generate a REVETON ActionSet. */
@@ -31,8 +31,8 @@ export function revetonDefaultBuilder(
 
   /** Determines the sprite & EID text red/blue color order. */
   const colorOrder: [
-    typeof DeletedColor.REVETON_BLUE | typeof DeletedColor.REVETON_RED,
-    typeof DeletedColor.REVETON_BLUE | typeof DeletedColor.REVETON_RED,
+    typeof DeletedColor.REVETON_BLUE,
+    typeof DeletedColor.REVETON_BLUE,
   ] =
     getRandomInt(0, 1) === 0
       ? [DeletedColor.REVETON_BLUE, DeletedColor.REVETON_RED]
@@ -50,15 +50,13 @@ export function revetonDefaultBuilder(
   ];
 
   /** Generate the ActionSet using default properties. */
-  if (active) {
-    actionSet = new InvertedActiveActionSet().addEffects(
-      ...generateRevetonActiveEffects(inputs, colorOrderEIDShortcut),
-    );
-  } else {
-    actionSet = new InvertedPassiveActionSet().addEffects(
-      ...generateRevetonPassiveEffects(inputs, colorOrderEIDShortcut),
-    );
-  }
+  actionSet = active
+    ? new InvertedActiveActionSet().addEffects(
+        ...generateRevetonActiveEffects(inputs, colorOrderEIDShortcut),
+      )
+    : new InvertedPassiveActionSet().addEffects(
+        ...generateRevetonPassiveEffects(inputs, colorOrderEIDShortcut),
+      );
 
   /** Set the name and description. */
   actionSet
@@ -130,15 +128,10 @@ function generateRevetonCorruptedCollectibleSprite(
   actionSet: InvertedItemActionSet,
   _inputs?: ActionSetBuilderInput,
   colorOrder: [
-    typeof DeletedColor.REVETON_BLUE | typeof DeletedColor.REVETON_RED,
-    typeof DeletedColor.REVETON_BLUE | typeof DeletedColor.REVETON_RED,
+    typeof DeletedColor.REVETON_BLUE,
+    typeof DeletedColor.REVETON_BLUE,
   ] = [DeletedColor.REVETON_BLUE, DeletedColor.REVETON_RED],
-): CorruptedCollectibleSprite | Color {
-  const advancedIcons = getAdvancedInvertedItemIconSetting();
-  if (!advancedIcons) {
-    return COLORS.Black;
-  }
-
+): CorruptedCollectibleSprite {
   const responses = actionSet.getResponses();
   let collectibles: Array<[CollectibleType, EIDColorShortcut]> = [];
 
@@ -146,41 +139,41 @@ function generateRevetonCorruptedCollectibleSprite(
    * For passive items, filter out for 'GetCollectibleResponses'. If it is an Active item, filter
    * for 'UseActiveItemResponses'.
    */
-  if (actionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM) {
-    collectibles = (
-      responses.filter(
-        (response) => response.responseType === ResponseType.USE_ACTIVE_ITEM,
-      ) as UseActiveItemResponse[]
-    )
-      .filter((response) => {
-        const collectible = response.getActiveItem();
-        return typeof collectible === "number";
-      })
-      .map((response) => {
-        const collectible = response.getActiveItem();
-        return [
-          collectible as CollectibleType,
-          response.getTextColor() ?? EIDColorShortcut.REVETON_RED,
-        ];
-      });
-  } else {
-    collectibles = (
-      responses.filter((response) =>
-        isGetCollectibleResponse(response),
-      ) as GetCollectibleResponse[]
-    )
-      .filter((response) => {
-        const c = response.getCollectible();
-        return typeof c === "number";
-      })
-      .map((response) => {
-        const c = response.getCollectible();
-        return [
-          c as CollectibleType,
-          response.getTextColor() ?? EIDColorShortcut.REVETON_BLUE,
-        ];
-      });
-  }
+  collectibles =
+    actionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM
+      ? (
+          responses.filter(
+            (response) =>
+              response.responseType === ResponseType.USE_ACTIVE_ITEM,
+          ) as UseActiveItemResponse[]
+        )
+          .filter((response) => {
+            const collectible = response.getActiveItem();
+            return typeof collectible === "number";
+          })
+          .map((response) => {
+            const collectible = response.getActiveItem();
+            return [
+              collectible as CollectibleType,
+              response.getTextColor() ?? EIDColorShortcut.REVETON_RED,
+            ];
+          })
+      : (
+          responses.filter((response) =>
+            isGetCollectibleResponse(response),
+          ) as GetCollectibleResponse[]
+        )
+          .filter((response) => {
+            const c = response.getCollectible();
+            return typeof c === "number";
+          })
+          .map((response) => {
+            const c = response.getCollectible();
+            return [
+              c as CollectibleType,
+              response.getTextColor() ?? EIDColorShortcut.REVETON_BLUE,
+            ];
+          });
 
   /** Rearrange collectibles array to match colorOrder. */
   collectibles.sort((a, b) => {

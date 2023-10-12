@@ -54,7 +54,7 @@ import { TriggerRandomResponse } from "./classes/corruption/responses/TriggerRan
 import { UseActiveItemResponse } from "./classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "./classes/corruption/responses/WaitThenTriggerResponse";
 import { initCorruptedCollectibleSpriteFacet } from "./classes/facets/CorruptedCollectibleSpriteFacet";
-import { initHUDRenderingFacet } from "./classes/facets/CustomActiveFacet";
+import { initCustomActiveFacet } from "./classes/facets/CustomActiveFacet";
 import { initExampleFacet } from "./classes/facets/ExampleFacet";
 import { initRenderOverHeadFacet } from "./classes/facets/RenderOverHeadFacet";
 import { initBolsterNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
@@ -94,9 +94,9 @@ function initFeatures() {
     devInit();
   }
 
-  FEATURE_INIT_FUNCTIONS.forEach((initFunction) => {
+  for (const initFunction of FEATURE_INIT_FUNCTIONS) {
     initFunction();
-  });
+  }
 }
 
 /** Initialize mod features for dev. */
@@ -200,7 +200,7 @@ function initFacets() {
   initFreezeNPCFacet();
   initBolsterNPCFacet();
   initEveryItemIsFacet();
-  initHUDRenderingFacet();
+  initCustomActiveFacet();
   initNonMandatoryNPCFacet();
 }
 

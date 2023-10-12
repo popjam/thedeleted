@@ -2,6 +2,7 @@ import {
   ActiveSlot,
   CollectibleType,
   EntityType,
+  ItemType,
   LevelStage,
 } from "isaac-typescript-definitions";
 import {
@@ -31,6 +32,14 @@ import { renderConstantly } from "../../helper/renderHelper";
 import { copySprite } from "../../helper/spriteHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
+import { printCustomActiveStatus } from "../../classes/facets/CustomActiveFacet";
+import { getAllCustomActives } from "../corruption/inversion/customActives";
+import { addActionOrResponseToTracker } from "../corruption/effects/playerEffects";
+import { addResponsesToPlayer } from "../../helper/deletedSpecific/inversion/responseHelper";
+import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
+import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -42,8 +51,7 @@ const del2ID = 0;
 const action1 = new OnFloorAction()
   .setInterval(1)
   .setLevelStage(LevelStage.BLUE_WOMB);
-const response1 = new UseActiveItemResponse();
-action1.setResponse(response1);
+const response1 = new GetCollectibleResponse().construct(CollectibleType.POOP);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -68,7 +76,22 @@ export function addTestingCommands(): void {
 }
 
 /** Test stuff as the developer with command 'del'. */
-export function testingFunction1(): void {}
+export function testingFunction1(): void {
+  spawnNewInvertedCollectible(
+    getRandomAccessiblePosition(player().Position) ?? VectorZero,
+    new InvertedActiveActionSet().addEffects(
+      new GetCollectibleResponse().construct(
+        getRandomCollectibleType() ?? CollectibleType.POOP,
+      ),
+      new OnRoomAction().setResponse(
+        new UseActiveItemResponse().construct(
+          getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
+            CollectibleType.POOP,
+        ),
+      ),
+    ),
+  );
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {

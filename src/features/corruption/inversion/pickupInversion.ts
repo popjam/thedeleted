@@ -5,7 +5,8 @@
  */
 
 import { CollectibleType } from "isaac-typescript-definitions";
-import { DefaultMap, PickupIndex } from "isaacscript-common";
+import type { PickupIndex } from "isaacscript-common";
+import { DefaultMap } from "isaacscript-common";
 import { mod } from "../../../mod";
 import { isGameInverted } from "./playerInversion";
 

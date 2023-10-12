@@ -1,6 +1,6 @@
-import { WeightedArray } from "isaacscript-common";
+import type { WeightedArray } from "isaacscript-common";
 import { InvertedItemActionSetBuilderReference } from "../enums/corruption/actionSets/ActionSetBuilders";
-import { Range } from "../types/general/Range";
+import type { Range } from "../types/general/Range";
 
 export const DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE: InvertedItemActionSetBuilderReference =
   InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT;
@@ -26,3 +26,5 @@ export const DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT: Range = [1, 3];
 export const DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH: Range = [0.4, 2];
 
 export const CORRUPTED_BACKDROP_COLOR_TRANSPARENCY_VALUE = 0.1;
+
+export const DEFAULT_INVERTED_ACTIVE_GENERATION_PERCENTAGE = 100;

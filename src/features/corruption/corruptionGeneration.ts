@@ -1,18 +1,18 @@
 /** Responsible for creating populated InvertedActionSets, Actions and Responses. */
 
+import type { PlayerIndex } from "isaacscript-common";
 import {
   DefaultMap,
   defaultMapGetPlayer,
   defaultMapSetPlayer,
-  PlayerIndex,
 } from "isaacscript-common";
-import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import type { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE } from "../../constants/corruptionConstants";
-import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
-import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
+import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { getInvertedItemActionSetBuilderFromReference } from "../../maps/builders/actionSetBuilderMap";
 import { mod } from "../../mod";
-import { InvertedItemActionSetBuilder } from "../../types/general/Builder";
+import type { InvertedItemActionSetBuilder } from "../../types/general/Builder";
 
 const v = {
   run: {

@@ -1,15 +1,15 @@
 import { temporaryActionResponseInit } from "./classes/corruption/responses/TemporaryActionResponse";
 import { facetInit } from "./classes/Facet";
 import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
+import { activeItemTrackerInit } from "./features/corruption/effects/activeItemTracker";
 import { itemEffectsInit } from "./features/corruption/effects/itemEffects";
 import { pickupEffectsInit } from "./features/corruption/effects/pickupEffects";
 import { playerEffectsInit } from "./features/corruption/effects/playerEffects";
 import { bombInventoryInit } from "./features/corruption/inventory/bombInventory";
-import { invertedItemCorruptInit } from "./features/corruption/inventory/itemInventory";
+import { invertedItemCorruptInit } from "./features/corruption/inventory/passiveItemInventory";
 import { removedItemTrackerInit } from "./features/corruption/inventory/removedInvertedItems";
 import { customActivesInit } from "./features/corruption/inversion/customActives";
 import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
-import { pedestalChargesInit } from "./features/corruption/inversion/pedestalCharges";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
 import { backdropHelperInit } from "./features/general/backdropHelper";
@@ -59,8 +59,8 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   facetInit,
   backdropHelperInit,
   removedItemTrackerInit,
-  pedestalChargesInit,
   glitchyReplacePlayerSpritesheetInit,
   floorColorHelper,
   customActivesInit,
+  activeItemTrackerInit,
 ];

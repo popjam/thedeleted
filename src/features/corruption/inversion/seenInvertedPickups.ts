@@ -1,4 +1,4 @@
-import { PickupIndex } from "isaacscript-common";
+import type { PickupIndex } from "isaacscript-common";
 import { mod } from "../../../mod";
 
 const v = {

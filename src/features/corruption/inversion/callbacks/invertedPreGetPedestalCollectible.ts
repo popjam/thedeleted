@@ -25,7 +25,6 @@ import {
   setLastPickedUpNonInvertedCollectibleActionSet,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
-import { getPedestalCharges } from "../pedestalCharges";
 import { isPickupInverted } from "../pickupInversion";
 
 /**
@@ -63,12 +62,9 @@ function preGetPedestalNormal(
   });
 
   fprint(
-    `
-
-    X-------X START PRE_GET_PEDESTAL X-------X
-    Player: ${getPlayerIndex(player)}
-    Pickup: ${pickup.SubType} name: ${getCollectibleName(pickup.SubType)})}
-    Inversion: ${isInverted}`,
+    `PreGetPedestalNormal: ${pickup.SubType} name: ${getCollectibleName(
+      pickup.SubType,
+    )} player: ${getPlayerIndex(player)} inversion: ${isInverted}`,
   );
 
   if (isInverted) {
@@ -82,20 +78,11 @@ function preGetPedestalNormal(
     return itemActionSet.preGetPedestal(player, pickup);
   }
   const itemActionSet = getNonInvertedPickupActionSet(pickup);
-  pickup.Charge = getPedestalCharges(pickup) ?? pickup.Charge;
   if (itemActionSet !== undefined) {
     setLastPickedUpNonInvertedCollectibleActionSet(player, itemActionSet);
-    fprint(
-      `   Non-Inverted ActionSet: ${itemActionSet.getText()}
-      X-------X END PRE_GET_PEDESTAL X-------X
-
-      `,
-    );
+    fprint(`NonInverted ActionSet: ${itemActionSet.getText()}`);
     return undefined;
   }
-
-  fprint(`    X-------X END PRE_GET_PEDESTAL X-------X
-  `);
   return undefined;
 }
 
@@ -144,15 +131,13 @@ function preGetPedestalZazz(
   /** Update pickup stage. */
   updateLastPickedUpCollectible(player, PickupStage.PRE_GET_PEDESTAL_ZAZZ);
 
-  fprint(`
-
-  X-------X START PRE_GET_PEDESTAL_ZAZZ X-------X
-  Player: ${getPlayerIndex(player)}
-  Pickup: ${pickup.SubType} name: ${getCollectibleName(pickup.SubType)})}
-  Inversion: ${lastPickedUpCollectible.inverted}
-  X-------X END PRE_GET_PEDESTAL_ZAZZ X-------X
-
-  `);
+  fprint(
+    `PreGetPedestalZazz: ${pickup.SubType} name: ${getCollectibleName(
+      pickup.SubType,
+    )} player: ${getPlayerIndex(player)} inversion: ${
+      lastPickedUpCollectible.inverted
+    }`,
+  );
 
   return undefined;
 }

@@ -1,26 +1,29 @@
 import { getRandomInt, isColor } from "isaacscript-common";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { HAPPY99InvertedItemSpriteColor } from "../../../constants/modes/HAPPY99Constants";
 import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,
   defaultInvertedPassiveActionSetBuilder,
   generateDefaultCorruptedCollectibleSprite,
 } from "../genericBuilders";
+import { fprint } from "../../printHelper";
+import { rollPercentage } from "../../../types/general/Percentage";
+import { DEFAULT_INVERTED_ACTIVE_GENERATION_PERCENTAGE } from "../../../constants/corruptionConstants";
 
 export function happy99DefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = inputs?.forceActiveOrPassive ?? getRandomInt(0, 1) === 0;
-  let actionSet: InvertedItemActionSet | undefined;
+  fprint("HAPPY99 DEFAULT BUILDER");
+  const active =
+    inputs?.forceActiveOrPassive ??
+    rollPercentage(DEFAULT_INVERTED_ACTIVE_GENERATION_PERCENTAGE);
 
   /** Generate the ActionSet using default properties. */
-  if (active) {
-    actionSet = defaultInvertedActiveActionSetBuilder(inputs);
-  } else {
-    actionSet = defaultInvertedPassiveActionSetBuilder(inputs);
-  }
+  const actionSet = active
+    ? defaultInvertedActiveActionSetBuilder(inputs)
+    : defaultInvertedPassiveActionSetBuilder(inputs);
 
   /** Set the name and description. */
   actionSet

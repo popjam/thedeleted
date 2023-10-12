@@ -7,8 +7,8 @@ import {
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { CollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { CollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
 import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 
@@ -18,10 +18,11 @@ const FIRST_TIME_PICKING_UP = true;
 const VERB = "get";
 
 /**
- * Response which uses Active items. The 'activeItem' field can either be a CollectibleType of the
- * active item, or a 'ActiveCollectibleAttribute' object. Every time the Response triggers, if using
- * the object, a random active item following the properties described in the
- * 'ActiveCollectibleAttribute' object will be used.
+ * This Response gives the player collectibles. The collectible can be a specific item, or a random
+ * item from a group of items.
+ *
+ * @field aT The collectible to get. Can be a specific item or randomly from a group of items
+ *        (defined by CollectibleAttribute).
  *
  * @example Use The Poop.
  * @example Use a quality 4 active item.
@@ -52,8 +53,8 @@ export class GetCollectibleResponse extends Response {
   }
 
   /**
-   * Calculates the collectible to get upon triggering the Response, taking into account the
-   * different types of 'collectibles'.
+   * Calculates the collectible to get upon triggering the Response. If the collectible is a
+   * CollectibleAttribute, a random collectible from the group is returned.
    */
   calculateCollectible(): CollectibleType {
     const collectible = this.getCollectible();
@@ -75,7 +76,7 @@ export class GetCollectibleResponse extends Response {
    * The collectible to get. Can be a specific item or randomly from a group of items (defined by
    * CollectibleAttribute).
    */
-  setCollectible(collectible: CollectibleType): this {
+  setCollectible(collectible: CollectibleType | CollectibleAttribute): this {
     this.aT = collectible;
     return this;
   }

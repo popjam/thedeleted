@@ -1,8 +1,8 @@
 import { getRandomInt, isColor } from "isaacscript-common";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { ILOVEYOUInvertedItemSpriteColor } from "../../../constants/modes/ILOVEYOUConstants";
 import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
-import { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,
   defaultInvertedPassiveActionSetBuilder,

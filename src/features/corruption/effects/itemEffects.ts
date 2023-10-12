@@ -53,6 +53,16 @@ export function getAndSetInvertedItemActionSet(
 }
 
 /**
+ * Get the ActionSet attached to the inverted collectibleType (will return undefined if one doesn't
+ * exist). If you need to always return an ActionSet, use getAndSetInvertedItemActionSet().
+ */
+export function getInvertedItemActionSet(
+  collectibleType: CollectibleType,
+): InvertedItemActionSet | undefined {
+  return v.run.invertedItems.get(collectibleType);
+}
+
+/**
  * Retrieves the ActionSet attached to the inverted state of the collectible. Note that the
  * collectible passed can be non-inverted.
  */

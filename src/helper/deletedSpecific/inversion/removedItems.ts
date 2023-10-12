@@ -4,6 +4,7 @@ import { _getRemovedInvertedItems } from "../../../features/corruption/inventory
 import { isZazzinatorAny } from "../../../sets/zazzSets";
 import { fprint } from "../../printHelper";
 import { setPedestalInversion } from "./pedestalInversion";
+import { setTrackedPedestalInvertedActive } from "../../../features/corruption/effects/activeItemTracker";
 
 /**
  * Morphs a Zazzinator item into an inverted collectible using the RemovedInvertedItemTracker. If no
@@ -26,7 +27,8 @@ export function setZazzinatorToRemovedItem(
       continue;
     }
 
-    const { playerIndex, dummyItem, referenceCollectible } = removedItem;
+    const { dummyItem, referenceCollectible, InvertedActiveActionSet } =
+      removedItem;
     if (dummyItem !== zazzCollectibleType) {
       continue;
     }
@@ -35,22 +37,28 @@ export function setZazzinatorToRemovedItem(
     setCollectibleSubType(zazzinatorItem, referenceCollectible);
     // Don't update as we will do that later.
     setPedestalInversion(true, zazzinatorItem);
+    // Update the pedestal's active tracker if it is an active item.
+    if (InvertedActiveActionSet !== undefined) {
+      setTrackedPedestalInvertedActive(zazzinatorItem, InvertedActiveActionSet);
+    }
+    // Set the pedestal.charge if we know the charge of the non-Inverted active item.
+    const charge = InvertedActiveActionSet?.getFlipCharge();
+    if (charge !== undefined) {
+      zazzinatorItem.Charge = charge;
+    }
+
     removedItems.splice(i, 1);
-    fprint(`Found a match for: ${zazzCollectibleType}
-      With reference: ${referenceCollectible} and name ${getCollectibleName(
+    fprint(
+      `Zazzinator item ${zazzCollectibleType} morphed into ${getCollectibleName(
         referenceCollectible,
-      )}
-      Setting pedestal inversion to true.`);
+      )}`,
+    );
     return;
   }
 
   // We did not find a match.
   fprint(
-    ` ERROR: Could not find a match for Zazzinator item ${zazzCollectibleType}!
-    Setting pedestal inversion to false and morphing into Sad Onion.
-    O------O END setZazzinatorToRemovedItem O------O
-
-    `,
+    `Zazzinator item ${zazzCollectibleType} morphed into a random item due to not finding a match`,
   );
   setPedestalInversion(false, zazzinatorItem);
   setCollectibleSubType(zazzinatorItem, CollectibleType.SAD_ONION);

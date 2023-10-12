@@ -4,12 +4,12 @@ import {
   ModCallback,
   PickupVariant,
 } from "isaac-typescript-definitions";
+import type { PickupIndex } from "isaacscript-common";
 import {
   Callback,
   CallbackCustom,
   ColorDefault,
   ModCallbackCustom,
-  PickupIndex,
   clearSprite,
   getCollectibleGfxFilename,
   isCollectible,
@@ -22,7 +22,7 @@ import { isCollectibleFree } from "../../helper/priceHelper";
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
 import { copySprite } from "../../helper/spriteHelper";
-import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { mod } from "../../mod";
 import { isZazzinatorAny } from "../../sets/zazzSets";
 import { Facet, initGenericFacet } from "../Facet";
@@ -49,9 +49,9 @@ class CorruptedCollectibleSpriteFacet extends Facet {
   @CallbackCustom(ModCallbackCustom.POST_PICKUP_CHANGED)
   postPickupChanged(
     pickup: EntityPickup,
-    oldVariant: PickupVariant,
-    oldSubType: number,
-    newVariant: PickupVariant,
+    _oldVariant: PickupVariant,
+    _oldSubType: number,
+    _newVariant: PickupVariant,
     newSubType: number,
   ): void {
     fprint(
@@ -72,6 +72,7 @@ class CorruptedCollectibleSpriteFacet extends Facet {
     const corruptedSprite = v.level.replacedPickups.get(
       mod.getPickupIndex(pickup),
     );
+
     /** If the pickup is not subscribed. */
     if (corruptedSprite === undefined) {
       return;

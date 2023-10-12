@@ -42,11 +42,17 @@ export function playerEffectsInit(): void {
   mod.saveDataManager("playerEffects", v, false);
 }
 
-export function removeActionFromPlayer(
+/** Removes the specified Action from the tracker, by checking if they reference the same object. */
+export function removeActionFromTracker(
   player: EntityPlayer,
-  actionType: ActionType,
-  origin?: [ActionOrigin, number],
-): void {}
+  action: Action,
+): void {
+  removeActionWithPredicate(
+    (actionLoop) => actionLoop === action,
+    player,
+    action.actionType,
+  );
+}
 
 /** Get the total number of Actions between all players. */
 export function getTotalNumActions(): int {

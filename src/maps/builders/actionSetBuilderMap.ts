@@ -7,8 +7,8 @@ import { iLoveYouDefaultBuilder } from "../../helper/builders/modes/ILOVEYOUBuil
 import { morrisDefaultBuilder } from "../../helper/builders/modes/MORRISBuilders";
 import { mydoomDefaultBuilder } from "../../helper/builders/modes/MYDOOMBuilders";
 import { revetonDefaultBuilder } from "../../helper/builders/modes/REVETONBuilders";
-import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import {
+import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type {
   Builder,
   InvertedItemActionSetBuilder,
 } from "../../types/general/Builder";

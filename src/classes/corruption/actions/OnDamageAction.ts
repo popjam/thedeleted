@@ -1,9 +1,9 @@
-import { DamageFlag } from "isaac-typescript-definitions";
+import type { DamageFlag } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { bitFlagsContainsValue } from "../../../helper/bitflagHelper";
 import { isSensibleDamage } from "../../../helper/damageHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getDamageFlagTextFromMap } from "../../../maps/data/damageFlagText";
 import { Action } from "./Action";
 
@@ -19,7 +19,7 @@ export class OnDamageAction extends Action {
     if (damageFlag === undefined) {
       return "";
     }
-    return `from ${getDamageFlagTextFromMap(damageFlag).toLowerCase()}`;
+    return ` from ${getDamageFlagTextFromMap(damageFlag).toLowerCase()}`;
   }
 
   // Additional Text manipulation for 'RoomType' modifier.
@@ -33,13 +33,12 @@ export class OnDamageAction extends Action {
     const intervalText = this.getIntervalText();
     const fireAfterThenRemove = this.getFireAfterThenRemove();
     if (fireAfterThenRemove !== undefined) {
-      if (fireAfterThenRemove === 1) {
-        text += `next time you take damage ${this.getDamageFlagText()} ${intervalText}`;
-      } else {
-        text += `up to ${fireAfterThenRemove} times, after taking damage ${this.getDamageFlagText()} ${intervalText}`;
-      }
+      text +=
+        fireAfterThenRemove === 1
+          ? `next time you take damage ${this.getDamageFlagText()} ${intervalText}`
+          : `up to ${fireAfterThenRemove} times, after taking damage ${this.getDamageFlagText()} ${intervalText}`;
     } else if (intervalText === "") {
-      text += `every time you take damage ${this.getDamageFlagText()}`;
+      text += `every time you take damage${this.getDamageFlagText()}`;
     } else {
       text += `every time you take damage ${this.getDamageFlagText()} ${intervalText}`;
     }

@@ -1,6 +1,6 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
-import { removePlayerMostRecentInvertedPassiveItem } from "../../../../helper/deletedSpecific/inversion/invertedInventory";
 import { addRemovedInvertedItemToTracker } from "../../inventory/removedInvertedItems";
+import { removePlayerMostRecentInvertedPassive } from "../../../../helper/deletedSpecific/inversion/invertedInventoryHelper";
 
 // PLAYER_COLLECTIBLE_REMOVED
 export function invertedItemEffectsPostZazzPassiveCollectibleRemoved(
@@ -8,10 +8,10 @@ export function invertedItemEffectsPostZazzPassiveCollectibleRemoved(
   collectibleType: CollectibleType,
 ): void {
   /** Remove the Zazz item. */
-  const collectibleTypeRemoved = removePlayerMostRecentInvertedPassiveItem(
+  const collectibleTypeRemoved = removePlayerMostRecentInvertedPassive(
     player,
+    collectibleType,
     false,
-    true,
   );
   if (collectibleTypeRemoved === undefined) {
     return;

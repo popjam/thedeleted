@@ -39,6 +39,26 @@ export function getPlayerInvertedPassiveItems(
   return defaultMapGetPlayer(v.run.items, player);
 }
 
+/**
+ * Returns the most recently added inverted passive item a player has along with its ActionSet, or
+ * undefined if they have none.
+ */
+export function getPlayerMostRecentInvertedPassiveItem(
+  player: EntityPlayer,
+): [CollectibleType, ActionSet] | undefined {
+  return defaultMapGetPlayer(v.run.items, player).at(-1);
+}
+
+/**
+ * Returns the most recently added inverted passive item a player has, or undefined if they have
+ * none.
+ */
+export function getPlayerMostRecentInvertedPassiveItemCollectibleType(
+  player: EntityPlayer,
+): CollectibleType | undefined {
+  return defaultMapGetPlayer(v.run.items, player).at(-1)?.[0];
+}
+
 /** Returns an ordered array of CollectibleType for the passive inverted items a player has. */
 export function getPlayerInvertedPassiveItemCollectibleTypes(
   player: EntityPlayer,
@@ -56,7 +76,7 @@ export function getPlayerInvertedPassiveItemActionSets(
 }
 
 /** Returns true if the player has at least one inverted item of the provided CollectibleType. */
-export function doesPlayerHaveInvertedPassiveItem(
+export function _doesPlayerHaveInvertedPassiveItem(
   player: EntityPlayer,
   collectibleType: CollectibleType,
 ): boolean {
@@ -69,7 +89,7 @@ export function doesPlayerHaveInvertedPassiveItem(
  * Get the amount of inverted passive items a player has. Can specify a certain CollectibleType to
  * filter results.
  */
-export function getPlayerAmountOfInvertedPassiveItems(
+export function _getPlayerAmountOfInvertedPassiveItems(
   player: EntityPlayer,
   collectibleType?: CollectibleType,
 ): number {

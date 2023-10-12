@@ -1,6 +1,5 @@
 import type { PickingUpItemCollectible } from "isaacscript-common";
 import { getPlayerIndex } from "isaacscript-common";
-import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inversion/invertedInventory";
 import { fprint } from "../../../../helper/printHelper";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import {
@@ -9,6 +8,7 @@ import {
   PickupStage,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
+import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inversion/invertedInventoryHelper";
 
 /**
  * When the item leaves ItemQueue. If it is ZAZZ, it's an inverted item. Passive items get their

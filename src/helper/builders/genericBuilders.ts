@@ -11,15 +11,15 @@ import {
   shuffleArrayInPlace,
 } from "isaacscript-common";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { Action } from "../../classes/corruption/actions/Action";
+import type { Action } from "../../classes/corruption/actions/Action";
 import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { OnKillAction } from "../../classes/corruption/actions/OnKillAction";
 import { OnObtainAction } from "../../classes/corruption/actions/OnObtainAction";
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
-import { Response } from "../../classes/corruption/responses/Response";
+import type { Response } from "../../classes/corruption/responses/Response";
 import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
 import { TriggerInSequenceResponse } from "../../classes/corruption/responses/TriggerInSequence";
 import { TriggerOverTimeResponse } from "../../classes/corruption/responses/TriggerOverTimeResponse";
@@ -31,12 +31,12 @@ import { Morality } from "../../enums/corruption/Morality";
 import { DeletedColor } from "../../enums/general/DeletedColor";
 import { NPCID } from "../../enums/general/ID/NPCID";
 import { getAdvancedInvertedItemIconSetting } from "../../features/settings/GeneralSettings";
-import { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
+import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { rollPercentage } from "../../types/general/Percentage";
 import { getRandomCollectibleType } from "../collectibleHelper";
-import { getPlayerMainColor } from "../deletedSpecific/deletedHelper";
 import { getObjectValues } from "../objectHelper";
+import { fprint } from "../printHelper";
 
 /**
  * Generates a CustomCollectibleSprite from the provided ActionSet. If 'Advanced Icons' setting is
@@ -46,18 +46,7 @@ import { getObjectValues } from "../objectHelper";
 export function generateDefaultCorruptedCollectibleSprite(
   actionSet: InvertedPassiveActionSet,
   inputs?: ActionSetBuilderInput,
-): CorruptedCollectibleSprite | Color {
-  const advancedIcons = getAdvancedInvertedItemIconSetting();
-  if (!advancedIcons) {
-    const player = inputs?.player;
-    if (player !== undefined) {
-      const mainColor = getPlayerMainColor(player);
-      if (mainColor !== undefined) {
-        return mainColor;
-      }
-    }
-    return DeletedColor.HAPPY_YELLOW;
-  }
+): CorruptedCollectibleSprite {
   const amountOfSegments = getRandomFromWeightedArray(
     INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD,
   );
@@ -90,14 +79,11 @@ export function defaultInvertedItemActionSetBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
   const active = inputs?.forceActiveOrPassive ?? getRandomInt(0, 1) === 0;
-  let actionSet: InvertedItemActionSet | undefined;
 
   /** Generate the ActionSet using default properties. */
-  if (active) {
-    actionSet = defaultInvertedActiveActionSetBuilder(inputs);
-  } else {
-    actionSet = defaultInvertedPassiveActionSetBuilder(inputs);
-  }
+  const actionSet = active
+    ? defaultInvertedActiveActionSetBuilder(inputs)
+    : defaultInvertedPassiveActionSetBuilder(inputs);
 
   /** Set the name and description. */
   actionSet
@@ -114,6 +100,8 @@ export function defaultInvertedItemActionSetBuilder(
 export function defaultInvertedActiveActionSetBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedActiveActionSet {
+  fprint(`defaultInvertedActiveActionSetBuilder. inputs: (${inputs})`);
+
   const amountOfEffects = getRandomInt(1, 3);
   const effectArray: Array<Action | Response> = [];
   for (let i = 0; i < amountOfEffects; i++) {
@@ -184,6 +172,7 @@ export function defaultInvertedActiveActionSetBuilder(
         1,
       ],
     ]);
+
     /** % Chance of Action/Response. */
     if (rollPercentage(10)) {
       effectArray.push(randomAction().setResponse(randomResponse));
@@ -206,6 +195,8 @@ export function defaultInvertedActiveActionSetBuilder(
 export function defaultInvertedPassiveActionSetBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedPassiveActionSet {
+  fprint(`defaultInvertedPassiveActionSetBuilder. inputs: (${inputs})`);
+
   const amountOfEffects = getRandomInt(1, 3);
   const effectArray: Action[] = [];
   const randomActions: Action = getRandomFromWeightedArray([
