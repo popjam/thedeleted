@@ -1,18 +1,18 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
-import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
 import { Morality } from "../../../enums/corruption/Morality";
-import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import type { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { fprint } from "../../../helper/printHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { Percentage } from "../../../types/general/Percentage";
 import {
   createPercentage,
-  Percentage,
   rollPercentage,
 } from "../../../types/general/Percentage";
+import type { Range } from "../../../types/general/Range";
 import {
   randomInRange,
-  Range,
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
@@ -36,8 +36,10 @@ export abstract class Response {
   readonly responseType!: ResponseType;
   mo?: Morality;
   aoa?: number | Range;
+
   /** Percentage chance to activate (100% will always pass). */
   cta?: Percentage;
+
   /** Overridden color of the Response. Default is derived from the Morality. */
   oc?: EIDColorShortcut;
 
@@ -98,11 +100,7 @@ export abstract class Response {
    * @example "Spawn 1-3 spiders" --> [1,3] rangeOfActivations.
    */
   setAmountOfActivations(amount: number | Range): this {
-    if (typeof amount === "number") {
-      this.aoa = amount;
-    } else {
-      this.aoa = validifyRange(amount);
-    }
+    this.aoa = typeof amount === "number" ? amount : validifyRange(amount);
     return this;
   }
 
@@ -142,7 +140,7 @@ export abstract class Response {
   }
 
   /** Describes the Response in string format. */
-  abstract getText(): string;
+  abstract getText(eid: boolean): string;
 
   deepCopy(): this {
     return deepCopy(this);
@@ -153,7 +151,7 @@ export abstract class Response {
    * this function to fire the Responses tied to them.
    */
   trigger(triggerData: TriggerData): void {
-    fprint(`Triggering Response: ${this.getText()}.`);
+    fprint(`Triggering Response: ${this.getText(false)}.`);
 
     // Percentage
     if (!rollPercentage(this.getChanceToActivate())) {
@@ -163,7 +161,7 @@ export abstract class Response {
     // Firing + AmountOfActivations
     const amountOfActivations = this.calculateAmountOfActivations();
     for (let i = 0; i < amountOfActivations; i++) {
-      fprint(`Firing Response: ${this.getText()}.`);
+      fprint(`Firing Response: ${this.getText(false)}.`);
       this.fire(triggerData);
     }
   }

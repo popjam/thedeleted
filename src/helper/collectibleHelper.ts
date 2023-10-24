@@ -1,9 +1,10 @@
-import type { ItemType, TrinketType } from "isaac-typescript-definitions";
+import type { TrinketType, ItemType } from "isaac-typescript-definitions";
 import {
   ActiveSlot,
   CollectibleType,
   ItemPoolType,
 } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   VectorZero,
   arrayRemove,
@@ -40,6 +41,12 @@ import {
 import { isCollectibleFree } from "./priceHelper";
 import { worldToRenderPosition } from "./renderHelper";
 import { copySprite } from "./spriteHelper";
+import { getItemTypeText } from "../maps/data/itemTypeNameMap";
+import {
+  joinWithOr,
+  legibleString,
+  removeUnnecessaryWhiteSpace,
+} from "./stringHelper";
 
 /** Replace an active item with another in a specific ActiveSlot. */
 export function replaceActiveItem(
@@ -186,22 +193,19 @@ export function doesCollectibleTypeMatchAttributes(
 
   // Forced.
   const { forced } = collectibleAttributes;
-  if (forced !== undefined) {
-    if (forced.includes(collectibleType)) {
-      return true;
-    }
+  if (forced !== undefined && forced.includes(collectibleType)) {
+    return true;
   }
 
   // Item Type.
-  if (itemType !== undefined) {
-    if (
-      !isInArrayOrEquals<ItemType>(
-        getCollectibleItemType(collectibleType),
-        itemType,
-      )
-    ) {
-      return false;
-    }
+  if (
+    itemType !== undefined &&
+    !isInArrayOrEquals<ItemType>(
+      getCollectibleItemType(collectibleType),
+      itemType,
+    )
+  ) {
+    return false;
   }
 
   // Pool Type.
@@ -220,35 +224,29 @@ export function doesCollectibleTypeMatchAttributes(
 
   // Item quality.
   const { quality } = collectibleAttributes;
-  if (quality !== undefined) {
-    if (
-      !isInArrayOrEquals<number>(
-        getCollectibleQuality(collectibleType),
-        quality,
-      )
-    ) {
-      return false;
-    }
+  if (
+    quality !== undefined &&
+    !isInArrayOrEquals<number>(getCollectibleQuality(collectibleType), quality)
+  ) {
+    return false;
   }
 
   // Charge type (passive collectibles return 'normal').
   const { chargeType } = collectibleAttributes;
-  if (chargeType !== undefined) {
-    if (
-      !isInArrayOrEquals(getCollectibleChargeType(collectibleType), chargeType)
-    ) {
-      return false;
-    }
+  if (
+    chargeType !== undefined &&
+    !isInArrayOrEquals(getCollectibleChargeType(collectibleType), chargeType)
+  ) {
+    return false;
   }
 
   // Max charges (passive collectibles return '0').
   const { maxCharges } = collectibleAttributes;
-  if (maxCharges !== undefined) {
-    if (
-      !isInArrayOrEquals(getCollectibleMaxCharges(collectibleType), maxCharges)
-    ) {
-      return false;
-    }
+  if (
+    maxCharges !== undefined &&
+    !isInArrayOrEquals(getCollectibleMaxCharges(collectibleType), maxCharges)
+  ) {
+    return false;
   }
 
   // Player has.
@@ -313,18 +311,17 @@ export function doesCollectibleTypeMatchAttributes(
 
   // Banned Collectibles.
   const { banned } = collectibleAttributes;
-  if (banned !== undefined) {
-    if (banned.includes(collectibleType)) {
-      return false;
-    }
+  if (banned !== undefined && banned.includes(collectibleType)) {
+    return false;
   }
 
   // Hidden.
   const { hidden } = collectibleAttributes;
-  if (hidden === undefined || !hidden) {
-    if (isHiddenCollectible(collectibleType)) {
-      return false;
-    }
+  if (
+    (hidden === undefined || !hidden) &&
+    isHiddenCollectible(collectibleType)
+  ) {
+    return false;
   }
 
   return true;
@@ -368,45 +365,34 @@ export function getRandomCollectibleType(
   return filteredCollectibles.length === 0 ? undefined : currentCollectible;
 }
 
-// export function collectibleAttributeToText(
-//   collectibleAttribute: CollectibleAttribute,
-// ): string {
-//   let text = "";
-//   if (collectibleAttribute.itemType !== undefined) {
-//     text += `Item Type: ${collectibleAttribute.itemType.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.poolType !== undefined) {
-//     text += `Pool Type: ${collectibleAttribute.poolType.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.quality !== undefined) {
-//     text += `Quality: ${collectibleAttribute.quality.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.chargeType !== undefined) {
-//     text += `Charge Type: ${collectibleAttribute.chargeType.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.maxCharges !== undefined) {
-//     text += `Max Charges: ${collectibleAttribute.maxCharges.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.playerHas !== undefined) {
-//     text += `Player Has: ${collectibleAttribute.playerHas.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.startsWith !== undefined) {
-//     text += `Starts With: ${collectibleAttribute.startsWith}\n`;
-//   }
-//   if (collectibleAttribute.endsWith !== undefined) {
-//     text += `Ends With: ${collectibleAttribute.endsWith}\n`;
-//   }
-//   if (collectibleAttribute.itemTagAll !== undefined) {
-//     text += `Item Tag (All): ${collectibleAttribute.itemTagAll.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.itemTagOne !== undefined) {
-//     text += `Item Tag (One): ${collectibleAttribute.itemTagOne.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.banned !== undefined) {
-//     text += `Banned: ${collectibleAttribute.banned.join(", ")}\n`;
-//   }
-//   if (collectibleAttribute.hidden !== undefined) {
-//     text += `Hidden: ${collectibleAttribute.hidden}\n`;
-//   }
-//   return text;
-// }
+/**
+ * Convert a CollectibleAttribute object to the appropriate text.
+ *
+ * @example { quality: 4, itemType: ItemType.ACTIVE } -> "quality 4 active item".
+ */
+export function collectibleAttributeToText(
+  collectibleAttribute: CollectibleAttribute,
+): string {
+  let text = "";
+
+  if (collectibleAttribute.quality !== undefined) {
+    text +=
+      typeof collectibleAttribute.quality === "number"
+        ? `quality ${collectibleAttribute.quality} `
+        : `quality ${joinWithOr(
+            collectibleAttribute.quality.flatMap((q) => tostring(q)),
+          )} `;
+  }
+
+  if (collectibleAttribute.itemType !== undefined) {
+    text +=
+      typeof collectibleAttribute.itemType === "number"
+        ? `${getItemTypeText(collectibleAttribute.itemType)} `
+        : `${joinWithOr(
+            collectibleAttribute.itemType.flatMap((q) => getItemTypeText(q)),
+          )}`;
+  }
+
+  text = `a random ${text} item`;
+  return removeUnnecessaryWhiteSpace(text);
+}

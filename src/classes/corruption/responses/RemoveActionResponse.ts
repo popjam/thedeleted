@@ -1,12 +1,12 @@
-import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
-import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import type { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
+import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
   removeActionWithPredicate,
   removeAllActionsWithPredicate,
 } from "../../../features/corruption/effects/playerEffects";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { Action } from "../actions/Action";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { Action } from "../actions/Action";
 import { Response } from "./Response";
 
 const DEFAULT_ALL_ACTIONS = false;

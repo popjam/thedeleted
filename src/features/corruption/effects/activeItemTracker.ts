@@ -63,8 +63,8 @@ export function removeTrackedPedestalInvertedActive(
 /**
  * Track a Custom Active / Inverted Active that has been dropped onto a pedestal.
  *
- * @param pedestal - The pedestal the item was dropped onto.
- * @param actionSet - The InvertedActiveActionSet associated with the pedestal. If undefined, the
+ * @param pedestal The pedestal the item was dropped onto.
+ * @param actionSet The InvertedActiveActionSet associated with the pedestal. If undefined, the
  *                  pedestal will be removed from the tracker.
  */
 export function setTrackedPedestalInvertedActive(
@@ -82,6 +82,16 @@ export function getTrackedPedestalInvertedActive(
   pedestal: EntityPickupCollectible,
 ): InvertedActiveActionSet | undefined {
   return v.level.invertedActiveItems.get(mod.getPickupIndex(pedestal));
+}
+
+/**
+ * Get the InvertedActiveActionSet associated with a pickup index, if it exists. This will still
+ * return the action set if the pedestal is not inverted. Does not deepCopy.
+ */
+export function getTrackedPedestalInvertedActiveFromPickupIndex(
+  pickupIndex: PickupIndex,
+): InvertedActiveActionSet | undefined {
+  return v.level.invertedActiveItems.get(pickupIndex);
 }
 
 /**

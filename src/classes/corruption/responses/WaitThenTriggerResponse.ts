@@ -1,11 +1,11 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { GAME_FRAMES_PER_SECOND } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { addTheS } from "../../../helper/stringHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
-import { Range } from "../../../types/general/Range";
+import type { Range } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 const DEFAULT_WAIT_TIME_SECONDS = 1;
@@ -55,7 +55,7 @@ export class WaitThenTriggerResponse extends Response {
   }
 
   /** This response should not have more than one AmountOfActivations. */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override setAmountOfActivations(amount: number | Range): this {
     throw new Error(
       "TriggerOverTimeResponse: Cannot set amount of activations.",
@@ -68,9 +68,9 @@ export class WaitThenTriggerResponse extends Response {
     return `wait ${secondsWait} ${addTheS("second", secondsWait)}, then `;
   }
 
-  getText(): string {
+  getText(eid = true): string {
     let text = ` ${this.getWaitText()} `;
-    text += this.getResponse()?.getText() ?? "do nothing.";
+    text += this.getResponse()?.getText(eid) ?? "do nothing.";
     return text;
   }
 

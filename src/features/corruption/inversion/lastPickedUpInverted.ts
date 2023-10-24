@@ -1,31 +1,18 @@
 /** This file tracks the last picked up inverted collectible that each player has picked up. */
 
-import type { CollectibleType } from "isaac-typescript-definitions";
-import type { PickupIndex, PlayerIndex } from "isaacscript-common";
+import type { PlayerIndex } from "isaacscript-common";
 import { getPlayerIndex } from "isaacscript-common";
 import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
-import { getPickupWithPickupIndex } from "../../../helper/entityHelper/pickupIndexHelper";
 import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
-
-export enum PickupStage {
-  PRE_GET_PEDESTAL,
-  PRE_GET_PEDESTAL_ZAZZ,
-  PRE_ITEM_PICKUP,
-  POST_ITEM_PICKUP,
-}
+import { PickupStage } from "../../../enums/general/PickupStage";
+import type { LastPickedUpCollectibleData } from "../../../interfaces/corruption/inversion/LastPickedUpCollectibleData";
 
 const v = {
   run: {
     lastPickedUpCollectible: new Map<
       PlayerIndex,
-      | {
-          collectibleType: CollectibleType;
-          pickupStage: PickupStage;
-          pickupIndex: PickupIndex;
-          inverted: boolean;
-        }
-      | undefined
+      LastPickedUpCollectibleData
     >(),
 
     /**
@@ -40,7 +27,7 @@ const v = {
 };
 
 export function lastPickedUpInvertedCollectibleInit(): void {
-  mod.saveDataManager("lastPickedUpInvertedCollectible", v);
+  mod.saveDataManager("lastPickedUpInvertedCollectible", v, false);
 }
 
 /**
@@ -54,14 +41,9 @@ export function lastPickedUpInvertedCollectibleInit(): void {
  *
  * Inverted - Whether or not the pickup is inverted.
  */
-export function getLastPickedUpCollectible(player: EntityPlayer):
-  | {
-      collectibleType: CollectibleType;
-      pickupStage: PickupStage;
-      pickupIndex: PickupIndex;
-      inverted: boolean;
-    }
-  | undefined {
+export function getLastPickedUpCollectibleData(
+  player: EntityPlayer,
+): LastPickedUpCollectibleData | undefined {
   return v.run.lastPickedUpCollectible.get(getPlayerIndex(player));
 }
 
@@ -77,17 +59,14 @@ export function getLastPickedUpCollectible(player: EntityPlayer):
  * Inverted - Whether or not the pickup is inverted.
  */
 
-export function setLastPickedUpCollectible(
+export function setLastPickedUpCollectibleData(
   player: EntityPlayer,
-  collectible:
-    | {
-        collectibleType: CollectibleType;
-        pickupStage: PickupStage;
-        pickupIndex: PickupIndex;
-        inverted: boolean;
-      }
-    | undefined,
+  collectible: LastPickedUpCollectibleData | undefined,
 ): void {
+  if (collectible === undefined) {
+    v.run.lastPickedUpCollectible.delete(getPlayerIndex(player));
+    return;
+  }
   v.run.lastPickedUpCollectible.set(getPlayerIndex(player), collectible);
 }
 
@@ -128,33 +107,12 @@ export function isPedestalInPreItemPickupStage(
 }
 
 /**
- * When the item on the pedestal has been picked up, gone in to item queue, and exited itemQueue to
- * appear in the players inventory. Note that a new item may be on the pedestal in this stage, if
- * the player is swapping an active item for an active item.
- */
-export function isPedestalInPostItemPickupStage(
-  pedestal: EntityPickupCollectible,
-): boolean {
-  const pickupData = getPedestalPickingUpData(pedestal);
-  if (pickupData === undefined) {
-    return false;
-  }
-
-  return pickupData.pickupStage === PickupStage.POST_ITEM_PICKUP;
-}
-
-/**
  * If a pedestal is in the process of being used for an Inverted Collectible pickup, the PickupData
  * will be returned. Otherwise, this returns undefined.
  */
-export function getPedestalPickingUpData(pedestal: EntityPickupCollectible):
-  | {
-      collectibleType: CollectibleType;
-      pickupStage: PickupStage;
-      pickupIndex: PickupIndex;
-      inverted: boolean;
-    }
-  | undefined {
+export function getPedestalPickingUpData(
+  pedestal: EntityPickupCollectible,
+): LastPickedUpCollectibleData | undefined {
   const pickupDatas = [...v.run.lastPickedUpCollectible.values()];
   // eslint-disable-next-line isaacscript/no-let-any
   let match;
@@ -170,18 +128,22 @@ export function getPedestalPickingUpData(pedestal: EntityPickupCollectible):
   return match;
 }
 
-/** If the player is in the process of picking up an item, update the stage its in. */
+/**
+ * If the player is in the process of picking up an item, update the stage its in. Alternatively,
+ * set it to undefined if the player is not picking up an item.
+ */
 export function updateLastPickedUpCollectible(
   player: EntityPlayer,
   pickupStage: PickupStage,
 ): void {
   const playerIndex = getPlayerIndex(player);
   if (v.run.lastPickedUpCollectible.has(playerIndex)) {
-    const pickupData = v.run.lastPickedUpCollectible.get(playerIndex) as {
-      collectibleType: CollectibleType;
-      pickupStage: PickupStage;
-      pickupIndex: PickupIndex;
-    };
+    const pickupData = v.run.lastPickedUpCollectible.get(playerIndex);
+
+    if (pickupData === undefined) {
+      fprint("Failed to get the last picked up collectible for the player.");
+      return;
+    }
     pickupData.pickupStage = pickupStage;
   }
 }
@@ -193,15 +155,13 @@ export function updateLastPickedUpCollectible(
 export function getLastPickedUpPedestal(
   player: EntityPlayer,
 ): EntityPickupCollectible | undefined {
-  const pickupData = getLastPickedUpCollectible(player);
+  const pickupData = getLastPickedUpCollectibleData(player);
   if (pickupData === undefined) {
     fprint("Failed to get the last picked up pedestal for the player.");
     return undefined;
   }
 
-  return getPickupWithPickupIndex(
-    pickupData.pickupIndex,
-  ) as EntityPickupCollectible;
+  return pickupData.pedestal;
 }
 
 /**
@@ -228,4 +188,9 @@ export function setLastPickedUpNonInvertedCollectibleActionSet(
     getPlayerIndex(player),
     actionSet,
   );
+}
+
+/** Checks if the player is picking up a collectible using the 'lastPickedUpItem' functionality. */
+export function isPlayerPickingUpItem(player: EntityPlayer): boolean {
+  return v.run.lastPickedUpCollectible.has(getPlayerIndex(player));
 }

@@ -1,9 +1,9 @@
-import { LevelStage } from "isaac-typescript-definitions";
+import type { LevelStage } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getStageNameFromLevelStage } from "../../../maps/data/levelStageNameMap";
 import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
@@ -13,24 +13,28 @@ const SINGULAR_NUMBER = 1;
 const PLURAL_NUMBER = 2;
 const DEFAULT_INTERVAL = 1;
 
-/** Triggers every floor. */
+/**
+ * Triggers every floor.
+ *
+ * @member lS - Fires only on the specified LevelStage.
+ */
 export class OnFloorAction extends Action {
   override actionType = ACTION_TYPE;
-  levelStage?: LevelStage;
+  lS?: LevelStage;
 
   /** If set, will only fire on the specified LevelStage. */
   getLevelStage(): LevelStage | undefined {
-    return this.levelStage;
+    return this.lS;
   }
 
   /** If set, will only fire on the specified LevelStage. */
   setLevelStage(levelStage: LevelStage): this {
-    this.levelStage = levelStage;
+    this.lS = levelStage;
     return this;
   }
 
   getLevelStageText(amount: number): string | undefined {
-    const { levelStage } = this;
+    const { lS: levelStage } = this;
     if (levelStage !== undefined) {
       const name = getStageNameFromLevelStage(levelStage);
       return `${addTheS("visit", amount)} to ${name}`;
@@ -52,7 +56,6 @@ export class OnFloorAction extends Action {
     return `${rangeToString(interval)} `;
   }
 
-  // Additional Text manipulation for 'RoomType' modifier.
   override getActionText(): string {
     // If overridden.
     if (this.oat !== undefined) {
@@ -90,10 +93,11 @@ export class OnFloorAction extends Action {
 
   override trigger(triggerData: TriggerData): void {
     const levelStage = this.getLevelStage();
-    if (levelStage !== undefined) {
-      if (game.GetLevel().GetAbsoluteStage() !== levelStage) {
-        return;
-      }
+    if (
+      levelStage !== undefined &&
+      game.GetLevel().GetAbsoluteStage() !== levelStage
+    ) {
+      return;
     }
 
     super.trigger(triggerData);

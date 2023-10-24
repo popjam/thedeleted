@@ -1,11 +1,17 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
-import { getConstituentsFromEntityID, getEntityID } from "isaacscript-common";
+import {
+  getCollectibleName,
+  getConstituentsFromEntityID,
+  getEntityID,
+} from "isaacscript-common";
 import { EID_ENTITY_DATA_KEY } from "../../constants/eidConstants";
 import type { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
 import type { Morality } from "../../enums/corruption/Morality";
 import type { EIDDescObject } from "../../interfaces/compatibility/EIDDescObject";
 import { getEIDColorShortcutFromMorality } from "../../maps/compatibility/EIDColorMap";
+import { getEIDTextSetting } from "../../features/settings/EIDSettings";
+import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
 
 /** Returns the Collectible icon for EID. */
 export function getEIDIconFromCollectible(
@@ -63,4 +69,28 @@ export function getGenericEntityEIDDescriptionObject(
   }
   const constituents = getConstituentsFromEntityID(entity);
   return EID.getDescriptionObj(...constituents) as unknown as EIDDescObject;
+}
+
+/**
+ * Get the specified collectible's name, icon, or both, aligning with the current EIDTextSetting.
+ */
+export function getCollectibleNameWithEIDSetting(
+  collectibleType: CollectibleType,
+): string {
+  const EIDSetting = getEIDTextSetting();
+  let text = "";
+
+  if (EIDSetting !== EIDObjectDisplaySetting.ICON_ONLY) {
+    text += getCollectibleName(collectibleType);
+  }
+
+  if (EIDSetting === EIDObjectDisplaySetting.TEXT_AND_ICON) {
+    text += " ";
+  }
+
+  if (EIDSetting !== EIDObjectDisplaySetting.TEXT_ONLY) {
+    text += getEIDIconFromCollectible(collectibleType);
+  }
+
+  return text;
 }

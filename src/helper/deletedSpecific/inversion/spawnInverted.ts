@@ -10,17 +10,21 @@ import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actio
 import { mod } from "../../../mod";
 import { spawnGlitchedCollectible } from "../../collectibleHelper";
 import { setPedestalInversion } from "./pedestalInversion";
-import { setNonInvertedPickupActionSet } from "./pickupEffects";
+import { setNonInvertedPickupActionSet } from "../effects/pickupEffects";
+import { setInvertedItemActionSet } from "../effects/itemEffects";
+import { getGameInvertedItemActionSet } from "../generation/corruptionGeneration";
 
 /**
  * Spawns an Inverted collectible with a fresh TMTRAINER subType. This guarantees (mostly) that the
  * generated ActionSet will be completely new. Can specify an ActionSet to use for the item.
  *
- * Does not deepCopy!
+ * Does not deepCopy! Once the game has generated >1024 tmtrainer collectibles, this will only
+ * return repeat collectibles. The new repeat collectibles will automatically overwrite the old
+ * ones.
  *
  * @param position The position to spawn the collectible at.
  * @param invertedActionSet The ActionSet to use for the item. If not specified, a new ActionSet
- *                          will be generated.
+ *                          will be generated using the game generator.
  * @param inputs The inputs to use for the ActionSetBuilder. If an ActionSet is specified, this
  *               parameter is ignored.
  */
@@ -30,7 +34,13 @@ export function spawnNewInvertedCollectible(
   inputs?: ActionSetBuilderInput,
 ): EntityPickupCollectible {
   const tmtrainerCollectible = spawnGlitchedCollectible(position);
-  setPedestalInversion(true, tmtrainerCollectible, invertedActionSet, inputs);
+
+  // We create the ActionSet before inverting it, to ensure it always overrides the existing one.
+  setInvertedItemActionSet(
+    tmtrainerCollectible.SubType,
+    invertedActionSet ?? getGameInvertedItemActionSet(inputs),
+  );
+  setPedestalInversion(true, tmtrainerCollectible);
   return tmtrainerCollectible;
 }
 
@@ -58,7 +68,7 @@ export function spawnNewInvertedActiveCollectible(
 
 /**
  * Spawns an inverted pedestal, with an optional parameter for a custom ActionSet. Does not deepCopy
- * the ActionSet!
+ * the ActionSet, or override an existing ActionSet associated with the collectible.
  *
  * @param position The position to spawn the collectible at.
  * @param collectibleType The inverted collectible you want to spawn.

@@ -2,6 +2,7 @@ import {
   ActiveSlot,
   CollectibleType,
   EntityType,
+  ItemPoolType,
   ItemType,
   LevelStage,
 } from "isaac-typescript-definitions";
@@ -24,9 +25,15 @@ import { UseActiveItemResponse } from "../../classes/corruption/responses/UseAct
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
-import { getRandomCollectibleType } from "../../helper/collectibleHelper";
-import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inversion/invertedActives";
-import { getRandomAccessiblePosition } from "../../helper/entityHelper";
+import {
+  getRandomCollectibleType,
+  spawnGlitchedCollectible,
+} from "../../helper/collectibleHelper";
+import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inventory/custom actives/invertedActives";
+import {
+  getQuickAccessiblePosition,
+  getRandomAccessiblePosition,
+} from "../../helper/entityHelper";
 import { fprint } from "../../helper/printHelper";
 import { renderConstantly } from "../../helper/renderHelper";
 import { copySprite } from "../../helper/spriteHelper";
@@ -35,11 +42,25 @@ import { mod } from "../../mod";
 import { printCustomActiveStatus } from "../../classes/facets/CustomActiveFacet";
 import { getAllCustomActives } from "../corruption/inversion/customActives";
 import { addActionOrResponseToTracker } from "../corruption/effects/playerEffects";
-import { addResponsesToPlayer } from "../../helper/deletedSpecific/inversion/responseHelper";
+import { addResponsesToTracker } from "../../helper/deletedSpecific/effects/responseHelper";
 import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
-import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
+import {
+  spawnInvertedCollectible,
+  spawnNewInvertedCollectible,
+} from "../../helper/deletedSpecific/inversion/spawnInverted";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
+import {
+  getRandomTMTRAINERActiveItem,
+  getRandomTMTRAINERItem,
+} from "../../helper/tmtrainerHelper";
+import { TMTRAINER_UNIQUE_LIMIT } from "../../constants/tmtrainerConstants";
+import { setInvertedItemActionSet } from "../../helper/deletedSpecific/effects/itemEffects";
+import { getGameInvertedItemActionSet } from "../../helper/deletedSpecific/generation/corruptionGeneration";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import type { CollectibleAttribute } from "../../interfaces/general/CollectibleAttribute";
+import { getEIDTextSetting, setEIDTextSetting } from "../settings/EIDSettings";
+import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -77,18 +98,14 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
+  setEIDTextSetting(EIDObjectDisplaySetting.ICON_ONLY);
   spawnNewInvertedCollectible(
-    getRandomAccessiblePosition(player().Position) ?? VectorZero,
-    new InvertedActiveActionSet().addEffects(
-      new GetCollectibleResponse().construct(
-        getRandomCollectibleType() ?? CollectibleType.POOP,
-      ),
-      new OnRoomAction().setResponse(
-        new UseActiveItemResponse().construct(
-          getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
-            CollectibleType.POOP,
-        ),
-      ),
+    getQuickAccessiblePosition(),
+    new InvertedPassiveActionSet().addEffects(
+      new GetCollectibleResponse().construct({
+        itemType: ItemType.ACTIVE,
+        quality: [0, 1, 2],
+      } as CollectibleAttribute),
     ),
   );
 }

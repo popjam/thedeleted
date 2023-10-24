@@ -7,7 +7,10 @@ import { CollectibleType } from "isaac-typescript-definitions";
 import { getCollectibles } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { Morality } from "../../../enums/corruption/Morality";
-import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
+import {
+  doesInvertedItemHaveActionSet,
+  getAndSetInvertedItemActionSet,
+} from "../../../features/corruption/effects/itemEffects";
 import {
   _setAllPedestalInversion,
   _setPedestalInversion,
@@ -16,9 +19,10 @@ import {
 import { hasInvertedPickupBeenSeen } from "../../../features/corruption/inversion/seenInvertedPickups";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import type { InvertedItemActionSetBuilder } from "../../../types/general/Builder";
-import { setInvertedItemActionSetIfNone } from "./itemEffects";
-import { addEffectsToNonInvertedPickup } from "./pickupEffects";
+import { setInvertedItemActionSetIfNone } from "../effects/itemEffects";
+import { addEffectsToNonInvertedPickup } from "../effects/pickupEffects";
 import { updatePedestal } from "./updateInverted";
+import { fprint } from "../../printHelper";
 
 /**
  * Set one pedestal to a specific inversion status. This will also update the pedestal.
@@ -35,23 +39,37 @@ export function setPedestalInversion(
   invertedItemActionSet?: InvertedItemActionSet,
   inputs?: ActionSetBuilderInput,
 ): void {
+  fprint(`Setting pedestal ${collectible.SubType} to inverted: ${toInverted}`);
+
   if (collectible.SubType === CollectibleType.NULL) {
+    fprint("Cannot set pedestal inversion of NULL collectible.");
     return;
   }
 
   if (isPickupInverted(collectible) === toInverted) {
+    fprint("Pedestal inversion is already set to the specified value.");
     return;
   }
 
   /** Force the inverted ActionSet if one is not set. */
   if (invertedItemActionSet !== undefined && toInverted) {
+    fprint("Forcing inverted ActionSet..");
     setInvertedItemActionSetIfNone(collectible.SubType, invertedItemActionSet);
   }
 
-  /** Carry over the negative effects if the inverted ActionSet has carryOver attribute. */
-  if (!toInverted && hasInvertedPickupBeenSeen(collectible)) {
+  /**
+   * Carry over the negative effects if the inverted ActionSet has carryOver attribute. Check if the
+   * inverted item has an ActionSet, so we don't have to generate one if it doesn't.
+   */
+  if (
+    !toInverted &&
+    hasInvertedPickupBeenSeen(collectible) &&
+    doesInvertedItemHaveActionSet(collectible.SubType)
+  ) {
+    fprint(`Carrying over negative effects for ${collectible.SubType}..`);
     const invertedActionSet = getAndSetInvertedItemActionSet(
       collectible.SubType,
+      inputs,
     );
     if (invertedActionSet.getNegativesCarryOver()) {
       addEffectsToNonInvertedPickup(

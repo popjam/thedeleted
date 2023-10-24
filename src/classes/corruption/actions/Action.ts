@@ -233,9 +233,9 @@ export abstract class Action {
   abstract getActionText(): string;
 
   // Only get the 'Responses' part of the text.
-  getResponseText(): string {
+  getResponseText(eid = true): string {
     const response = this.getResponse();
-    return response === undefined ? NO_RESPONSE_TEXT : response.getText();
+    return response === undefined ? NO_RESPONSE_TEXT : response.getText(eid);
   }
 
   getText(): string {

@@ -1,9 +1,5 @@
-import {
-  DISTANCE_OF_GRID_TILE,
-  EntityID,
-  game,
-  spawnEntityID,
-} from "isaacscript-common";
+import type { EntityID } from "isaacscript-common";
+import { DISTANCE_OF_GRID_TILE, game, spawnEntityID } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { NPCID } from "../../../enums/general/ID/NPCID";
 import {
@@ -12,7 +8,7 @@ import {
 } from "../../../helper/entityHelper";
 import { getObjectKeyByValue } from "../../../helper/objectHelper";
 import { addTheS } from "../../../helper/stringHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
 
 /** An assortment of different ways to randomly spawn an Entity. */
@@ -98,16 +94,15 @@ export class SpawnNPCResponse extends Response {
     const player = triggerData.player ?? Isaac.GetPlayer();
 
     // If triggered from killing an NPC, spawn from the NPC position.
-    if (triggerData.onKillAction !== undefined) {
-      if (
-        isPositionAccessible(triggerData.onKillAction.Position, player.Position)
-      ) {
-        return spawnEntityID(
-          this.getNPC() as EntityID,
-          triggerData.onKillAction.Position,
-          this.getVelocity(),
-        );
-      }
+    if (
+      triggerData.onKillAction !== undefined &&
+      isPositionAccessible(triggerData.onKillAction.Position, player.Position)
+    ) {
+      return spawnEntityID(
+        this.getNPC() as EntityID,
+        triggerData.onKillAction.Position,
+        this.getVelocity(),
+      );
     }
 
     const spawnType = this.getSpawnType();

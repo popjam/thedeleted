@@ -16,16 +16,23 @@ import { stopPickupSounds } from "../../../../helper/soundHelper";
 import { isGlitchedCollectibleSubType } from "../../../../helper/tmtrainerHelper";
 import { mod } from "../../../../mod";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
-import { getAndSetInvertedItemActionSet } from "../../effects/itemEffects";
+import {
+  getAndSetInvertedItemActionSet,
+  getAndSetInvertedPedestalActionSet,
+} from "../../effects/itemEffects";
 import { getNonInvertedPickupActionSet } from "../../effects/pickupEffects";
 import {
-  getLastPickedUpCollectible,
-  PickupStage,
-  setLastPickedUpCollectible,
+  getLastPickedUpCollectibleData,
+  setLastPickedUpCollectibleData,
   setLastPickedUpNonInvertedCollectibleActionSet,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
 import { isPickupInverted } from "../pickupInversion";
+import { PickupStage } from "../../../../enums/general/PickupStage";
+import type { LastPickedUpCollectibleData } from "../../../../interfaces/corruption/inversion/LastPickedUpCollectibleData";
+import { removeTrackedPedestalInvertedActive } from "../../effects/activeItemTracker";
+import { getCustomActiveCurrentCharge } from "../customActives";
+import { ActiveSlot } from "isaac-typescript-definitions";
 
 /**
  * Upon picking up an item, but before it is added to ItemQueue. If the item pedestal is inverted,
@@ -54,12 +61,14 @@ function preGetPedestalNormal(
   isInverted: boolean,
 ): boolean | undefined {
   // Update pickup tracking.
-  setLastPickedUpCollectible(player, {
+  const lastPickedUpCollectibleData: LastPickedUpCollectibleData = {
     collectibleType: pickup.SubType,
     pickupStage: PickupStage.PRE_GET_PEDESTAL,
     pickupIndex: mod.getPickupIndex(pickup),
     inverted: false,
-  });
+    pedestal: pickup,
+    nonInvertedCharge: pickup.Charge,
+  };
 
   fprint(
     `PreGetPedestalNormal: ${pickup.SubType} name: ${getCollectibleName(
@@ -68,7 +77,18 @@ function preGetPedestalNormal(
   );
 
   if (isInverted) {
-    const itemActionSet = getAndSetInvertedItemActionSet(pickup.SubType);
+    // Get ActionSet so we can know what ZAZZ to modify to.
+    const itemActionSet = getAndSetInvertedPedestalActionSet(pickup);
+
+    // We can set the pedestal tracker to undefined for now. If the put down item should be tracked,
+    // it will be set in the next callback.
+    removeTrackedPedestalInvertedActive(pickup);
+
+    // Save last picked up collectible data.
+    lastPickedUpCollectibleData.inverted = true;
+    lastPickedUpCollectibleData.actionSet = itemActionSet;
+    setLastPickedUpCollectibleData(player, lastPickedUpCollectibleData);
+
     fprint(
       `   Inverted Active: ${
         itemActionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM
@@ -77,6 +97,9 @@ function preGetPedestalNormal(
     );
     return itemActionSet.preGetPedestal(player, pickup);
   }
+
+  setLastPickedUpCollectibleData(player, lastPickedUpCollectibleData);
+
   const itemActionSet = getNonInvertedPickupActionSet(pickup);
   if (itemActionSet !== undefined) {
     setLastPickedUpNonInvertedCollectibleActionSet(player, itemActionSet);
@@ -91,7 +114,7 @@ function preGetPedestalZazz(
   player: EntityPlayer,
   pickup: EntityPickupCollectible,
 ): boolean | undefined {
-  const lastPickedUpCollectible = getLastPickedUpCollectible(player);
+  const lastPickedUpCollectible = getLastPickedUpCollectibleData(player);
 
   /**
    * We don't care about it if it's not inverted.

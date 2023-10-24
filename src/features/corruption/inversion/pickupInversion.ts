@@ -39,7 +39,6 @@ export function isPickupInverted(pickup: EntityPickup): boolean {
 }
 
 /** Do not use. */
-// eslint-disable-next-line no-underscore-dangle
 export function _setPedestalInversion(
   inverted: boolean,
   collectible: EntityPickupCollectible,
@@ -52,9 +51,8 @@ export function _setPedestalInversion(
 }
 
 /** Do not use. */
-// eslint-disable-next-line no-underscore-dangle
 export function _setAllPedestalInversion(inverted: boolean): void {
-  v.level.isInverted.forEach((_value, key) =>
-    v.level.isInverted.set(key, inverted),
-  );
+  for (const [key, _value] of v.level.isInverted.entries()) {
+    v.level.isInverted.set(key, inverted);
+  }
 }

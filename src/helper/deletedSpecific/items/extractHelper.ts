@@ -22,7 +22,7 @@ import { explodeEntity } from "../../entityHelper/explodeEntity";
 import { isUselessPickup } from "../../pickupHelper";
 import { fprint } from "../../printHelper";
 import { setPedestalInversion } from "../inversion/pedestalInversion";
-import { getAndSetNonInvertedPickupActionSet } from "../inversion/pickupEffects";
+import { getAndSetNonInvertedPickupActionSet } from "../effects/pickupEffects";
 
 const BASE_PICKUP_EXPLOSION_DMG = 20;
 const EXTRACT_COLLECTIBLE_SOUND = SoundEffect.MATCHSTICK;

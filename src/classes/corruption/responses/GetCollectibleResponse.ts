@@ -3,6 +3,7 @@ import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
+  collectibleAttributeToText,
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
@@ -11,6 +12,7 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import type { CollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
 import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
+import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EIDHelper";
 
 /** Defaults to The Poop if no activeItem is set. */
 const DEFAULT_COLLECTIBLE = CollectibleType.POOP;
@@ -24,8 +26,8 @@ const VERB = "get";
  * @field aT The collectible to get. Can be a specific item or randomly from a group of items
  *        (defined by CollectibleAttribute).
  *
- * @example Use The Poop.
- * @example Use a quality 4 active item.
+ * @example Get The Poop.
+ * @example Get a quality 4 active item.
  */
 export class GetCollectibleResponse extends Response {
   override responseType: ResponseType = ResponseType.GET_COLLECTIBLE;
@@ -45,11 +47,11 @@ export class GetCollectibleResponse extends Response {
 
   /** Get collectibles mentioned. */
   override getInvolvedCollectibles(): CollectibleType[] {
-    const active = this.getCollectible();
-    if (typeof active === "object") {
-      return getRandomAssortmentOfCollectibles([1, 3], active);
+    const collectible = this.getCollectible();
+    if (typeof collectible === "object") {
+      return getRandomAssortmentOfCollectibles([1, 3], collectible);
     }
-    return [active];
+    return [collectible];
   }
 
   /**
@@ -81,7 +83,6 @@ export class GetCollectibleResponse extends Response {
     return this;
   }
 
-  // TODO: Map ActiveItems to Morality and return that if undefined.
   override getMorality(): Morality {
     return this.mo ?? Morality.NEUTRAL;
   }
@@ -98,16 +99,20 @@ export class GetCollectibleResponse extends Response {
   }
 
   // TODO: Finish.
-  getCollectibleText(): string {
+  getCollectibleText(eid = true): string {
     const collectible = this.getCollectible();
     if (typeof collectible === "object") {
-      return " a random collectible ";
+      return collectibleAttributeToText(collectible);
     }
-    return getCollectibleName(collectible);
+    return eid
+      ? getCollectibleNameWithEIDSetting(collectible)
+      : getCollectibleName(collectible);
   }
 
-  override getText(): string {
-    const text = `${VERB} ${this.getAmountOfActivationsText()} ${this.getCollectibleText()}`;
+  override getText(eid = true): string {
+    const text = `${VERB} ${this.getAmountOfActivationsText()} ${this.getCollectibleText(
+      eid,
+    )}`;
     return text;
   }
 

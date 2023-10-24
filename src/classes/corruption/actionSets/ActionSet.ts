@@ -15,7 +15,7 @@ import { isAction } from "../actions/Action";
 import type { Response } from "../responses/Response";
 import { isResponse } from "../responses/Response";
 import { NO_EFFECTS_DEFAULT_TEXT } from "../../../constants/actionSetConstants";
-import { sortEffectsByMorality } from "../../../helper/deletedSpecific/inversion/moralityHelper";
+import { sortEffectsByMorality } from "../../../helper/deletedSpecific/effects/moralityHelper";
 
 /** ActionSet class. */
 export abstract class ActionSet {
@@ -127,7 +127,7 @@ export abstract class ActionSet {
             this.getActionOrResponseColor(actionOrResponse),
         );
       }
-      text += legibleString(actionOrResponse.getText());
+      text += legibleString(actionOrResponse.getText(eid));
       if (eid) {
         text += "{{CR}}";
       }

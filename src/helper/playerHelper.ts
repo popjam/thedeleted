@@ -1,4 +1,5 @@
-import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { UseFlag } from "isaac-typescript-definitions";
 import {
   arrayToBitFlags,
   getPlayerBlackHearts,
@@ -110,7 +111,7 @@ export function useActiveItemAtPosition(
   roomPos: Vector,
   player?: EntityPlayer,
 ): void {
-  player = player ?? Isaac.GetPlayer();
+  player ??= Isaac.GetPlayer();
   const currentPos = player.Position;
   player.Position = roomPos;
   player.UseActiveItem(

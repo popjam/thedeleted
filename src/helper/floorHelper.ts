@@ -5,7 +5,7 @@ import {
   FILL_SPRITE_TO_SCREEN_VECTOR_SCALE,
   WHITE_CLEAR_SPRITE_PNG_PATH,
 } from "../constants/spriteConstants";
-import { AdvancedColor } from "../interfaces/general/AdvancedColor";
+import type { AdvancedColor } from "../interfaces/general/AdvancedColor";
 import { simplifyAndCopyColor, simplifyColor } from "./advancedColorHelper";
 
 /**

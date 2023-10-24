@@ -226,3 +226,18 @@ export function doesAnyPlayerHaveAnyCustomActives(): boolean {
   }
   return false;
 }
+
+/**
+ * Get the 'current charge' (the internally tracked current charge of the custom active), returns
+ * undefined if the player does not have a custom active in the specified slot.
+ */
+export function getCustomActiveCurrentCharge(
+  player: EntityPlayer,
+  slot: ActiveSlot,
+): number | undefined {
+  const customActive = getCustomActiveInSlot(player, slot);
+  if (customActive === undefined) {
+    return undefined;
+  }
+  return customActive.getCurrentCharge();
+}

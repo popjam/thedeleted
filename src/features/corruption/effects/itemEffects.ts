@@ -7,7 +7,7 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
-import { getGameInvertedItemActionSet } from "../../../helper/deletedSpecific/inversion/corruptionGeneration";
+import { getGameInvertedItemActionSet } from "../../../helper/deletedSpecific/generation/corruptionGeneration";
 import { fprint } from "../../../helper/printHelper";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { mod } from "../../../mod";

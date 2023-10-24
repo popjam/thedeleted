@@ -3,7 +3,7 @@ import { game, getRoomType } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getRoomNameFromType as getRoomNameFromRoomType } from "../../../maps/data/roomTypeNameMap";
 import { Action } from "./Action";
 
@@ -53,23 +53,20 @@ export class OnRoomAction extends Action {
 
     let text = "";
     const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove !== undefined) {
-      if (fireAfterThenRemove === 1) {
-        text += `next ${this.getRoomTypeText(fireAfterThenRemove) ?? "room"}`;
-      } else {
-        text += `after ${fireAfterThenRemove} ${
-          this.getRoomTypeText(fireAfterThenRemove) ?? "rooms"
-        }`;
-      }
-    } else {
+    if (fireAfterThenRemove === undefined) {
       const intervalText = this.getIntervalText();
-      if (intervalText === "") {
-        text += `every ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`;
-      } else {
-        text += `every ${intervalText} ${
-          this.getRoomTypeText(PLURAL_NUMBER) ?? "rooms"
-        }`;
-      }
+      text +=
+        intervalText === ""
+          ? `every ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`
+          : `every ${intervalText} ${
+              this.getRoomTypeText(PLURAL_NUMBER) ?? "rooms"
+            }`;
+    } else if (fireAfterThenRemove === 1) {
+      text += `next ${this.getRoomTypeText(fireAfterThenRemove) ?? "room"}`;
+    } else {
+      text += `after ${fireAfterThenRemove} ${
+        this.getRoomTypeText(fireAfterThenRemove) ?? "rooms"
+      }`;
     }
     text += ", ";
     return text;
@@ -81,10 +78,8 @@ export class OnRoomAction extends Action {
       return;
     }
 
-    if (this.rT !== undefined) {
-      if (getRoomType() !== this.rT) {
-        return;
-      }
+    if (this.rT !== undefined && getRoomType() !== this.rT) {
+      return;
     }
 
     super.trigger(triggerData);

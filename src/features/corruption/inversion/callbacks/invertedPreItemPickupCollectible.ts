@@ -1,16 +1,17 @@
 import { CollectibleType } from "isaac-typescript-definitions";
 import type { PickingUpItemCollectible } from "isaacscript-common";
 import { setPedestalInversion } from "../../../../helper/deletedSpecific/inversion/pedestalInversion";
-import { setZazzinatorToRemovedItem } from "../../../../helper/deletedSpecific/inversion/removedItems";
+import { setZazzinatorToRemovedItem } from "../../../../helper/deletedSpecific/inventory/removedItems";
 import { mod } from "../../../../mod";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import { getAndSetInvertedItemActionSet } from "../../effects/itemEffects";
 import {
-  PickupStage,
-  getLastPickedUpCollectible,
+  getLastPickedUpCollectibleData,
   getLastPickedUpPedestal,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
+import { PickupStage } from "../../../../enums/general/PickupStage";
+import { fprint } from "../../../../helper/printHelper";
 
 /**
  * When the item goes into ItemQueue. Despite its name, tracks both inverted and non-inverted items.
@@ -27,7 +28,7 @@ export function invertedPreItemPickupCollectible(
 
   /** Call inverted item ActionSet 'prePickupCollectible' function. */
   if (pickingUpItemInverted) {
-    const pickedUpItemData = getLastPickedUpCollectible(player);
+    const pickedUpItemData = getLastPickedUpCollectibleData(player);
 
     /** TODO: Error handling. */
     if (
@@ -36,9 +37,9 @@ export function invertedPreItemPickupCollectible(
     ) {
       return;
     }
-    const invertedActionSet = getAndSetInvertedItemActionSet(
-      pickedUpItemData.collectibleType,
-    );
+    const invertedActionSet =
+      pickedUpItemData.actionSet ??
+      getAndSetInvertedItemActionSet(pickedUpItemData.collectibleType);
     invertedActionSet.prePickupCollectible(player, pickingUpItem);
   }
 
@@ -58,7 +59,9 @@ export function invertedPreItemPickupCollectible(
    * Inverted active -> Inverted active ---> Morph zazz item.
    */
   const pedestal = getLastPickedUpPedestal(player);
+  fprint(" sorting out pedestal during preItemPickup...");
   if (pedestal === undefined || pedestal.SubType === CollectibleType.NULL) {
+    fprint(` pedestal with type ${pedestal?.SubType}, returning...`);
     return;
   }
 

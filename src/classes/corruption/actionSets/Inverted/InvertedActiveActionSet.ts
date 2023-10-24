@@ -1,3 +1,4 @@
+import type { ActiveSlot } from "isaac-typescript-definitions";
 import {
   CollectibleType,
   ItemConfigChargeType,
@@ -5,9 +6,9 @@ import {
 } from "isaac-typescript-definitions";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import {
-  PickupStage,
+  getLastPickedUpCollectibleData,
   getPedestalPickingUpData,
-  setLastPickedUpCollectible,
+  setLastPickedUpCollectibleData,
 } from "../../../../features/corruption/inversion/lastPickedUpInverted";
 import { fprint } from "../../../../helper/printHelper";
 import { getZazzActiveFromCharge } from "../../../../maps/activeChargeToZazzActive";
@@ -23,7 +24,7 @@ import {
   INVERTED_ACTIVE_EID_ICON,
   NO_EFFECTS_DEFAULT_TEXT,
 } from "../../../../constants/actionSetConstants";
-import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/inversion/moralityHelper";
+import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/effects/moralityHelper";
 import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import type { CustomActiveData } from "../../../../interfaces/corruption/actionSets/CustomActiveData";
@@ -34,6 +35,9 @@ import {
   setTrackedPedestalCharge,
   setTrackedPedestalInvertedActive,
 } from "../../../../features/corruption/effects/activeItemTracker";
+import { getTotalCharges } from "../../../../helper/activeHelper";
+import { getTotalCharge } from "isaacscript-common";
+import { PickupStage } from "../../../../enums/general/PickupStage";
 
 const DEFAULT_NAME = "Corrupted Active Item";
 const DEFAULT_CHARGES = 4;
@@ -134,7 +138,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
               this.getActionOrResponseColor(actionOrResponse),
           );
         }
-        text += legibleString(actionOrResponse.getText());
+        text += legibleString(actionOrResponse.getText(eid));
         if (eid) {
           text += "{{CR}}";
         }
@@ -161,7 +165,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
    * the charge that is tracked.
    */
   getCurrentCharge(): number {
-    return this.cc ?? 0;
+    return this.cc ?? this.getCharges();
   }
 
   /**
@@ -224,6 +228,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
   // POST_USE_ITEM
   use(
     player: EntityPlayer,
+    slot: ActiveSlot,
   ):
     | boolean
     | { Discharge: boolean; Remove: boolean; ShowAnim: boolean }
@@ -252,24 +257,16 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     const icon = this.getIcon();
     playPickupAnimationWithCustomSprite(player, icon, 2);
 
+    /** Update charges tracker. */
+    this.setCurrentCharge(getTotalCharge(player, slot) - this.getCharges());
+
     return { Discharge: true, Remove: false, ShowAnim: false };
   }
 
   preGetPedestal(
-    player: EntityPlayer,
+    _player: EntityPlayer,
     pedestal: EntityPickupCollectible,
   ): boolean | undefined {
-    setLastPickedUpCollectible(player, {
-      collectibleType: pedestal.SubType,
-      pickupStage: PickupStage.PRE_GET_PEDESTAL,
-      pickupIndex: mod.getPickupIndex(pedestal),
-      inverted: true,
-    });
-
-    // Save the original charge of the item on the pedestal. This should always be the charge of the
-    // non-Inverted active (if the non-Inverted item is a passive, we can ignore this).
-    setTrackedPedestalCharge(pedestal, pedestal.Charge);
-
     // Quickly change the item on the pedestal to the correct Zazzinator item.
     pedestal.SubType = getZazzActiveFromCharge(
       this.getChargeType(),
@@ -280,13 +277,9 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     // tracked, we use the tracked charge instead of the default charge. We don't remove it as we
     // still need to track it for postItemPickup.
     fprint(
-      `tracked inverted active charge upon pickup: ${
-        getTrackedPedestalInvertedActive(pedestal)?.getCurrentCharge() ?? -1
-      }`,
+      `preGetPedestal: Setting pedestal charge to ${this.getCurrentCharge()}`,
     );
-    pedestal.Charge =
-      getTrackedPedestalInvertedActive(pedestal)?.getCurrentCharge() ??
-      this.getCharges();
+    pedestal.Charge = this.getCurrentCharge();
 
     return false;
   }

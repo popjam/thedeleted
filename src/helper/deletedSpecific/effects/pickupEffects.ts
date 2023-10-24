@@ -1,8 +1,11 @@
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
-import { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
+/** Functions related to non-inverted pickup corrupted effects. */
+
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { PickupVariant } from "isaac-typescript-definitions";
+import type { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
 import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
-import { Action } from "../../../classes/corruption/actions/Action";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { Action } from "../../../classes/corruption/actions/Action";
+import type { Response } from "../../../classes/corruption/responses/Response";
 import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import {
   _setPickupIndexActionSet,
@@ -10,7 +13,7 @@ import {
 } from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { mod } from "../../../mod";
-import { updatePickup } from "./updateInverted";
+import { updatePickup } from "../inversion/updateInverted";
 
 /**
  * Sets the ActionSet of the non-inverted pickup (which is unique per PickupIndex). Updates the
@@ -51,14 +54,14 @@ export function addEffectsToNonInvertedPickup(
   ...effects: Array<Response | Action>
 ): void {
   const nonInvertedActionSet = getNonInvertedPickupActionSet(pickup);
-  if (nonInvertedActionSet !== undefined) {
-    nonInvertedActionSet.addEffects(...effects);
-    updatePickup(pickup);
-  } else {
+  if (nonInvertedActionSet === undefined) {
     setNonInvertedPickupActionSet(
       pickup,
       new NonInvertedPickupActionSet().addEffects(...effects),
     );
+  } else {
+    nonInvertedActionSet.addEffects(...effects);
+    updatePickup(pickup);
   }
 }
 
@@ -69,11 +72,11 @@ export function addEffectsToNonInvertedPickup(
 export function getPickupActionSet(
   pickup: EntityPickup,
 ): ActionSet | undefined {
-  if (pickup.Variant === PickupVariant.COLLECTIBLE) {
-    // Inverted Items.
-    if (isPickupInverted(pickup as EntityPickupCollectible)) {
-      return getAndSetInvertedItemActionSet(pickup.SubType as CollectibleType);
-    }
+  if (
+    pickup.Variant === PickupVariant.COLLECTIBLE && // Inverted Items.
+    isPickupInverted(pickup as EntityPickupCollectible)
+  ) {
+    return getAndSetInvertedItemActionSet(pickup.SubType as CollectibleType);
   }
   return getNonInvertedPickupActionSet(pickup);
 }

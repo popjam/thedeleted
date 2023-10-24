@@ -23,7 +23,6 @@ import {
   setSpecificEntityEIDDescriptionObject,
 } from "../../compatibility/EIDHelper";
 import { fprint } from "../../printHelper";
-import { getTrackedPedestalCharge } from "../../../features/corruption/effects/activeItemTracker";
 
 /**
  * Update pedestal is unique from the 'update pickup' function in that it needs to take into account
@@ -32,8 +31,7 @@ import { getTrackedPedestalCharge } from "../../../features/corruption/effects/a
  * If the pedestal is non-inverted, it needs to be set to default appearance in case it was
  * originally inverted.
  *
- * If a pedestal is a 'ZAZZ' item, it needs to be changed. This is done by tracking the most
- * recently removed inverted items from the player.
+ * If a pedestal is inverted, it needs to be changed.
  */
 export function updatePedestal(
   pedestal: EntityPickupCollectible,
@@ -75,9 +73,9 @@ export function updatePedestal(
 
 /** Scans all pedestals in the room. */
 export function updatePedestalsInRoom(): void {
-  getCollectibles().forEach((pedestal) => {
+  for (const pedestal of getCollectibles()) {
     updatePedestal(pedestal);
-  });
+  }
 }
 
 /**
@@ -92,12 +90,6 @@ function returnPedestalAppearanceToNormal(pedestal: EntityPickupCollectible) {
   pedestal.FlipX = false;
   pedestal.SetColor(ColorDefault, 0, 1);
   returnCorruptedCollectibleSpriteToNormal(pedestal);
-
-  // Set charge if it's a normal active and it's being tracked.
-  // const trackedCharge = getTrackedPedestalCharge(pedestal);
-  // if (trackedCharge !== undefined) {
-  //   pedestal.Charge = trackedCharge;
-  // }
 
   if (!isGlitchedCollectible(pedestal)) {
     setCollectibleSprite(pedestal, getCollectibleGfxFilename(pedestal.SubType));

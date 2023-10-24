@@ -1,4 +1,4 @@
-/** Functions related to inverted actions and passives the player owns. */
+/** Core functions related to inverted actions and passives the player owns. */
 
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActiveSlot } from "isaac-typescript-definitions";
@@ -18,11 +18,12 @@ import {
   getCustomActiveInSlot,
 } from "../../../features/corruption/inversion/customActives";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { PickupIndex, deepCopy } from "isaacscript-common";
+import type { PickupIndex } from "isaacscript-common";
+import { deepCopy } from "isaacscript-common";
 import {
   _addZazzActiveToPlayer,
   _removeZazzActiveFromPlayer,
-} from "./customActiveHelper";
+} from "./custom actives/customActiveHelper";
 import { isInvertedActiveActionSet } from "../actionSetHelper";
 import type { InvertedPassiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import { isAction } from "../../../classes/corruption/actions/Action";
@@ -41,6 +42,8 @@ import {
   removeTrackedPedestalChargeFromPickupIndex,
   setTrackedPedestalCharge,
 } from "../../../features/corruption/effects/activeItemTracker";
+import { fprint } from "../../printHelper";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 
 /**
  * Returns true if the player has at least one inverted item of the provided CollectibleType. Can be
@@ -76,15 +79,19 @@ export function doesPlayerHaveInvertedItem(
  *                    any). This is necessary to ascertain if the item on the pedestal is being
  *                    tracked through the activeItemTracker, and if so, the tracked ActionSet should
  *                    be given to the player.
+ * @param actionSet
+ * @param activeActionSet
  */
 export function addInvertedItemToPlayer(
   player: EntityPlayer,
   collectibleType: CollectibleType,
   addLogo = true,
   slot: ActiveSlot = ActiveSlot.PRIMARY,
-  pickupIndex?: PickupIndex,
+  actionSet?: InvertedItemActionSet,
 ): void {
-  const invertedItemActionSet = getAndSetInvertedItemActionSet(collectibleType);
+  fprint(`addInvertedItemToPlayer: ${collectibleType}`);
+  const invertedItemActionSet =
+    actionSet ?? deepCopy(getAndSetInvertedItemActionSet(collectibleType));
   if (isInvertedActiveActionSet(invertedItemActionSet)) {
     addInvertedActiveToPlayer(
       player,
@@ -92,7 +99,6 @@ export function addInvertedItemToPlayer(
       collectibleType,
       addLogo,
       slot,
-      pickupIndex,
     );
   } else {
     addInvertedPassiveToPlayer(
@@ -112,6 +118,8 @@ export function addInvertedItemToPlayer(
  * @param addLogo Whether to add the physical item (should be true).
  * @param collectible The collectible the InvertedActionSet refers to.
  * @param slot The slot the inverted active item should go into (default primary).
+ * @param pickupIndex
+ * @param actionSet
  */
 function addInvertedActiveToPlayer(
   player: EntityPlayer,
@@ -119,32 +127,11 @@ function addInvertedActiveToPlayer(
   collectible: CollectibleType,
   addLogo = true,
   slot: ActiveSlot = ActiveSlot.PRIMARY,
-  pickupIndex?: PickupIndex,
 ) {
-  let actionSet: InvertedActiveActionSet | undefined;
-
-  // If the pedestal has a tracked custom active on it, use that instead.
-  if (pickupIndex !== undefined) {
-    actionSet =
-      getAndRemoveTrackedPedestalInvertedActiveFromPickupIndex(pickupIndex);
-  }
-
-  // Otherwise, clone the assigned ActionSet.
-  actionSet ??= deepCopy(invertedActionSet);
-  actionSet.oi = collectible;
-
-  // If we know the charge of the non-Inverted active item on the pedestal, track it on the
-  // InvertedActiveActionSet object.
-  if (pickupIndex !== undefined) {
-    const flippedCharge = getTrackedPedestalChargeFromPickupIndex(pickupIndex);
-    if (flippedCharge !== undefined) {
-      actionSet.setFlipCharge(flippedCharge);
-      removeTrackedPedestalChargeFromPickupIndex(pickupIndex);
-    }
-  }
+  invertedActionSet.oi = collectible;
 
   // Add actions to tracker.
-  for (const actionOrResponse of actionSet.getActions()) {
+  for (const actionOrResponse of invertedActionSet.getActions()) {
     if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
       actionOrResponse.trigger({ player });
     } else {
@@ -157,7 +144,7 @@ function addInvertedActiveToPlayer(
     _addZazzActiveToPlayer(player, invertedActionSet, slot);
   }
 
-  _addInvertedActiveToPlayer(player, actionSet, slot);
+  _addInvertedActiveToPlayer(player, invertedActionSet, slot);
 }
 
 /**
@@ -176,15 +163,14 @@ function addInvertedPassiveToPlayer(
   addLogo = true,
 ) {
   // Add to the corrupt inventory.
-  const copiedActionSet = deepCopy(invertedPassiveActionSet);
   _addInvertedPassiveItemToCorruptInventory(
     player,
     collectible,
-    copiedActionSet,
+    invertedPassiveActionSet,
   );
 
   // Add actions to tracker for optimization. Trigger effects and 'on obtain' Actions.
-  for (const actionOrResponse of copiedActionSet.getEffects()) {
+  for (const actionOrResponse of invertedPassiveActionSet.getEffects()) {
     if (isAction(actionOrResponse)) {
       if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
         actionOrResponse.trigger({ player });

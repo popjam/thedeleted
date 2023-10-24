@@ -1,9 +1,9 @@
-import { PlayerType, SoundEffect } from "isaac-typescript-definitions";
+import type { PlayerType, SoundEffect } from "isaac-typescript-definitions";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
 import { Mode } from "../../enums/modes/Mode";
 import { fprint } from "../../helper/printHelper";
-import { ModeData } from "../../interfaces/modes/ModeData";
+import type { ModeData } from "../../interfaces/modes/ModeData";
 import { BATTLEYEData } from "../../objects/modes/BATTLEYEData";
 import { CRYPTOLOCKERData } from "../../objects/modes/CRYPTOLOCKERData";
 import { HAPPY99Data } from "../../objects/modes/HAPPY99Data";

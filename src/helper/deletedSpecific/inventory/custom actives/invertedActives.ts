@@ -1,14 +1,14 @@
-/** Functions revolving around inverted active items. */
+/** General functions revolving around inverted active items. */
 
 import { ActiveSlot } from "isaac-typescript-definitions";
 import { VectorZero } from "isaacscript-common";
-import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
-import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { isInvertedPassiveActionSet } from "../actionSetHelper";
-import { spawnNewInvertedActiveCollectible } from "./spawnInverted";
-import { addInvertedItemToPlayer } from "./invertedInventoryHelper";
+import type { InvertedActiveActionSet } from "../../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import type { InvertedItemActionSet } from "../../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import { getAndSetInvertedItemActionSet } from "../../../../features/corruption/effects/itemEffects";
+import type { ActionSetBuilderInput } from "../../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
+import { isInvertedPassiveActionSet } from "../../actionSetHelper";
+import { spawnNewInvertedActiveCollectible } from "../../inversion/spawnInverted";
+import { addInvertedItemToPlayer } from "../invertedInventoryHelper";
 
 export function addNewInvertedActiveToPlayer(
   player: EntityPlayer,

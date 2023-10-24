@@ -3,7 +3,7 @@ import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/ac
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { ModeData } from "../../interfaces/modes/ModeData";
+import type { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MYDOOM. */
 // eslint-disable-next-line isaacscript/require-capital-const-assertions

@@ -1,5 +1,7 @@
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { PickupVariant } from "isaac-typescript-definitions";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { invertedPostPickupChanged } from "../features/corruption/inversion/callbacks/invertedPostPickupChanged";
 import { isZazzinatorAny } from "../sets/zazzSets";
 
@@ -14,7 +16,6 @@ function main(
   newVariant: PickupVariant,
   newSubType: int,
 ) {
-  // eslint-disable-next-line isaacscript/complete-sentences-jsdoc
   /**
    * Going from any pickup --> zazzinator collectible should NOT update the pickup, and instead
    * determine if the change was due to the pre_get_pedestal morph or some other reason which should

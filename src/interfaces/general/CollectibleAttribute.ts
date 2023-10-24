@@ -1,11 +1,11 @@
-import {
+import type {
   CollectibleType,
   ItemConfigChargeType,
   ItemConfigTag,
   ItemPoolType,
   ItemType,
 } from "isaac-typescript-definitions";
-import { PlayerIndex } from "isaacscript-common";
+import type { PlayerIndex } from "isaacscript-common";
 
 /**
  * Modifiers to describe a subset of all CollectibleTypes.
@@ -15,31 +15,43 @@ import { PlayerIndex } from "isaacscript-common";
 export interface CollectibleAttribute {
   /** Type of item, e.g Active. Remember familiars are separate from passives. */
   itemType?: ItemType | ItemType[];
+
   /** The pool the item is in. */
   poolType?: ItemPoolType | ItemPoolType[] | "room";
+
   /** The item quality. */
   quality?: number | number[];
+
   /** The item charge type (passive collectibles return 'normal'). */
   chargeType?: ItemConfigChargeType | ItemConfigChargeType[];
+
   /** The charges the item has (passive collectibles return 0). */
   maxCharges?: number | number[];
+
   /**
    * If the item is already owned by a player. If multiple players are specified, only one needs to
    * have it. Does not include pocket items.
    */
   playerHas?: PlayerIndex | PlayerIndex[];
+
   /** Item name starts with (capitalization doesn't matter). */
   startsWith?: string;
+
   /** Item name ends with (capitalization doesn't matter). */
   endsWith?: string;
+
   /** The tag/s the item should have all of (can have more than these). */
   itemTagAll?: ItemConfigTag[];
+
   /** The tag/s the item should have at least one of. */
   itemTagOne?: ItemConfigTag[];
+
   /** Banned Collectibles. */
   banned?: CollectibleType[];
+
   /** Collectibles that ignore other tags. */
   forced?: CollectibleType[];
+
   /** If you can/can't find it in Death Certificate. */
   hidden?: boolean;
 }

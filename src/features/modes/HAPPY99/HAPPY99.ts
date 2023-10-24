@@ -27,6 +27,5 @@ export function happy99PostPlayerFatalDamage(
   player: EntityPlayer,
 ): boolean | undefined {
   spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
-  spawnEffect(EffectVariant.FIREWORKS, 0, player.Position);
   return undefined;
 }

@@ -31,13 +31,18 @@ import {
 import {
   _removeZazzActiveFromPlayer,
   doesInvertedActiveActionSetMatchZazzActive,
-} from "../../helper/deletedSpecific/inversion/customActiveHelper";
+} from "../../helper/deletedSpecific/inventory/custom actives/customActiveHelper";
 import { renderCorruptedCollectibleSpriteInSlot } from "../../helper/deletedSpecific/funnySprites";
 import {
   addActionsToTracker,
   removeActionFromTracker,
 } from "../../features/corruption/effects/playerEffects";
 import { ActionType } from "../../enums/corruption/actions/ActionType";
+import { getTotalCharges } from "../../helper/activeHelper";
+import {
+  getPedestalPickingUpData,
+  isPlayerPickingUpItem,
+} from "../../features/corruption/inversion/lastPickedUpInverted";
 
 /**
  * Corrupted Actives are basically custom active items that can have a unique sprite, effects,
@@ -122,7 +127,7 @@ class CustomActiveFacet extends Facet {
     fprint(
       `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getCharges()}`,
     );
-    return actionSet.use(player);
+    return actionSet.use(player, activeSlot as ActiveSlot);
   }
 
   /**
@@ -231,15 +236,6 @@ export function _addInvertedActiveToPlayer(
     return;
   }
 
-  // Primary or secondary slot. if ( !player.HasCollectible(CollectibleType.SCHOOLBAG) ||
-  // hasOpenActiveItemSlot(player) ) { fprint("Adding inverted active to primary slot...");
-  // setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet); return; }
-
-  // // Player has schoolbag and no empty slots... const customActivePrimary =
-  // getCustomActiveInSlot(player, ActiveSlot.PRIMARY); if (customActivePrimary !== undefined) {
-  // fprint("Switching inverted active in primary slot to secondary slot...");
-  // setCustomActiveInSlot(player, ActiveSlot.SECONDARY, customActivePrimary); return; }
-
   if (player.HasCollectible(CollectibleType.SCHOOLBAG)) {
     fprint("Player has schoolbag, switching primary slot to secondary slot...");
     setCustomActiveInSlot(
@@ -314,8 +310,13 @@ function updateCustomActiveCurrentCharge(
     return;
   }
 
-  const charge = player.GetActiveCharge(slot);
-  actionSet.setCurrentCharge(charge);
+  const charge = getTotalCharges(player, slot);
+
+  // Do not update the charge when player is picking up an item as this messed up extra battery
+  // charge.
+  if (!isPlayerPickingUpItem(player)) {
+    actionSet.setCurrentCharge(charge);
+  }
 }
 
 /**

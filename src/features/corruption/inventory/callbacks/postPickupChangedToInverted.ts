@@ -6,7 +6,7 @@
  * removed onto the floor.
  */
 
-import { setZazzinatorToRemovedItem } from "../../../../helper/deletedSpecific/inversion/removedItems";
+import { setZazzinatorToRemovedItem } from "../../../../helper/deletedSpecific/inventory/removedItems";
 import { fprint } from "../../../../helper/printHelper";
 import { isPedestalInPreGetPedestalStage } from "../../inversion/lastPickedUpInverted";
 
@@ -14,11 +14,11 @@ import { isPedestalInPreGetPedestalStage } from "../../inversion/lastPickedUpInv
 export function postPickupChangedZazzinator(
   pickup: EntityPickupCollectible,
 ): void {
-  if (!isPedestalInPreGetPedestalStage(pickup)) {
+  if (isPedestalInPreGetPedestalStage(pickup)) {
+    fprint("Zazzinator item is PreGetPedestalStage, doing nothing...");
+  } else {
     fprint("Zazzinator item is not PreGetPedestalStage, dealing with it...");
     setZazzinatorToRemovedItem(pickup);
-  } else {
-    fprint("Zazzinator item is PreGetPedestalStage, doing nothing...");
   }
 }
 

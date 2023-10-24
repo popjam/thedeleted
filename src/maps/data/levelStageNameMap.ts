@@ -24,9 +24,7 @@ const LEVEL_STAGE_TO_NAME_MAP: ReadonlyMap<LevelStage, string> = new Map([
 export function getStageNameFromLevelStage(levelStage: LevelStage): string {
   const name = LEVEL_STAGE_TO_NAME_MAP.get(levelStage);
   if (name === undefined) {
-    throw new Error(
-      `LevelStageNameMap: Cannot find Name of LevelStage: ${levelStage}`,
-    );
+    error(`LevelStageNameMap: Cannot find Name of LevelStage: ${levelStage}`);
   }
   return name;
 }

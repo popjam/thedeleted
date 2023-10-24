@@ -53,3 +53,23 @@ export function getRandomSuffix(s: string): string {
   const suffix = string.sub(s, num, len);
   return suffix;
 }
+
+/**
+ * Returns a string joining all elements in the array, where the last two elements are joined with
+ * "or", and the rest are joined with commas.
+ */
+export function joinWithOr(arr: string[]): string {
+  const len = arr.length;
+  if (len === 0) {
+    return "";
+  }
+  if (len === 1) {
+    return arr[0] ?? "";
+  }
+  if (len === 2) {
+    return `${arr[0]} or ${arr[1]}`;
+  }
+  const lastTwo = `${arr[len - 2]} or ${arr[len - 1]}`;
+  const rest = arr.slice(0, len - 2).join(", ");
+  return `${rest}, ${lastTwo}`;
+}

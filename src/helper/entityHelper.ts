@@ -1,11 +1,8 @@
-import {
-  EntityFlag,
-  EntityType,
-  PickupVariant,
-} from "isaac-typescript-definitions";
+import type { PickupVariant } from "isaac-typescript-definitions";
+import { EntityFlag, EntityType } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import {
   DISTANCE_OF_GRID_TILE,
-  EntityID,
   game,
   getEntityIDFromConstituents,
   getPickups,
@@ -148,10 +145,8 @@ export function getRandomAccessiblePosition(
         playerPosition.Distance(freePosition) <
         RANDOM_POSITION_AVOID_PLAYER_DISTANCE,
     );
-    if (!doesOverlapPlayer) {
-      if (isPositionAccessible(freePosition, accessorPos)) {
-        break;
-      }
+    if (!doesOverlapPlayer && isPositionAccessible(freePosition, accessorPos)) {
+      break;
     }
     i++;
   }
@@ -176,6 +171,17 @@ export function isPositionAccessible(
   const hasPath = pathfinder.HasPathToPos(accessorPos, ignorePoop);
   npc.Remove();
   return hasPath;
+}
+
+/**
+ * Get a random position in the room that has direct access to the first player. Poop is ignored and
+ * acts as if nothing is there. Does not overlap with any players. If there are no possible
+ * positions, returns Vector(0, 0).
+ */
+export function getQuickAccessiblePosition(): Vector {
+  return (
+    getRandomAccessiblePosition(Isaac.GetPlayer().Position) ?? Vector(0, 0)
+  );
 }
 
 /**
@@ -214,7 +220,7 @@ export function getClosestPickupTo(
   referencePosition: Vector,
 ): EntityPickup | undefined {
   let closestPickup: undefined | EntityPickup;
-  let closestDistance = 10000;
+  let closestDistance = 10_000;
   const pickupsInRoom = getPickups();
   pickupsInRoom.forEach((pickup: EntityPickup) => {
     const pickupDistance = pickup.Position.Distance(referencePosition);

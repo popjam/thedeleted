@@ -1,7 +1,9 @@
+/** Functions that aid the CustomActiveHelper. */
+
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActiveSlot } from "isaac-typescript-definitions";
-import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { isZazzinatorActive } from "../../../sets/zazzSets";
+import type { InvertedActiveActionSet } from "../../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import { isZazzinatorActive } from "../../../../sets/zazzSets";
 import {
   getCollectibleChargeType,
   getCollectibleMaxCharges,

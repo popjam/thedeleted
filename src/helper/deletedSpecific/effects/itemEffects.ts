@@ -1,15 +1,15 @@
 /** Functions related to inverted item ActionSets. */
 
-import { CollectibleType } from "isaac-typescript-definitions";
-import { Action } from "../../../classes/corruption/actions/Action";
-import { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import type { Action } from "../../../classes/corruption/actions/Action";
+import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { Response } from "../../../classes/corruption/responses/Response";
 import {
   doesInvertedItemHaveActionSet,
   getAndSetInvertedItemActionSet,
   _setInvertedItemActionSet,
 } from "../../../features/corruption/effects/itemEffects";
-import { updatePedestalsInRoom } from "./updateInverted";
+import { updatePedestalsInRoom } from "../inversion/updateInverted";
 
 /**
  * If the inverted item does not already have an ActionSet attached to it, this function will attach

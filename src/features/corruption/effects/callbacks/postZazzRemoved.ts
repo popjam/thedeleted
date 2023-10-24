@@ -1,6 +1,6 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { addRemovedInvertedItemToTracker } from "../../inventory/removedInvertedItems";
-import { removePlayerMostRecentInvertedPassive } from "../../../../helper/deletedSpecific/inversion/invertedInventoryHelper";
+import { removePlayerMostRecentInvertedPassive } from "../../../../helper/deletedSpecific/inventory/invertedInventoryHelper";
 
 // PLAYER_COLLECTIBLE_REMOVED
 export function invertedItemEffectsPostZazzPassiveCollectibleRemoved(

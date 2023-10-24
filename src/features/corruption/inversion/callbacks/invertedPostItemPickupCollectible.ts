@@ -3,12 +3,14 @@ import { getPlayerIndex } from "isaacscript-common";
 import { fprint } from "../../../../helper/printHelper";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
 import {
-  getLastPickedUpCollectible,
+  getLastPickedUpCollectibleData,
   getLastPickedUpNonInvertedCollectibleActionSet,
-  PickupStage,
+  setLastPickedUpCollectibleData,
   updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
-import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inversion/invertedInventoryHelper";
+import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inventory/invertedInventoryHelper";
+import { ActiveSlot } from "isaac-typescript-definitions";
+import { PickupStage } from "../../../../enums/general/PickupStage";
 
 /**
  * When the item leaves ItemQueue. If it is ZAZZ, it's an inverted item. Passive items get their
@@ -23,7 +25,7 @@ export function invertedPostItemPickupCollectible(
   pickingUpItem: PickingUpItemCollectible,
 ): void {
   if (isZazzinatorAny(pickingUpItem.subType)) {
-    const pickedUpCollectibleType = getLastPickedUpCollectible(player);
+    const pickedUpCollectibleType = getLastPickedUpCollectibleData(player);
 
     // TODO: Error Handling.
     if (
@@ -43,10 +45,12 @@ export function invertedPostItemPickupCollectible(
       player,
       pickedUpCollectibleType.collectibleType,
       false,
+      ActiveSlot.PRIMARY,
+      pickedUpCollectibleType.actionSet,
     );
 
     /** Item is finished being picked up. */
-    updateLastPickedUpCollectible(player, PickupStage.POST_ITEM_PICKUP);
+    setLastPickedUpCollectibleData(player, undefined);
   } else {
     // This is a regular item.
     const lastPickedUpCollectibleActionSet =
@@ -54,6 +58,8 @@ export function invertedPostItemPickupCollectible(
     if (lastPickedUpCollectibleActionSet !== undefined) {
       lastPickedUpCollectibleActionSet.addToPlayer(player);
     }
-    updateLastPickedUpCollectible(player, PickupStage.POST_ITEM_PICKUP);
+
+    /** Item is finished being picked up. */
+    setLastPickedUpCollectibleData(player, undefined);
   }
 }

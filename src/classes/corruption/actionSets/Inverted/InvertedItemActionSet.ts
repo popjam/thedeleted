@@ -190,12 +190,6 @@ export abstract class InvertedItemActionSet extends ActionSet {
     /** When the pedestal is updating appearance, register it as being seen. */
     _invertedPickupHasBeenSeen(collectible);
 
-    /** Set the pedestal's charges if it's being tracked in the activeItemTracker. */
-    // const trackedInvertedActive = getTrackedPedestalInvertedActive(collectible);
-    // if (trackedInvertedActive !== undefined) {
-    //   collectible.Charge = trackedInvertedActive.getActiveData().i ?? 0;
-    // }
-
     setSpecificEntityEIDDescriptionObject(collectible, this.getDescObject());
   }
 

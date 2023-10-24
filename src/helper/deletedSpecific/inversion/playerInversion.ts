@@ -71,10 +71,10 @@ export function invertPlayerToInversion(
   silent = false,
 ): void {
   const isInverted = isPlayerInverted(player);
-  if (isInverted !== inversion) {
-    invertPlayer(player, silent);
-  } else {
+  if (isInverted === inversion) {
     _updateCorruptedFloorColorForPlayer(player);
+  } else {
+    invertPlayer(player, silent);
   }
 }
 
@@ -97,18 +97,18 @@ export function invertPlayer(player: EntityPlayer, silent = false): void {
 
   /** Player Inversion. */
   _setPlayerInversion(player, !isInverted);
-  if (!isInverted) {
-    // NON-INVERTED --> INVERTED
-    if (!silent) {
-      SFXManager().Play(NORMAL_TO_INVERTED_SFX);
-    }
-    removeAllCostumes(player);
-  } else {
+  if (isInverted) {
     // INVERTED --> NON-INVERTED
     if (!silent) {
       SFXManager().Play(INVERTED_TO_NORMAL_SFX);
     }
     restoreAllCostumes(player);
+  } else {
+    // NON-INVERTED --> INVERTED
+    if (!silent) {
+      SFXManager().Play(NORMAL_TO_INVERTED_SFX);
+    }
+    removeAllCostumes(player);
   }
 
   /** World Inversion, does not happen every player inversion. */

@@ -20,7 +20,7 @@ export function shouldInvertedWorldHaveCorruptBackdrop(): boolean {
  * any player is in a mode that is stuck in the inverted world.
  */
 export function shouldInvertedWorldHaveCorruptFloorColor(): boolean {
-  return !shouldInvertedWorldHaveCorruptBackdrop();
+  return shouldInvertedWorldHaveCorruptBackdrop();
 }
 
 /** Checks if the world is in its inverted state. */

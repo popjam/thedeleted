@@ -14,8 +14,10 @@ import {
   shouldInvertedWorldHaveCorruptFloorColor,
 } from "../../helper/deletedSpecific/inversion/worldInversionHelper";
 import { setTemporaryFloorColor } from "../../helper/floorHelper";
-import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
+import type { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 import { mod } from "../../mod";
+import { getInvertedPlayers } from "../corruption/inversion/playerInversion";
+import { fprint } from "../../helper/printHelper";
 
 const v = {
   run: {
@@ -24,6 +26,7 @@ const v = {
   room: {
     /** The 'ladder' object used to color the current floor. */
     currentFloorColorObject: undefined as EntityPtr | undefined,
+
     /** The 'ladder' object which is used to color the floor. */
     corruptedFloorColorObject: new Map<number, EntityEffect>(),
   },
@@ -53,7 +56,7 @@ export function setFloorColor(
   roomListIndex?: number,
   overrideTransparency = true,
 ): void {
-  roomListIndex = roomListIndex ?? getRoomListIndex();
+  roomListIndex ??= getRoomListIndex();
   color = deepCopy(color);
   if (overrideTransparency) {
     if (isColor(color)) {
@@ -89,11 +92,10 @@ export function removeFloorColor(roomListIndex?: number): void {
     v.room.currentFloorColorObject?.Ref?.Remove();
     v.room.currentFloorColorObject = undefined;
   }
-  roomListIndex = roomListIndex ?? getRoomListIndex();
+  roomListIndex ??= getRoomListIndex();
   v.run.floorColor.delete(roomListIndex);
 }
 
-// eslint-disable-next-line no-underscore-dangle
 export function _updateCorruptedFloorColorForPlayer(
   player: EntityPlayer,
 ): void {
@@ -116,24 +118,19 @@ export function _updateCorruptedFloorColorForPlayer(
  * Update the floor color using the new 'setTemporaryFloorColor()' function. Every inverted player
  * will cast a tint on the floor, that will overlap when multiple players are inverted. There will
  * be no corrupted floor color if the world is not corrupted.
- *
- * @param player The player which has just inverted and needs to be accounted for.
  */
-// eslint-disable-next-line no-underscore-dangle
 export function _updateCorruptedFloorColor(): void {
   const shouldHaveFloorColor = shouldInvertedWorldHaveCorruptFloorColor();
-  if (!shouldHaveFloorColor) {
-    v.room.corruptedFloorColorObject.forEach((effect) => {
-      effect.Remove();
-    });
-    v.room.corruptedFloorColorObject.clear();
+  if (!shouldHaveFloorColor || !isWorldInverted()) {
+    removeAllCorruptedFloorColor();
     return;
   }
 
-  getPlayers().forEach((invertedPlayer) => {
+  // World is inverted and players should have corrupted floor colors.
+  for (const invertedPlayer of getInvertedPlayers()) {
     const mainColor = getPlayerMainColor(invertedPlayer);
     if (mainColor === undefined) {
-      return;
+      continue;
     }
     const playerIndex = getPlayerIndex(invertedPlayer);
     v.room.corruptedFloorColorObject.get(playerIndex)?.Remove();
@@ -141,7 +138,16 @@ export function _updateCorruptedFloorColor(): void {
       playerIndex,
       setTemporaryFloorColor(copyColor(mainColor)),
     );
-  });
+  }
+}
+
+/** Removes all corrupted floor color effects. */
+function removeAllCorruptedFloorColor() {
+  fprint("Removing all corrupted floor color effects.");
+  for (const effect of v.room.corruptedFloorColorObject) {
+    effect[1].Remove();
+  }
+  v.room.corruptedFloorColorObject.clear();
 }
 
 // POST_NEW_ROOM_REORDERED

@@ -1,8 +1,8 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
 
 const UNKNOWN_MORALITY_MORALITY = Morality.NEUTRAL;
@@ -40,11 +40,11 @@ export class TriggerInSequenceResponse extends Response {
     );
   }
 
-  getText(): string {
+  getText(eid = true): string {
     let text = "";
     let iterations = this.r.length;
     for (const response of this.r) {
-      text += ` ${response.getText()} `;
+      text += ` ${response.getText(eid)} `;
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
       if (--iterations !== 0) {
         text += BETWEEN_RESPONSES_TEXT;
@@ -54,8 +54,8 @@ export class TriggerInSequenceResponse extends Response {
   }
 
   fire(triggerData: TriggerData): void {
-    this.r.forEach((response) => {
+    for (const response of this.r) {
       response.trigger(triggerData);
-    });
+    }
   }
 }
