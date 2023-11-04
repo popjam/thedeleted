@@ -4,7 +4,7 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getStageNameFromLevelStage } from "../../../maps/data/levelStageNameMap";
+import { getStageNameFromLevelStage } from "../../../maps/data/name/levelStageNameMap";
 import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
 

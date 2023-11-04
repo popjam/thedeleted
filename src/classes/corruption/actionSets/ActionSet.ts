@@ -4,7 +4,7 @@ import type { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTripl
 import { Morality } from "../../../enums/corruption/Morality";
 import type { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";
-import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EIDHelper";
+import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
 import {
   getEIDColorShortcutFromMorality,

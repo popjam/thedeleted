@@ -45,7 +45,11 @@ export function doesFacetHaveSubscribers(facet: Facet | string): boolean {
  * the run ending, as they do not do it automatically, as well as auto-init upon exit/continue if
  * there are subscribers.
  */
-export class Facet extends ModFeature {
+export abstract class Facet extends ModFeature {
+  constructor() {
+    super(mod, false);
+  }
+
   /** Subscribe to the Facet, if the Facet is not initialized, will do so. */
   subscribe(): void {
     const className = getTSTLClassName(this);
@@ -120,30 +124,18 @@ export class Facet extends ModFeature {
   isInitialized(): boolean {
     return this.initialized;
   }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
-    }
-  }
 }
 
 /**
  * Function to easily set up a Facet (NOT initialize the actual Facet), this should be called in
  * each Facet class file in an init() function.
  */
-export function initGenericFacet(facet: typeof Facet, vObject?: object): Facet {
+export function initGenericFacet<Type extends Facet>(
+  facet: new () => Type,
+  vObject?: object,
+): Facet {
   // eslint-disable-next-line new-cap
-  const newFacet = new facet(mod, false);
+  const newFacet = new facet();
   allFacets.push(newFacet);
   const facetName = getTSTLClassName(newFacet);
   if (facetName === undefined) {

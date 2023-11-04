@@ -1,11 +1,17 @@
-import { CollectibleType, PickupVariant } from "isaac-typescript-definitions";
 import {
+  CollectibleType,
+  ModCallback,
+  PickupVariant,
+} from "isaac-typescript-definitions";
+import type { PickupIndex } from "isaacscript-common";
+import {
+  Callback,
   CallbackCustom,
   DefaultMap,
   ModCallbackCustom,
-  PickupIndex,
   getCollectibleName,
   getCollectibles,
+  getTSTLClassName,
   setCollectibleSubType,
 } from "isaacscript-common";
 import {
@@ -14,7 +20,7 @@ import {
 } from "../../../../helper/collectibleHelper";
 import { objectToString } from "../../../../helper/objectHelper";
 import { fprint } from "../../../../helper/printHelper";
-import { CollectibleAttribute } from "../../../../interfaces/general/CollectibleAttribute";
+import type { CollectibleAttribute } from "../../../../interfaces/general/CollectibleAttribute";
 import { mod } from "../../../../mod";
 import { Facet, initGenericFacet } from "../../../Facet";
 
@@ -68,6 +74,21 @@ class EveryItemIsFacet extends Facet {
 
     morphItem(pickup, everyItemIs, MORPH_LIMIT);
   }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
+  }
 }
 
 export function initEveryItemIsFacet(): void {
@@ -89,9 +110,9 @@ export function everyItemIs(
    * We need to Morph preexisting collectibles in the room. Don't check for endless loops as this
    * will only run once not infinitely.
    */
-  getCollectibles().forEach((pickup) => {
+  for (const pickup of getCollectibles()) {
     morphItem(pickup, everyItemIs);
-  });
+  }
 
   FACET?.subscribeIfNotAlready();
 }

@@ -21,7 +21,7 @@ import { isZazzinatorAny } from "../../../sets/zazzSets";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
-} from "../../compatibility/EIDHelper";
+} from "../../compatibility/EID/EIDHelper";
 import { fprint } from "../../printHelper";
 
 /**

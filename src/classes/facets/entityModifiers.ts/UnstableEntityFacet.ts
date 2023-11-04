@@ -1,12 +1,13 @@
 import { ModCallback, SoundEffect } from "isaac-typescript-definitions";
+import type { PickupIndex } from "isaacscript-common";
 import {
   Callback,
   CallbackCustom,
   GAME_FRAMES_PER_SECOND,
   ModCallbackCustom,
-  PickupIndex,
   game,
   getRoomListIndex,
+  getTSTLClassName,
   isPickup,
   sfxManager,
 } from "isaacscript-common";
@@ -21,6 +22,8 @@ import { fprint } from "../../../helper/printHelper";
 import { isRoomAdjacent } from "../../../helper/roomHelper";
 import { mod } from "../../../mod";
 import { Facet, initGenericFacet } from "../../Facet";
+import type { Range } from "../../../types/general/Range";
+import { randomInRange } from "../../../types/general/Range";
 
 const SECONDS_LEFT_UNTIL_FAST_BEEP = 1;
 const SLOW_BEEP_INTERVAL_SEC = 1;
@@ -28,12 +31,14 @@ const FAST_BEEP_INTERVAL_SEC = 0.1;
 const BEEP_SOUND_EFFECT = SoundEffect.BEEP;
 const NEXT_ROOM_SHAKE_DURATION = 5;
 const OTHER_ROOM_SHAKE_DURATION = 1;
+const DEFAULT_SEC_TO_EXPLODE_RANGE = [2, 8] as Range;
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
   level: {
     /** [RoomListIndex, GameFramesToExplode]. */
     pickupsBeingExtracted: new Map<PickupIndex, [int, int]>(),
+
     /** [RoomListIndex, Pickups to remove. ] */
     pickupsToRemove: new Map<int, PickupIndex[]>(),
   },
@@ -100,6 +105,21 @@ class UnstableEntityFacet extends Facet {
     if (v.level.pickupsBeingExtracted.has(pickupIndex)) {
       v.level.pickupsBeingExtracted.delete(pickupIndex);
       this.unsubscribeIfNotInUse();
+    }
+  }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
     }
   }
 
@@ -206,6 +226,7 @@ class UnstableEntityFacet extends Facet {
         entity.SetColor(Color(1, 0, 0, 1, 0, 0, 0), 10, 0, true, false);
         sfxManager.Play(SoundEffect.BEEP, 10);
       }
+
       /** Fast beep. */
     } else if (
       framesTilExplode % secondsToGameFrames(FAST_BEEP_INTERVAL_SEC) ===
@@ -239,11 +260,16 @@ export function initUnstableEntityFacet(): void {
  * Set an entity to explode after an amount of seconds. For pickups, this will even work if the
  * player has gone into another room. For enemies, once the player has left a room the instability
  * will be removed.
+ *
+ * @param entity The entity to make unstable.
+ * @param secToExplode The amount of seconds until the entity explodes. If not given, a random
+ *                     amount of seconds will be chosen.
  */
 export function setEntityInstability(
   entity: Entity,
-  secToExplode: number,
+  secToExplode?: number,
 ): Entity {
+  secToExplode ??= randomInRange(DEFAULT_SEC_TO_EXPLODE_RANGE);
   if (isPickup(entity)) {
     const pickupIndex = mod.getPickupIndex(entity);
     const numFrames = secToExplode * GAME_FRAMES_PER_SECOND;
@@ -265,4 +291,16 @@ export function setEntityInstability(
 /** Returns true if the given pickup is unstable and going to explode. */
 export function isPickupUnstable(entityPickup: EntityPickup): boolean {
   return v.level.pickupsBeingExtracted.has(mod.getPickupIndex(entityPickup));
+}
+
+/** Returns true if the NPC is unstable and going to explode. */
+export function isNPCUnstable(entityNPC: EntityNPC): boolean {
+  const npcPtrHash = GetPtrHash(entityNPC);
+  for (const [entity, _] of v.room.enemiesBeingExtracted) {
+    if (GetPtrHash(entity) === npcPtrHash) {
+      return true;
+    }
+  }
+
+  return false;
 }

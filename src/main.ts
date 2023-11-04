@@ -1,5 +1,10 @@
 import { ModCallback } from "isaac-typescript-definitions";
-import { Callback, ModFeature, getEnumValues } from "isaacscript-common";
+import {
+  Callback,
+  ModFeature,
+  getEnumValues,
+  initModFeatures,
+} from "isaacscript-common";
 import { evaluateCacheInit } from "./callbacks/evaluateCache";
 import { postPlayerCollectibleAddedInit } from "./callbacks/playerCollectibleAdded";
 import { postPlayerCollectibleRemovedInit } from "./callbacks/playerCollectibleRemoved";
@@ -72,6 +77,7 @@ import { addTestingCommands } from "./features/console/testing";
 import { fprint } from "./helper/printHelper";
 import { MODE_DATA_MAP, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
+import { initHideNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/HideNPCFacet";
 
 const IS_DEV = true;
 
@@ -202,11 +208,5 @@ function initFacets() {
   initEveryItemIsFacet();
   initCustomActiveFacet();
   initNonMandatoryNPCFacet();
-}
-
-class TestModFeature extends ModFeature {
-  @Callback(ModCallback.POST_RENDER)
-  postUpdate() {
-    Isaac.DebugString("Callback triggered: POST_UPDATE");
-  }
+  initHideNPCFacet();
 }

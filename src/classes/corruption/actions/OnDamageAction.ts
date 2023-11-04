@@ -4,7 +4,7 @@ import { triggerPlayerActionsByType } from "../../../features/corruption/effects
 import { bitFlagsContainsValue } from "../../../helper/bitflagHelper";
 import { isSensibleDamage } from "../../../helper/damageHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getDamageFlagTextFromMap } from "../../../maps/data/damageFlagText";
+import { getDamageFlagTextFromMap } from "../../../maps/data/name/damageFlagNameMap";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_DAMAGE;

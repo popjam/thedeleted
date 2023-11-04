@@ -13,7 +13,7 @@ import {
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import { _invertedPickupHasBeenSeen } from "../../../../features/corruption/inversion/seenInvertedPickups";
 import { getAdvancedInvertedItemIconSetting } from "../../../../features/settings/GeneralSettings";
-import { setSpecificEntityEIDDescriptionObject } from "../../../../helper/compatibility/EIDHelper";
+import { setSpecificEntityEIDDescriptionObject } from "../../../../helper/compatibility/EID/EIDHelper";
 import {
   generateCorruptedSound,
   playCorruptedSound,

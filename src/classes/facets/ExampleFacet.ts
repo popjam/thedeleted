@@ -1,4 +1,5 @@
-import { getPlayerIndex, PlayerIndex } from "isaacscript-common";
+import type { PlayerIndex } from "isaacscript-common";
+import { getPlayerIndex } from "isaacscript-common";
 import { Facet, initGenericFacet } from "../Facet";
 
 const v = {

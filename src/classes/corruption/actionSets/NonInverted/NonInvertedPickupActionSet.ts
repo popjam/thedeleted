@@ -5,7 +5,7 @@ import { addActionsToTracker } from "../../../../features/corruption/effects/pla
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
-} from "../../../../helper/compatibility/EIDHelper";
+} from "../../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
 import type { Action } from "../../actions/Action";
 import { isAction } from "../../actions/Action";

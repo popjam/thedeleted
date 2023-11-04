@@ -18,7 +18,7 @@ import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverH
 import type { Action } from "../../actions/Action";
 import type { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
-import { getEIDMarkupFromShortcut } from "../../../../helper/compatibility/EIDHelper";
+import { getEIDMarkupFromShortcut } from "../../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
 import {
   INVERTED_ACTIVE_EID_ICON,

@@ -42,9 +42,7 @@ const ROOM_TYPE_TO_NAME_MAP: ReadonlyMap<RoomType, string> = new Map([
 export function getRoomNameFromType(roomType: RoomType): string {
   const name = ROOM_TYPE_TO_NAME_MAP.get(roomType);
   if (name === undefined) {
-    throw new Error(
-      `RoomTypeNameMap: Cannot find Name of RoomType: ${roomType}`,
-    );
+    error(`RoomTypeNameMap: Cannot find Name of RoomType: ${roomType}`);
   }
   return name;
 }

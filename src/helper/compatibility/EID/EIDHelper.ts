@@ -5,13 +5,13 @@ import {
   getConstituentsFromEntityID,
   getEntityID,
 } from "isaacscript-common";
-import { EID_ENTITY_DATA_KEY } from "../../constants/eidConstants";
-import type { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
-import type { Morality } from "../../enums/corruption/Morality";
-import type { EIDDescObject } from "../../interfaces/compatibility/EIDDescObject";
-import { getEIDColorShortcutFromMorality } from "../../maps/compatibility/EIDColorMap";
-import { getEIDTextSetting } from "../../features/settings/EIDSettings";
-import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
+import { EID_ENTITY_DATA_KEY } from "../../../constants/eidConstants";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { Morality } from "../../../enums/corruption/Morality";
+import type { EIDDescObject } from "../../../interfaces/compatibility/EIDDescObject";
+import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";
+import { getEIDTextSetting } from "../../../features/settings/EIDSettings";
+import { EIDObjectDisplaySetting } from "../../../enums/settings/EIDObjectDisplaySetting";
 
 /** Returns the Collectible icon for EID. */
 export function getEIDIconFromCollectible(

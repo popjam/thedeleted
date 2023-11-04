@@ -2,7 +2,7 @@
   <!-- BitFlip !-->
   <active description="Ones and Zeros" gfx="bitflip.png" maxcharges="0" name="Bitflip" chargetype="normal" hidden="true" tags="quest" />
   <!-- Pink BitFlip !-->
-  <active description="Ones and Zeroes" gfx="bitflip_pink.png" maxcharges="0" name=" Bitflip" chargetype="normal" hidden="true" tags="quest" />
+  <active description="Ones and Zeroes" gfx="sharp.png" maxcharges="0" name=" Bitflip" chargetype="normal" hidden="true" tags="quest" />
   <!-- Blue BitFlip !-->
   <active description="Ones and Zeroes" gfx="bitflip_blue.png" maxcharges="0" name="  Bitflip" chargetype="normal" hidden="true" tags="quest" />
   <!-- D-13 !-->

@@ -3,10 +3,15 @@ import {
   Callback,
   CallbackCustom,
   getNPCs,
+  getTSTLClassName,
   ModCallbackCustom,
 } from "isaacscript-common";
-import { getNPCFamily } from "../../../../helper/npcHelper";
+import {
+  getNPCLineage,
+  getNPCFamily,
+} from "../../../../helper/entityHelper/npcHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
+import { fprint } from "../../../../helper/printHelper";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
@@ -45,6 +50,21 @@ class BolsterNPCFacet extends Facet {
   postNewRoomReordered(): void {
     this.unsubscribeAll();
   }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
+  }
 }
 
 export function initBolsterNPCFacet(): void {
@@ -52,29 +72,39 @@ export function initBolsterNPCFacet(): void {
 }
 
 /** Prevents an NPC from moving. It can still be damaged and attack the player. */
-export function bolsterNPC(npc: EntityNPC): void {
-  const npcFamily = getNPCFamily(npc);
-  npcFamily.forEach((member) => {
-    if (v.room.bolsteredNPCs.has(GetPtrHash(member))) {
-      return;
+export function bolsterNPC(npc: EntityNPC, individual = false): void {
+  if (individual) {
+    v.room.bolsteredNPCs.set(GetPtrHash(npc), npc.Position);
+  } else {
+    const npcFamily = getNPCFamily(npc);
+    for (const member of npcFamily) {
+      if (v.room.bolsteredNPCs.has(GetPtrHash(member))) {
+        continue;
+      }
+      v.room.bolsteredNPCs.set(GetPtrHash(member), member.Position);
     }
-    v.room.bolsteredNPCs.set(GetPtrHash(member), npc.Position);
+  }
 
-    FACET?.subscribe();
-  });
+  FACET?.subscribeIfNotAlready();
 }
 
 /** Returns an NPC to normal after having been bolstered with "bolsterNPC()". */
-export function unbolsterNPC(npc: EntityNPC): void {
-  const npcFamily = getNPCFamily(npc);
-  npcFamily.forEach((member) => {
-    if (!v.room.bolsteredNPCs.has(GetPtrHash(member))) {
-      return;
+export function unbolsterNPC(npc: EntityNPC, individual = false): void {
+  if (individual) {
+    v.room.bolsteredNPCs.delete(GetPtrHash(npc));
+  } else {
+    const npcFamily = getNPCFamily(npc);
+    for (const member of npcFamily) {
+      if (!v.room.bolsteredNPCs.has(GetPtrHash(member))) {
+        continue;
+      }
+      v.room.bolsteredNPCs.delete(GetPtrHash(member));
     }
-    v.room.bolsteredNPCs.delete(GetPtrHash(member));
+  }
 
-    FACET?.unsubscribe();
-  });
+  if (v.room.bolsteredNPCs.size === 0) {
+    FACET?.unsubscribeAll();
+  }
 }
 
 /**
@@ -83,13 +113,18 @@ export function unbolsterNPC(npc: EntityNPC): void {
  */
 export function bolsterAllNPCsInRoom(): void {
   for (const npc of getNPCs()) {
-    bolsterNPC(npc);
+    bolsterNPC(npc, true);
   }
 }
 
 /** Return all enemies in room to normal after being bolstered. */
 export function unbolsterAllNPCsInRoom(): void {
   for (const npc of getNPCs()) {
-    unbolsterNPC(npc);
+    unbolsterNPC(npc, true);
   }
+}
+
+/** Check if an NPC has been bolstered by the BolsterNPCFacet. */
+export function isNPCBolstered(npc: EntityNPC): boolean {
+  return v.room.bolsteredNPCs.has(GetPtrHash(npc));
 }

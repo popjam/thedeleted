@@ -1,4 +1,4 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -12,10 +12,11 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import type { CollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
 import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
-import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EIDHelper";
+import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
+import { fprint } from "../../../helper/printHelper";
 
 /** Defaults to The Poop if no activeItem is set. */
-const DEFAULT_COLLECTIBLE = CollectibleType.POOP;
+const EMPTY_COLLECTIBLE_TEXT = "nothing";
 const FIRST_TIME_PICKING_UP = true;
 const VERB = "get";
 
@@ -48,6 +49,9 @@ export class GetCollectibleResponse extends Response {
   /** Get collectibles mentioned. */
   override getInvolvedCollectibles(): CollectibleType[] {
     const collectible = this.getCollectible();
+    if (collectible === undefined) {
+      return [];
+    }
     if (typeof collectible === "object") {
       return getRandomAssortmentOfCollectibles([1, 3], collectible);
     }
@@ -57,11 +61,14 @@ export class GetCollectibleResponse extends Response {
   /**
    * Calculates the collectible to get upon triggering the Response. If the collectible is a
    * CollectibleAttribute, a random collectible from the group is returned.
+   *
+   * If a collectible can not be found, returns undefined (which will mean this Response will not
+   * fire properly).
    */
-  calculateCollectible(): CollectibleType {
+  calculateCollectible(): CollectibleType | undefined {
     const collectible = this.getCollectible();
     if (typeof collectible === "object") {
-      return getRandomCollectibleType(collectible) ?? DEFAULT_COLLECTIBLE;
+      return getRandomCollectibleType(collectible);
     }
     return collectible;
   }
@@ -70,8 +77,8 @@ export class GetCollectibleResponse extends Response {
    * The collectible to get. Can be a specific item or randomly from a group of items (defined by
    * CollectibleAttribute).
    */
-  getCollectible(): CollectibleType | CollectibleAttribute {
-    return this.aT ?? DEFAULT_COLLECTIBLE;
+  getCollectible(): CollectibleType | CollectibleAttribute | undefined {
+    return this.aT;
   }
 
   /**
@@ -98,11 +105,13 @@ export class GetCollectibleResponse extends Response {
     return `${rangeToString(amountOfActivations)}x`;
   }
 
-  // TODO: Finish.
   getCollectibleText(eid = true): string {
     const collectible = this.getCollectible();
     if (typeof collectible === "object") {
       return collectibleAttributeToText(collectible);
+    }
+    if (collectible === undefined) {
+      return EMPTY_COLLECTIBLE_TEXT;
     }
     return eid
       ? getCollectibleNameWithEIDSetting(collectible)
@@ -120,11 +129,15 @@ export class GetCollectibleResponse extends Response {
     const player = triggerData.player ?? Isaac.GetPlayer();
 
     // Standard firing procedure.
-    player.AddCollectible(
-      this.calculateCollectible(),
-      undefined,
-      FIRST_TIME_PICKING_UP,
-    );
+    const collectibleToFire = this.calculateCollectible();
+    if (collectibleToFire === undefined) {
+      fprint(
+        "Failed to get a collectible to fire for the GetCollectibleResponse.",
+      );
+      return;
+    }
+
+    player.AddCollectible(collectibleToFire, undefined, FIRST_TIME_PICKING_UP);
   }
 }
 

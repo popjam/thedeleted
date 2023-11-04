@@ -12,6 +12,7 @@ import {
   ModCallbackCustom,
   clearSprite,
   getCollectibleGfxFilename,
+  getTSTLClassName,
   isCollectible,
   isGlitchedCollectible,
   setCollectibleSprite,
@@ -86,11 +87,27 @@ class CorruptedCollectibleSpriteFacet extends Facet {
       newSprite.Play("Alternates", true);
       newSprite.Render(worldToRenderPosition(pickup.Position));
     }
+
     /** Render the new sprite. */
     renderCorruptedCollectibleSpriteOverCollectible(
       pickup as EntityPickupCollectible,
       corruptedSprite,
     );
+  }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
   }
 }
 

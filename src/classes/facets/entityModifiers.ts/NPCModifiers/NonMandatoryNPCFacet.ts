@@ -5,8 +5,12 @@ import {
   ModCallbackCustom,
   game,
   getNPCs,
+  getTSTLClassName,
 } from "isaacscript-common";
-import { getNPCFamily } from "../../../../helper/npcHelper";
+import {
+  getNPCFamily,
+  getNPCLineage,
+} from "../../../../helper/entityHelper/npcHelper";
 import { fprint } from "../../../../helper/printHelper";
 import { clearRoom } from "../../../../helper/roomHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
@@ -52,6 +56,21 @@ class NonMandatoryNPCFacet extends Facet {
       `Unsubscribed from NonMandatoryNPCFacet, subscriber count: ${this.getSubscriberCount()}`,
     );
   }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
+  }
 }
 
 /**
@@ -67,23 +86,49 @@ export function initNonMandatoryNPCFacet(): void {
  * Makes a player not require to kill the NPC to trigger the room clear. If all NPCs in the room are
  * non-Mandatory, the room will clear automatically.
  */
-export function makeNPCNonMandatory(npc: EntityNPC): void {
-  const npcFamily = getNPCFamily(npc);
-  npcFamily.forEach((member) => {
+export function makeNPCNonMandatory(npc: EntityNPC, individual = false): void {
+  const npcFamily = individual ? new Set<EntityNPC>([npc]) : getNPCFamily(npc);
+  for (const member of npcFamily) {
     if (v.room.nonMandatoryNPC.has(GetPtrHash(member))) {
-      return;
+      continue;
     }
     v.room.nonMandatoryNPC.add(GetPtrHash(member));
+  }
 
-    FACET?.subscribe();
-  });
+  FACET?.subscribeIfNotAlready();
 }
 
 /** Makes all NPCs non-mandatory, hence clearing the room. */
 export function makeAllNPCsInRoomNonMandatory(): void {
-  getNPCs().forEach((npc) => {
+  for (const npc of getNPCs()) {
     makeNPCNonMandatory(npc);
-  });
+  }
+}
+
+/**
+ * Removes the NPC NonMandatory effect given by the NonMandatoryNPCFacet. Note that this does not
+ * make an already non-mandatory NPC mandatory.
+ */
+export function removeNPCNonMandatoryEffect(
+  npc: EntityNPC,
+  individual = false,
+): void {
+  const npcFamily = individual ? new Set<EntityNPC>([npc]) : getNPCFamily(npc);
+  for (const member of npcFamily) {
+    if (!v.room.nonMandatoryNPC.has(GetPtrHash(member))) {
+      continue;
+    }
+    v.room.nonMandatoryNPC.delete(GetPtrHash(member));
+  }
+
+  if (v.room.nonMandatoryNPC.size === 0) {
+    FACET?.unsubscribeAll();
+  }
+}
+
+/** Returns true if an NPC is non-Mandatory (not required to kill to clear the room). */
+export function isNPCNonMandatory(npc: EntityNPC): boolean {
+  return v.room.nonMandatoryNPC.has(GetPtrHash(npc));
 }
 
 export function getNonMandatoryNPCFacetSubscriberCount(): number {

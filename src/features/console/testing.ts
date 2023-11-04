@@ -1,23 +1,53 @@
 import {
   ActiveSlot,
+  BombSubType,
+  ChestSubType,
+  CoinSubType,
   CollectibleType,
+  EffectVariant,
+  EntityCollisionClass,
+  EntityFlag,
   EntityType,
+  HeartSubType,
+  ItemConfigChargeType,
   ItemPoolType,
   ItemType,
+  KeySubType,
   LevelStage,
+  ModCallback,
+  PickupVariant,
+  SortingLayer,
 } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import {
+  COLORS,
+  Callback,
+  CallbackCustom,
+  ModCallbackCustom,
+  ModFeature,
   VectorZero,
   arrayRemove,
+  arrayToString,
+  game,
   getClosestEntityTo,
   getCollectibleName,
   getEntities,
   getEnumValues,
+  getKeys,
+  getNPCs,
+  getPlayerIndex,
   getRandomArrayElement,
   getRandomArrayIndex,
+  getRandomEnumValue,
+  getRandomInt,
   getRandomSeed,
+  getTSTLClassName,
   sfxManager,
+  spawnEffect,
+  spawnEntityID,
+  spawnKey,
   spawnNPC,
+  spawnPickup,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
@@ -33,6 +63,8 @@ import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inven
 import {
   getQuickAccessiblePosition,
   getRandomAccessiblePosition,
+  makeEntityInvisible,
+  spawnInvisibleEntity,
 } from "../../helper/entityHelper";
 import { fprint } from "../../helper/printHelper";
 import { renderConstantly } from "../../helper/renderHelper";
@@ -58,9 +90,52 @@ import { TMTRAINER_UNIQUE_LIMIT } from "../../constants/tmtrainerConstants";
 import { setInvertedItemActionSet } from "../../helper/deletedSpecific/effects/itemEffects";
 import { getGameInvertedItemActionSet } from "../../helper/deletedSpecific/generation/corruptionGeneration";
 import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import type { CollectibleAttribute } from "../../interfaces/general/CollectibleAttribute";
+import type {
+  ActiveCollectibleAttribute,
+  CollectibleAttribute,
+} from "../../interfaces/general/CollectibleAttribute";
 import { getEIDTextSetting, setEIDTextSetting } from "../settings/EIDSettings";
 import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
+import { RemoveCollectibleResponse } from "../../classes/corruption/responses/RemoveCollectibleResponse";
+import { addNPCFlags } from "../../helper/entityHelper/npcFlagHelper";
+import { NPCFlag } from "../../enums/general/NPCFlag";
+import {
+  getAllChildrenNPCs,
+  getAllParentNPCs,
+  getLastParentNPC,
+  getNPCLineage,
+  getNPCFamily,
+  areNPCsRelated,
+  getRandomNPC,
+  isEntityNPC,
+} from "../../helper/entityHelper/npcHelper";
+import {
+  bolsterAllNPCsInRoom,
+  bolsterNPC,
+  unbolsterAllNPCsInRoom,
+  unbolsterNPC,
+} from "../../classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
+import {
+  freezeAllNPCsInRoom,
+  freezeNPC,
+  unfreezeAllNPCsInRoom,
+} from "../../classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
+import { makeNPCNonMandatory } from "../../classes/facets/entityModifiers.ts/NPCModifiers/NonMandatoryNPCFacet";
+import { censorNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/CensoredNPCFacet";
+import { fireFunctionConstantly } from "../../helper/gameHelpter";
+import { spawnNPCWithNPCID } from "../../helper/npcIDHelper";
+import { setEntityInstability } from "../../classes/facets/entityModifiers.ts/UnstableEntityFacet";
+import {
+  getHideNPCFacet,
+  hideNPC,
+  unhideNPC,
+} from "../../classes/facets/entityModifiers.ts/NPCModifiers/HideNPCFacet";
+import { Facet } from "../../classes/Facet";
+import { setupPC } from "../../classes/facets/pc/PCFacet";
+import { spawnHybridNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/HybridNPCFacet";
+import { randomInRangeWithDecimalPrecision } from "../../types/general/Range";
+import { NPCID } from "../../enums/general/ID/NPCID";
+import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -94,26 +169,29 @@ export function addTestingCommands(): void {
   mod.addConsoleCommand("pindex", () => {
     getClosestPickupIndex();
   });
+  mod.addConsoleCommand("pause", () => {
+    freezeAllNPCsInRoom();
+  });
+  mod.addConsoleCommand("unpause", () => {
+    unfreezeAllNPCsInRoom();
+  });
 }
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  setEIDTextSetting(EIDObjectDisplaySetting.ICON_ONLY);
   spawnNewInvertedCollectible(
     getQuickAccessiblePosition(),
-    new InvertedPassiveActionSet().addEffects(
-      new GetCollectibleResponse().construct({
-        itemType: ItemType.ACTIVE,
-        quality: [0, 1, 2],
-      } as CollectibleAttribute),
+    new InvertedActiveActionSet().addEffects(
+      new SpawnNPCResponse()
+        .construct(getRandomNPC())
+        .setAmountOfActivations([1, 10])
+        .setNPCFlags([NPCFlag.UNSTABLE]),
     ),
   );
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction2(): void {
-  sfxManager.Play(SoundEffectCustom.VO_ILOVEYOU, 100);
-}
+export function testingFunction2(): void {}
 
 function getRandomTest<T>(
   th: T[],
@@ -141,7 +219,7 @@ function getRandomTest<T>(
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  addNewInvertedActiveToPlayer(player(), ActiveSlot.POCKET);
+  spawnNPCWithNPCID(NPCID.ULTRA_DOOR, getQuickAccessiblePosition());
 }
 
 /** Test stuff as the developer with command 'eted'. */

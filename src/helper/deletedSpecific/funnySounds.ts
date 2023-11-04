@@ -1,16 +1,16 @@
 /** This file contains functions used to create glitched sound effects. */
 
-import { SoundEffect } from "isaac-typescript-definitions";
+import type { SoundEffect } from "isaac-typescript-definitions";
 import { GAME_FRAMES_PER_SECOND, sfxManager } from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,
 } from "../../constants/corruptionConstants";
 import { MILLISECONDS_IN_A_SECOND } from "../../constants/generalConstants";
-import { CorruptedSoundEffect } from "../../interfaces/corruption/funny/CorruptedSoundEffect";
+import type { CorruptedSoundEffect } from "../../interfaces/corruption/funny/CorruptedSoundEffect";
 import { mod } from "../../mod";
+import type { Range } from "../../types/general/Range";
 import {
-  Range,
   multiplyRangeConstituents,
   randomInRange,
   randomInRangeOrNumber,

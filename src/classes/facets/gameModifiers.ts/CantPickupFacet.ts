@@ -1,5 +1,7 @@
-import { ModCallback, PickupVariant } from "isaac-typescript-definitions";
-import { Callback, PlayerIndex, getPlayerIndex } from "isaacscript-common";
+import type { PickupVariant } from "isaac-typescript-definitions";
+import { ModCallback } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
+import { Callback, getPlayerIndex, getTSTLClassName } from "isaacscript-common";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
 
@@ -47,6 +49,21 @@ class CantPickupFacet extends Facet {
     }
 
     return undefined;
+  }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
   }
 }
 

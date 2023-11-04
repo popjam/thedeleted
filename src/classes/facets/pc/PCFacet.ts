@@ -1,15 +1,18 @@
+import type { SlotVariant } from "isaac-typescript-definitions";
 import {
   ButtonAction,
-  SlotVariant,
+  ModCallback,
   SoundEffect,
 } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
+  Callback,
   CallbackCustom,
   ModCallbackCustom,
-  PlayerIndex,
   getPlayerFromIndex,
   getPlayerIndex,
   getSlots,
+  getTSTLClassName,
   gridCoordinatesToWorldPosition,
   sfxManager,
   spawnSlot,
@@ -89,12 +92,10 @@ class PCFacet extends Facet {
     if (state === PCState.ACCOUNT) {
       if (isPCBeingUsed()) {
         const currentPCUser = getCurrentPCUser();
-        if (currentPCUser !== undefined) {
-          if (!(isPlayerInPCRange(currentPCUser, pc) ?? false)) {
-            bootCurrentUserFromPC();
-          }
-        } else {
+        if (currentPCUser === undefined) {
           v.run.user = null;
+        } else if (!(isPlayerInPCRange(currentPCUser, pc) ?? false)) {
+          bootCurrentUserFromPC();
         }
       } else if (isPlayerInPCRange(player, pc) ?? false) {
         logOnToPC(player);
@@ -107,6 +108,7 @@ class PCFacet extends Facet {
     if (!isPlayerPCUser(player)) {
       return;
     }
+
     /** User can't shoot. */
     player.SetShootingCooldown(1);
     if (
@@ -116,6 +118,21 @@ class PCFacet extends Facet {
       switchToNextModeOnCarousel(player);
     }
     return undefined;
+  }
+
+  /**
+   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
+   * auto-reset.
+   */
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(shouldSave: boolean): void {
+    if (shouldSave) {
+      return;
+    }
+    if (this.initialized) {
+      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
+      this.uninit();
+    }
   }
 }
 
@@ -148,12 +165,12 @@ export function setupPC(): void {
 /** Logs player into PC, booting previous user if any. */
 export function logOnToPC(player: EntityPlayer): void {
   const currentPCUser = getCurrentPCUser();
-  if (currentPCUser !== undefined) {
-    bootCurrentUserFromPC();
-  } else {
+  if (currentPCUser === undefined) {
     /** Only play sound effects and animation if there was no one previously using PC. */
     sfxManager.Play(ACTIVATION_SFX);
     playInitiateAnimation();
+  } else {
+    bootCurrentUserFromPC();
   }
 
   v.run.user = getPlayerIndex(player);

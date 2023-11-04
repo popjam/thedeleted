@@ -15,6 +15,7 @@ import {
   getCollectibleName,
   getCollectibleQuality,
   getCollectibleTags,
+  getEntityID,
   getPlayerIndex,
   getPlayersWithCollectible,
   getRandomArrayElement,
@@ -41,12 +42,15 @@ import {
 import { isCollectibleFree } from "./priceHelper";
 import { worldToRenderPosition } from "./renderHelper";
 import { copySprite } from "./spriteHelper";
-import { getItemTypeText } from "../maps/data/itemTypeNameMap";
+import { getItemTypeText } from "../maps/data/name/itemTypeNameMap";
 import {
+  addTheS,
   joinWithOr,
   legibleString,
   removeUnnecessaryWhiteSpace,
 } from "./stringHelper";
+import { itemPoolTypeToText } from "../maps/data/name/itemPoolTypeNameMap";
+import { itemConfigChargeTypeToText } from "../maps/data/name/itemConfigChargeTypeNameMap";
 
 /** Replace an active item with another in a specific ActiveSlot. */
 export function replaceActiveItem(
@@ -372,18 +376,11 @@ export function getRandomCollectibleType(
  */
 export function collectibleAttributeToText(
   collectibleAttribute: CollectibleAttribute,
+  plural = false,
 ): string {
-  let text = "";
+  let text = plural ? "random " : "a random ";
 
-  if (collectibleAttribute.quality !== undefined) {
-    text +=
-      typeof collectibleAttribute.quality === "number"
-        ? `quality ${collectibleAttribute.quality} `
-        : `quality ${joinWithOr(
-            collectibleAttribute.quality.flatMap((q) => tostring(q)),
-          )} `;
-  }
-
+  // Item Type.
   if (collectibleAttribute.itemType !== undefined) {
     text +=
       typeof collectibleAttribute.itemType === "number"
@@ -393,6 +390,106 @@ export function collectibleAttributeToText(
           )}`;
   }
 
-  text = `a random ${text} item`;
-  return removeUnnecessaryWhiteSpace(text);
+  // Item.
+  text = `${text} ${addTheS("item", plural ? 2 : 1)} `;
+
+  // We set up a textArray, so we can join it with 'and' later, and for greater flexibility.
+  const textArray = [] as string[];
+
+  // Quality.
+  if (collectibleAttribute.quality !== undefined) {
+    textArray.push(
+      typeof collectibleAttribute.quality === "number"
+        ? `of quality ${collectibleAttribute.quality}`
+        : `of quality ${joinWithOr(
+            collectibleAttribute.quality.flatMap((q) => tostring(q)),
+          )}`,
+    );
+  }
+
+  // PoolType.
+  if (collectibleAttribute.poolType !== undefined) {
+    if (collectibleAttribute.poolType === "room") {
+      textArray.push(" from the current room pool ");
+    } else if (typeof collectibleAttribute.poolType === "number") {
+      textArray.push(
+        `from the ${itemPoolTypeToText(collectibleAttribute.poolType)} pool`,
+      );
+    } else {
+      textArray.push(
+        `from the ${joinWithOr(
+          collectibleAttribute.poolType.flatMap((q) => itemPoolTypeToText(q)),
+        )} pool`,
+      );
+    }
+  }
+
+  // ChargeType
+  if (collectibleAttribute.chargeType !== undefined) {
+    textArray.push(
+      typeof collectibleAttribute.chargeType === "number"
+        ? `with a charge type of '${itemConfigChargeTypeToText(
+            collectibleAttribute.chargeType,
+          )}'`
+        : `with a charge type of ${joinWithOr(
+            collectibleAttribute.chargeType.flatMap(
+              (q) => `${itemConfigChargeTypeToText(q)}`,
+            ),
+          )}`,
+    );
+  }
+
+  // MaxCharges
+  if (collectibleAttribute.maxCharges !== undefined) {
+    textArray.push(
+      typeof collectibleAttribute.maxCharges === "number"
+        ? `which has a max charge count of ${collectibleAttribute.maxCharges}`
+        : `which has a max charge count of ${joinWithOr(
+            collectibleAttribute.maxCharges.flatMap((q) => tostring(q)),
+          )}`,
+    );
+  }
+
+  // Owned by player.
+  if (collectibleAttribute.playerHas !== undefined) {
+    textArray.push(
+      typeof collectibleAttribute.playerHas === "number"
+        ? "that you already own"
+        : "that a player already owns",
+    );
+  }
+
+  // Starts with (capitalization doesn't matter).
+  if (collectibleAttribute.startsWith !== undefined) {
+    textArray.push(
+      `that starts with '${collectibleAttribute.startsWith.toUpperCase()}'`,
+    );
+  }
+
+  // Ends with (capitalization doesn't matter).
+  if (collectibleAttribute.endsWith !== undefined) {
+    textArray.push(
+      `that ends with '${collectibleAttribute.endsWith.toUpperCase()}'`,
+    );
+  }
+
+  // Item tags (contains ALL).
+  if (collectibleAttribute.itemTagAll !== undefined) {
+    textArray.push(
+      `that has the tag/s ${joinWithOr(
+        collectibleAttribute.itemTagAll.flatMap((q) => tostring(q)),
+      )}`,
+    );
+  }
+
+  // If the textArray is empty or has one element.
+  text += ` ${textArray[0]} `;
+
+  // If the textArray has more than one elements.
+  if (textArray.length > 1) {
+    textArray.shift();
+    text += textArray.join(", ");
+  }
+
+  return text;
 }

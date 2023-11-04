@@ -213,6 +213,22 @@ export function spawnInvisibleEntity(
 }
 
 /**
+ * Makes an entity invisible. Note that this will not mute sounds or make them friendly / invisible
+ * upon exiting / entering game / room.
+ */
+export function makeEntityInvisible(entity: Entity): Entity {
+  entity.ClearEntityFlags(EntityFlag.APPEAR);
+  entity.Visible = false;
+  return entity;
+}
+
+/** Return an Entity to visible after makeEntityInvisible(). */
+export function makeEntityVisible(entity: Entity): Entity {
+  entity.Visible = true;
+  return entity;
+}
+
+/**
  * Retrieves the closest pickup to a reference position. If there are no pickups in the room,
  * returns undefined.
  */

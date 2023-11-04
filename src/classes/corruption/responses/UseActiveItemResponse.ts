@@ -1,20 +1,22 @@
-import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
+import { UseFlag } from "isaac-typescript-definitions";
 import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
+  collectibleAttributeToText,
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
 import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { useActiveItemAtPosition } from "../../../helper/playerHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { ActiveCollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { ActiveCollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
 import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
+import { fprint } from "../../../helper/printHelper";
 
-/** Defaults to The Poop if no activeItem is set. */
-const DEFAULT_ACTIVE_ITEM = CollectibleType.POOP;
+const EMPTY_COLLECTIBLE_TEXT = "nothing";
 const VERB = "use";
 
 /**
@@ -45,6 +47,9 @@ export class UseActiveItemResponse extends Response {
   /** Get collectibles mentioned. */
   override getInvolvedCollectibles(): CollectibleType[] {
     const active = this.getActiveItem();
+    if (active === undefined) {
+      return [];
+    }
     if (typeof active === "object") {
       return getRandomAssortmentOfCollectibles([1, 3], active);
     }
@@ -55,10 +60,10 @@ export class UseActiveItemResponse extends Response {
    * Calculates the ActiveItem to use upon triggering the Response, taking into account the
    * different types of 'activeItem'.
    */
-  calculateActiveItem(): CollectibleType {
+  calculateActiveItem(): CollectibleType | undefined {
     const activeItem = this.getActiveItem();
     if (typeof activeItem === "object") {
-      return getRandomCollectibleType(activeItem) ?? DEFAULT_ACTIVE_ITEM;
+      return getRandomCollectibleType(activeItem);
     }
     return activeItem;
   }
@@ -67,8 +72,8 @@ export class UseActiveItemResponse extends Response {
    * The active item to use. Can be a specific active item or randomly from a group of active items
    * (defined by ActiveCollectibleAttribute).
    */
-  getActiveItem(): CollectibleType | ActiveCollectibleAttribute {
-    return this.aT ?? DEFAULT_ACTIVE_ITEM;
+  getActiveItem(): CollectibleType | ActiveCollectibleAttribute | undefined {
+    return this.aT;
   }
 
   /**
@@ -99,7 +104,10 @@ export class UseActiveItemResponse extends Response {
   getActiveItemText(): string {
     const activeItem = this.getActiveItem();
     if (typeof activeItem === "object") {
-      return " a random active item ";
+      return collectibleAttributeToText(activeItem);
+    }
+    if (activeItem === undefined) {
+      return EMPTY_COLLECTIBLE_TEXT;
     }
     return getCollectibleName(activeItem);
   }
@@ -111,23 +119,30 @@ export class UseActiveItemResponse extends Response {
 
   fire(triggerData: TriggerData): void {
     const player = triggerData.player ?? Isaac.GetPlayer();
+    const activeItem = this.calculateActiveItem();
+
+    if (activeItem === undefined) {
+      fprint("Active item is undefined, can't fire UseActiveItemResponse.");
+      return;
+    }
 
     // If it's called from OnKillAction, use the Active item at the killed NPC location.
     if (triggerData.onKillAction !== undefined) {
       useActiveItemAtPosition(
-        this.calculateActiveItem(),
+        activeItem,
         triggerData.onKillAction.Position,
         player,
       );
-    } else if (triggerData.onBombExplodedAction !== undefined) {
+    } else if (triggerData.onBombExplodedAction === undefined) {
+      // Standard firing procedure.
+      player.UseActiveItem(activeItem, UseFlag.NO_ANIMATION);
+    } else {
+      // If it's called from OnBombExplodedAction, use the Active item at the bomb location.
       useActiveItemAtPosition(
-        this.calculateActiveItem(),
+        activeItem,
         triggerData.onBombExplodedAction.bomb.Position,
         player,
       );
-    } else {
-      // Standard firing procedure.
-      player.UseActiveItem(this.calculateActiveItem(), UseFlag.NO_ANIMATION);
     }
   }
 }
