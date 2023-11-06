@@ -1,4 +1,5 @@
 import { getRandomInt } from "isaacscript-common";
+import { getRandomInteger } from "../helper/randomHelper";
 
 export const FUNNY_ACTION_TEXT_SET: ReadonlySet<string> = new Set([
   "upon uninstalling Isaac,",
@@ -19,7 +20,7 @@ export const FUNNY_ACTION_TEXT_SET: ReadonlySet<string> = new Set([
   "upon twisting and shouting,",
   "upon twirling your mustache,",
   "upon menstruating,",
-  `every 2-${getRandomInt(1, 24)} hours,`,
+  `every 2-${getRandomInteger(1, 24)} hours,`,
   "on updating this mod,",
   "instead of leaving a cookie out for santa,",
   "instead of picking up this item,",

@@ -185,7 +185,7 @@ export function getNPCFamily(npc: EntityNPC): Set<EntityNPC> {
 
 // TODO.
 export function getRandomNPC(): NPCID {
-  return getRandomEnumValue(NPCID);
+  return getRandomEnumValue(NPCID, undefined);
 }
 
 export function doesNPCIDMatchNPCAttributes(

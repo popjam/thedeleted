@@ -152,11 +152,11 @@ function morphItem(
   /** Prevent endless loops. */
   if (iterationsTilStop !== undefined) {
     const amountMorphed = v.level.convertedPickups.getAndSetDefault(
-      mod.getPickupIndex(pickup),
+      mod["getPickupIndex"](pickup),
     );
     if (amountMorphed >= iterationsTilStop) {
       fprint(
-        `EveryItemIsFacet: Morph limit reached for ${mod.getPickupIndex(
+        `EveryItemIsFacet: Morph limit reached for ${mod["getPickupIndex"](
           pickup,
         )}`,
       );

@@ -1,7 +1,7 @@
 import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
+import type { WeightedArray } from "isaacscript-common";
 import {
   DefaultMap,
-  WeightedArray,
   copyColor,
   getRandomFromWeightedArray,
   isCollectible,
@@ -13,8 +13,10 @@ import {
 } from "../../../classes/facets/entityModifiers.ts/UnstableEntityFacet";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { getPickupExtractExplosionDmg } from "../../../maps/modes/ZIPBOMBER/extractPickupBurnTimeMap";
-import { Percentage, rollPercentage } from "../../../types/general/Percentage";
-import { Range, randomInRangeOrNumber } from "../../../types/general/Range";
+import type { Percentage } from "../../../types/general/Percentage";
+import { rollPercentage } from "../../../types/general/Percentage";
+import type { Range } from "../../../types/general/Range";
+import { randomInRangeOrNumber } from "../../../types/general/Range";
 import { extractResponseBuilder } from "../../builders/items/EXTRACTBuilders";
 import { rerollCollectible } from "../../collectibleHelper";
 import { reddenColor } from "../../colorHelper";
@@ -95,7 +97,10 @@ export function extractCollectible(collectible: EntityPickupCollectible): void {
     setEntityInstability(
       collectible,
       randomInRangeOrNumber(
-        getRandomFromWeightedArray(SECONDS_TO_EXPLODE_AFTER_EXTRACTION),
+        getRandomFromWeightedArray(
+          SECONDS_TO_EXPLODE_AFTER_EXTRACTION,
+          undefined,
+        ),
       ),
     );
   }

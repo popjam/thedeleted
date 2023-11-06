@@ -20,7 +20,7 @@ const ROOM_TYPE_TO_NAME_MAP: ReadonlyMap<RoomType, string> = new Map([
   [RoomType.BOSS_RUSH, "Boss Rush"],
   [RoomType.CLEAN_BEDROOM, "Clean Bedroom"],
   [RoomType.DIRTY_BEDROOM, "Dirty Bedroom"],
-  [RoomType.CHEST, "the Chest"],
+  [RoomType.VAULT, "the Chest"],
   [RoomType.DICE, "Dice Room"],
   [RoomType.BLACK_MARKET, "Black Market"],
   [RoomType.GREED_EXIT, "Greed Exit Room"],

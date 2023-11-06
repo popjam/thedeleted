@@ -1,4 +1,5 @@
-import { getPickups, PickupIndex } from "isaacscript-common";
+import type { PickupIndex } from "isaacscript-common";
+import { getPickups } from "isaacscript-common";
 import { mod } from "../../mod";
 
 /**
@@ -9,7 +10,7 @@ export function getPickupWithPickupIndex(
   pickupIndex: PickupIndex,
 ): EntityPickup | undefined {
   for (const pickup of getPickups()) {
-    if (mod.getPickupIndex(pickup) === pickupIndex) {
+    if (mod["getPickupIndex"](pickup) === pickupIndex) {
       return pickup;
     }
   }

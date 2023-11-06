@@ -1,9 +1,9 @@
 import { CacheFlag } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   DefaultMap,
   defaultMapGetPlayer,
   defaultMapSetPlayer,
-  PlayerIndex,
 } from "isaacscript-common";
 import { triggerCacheUpdate } from "../../helper/statHelper";
 import { mod } from "../../mod";
@@ -153,4 +153,3 @@ export function playerStatsEvaluateCache(
     // addStat(player, cacheFlag, getStaticStat(player, cacheFlag));
   }
 }
-

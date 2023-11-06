@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ModCallback } from "isaac-typescript-definitions";
 import {
   Callback,
@@ -108,7 +109,7 @@ function initFeatures() {
 /** Initialize mod features for dev. */
 function devInit() {
   addTestingCommands();
-  mod.enableFastReset();
+  mod["enableFastReset"]();
 }
 
 /** Register all the callbacks. */
@@ -162,7 +163,7 @@ function initStats() {
   for (const mode of modes) {
     const characterStats = MODE_DATA_MAP.get(mode);
     if (characterStats?.characterStats !== undefined) {
-      mod.registerCharacterStats(
+      mod["registerCharacterStats"](
         getModePlayerType(mode),
         characterStats.characterStats,
       );
@@ -171,7 +172,7 @@ function initStats() {
 }
 
 function initClasses() {
-  mod.saveDataManagerRegisterClass(
+  mod["saveDataManagerRegisterClass"](
     InvertedPassiveActionSet,
     InvertedActiveActionSet,
     NonInvertedPickupActionSet,

@@ -8,19 +8,18 @@ import {
   defaultInvertedPassiveActionSetBuilder,
   generateDefaultCorruptedCollectibleSprite,
 } from "../genericBuilders";
+import { getRandomInteger } from "../../randomHelper";
 
 export function iLoveYouDefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = getRandomInt(0, 1) === 0;
+  const active = getRandomInteger(0, 1) === 0;
   let actionSet: InvertedItemActionSet | undefined;
 
   /** Generate the ActionSet using default properties. */
-  if (active) {
-    actionSet = defaultInvertedActiveActionSetBuilder(inputs);
-  } else {
-    actionSet = defaultInvertedPassiveActionSetBuilder(inputs);
-  }
+  actionSet = active
+    ? defaultInvertedActiveActionSetBuilder(inputs)
+    : defaultInvertedPassiveActionSetBuilder(inputs);
 
   /** Set the name and description. */
   actionSet

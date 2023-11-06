@@ -1,3 +1,5 @@
+import { getRandomInt } from "isaacscript-common";
+
 export function randomDistribution(
   mean: number,
   standardDeviation: number,
@@ -28,4 +30,14 @@ export function randomLogDistribution(
   const logValue = skewness ** rand - 1;
   const value = (logValue / (skewness - 1)) * range + minValue;
   return Math.max(minValue, Math.min(maxValue, value));
+}
+
+/** Wrapper for getRandomInteger() to default seedOrRNG to undefined. */
+export function getRandomInteger(
+  min: int,
+  max: int,
+  seedOrRNG: Seed | RNG | undefined = undefined,
+  exceptions?: int[] | readonly int[],
+): int {
+  return getRandomInt(min, max, seedOrRNG, exceptions);
 }

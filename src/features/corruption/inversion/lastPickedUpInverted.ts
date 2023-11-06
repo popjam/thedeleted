@@ -119,7 +119,7 @@ export function getPedestalPickingUpData(
   for (const pickupData of pickupDatas) {
     if (
       pickupData !== undefined &&
-      pickupData.pickupIndex === mod.getPickupIndex(pedestal)
+      pickupData.pickupIndex === mod["getPickupIndex"](pedestal)
     ) {
       match = pickupData;
     }

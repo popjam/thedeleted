@@ -12,7 +12,7 @@ const LEVEL_STAGE_TO_NAME_MAP: ReadonlyMap<LevelStage, string> = new Map([
   [LevelStage.BLUE_WOMB, "Blue Womb"],
   [LevelStage.SHEOL_CATHEDRAL, "Sheol or Cathedral"],
   [LevelStage.DARK_ROOM_CHEST, "the Dark Room or the Chest"],
-  [LevelStage.THE_VOID, "The Void"],
+  [LevelStage.VOID, "The Void"],
   [LevelStage.HOME, "Home"],
 ]);
 

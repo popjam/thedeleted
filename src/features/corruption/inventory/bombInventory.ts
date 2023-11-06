@@ -1,4 +1,5 @@
 import { SoundEffect } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   deepCopy,
   DefaultMap,
@@ -6,11 +7,10 @@ import {
   getPlayerFromIndex,
   getPlayerIndex,
   mapSetHash,
-  PlayerIndex,
   sfxManager,
 } from "isaacscript-common";
-import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
+import type { Response } from "../../../classes/corruption/responses/Response";
 import { fprint } from "../../../helper/printHelper";
 import { mod } from "../../../mod";
 
@@ -62,7 +62,7 @@ export function postCorruptBombInitLate(bomb: EntityBomb): void {
   const bombInventory = v.run.bombInventory.getAndSetDefault(
     getPlayerIndex(player),
   );
-  const corruptedBomb = bombInventory[bombInventory.length - 1];
+  const corruptedBomb = bombInventory.at(-1);
   if (corruptedBomb === undefined) {
     return;
   }

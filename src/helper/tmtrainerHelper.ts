@@ -21,6 +21,7 @@ export function getRandomTMTRAINERItem(): CollectibleType {
   const tmtCollectible = mod.spawnCollectible(
     CollectibleType.SAD_ONION,
     Vector(0, 0),
+    undefined,
   );
   tmtCollectible.Remove();
 
@@ -72,6 +73,7 @@ export function getRandomTMTRAINERActiveItem(): CollectibleType {
     const tmtCollectible = mod.spawnCollectible(
       CollectibleType.SAD_ONION,
       Vector(0, 0),
+      undefined,
     );
     const tmtCollectibleType = tmtCollectible.SubType;
     tmtCollectible.Remove();

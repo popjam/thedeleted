@@ -64,7 +64,7 @@ function preGetPedestalNormal(
   const lastPickedUpCollectibleData: LastPickedUpCollectibleData = {
     collectibleType: pickup.SubType,
     pickupStage: PickupStage.PRE_GET_PEDESTAL,
-    pickupIndex: mod.getPickupIndex(pickup),
+    pickupIndex: mod["getPickupIndex"](pickup),
     inverted: false,
     pedestal: pickup,
     nonInvertedCharge: pickup.Charge,

@@ -7,11 +7,11 @@ import { PICKUP_SOUNDS } from "../constants/soundConstants";
  * game frame instead of the callback you are in.
  */
 export function stopPickupSounds(): void {
-  PICKUP_SOUNDS.forEach((sound) => {
+  for (const sound of PICKUP_SOUNDS) {
     sfxManager.Stop(sound as SoundEffect);
-  });
+  }
 }
 
 export function getRandomSoundEffect(): SoundEffect {
-  return getRandomEnumValue(SoundEffect);
+  return getRandomEnumValue(SoundEffect, undefined);
 }

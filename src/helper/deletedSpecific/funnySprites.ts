@@ -36,6 +36,7 @@ import {
 import { worldToRenderPosition } from "../renderHelper";
 import { nextSeeds } from "../rngHelper";
 import { renderSprite } from "../spriteHelper";
+import { getRandomInteger } from "../randomHelper";
 
 const DEFAULT_CUSTOM_COLLECTIBLE_SPRITE_COLLECTIBLES = [1, 4] as const;
 
@@ -134,7 +135,7 @@ export function renderTMTRAINERSprite(
   const segmentLength = 30 / len;
   let currentLength = 0;
 
-  horizontal ??= getRandomInt(1, 2, seed) === 1;
+  horizontal ??= getRandomInteger(1, 2, seed) === 1;
   // if (flipX ?? false) { // Reverse the array without using array.reverse(). collectibles =
   // collectibles.reduce( (acc, val) => [val, ...acc], // eslint-disable-next-line
   // @typescript-eslint/prefer-reduce-type-parameter [] as CollectibleType[], ); }
@@ -170,8 +171,8 @@ export function renderTMTRAINERSprite(
       sprite.Color = portionColor;
     }
 
-    // sprite.FlipX = flipX ?? getRandomInt(1, 2, nextSeeds(seed, i)) === 1; sprite.FlipY = flipY ??
-    // getRandomInt(1, 2, nextSeeds(seed, i)) === 1;
+    // sprite.FlipX = flipX ?? getRandomInteger(1, 2, nextSeeds(seed, i)) === 1; sprite.FlipY =
+    // flipY ?? getRandomInteger(1, 2, nextSeeds(seed, i)) === 1;
     sprite.Scale = scale;
     sprite.Rotation = rotation;
 

@@ -14,11 +14,12 @@ import {
   defaultInvertedActiveActionSetBuilder,
   defaultInvertedPassiveActionSetBuilder,
 } from "../genericBuilders";
+import { getRandomInteger } from "../../randomHelper";
 
 export function mydoomDefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = getRandomInt(0, 1) === 0;
+  const active = getRandomInteger(0, 1) === 0;
   let actionSet: InvertedItemActionSet | undefined;
 
   /** Generate the ActionSet using default properties. */
@@ -34,8 +35,8 @@ export function mydoomDefaultBuilder(
   /** Set the icon. */
   const sprite = generateMydoomCorruptedCollectibleSprite(actionSet, inputs);
   if (!isColor(sprite)) {
-    sprite.flipX = getRandomInt(0, 1) === 0;
-    sprite.flipY = getRandomInt(0, 1) === 0;
+    sprite.flipX = getRandomInteger(0, 1) === 0;
+    sprite.flipY = getRandomInteger(0, 1) === 0;
   }
   actionSet.setIcon(sprite);
 
@@ -56,12 +57,12 @@ function generateMydoomCorruptedCollectibleSprite(
     seed: getRandomSeed(),
     color: COLORS.Black,
   };
-  const multipleSegments = getRandomInt(0, 1) === 0;
+  const multipleSegments = getRandomInteger(0, 1) === 0;
   if (multipleSegments) {
     sprite.flipX = undefined;
     sprite.flipY = undefined;
 
-    const mirror = getRandomInt(0, 1) === 0;
+    const mirror = getRandomInteger(0, 1) === 0;
     if (mirror) {
       sprite.collectibles.push(
         inputs?.collectible ??
@@ -70,7 +71,7 @@ function generateMydoomCorruptedCollectibleSprite(
       );
     }
 
-    const confusion = getRandomInt(0, 1) === 0;
+    const confusion = getRandomInteger(0, 1) === 0;
     if (confusion) {
       sprite.collectibles.push(
         getRandomCollectibleType() ?? CollectibleType.POOP,
@@ -79,8 +80,8 @@ function generateMydoomCorruptedCollectibleSprite(
       sprite.collectibles.sort(() => Math.random() - 0.5);
     }
   } else {
-    sprite.flipX = getRandomInt(0, 1) === 0;
-    sprite.flipY = getRandomInt(0, 1) === 0;
+    sprite.flipX = getRandomInteger(0, 1) === 0;
+    sprite.flipY = getRandomInteger(0, 1) === 0;
   }
   return sprite;
 }

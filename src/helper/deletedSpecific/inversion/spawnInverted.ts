@@ -83,7 +83,7 @@ export function spawnInvertedCollectible(
   invertedActionSet?: InvertedItemActionSet,
   inputs?: ActionSetBuilderInput,
 ): EntityPickup {
-  const pedestal = mod.spawnCollectible(collectibleType, position);
+  const pedestal = mod.spawnCollectible(collectibleType, position, undefined);
   setPedestalInversion(true, pedestal, invertedActionSet, inputs);
   return pedestal;
 }

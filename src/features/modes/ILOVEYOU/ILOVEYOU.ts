@@ -1,8 +1,5 @@
-import {
-  CollectibleType,
-  DamageFlag,
-  SoundEffect,
-} from "isaac-typescript-definitions";
+import type { DamageFlag } from "isaac-typescript-definitions";
+import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
 import {
   getPlayerIndex,
   getPlayersOfType,
@@ -42,11 +39,11 @@ export function iLoveYouModeFin(player: EntityPlayer): void {
 // TODO: Fix
 export function iLoveYouPostNewRoom(): void {
   const iLoveYouPlayers = getPlayersOfType(PlayerTypeCustom.DELETED_ILOVEYOU);
-  iLoveYouPlayers.forEach((player) => {
+  for (const player of iLoveYouPlayers) {
     player
       .GetEffects()
       .AddCollectibleEffect(PERSISTENT_COLLECTIBLE_EFFECT, false);
-  });
+  }
 }
 
 export function iloveyouPlayerCollision(

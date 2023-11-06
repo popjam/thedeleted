@@ -17,7 +17,7 @@ export class OnObtainAction extends Action {
    * @example 'On uninstalling isaac, ' ...
    */
   setRandomFunnyActionText(): this {
-    this.oat = getRandomSetElement(FUNNY_ACTION_TEXT_SET);
+    this.oat = getRandomSetElement(FUNNY_ACTION_TEXT_SET, undefined);
     return this;
   }
 

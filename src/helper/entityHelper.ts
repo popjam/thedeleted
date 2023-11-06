@@ -39,9 +39,9 @@ export function getRandomPositionInRadius(
   radius: number,
   excludeRadius = 0,
 ): Vector {
-  const displacement = getRandomVector()
+  const displacement = getRandomVector(undefined)
     .Normalized()
-    .mul(getRandom() * radius + excludeRadius);
+    .mul(getRandom(undefined) * radius + excludeRadius);
   return centerPos.add(displacement);
 }
 
@@ -55,7 +55,7 @@ export function spawnPickupThrowToPos(
   radius = 100,
   speed = 4,
 ): EntityPickup {
-  const spawnPos = getRandomVector().Normalized().mul(radius).add(pos);
+  const spawnPos = getRandomVector(undefined).Normalized().mul(radius).add(pos);
   const displacement = pos.sub(spawnPos);
   const distance = spawnPos.Distance(pos);
   const time = distance / speed;
@@ -75,7 +75,7 @@ export function spawnPickupThrowToEntity(
   speed = 4,
 ): EntityPickup {
   const pos = entity.Position;
-  const spawnPos = getRandomVector().Normalized().mul(radius).add(pos);
+  const spawnPos = getRandomVector(undefined).Normalized().mul(radius).add(pos);
   const displacement = pos.sub(spawnPos);
   const distance = spawnPos.Distance(pos);
   const time = distance / speed;
@@ -94,9 +94,9 @@ export function spawnPickupThrowFromPos(
   maxSpeed = 15,
   minSpeed = 2,
 ): EntityPickup {
-  const throwVector = getRandomVector()
+  const throwVector = getRandomVector(undefined)
     .Normalized()
-    .mul(getRandom() * (maxSpeed - minSpeed) + minSpeed);
+    .mul(getRandom(undefined) * (maxSpeed - minSpeed) + minSpeed);
   const pickup = spawnPickup(variant, subType, centerPos, throwVector);
   return pickup;
 }
@@ -113,9 +113,9 @@ export function spawnPickupThrowFromEntity(
   minSpeed = 2,
 ): EntityPickup {
   const centerPos = entity.Position;
-  const throwVector = getRandomVector()
+  const throwVector = getRandomVector(undefined)
     .Normalized()
-    .mul(getRandom() * (maxSpeed - minSpeed) + minSpeed);
+    .mul(getRandom(undefined) * (maxSpeed - minSpeed) + minSpeed);
   const pickup = spawnPickup(
     variant,
     subType,

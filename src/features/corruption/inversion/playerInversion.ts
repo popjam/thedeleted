@@ -1,11 +1,7 @@
 /** Functions related to player and hence game inversion status. */
 
-import {
-  DefaultMap,
-  getPlayerIndex,
-  getPlayers,
-  PlayerIndex,
-} from "isaacscript-common";
+import type { PlayerIndex } from "isaacscript-common";
+import { DefaultMap, getPlayerIndex, getPlayers } from "isaacscript-common";
 import { mod } from "../../../mod";
 
 /**
@@ -37,7 +33,7 @@ export function isPlayerInverted(player: EntityPlayer): boolean {
  * Set the specified players' inversion status. This should NOT be used as a general function to
  * invert the player as it does not update the world. Should use 'invertPlayer' instead.
  */
-// eslint-disable-next-line no-underscore-dangle
+
 export function _setPlayerInversion(
   player: EntityPlayer,
   inversion: boolean,

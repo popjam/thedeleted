@@ -1,11 +1,12 @@
 import { deepCopy, getRandomInt } from "isaacscript-common";
+import { getRandomInteger } from "../../helper/randomHelper";
 
 /** Range between two numbers. Left number is minimum, right is maximum. */
 export type Range = [number, number];
 
 /** Get a random number in the range, inclusive on both ends. */
 export function randomInRange(range: Range, seedOrRNG?: Seed | RNG): number {
-  return getRandomInt(range[0], range[1], seedOrRNG);
+  return getRandomInteger(range[0], range[1], seedOrRNG);
 }
 
 /**

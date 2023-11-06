@@ -1,5 +1,6 @@
 import { mod } from "../../mod";
-import { createPercentage, Percentage } from "../../types/general/Percentage";
+import type { Percentage } from "../../types/general/Percentage";
+import { createPercentage } from "../../types/general/Percentage";
 
 const v = {
   persistent: {

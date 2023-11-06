@@ -23,7 +23,7 @@ export function setNonInvertedPickupActionSet(
   pickup: EntityPickup,
   actionSet: NonInvertedPickupActionSet,
 ): void {
-  _setPickupIndexActionSet(mod.getPickupIndex(pickup), actionSet);
+  _setPickupIndexActionSet(mod["getPickupIndex"](pickup), actionSet);
   updatePickup(pickup);
   // if (isPickupInverted(pickup)) { }
 }

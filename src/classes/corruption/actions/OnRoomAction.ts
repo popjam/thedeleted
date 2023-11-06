@@ -32,7 +32,7 @@ export class OnRoomAction extends Action {
   getRoomTypeText(amount: number): string | undefined {
     const { rT: roomType } = this;
     if (roomType !== undefined) {
-      if (roomType === RoomType.CHEST) {
+      if (roomType === RoomType.VAULT) {
         if (amount !== 1) {
           return SINGULAR_CHEST_CLAUSE;
         }

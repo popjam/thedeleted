@@ -119,8 +119,8 @@ export function getCollectibleRenderOffset(
 }
 
 export function getRandomTrinketType(): TrinketType {
-  const trinketArray = mod.getTrinketArray();
-  return getRandomArrayElement(trinketArray);
+  const trinketArray = mod.getTrinketTypes();
+  return getRandomArrayElement(trinketArray, getRandomSeed());
 }
 
 /** Get a random amount of random collectibles. */
@@ -162,6 +162,7 @@ export function spawnGlitchedCollectible(
   const glitchedCollectible = mod.spawnCollectible(
     CollectibleType.SAD_ONION,
     positionOrGridIndex,
+    undefined,
   );
   setCollectibleGlitched(glitchedCollectible);
   return glitchedCollectible;
@@ -339,7 +340,7 @@ export function getRandomCollectibleType(
   collectibleAttributes?: CollectibleAttribute,
   seedOrRNG: Seed | RNG = getRandomSeed(),
 ): CollectibleType | undefined {
-  let filteredCollectibles = [...mod.getCollectibleArray()];
+  let filteredCollectibles = [...mod.getCollectibleTypes()];
   const rng = isRNG(seedOrRNG) ? seedOrRNG : newRNG(seedOrRNG);
   let currentCollectible: CollectibleType | undefined;
   let i = 0;

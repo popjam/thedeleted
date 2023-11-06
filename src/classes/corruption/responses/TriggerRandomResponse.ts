@@ -89,6 +89,6 @@ export class TriggerRandomResponse extends Response {
   }
 
   fire(triggerData: TriggerData): void {
-    getRandomFromWeightedArray(this.r).trigger(triggerData);
+    getRandomFromWeightedArray(this.r, undefined).trigger(triggerData);
   }
 }

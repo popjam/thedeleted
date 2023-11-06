@@ -37,6 +37,7 @@ import { rollPercentage } from "../../types/general/Percentage";
 import { getRandomCollectibleType } from "../collectibleHelper";
 import { getObjectValues } from "../objectHelper";
 import { fprint } from "../printHelper";
+import { getRandomInteger } from "../randomHelper";
 
 /**
  * Generates a CustomCollectibleSprite from the provided ActionSet. If 'Advanced Icons' setting is
@@ -49,6 +50,7 @@ export function generateDefaultCorruptedCollectibleSprite(
 ): CorruptedCollectibleSprite {
   const amountOfSegments = getRandomFromWeightedArray(
     INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD,
+    undefined,
   );
   const involvedCollectibles = actionSet.getInvolvedCollectibles();
   if (inputs?.collectible !== undefined) {
@@ -62,23 +64,23 @@ export function generateDefaultCorruptedCollectibleSprite(
     }
   } else if (involvedCollectibles.length > amountOfSegments) {
     involvedCollectibles.splice(
-      getRandomInt(0, involvedCollectibles.length - 1),
+      getRandomInteger(0, involvedCollectibles.length - 1),
       involvedCollectibles.length - amountOfSegments,
     );
   }
-  shuffleArrayInPlace(involvedCollectibles);
+  shuffleArrayInPlace(involvedCollectibles, undefined);
   return {
     collectibles: involvedCollectibles,
     color: "random",
     seed: getRandomSeed(),
-    horizontal: getRandomInt(0, 1) === 0,
+    horizontal: getRandomInteger(0, 1) === 0,
   };
 }
 
 export function defaultInvertedItemActionSetBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = inputs?.forceActiveOrPassive ?? getRandomInt(0, 1) === 0;
+  const active = inputs?.forceActiveOrPassive ?? getRandomInteger(0, 1) === 0;
 
   /** Generate the ActionSet using default properties. */
   const actionSet = active
@@ -102,7 +104,7 @@ export function defaultInvertedActiveActionSetBuilder(
 ): InvertedActiveActionSet {
   fprint(`defaultInvertedActiveActionSetBuilder. inputs: (${inputs})`);
 
-  const amountOfEffects = getRandomInt(1, 3);
+  const amountOfEffects = getRandomInteger(1, 3);
   const effectArray: Array<Action | Response> = [];
   for (let i = 0; i < amountOfEffects; i++) {
     const responses = [
@@ -119,18 +121,18 @@ export function defaultInvertedActiveActionSetBuilder(
             getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
               CollectibleType.POOP,
           )
-          .setChanceToActivate(getRandomInt(1, 100))
-          .setAmountOfActivations(getRandomInt(1, 3))
+          .setChanceToActivate(getRandomInteger(1, 100))
+          .setAmountOfActivations(getRandomInteger(1, 3))
           .setMorality(Morality.POSITIVE),
       () =>
         new SpawnNPCResponse()
-          .construct(getRandomArrayElement(getObjectValues(NPCID)))
+          .construct(getRandomArrayElement(getObjectValues(NPCID), undefined))
           .setMorality(Morality.NEGATIVE),
       () =>
         new SpawnNPCResponse()
-          .construct(getRandomArrayElement(getObjectValues(NPCID)))
-          .setChanceToActivate(getRandomInt(1, 100))
-          .setAmountOfActivations(getRandomInt(1, 3))
+          .construct(getRandomArrayElement(getObjectValues(NPCID), undefined))
+          .setChanceToActivate(getRandomInteger(1, 100))
+          .setAmountOfActivations(getRandomInteger(1, 3))
           .setMorality(Morality.NEGATIVE),
     ];
     const randomAction: () => Action = getRandomFromWeightedArray<() => Action>(
@@ -140,38 +142,42 @@ export function defaultInvertedActiveActionSetBuilder(
         [() => new OnObtainAction(), 1],
         [() => new OnRoomAction(), 1],
       ],
+      undefined,
     );
-    const randomResponse: Response = getRandomFromWeightedArray<Response>([
-      [getRandomArrayElement(responses)(), 1],
+    const randomResponse: Response = getRandomFromWeightedArray<Response>(
       [
-        new WaitThenTriggerResponse().construct(
-          getRandomArrayElement(responses)(),
-        ),
-        1,
+        [getRandomArrayElement(responses, undefined)(), 1],
+        [
+          new WaitThenTriggerResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerInSequenceResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerRandomResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerOverTimeResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomInteger(1, 4),
+            getRandomInteger(1, 3),
+          ),
+          1,
+        ],
       ],
-      [
-        new TriggerInSequenceResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomArrayElement(responses)(),
-        ),
-        1,
-      ],
-      [
-        new TriggerRandomResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomArrayElement(responses)(),
-        ),
-        1,
-      ],
-      [
-        new TriggerOverTimeResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomInt(1, 4),
-          getRandomInt(1, 3),
-        ),
-        1,
-      ],
-    ]);
+      undefined,
+    );
 
     /** % Chance of Action/Response. */
     if (rollPercentage(10)) {
@@ -184,7 +190,7 @@ export function defaultInvertedActiveActionSetBuilder(
     .addEffects(...effectArray)
     .setQuality(3)
     .setChargeType(ItemConfigChargeType.NORMAL)
-    .setCharges(getRandomInt(1, 6));
+    .setCharges(getRandomInteger(1, 6));
   return invertedActiveActionSet;
 }
 
@@ -197,15 +203,18 @@ export function defaultInvertedPassiveActionSetBuilder(
 ): InvertedPassiveActionSet {
   fprint(`defaultInvertedPassiveActionSetBuilder. inputs: (${inputs})`);
 
-  const amountOfEffects = getRandomInt(1, 3);
+  const amountOfEffects = getRandomInteger(1, 3);
   const effectArray: Action[] = [];
-  const randomActions: Action = getRandomFromWeightedArray([
-    [new OnDamageAction(), 1],
-    [new OnFloorAction(), 1],
-    [new OnObtainAction(), 1],
-    [new OnRoomAction(), 1],
-    [new OnKillAction(), 1],
-  ]);
+  const randomActions: Action = getRandomFromWeightedArray(
+    [
+      [new OnDamageAction(), 1],
+      [new OnFloorAction(), 1],
+      [new OnObtainAction(), 1],
+      [new OnRoomAction(), 1],
+      [new OnKillAction(), 1],
+    ],
+    undefined,
+  );
   for (let i = 0; i < amountOfEffects; i++) {
     const responses = [
       () =>
@@ -221,18 +230,18 @@ export function defaultInvertedPassiveActionSetBuilder(
             getRandomCollectibleType({ itemType: ItemType.ACTIVE }) ??
               CollectibleType.POOP,
           )
-          .setChanceToActivate(getRandomInt(1, 100))
-          .setAmountOfActivations(getRandomInt(1, 3))
+          .setChanceToActivate(getRandomInteger(1, 100))
+          .setAmountOfActivations(getRandomInteger(1, 3))
           .setMorality(Morality.POSITIVE),
       () =>
         new SpawnNPCResponse()
-          .construct(getRandomArrayElement(getObjectValues(NPCID)))
+          .construct(getRandomArrayElement(getObjectValues(NPCID), undefined))
           .setMorality(Morality.NEGATIVE),
       () =>
         new SpawnNPCResponse()
-          .construct(getRandomArrayElement(getObjectValues(NPCID)))
-          .setChanceToActivate(getRandomInt(1, 100))
-          .setAmountOfActivations(getRandomInt(1, 3))
+          .construct(getRandomArrayElement(getObjectValues(NPCID), undefined))
+          .setChanceToActivate(getRandomInteger(1, 100))
+          .setAmountOfActivations(getRandomInteger(1, 3))
           .setMorality(Morality.NEGATIVE),
     ];
     const randomAction: () => Action = getRandomFromWeightedArray<() => Action>(
@@ -242,38 +251,42 @@ export function defaultInvertedPassiveActionSetBuilder(
         [() => new OnObtainAction(), 1],
         [() => new OnRoomAction(), 1],
       ],
+      undefined,
     );
-    const randomResponse: Response = getRandomFromWeightedArray<Response>([
-      [getRandomArrayElement(responses)(), 1],
+    const randomResponse: Response = getRandomFromWeightedArray<Response>(
       [
-        new WaitThenTriggerResponse().construct(
-          getRandomArrayElement(responses)(),
-        ),
-        1,
+        [getRandomArrayElement(responses, undefined)(), 1],
+        [
+          new WaitThenTriggerResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerInSequenceResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerRandomResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomArrayElement(responses, undefined)(),
+          ),
+          1,
+        ],
+        [
+          new TriggerOverTimeResponse().construct(
+            getRandomArrayElement(responses, undefined)(),
+            getRandomInteger(1, 4),
+            getRandomInteger(1, 3),
+          ),
+          1,
+        ],
       ],
-      [
-        new TriggerInSequenceResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomArrayElement(responses)(),
-        ),
-        1,
-      ],
-      [
-        new TriggerRandomResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomArrayElement(responses)(),
-        ),
-        1,
-      ],
-      [
-        new TriggerOverTimeResponse().construct(
-          getRandomArrayElement(responses)(),
-          getRandomInt(1, 4),
-          getRandomInt(1, 3),
-        ),
-        1,
-      ],
-    ]);
+      undefined,
+    );
     effectArray.push(
       randomAction().setResponse(randomResponse.setMorality(Morality.POSITIVE)),
     );

@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter, getRandomInt } from "isaacscript-common";
 import { patternToPlainString } from "./patternHelper";
+import { getRandomInteger } from "./randomHelper";
 
 /**
  * Removes unnecessary spaces, capitalizes first letter.
@@ -37,8 +38,8 @@ export function getRandomPrefix(s: string): string {
   let num = 1;
   num =
     len < 3
-      ? string.find(s, "[.]", getRandomInt(1, len))[1]
-      : string.find(s, "[AEIOUaeiou]", getRandomInt(2, len))[1];
+      ? string.find(s, "[.]", getRandomInteger(1, len, undefined))[1]
+      : string.find(s, "[AEIOUaeiou]", getRandomInteger(2, len, undefined))[1];
   const prefix = string.sub(s, 1, num);
   return prefix;
 }
@@ -48,8 +49,12 @@ export function getRandomSuffix(s: string): string {
   let num = 1;
   num =
     len < 3
-      ? string.find(s, "[.]", getRandomInt(1, len - 1))[1]
-      : string.find(s, "[^AEIOUaeiou]", getRandomInt(1, len - 1))[1];
+      ? string.find(s, "[.]", getRandomInteger(1, len - 1, undefined))[1]
+      : string.find(
+          s,
+          "[^AEIOUaeiou]",
+          getRandomInteger(1, len - 1, undefined),
+        )[1];
   const suffix = string.sub(s, num, len);
   return suffix;
 }

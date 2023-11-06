@@ -21,12 +21,13 @@ import { getAdvancedInvertedItemIconSetting } from "../../../features/settings/G
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import type { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { getRandomCollectibleType } from "../../collectibleHelper";
+import { getRandomInteger } from "../../randomHelper";
 
 /** Default Builder to generate a REVETON ActionSet. */
 export function revetonDefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = getRandomInt(0, 1) === 0;
+  const active = getRandomInteger(0, 1) === 0;
   let actionSet: InvertedItemActionSet | undefined;
 
   /** Determines the sprite & EID text red/blue color order. */
@@ -34,7 +35,7 @@ export function revetonDefaultBuilder(
     typeof DeletedColor.REVETON_BLUE,
     typeof DeletedColor.REVETON_BLUE,
   ] =
-    getRandomInt(0, 1) === 0
+    getRandomInteger(0, 1) === 0
       ? [DeletedColor.REVETON_BLUE, DeletedColor.REVETON_RED]
       : [DeletedColor.REVETON_RED, DeletedColor.REVETON_BLUE];
   const colorOrderEIDShortcut: [

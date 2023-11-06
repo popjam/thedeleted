@@ -19,7 +19,7 @@ export function backdropHelperInit(): void {
  * Permanently set the backdrop to the 'error room' backdrop. Should not use outside turning the
  * world corrupted. Will also set the corrupted floor color.
  */
-// eslint-disable-next-line no-underscore-dangle
+
 export function _setCorruptedBackdrop(): void {
   if (v.run.corruptedBackdrop) {
     return;
@@ -34,7 +34,7 @@ export function _setCorruptedBackdrop(): void {
  * Remove the permanent corrupted backdrop set by 'setCorruptedBackdrop()'. Should not use outside
  * removing the corrupted status of the world.
  */
-// eslint-disable-next-line no-underscore-dangle
+
 export function _removeCorruptedBackdrop(): void {
   if (!v.run.corruptedBackdrop) {
     return;

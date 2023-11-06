@@ -1,4 +1,5 @@
-import { ActiveSlot, PlayerType } from "isaac-typescript-definitions";
+import type { PlayerType } from "isaac-typescript-definitions";
+import { ActiveSlot } from "isaac-typescript-definitions";
 import {
   addCollectible,
   getPlayerIndex,
@@ -37,6 +38,7 @@ const v = {
   persistent: {
     /** The mode N.Deleted will be upon starting a run. */
     normalMode: Mode.HAPPY99,
+
     /** The mode T.Deleted will be upon starting a run. */
     taintedMode: Mode.SOPHOS,
   }, // NOTE: There are currently no checks in place to
@@ -158,11 +160,11 @@ export function postPlayerChangeTypeMode(
     getModeFin(oldMode)(player);
   }
   const newMode = getModeFromPlayerType(newCharacter);
-  if (newMode !== undefined) {
+  if (newMode === undefined) {
+    invertPlayerToInversion(player, false, true);
+  } else {
     fprint(`Starting up mode: ${newMode} for player ${getPlayerIndex(player)}`);
     setPlayerMode(player, newMode);
-  } else {
-    invertPlayerToInversion(player, false, true);
   }
 }
 

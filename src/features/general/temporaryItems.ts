@@ -11,11 +11,12 @@
  * enum.
  */
 
-import {
+import type {
   CollectibleType,
   DamageFlag,
   TrinketType,
 } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
   arrayRemove,
   DefaultMap,
@@ -23,7 +24,6 @@ import {
   defaultMapSetPlayer,
   game,
   getPlayerFromIndex,
-  PlayerIndex,
   smeltTrinket,
 } from "isaacscript-common";
 import { TemporaryEffectType } from "../../enums/general/TemporaryEffectType";
@@ -58,16 +58,19 @@ const v = {
     temporaryLevelTrinkets: new DefaultMap<PlayerIndex, TrinketType[]>(
       () => [],
     ),
+
     /** Temporary effects which automatically are removed next room. */
     temporaryRoomCollectibleEffects: new DefaultMap<
       PlayerIndex,
       CollectibleType[]
     >(() => []),
+
     /** Collectibles that are actually given to the player and removed next room. */
     temporaryRoomCollectibles: new DefaultMap<PlayerIndex, CollectibleType[]>(
       () => [],
     ),
     temporaryRoomTrinkets: new DefaultMap<PlayerIndex, TrinketType[]>(() => []),
+
     /**
      * Used to check if POST_NEW_ROOM_REORDERED firing is on save/continue, or actually going to a
      * new room.
@@ -113,7 +116,9 @@ export function temporaryItemsPlayerTakeDMG(
 export function temporaryItemsPreNewLevel(player: EntityPlayer): void {
   removeTemporaryCollectibles(v.run.temporaryLevelCollectibles);
   removeTemporaryTrinkets(v.run.temporaryLevelTrinkets);
-  v.run.temporaryLevelCollectibleEffects.forEach((value) => value.splice(0));
+  for (const value of v.run.temporaryLevelCollectibleEffects) {
+    value.splice(0);
+  }
 }
 
 export function temporaryItemsPostNewRoomReordered(): void {
@@ -127,7 +132,9 @@ export function temporaryItemsPostNewRoomReordered(): void {
     removeTemporaryCollectibles(v.run.temporaryRoomCollectibles);
     removeTemporaryTrinkets(v.run.temporaryRoomTrinkets);
     // Temporary effects automatically disappear so we only have to remove them from the arrays.
-    v.run.temporaryRoomCollectibleEffects.forEach((value) => value.splice(0));
+    for (const value of v.run.temporaryRoomCollectibleEffects) {
+      value.splice(0);
+    }
   }
 
   // Floor temporary effects need to be reapplied in every new room instance (they are removed
@@ -135,6 +142,7 @@ export function temporaryItemsPostNewRoomReordered(): void {
   reapplyTemporaryCollectibleEffects(v.run.temporaryLevelCollectibleEffects);
   // On hit effects need to be reapplied.
   reapplyTemporaryCollectibleEffects(v.run.temporaryOnHitCollectibleEffects);
+
   /** Permanent effects need to be reapplied. */
   reapplyTemporaryCollectibleEffects(v.run.permanentCollectibleEffects);
 
@@ -154,12 +162,25 @@ export function playerAddTemporaryTrinket(
   duration: TemporaryEffectType = TemporaryEffectType.ROOM,
 ): void {
   smeltTrinket(player, trinket);
-  if (duration === TemporaryEffectType.ROOM) {
-    defaultMapGetPlayer(v.run.temporaryRoomTrinkets, player).push(trinket);
-  } else if (duration === TemporaryEffectType.LEVEL) {
-    defaultMapGetPlayer(v.run.temporaryLevelTrinkets, player).push(trinket);
-  } else if (duration === TemporaryEffectType.ON_HIT) {
-    defaultMapGetPlayer(v.run.temporaryOnHitTrinkets, player).push(trinket);
+  switch (duration) {
+    case TemporaryEffectType.ROOM: {
+      defaultMapGetPlayer(v.run.temporaryRoomTrinkets, player).push(trinket);
+
+      break;
+    }
+
+    case TemporaryEffectType.LEVEL: {
+      defaultMapGetPlayer(v.run.temporaryLevelTrinkets, player).push(trinket);
+
+      break;
+    }
+
+    case TemporaryEffectType.ON_HIT: {
+      defaultMapGetPlayer(v.run.temporaryOnHitTrinkets, player).push(trinket);
+
+      break;
+    }
+    // No default
   }
 }
 
@@ -183,38 +204,70 @@ export function playerAddTemporaryCollectible(
     player
       .GetEffects()
       .AddCollectibleEffect(collectibleType as TemporaryCollectibleType);
-    if (duration === TemporaryEffectType.ROOM) {
-      defaultMapGetPlayer(v.run.temporaryRoomCollectibleEffects, player).push(
-        collectibleType,
-      );
-    } else if (duration === TemporaryEffectType.LEVEL) {
-      defaultMapGetPlayer(v.run.temporaryLevelCollectibleEffects, player).push(
-        collectibleType,
-      );
-    } else if (duration === TemporaryEffectType.ON_HIT) {
-      defaultMapGetPlayer(v.run.temporaryOnHitCollectibleEffects, player).push(
-        collectibleType,
-      );
-    } else if (duration === TemporaryEffectType.PERMANENT) {
-      defaultMapGetPlayer(v.run.permanentCollectibleEffects, player).push(
-        collectibleType,
-      );
+    switch (duration) {
+      case TemporaryEffectType.ROOM: {
+        defaultMapGetPlayer(v.run.temporaryRoomCollectibleEffects, player).push(
+          collectibleType,
+        );
+
+        break;
+      }
+
+      case TemporaryEffectType.LEVEL: {
+        defaultMapGetPlayer(
+          v.run.temporaryLevelCollectibleEffects,
+          player,
+        ).push(collectibleType);
+
+        break;
+      }
+
+      case TemporaryEffectType.ON_HIT: {
+        defaultMapGetPlayer(
+          v.run.temporaryOnHitCollectibleEffects,
+          player,
+        ).push(collectibleType);
+
+        break;
+      }
+
+      case TemporaryEffectType.PERMANENT: {
+        defaultMapGetPlayer(v.run.permanentCollectibleEffects, player).push(
+          collectibleType,
+        );
+
+        break;
+      }
+      // No default
     }
     return true;
   }
   player.AddCollectible(collectibleType, undefined, FIRST_TIME_PICKING_UP);
-  if (duration === TemporaryEffectType.ROOM) {
-    defaultMapGetPlayer(v.run.temporaryRoomCollectibles, player).push(
-      collectibleType,
-    );
-  } else if (duration === TemporaryEffectType.LEVEL) {
-    defaultMapGetPlayer(v.run.temporaryLevelCollectibles, player).push(
-      collectibleType,
-    );
-  } else if (duration === TemporaryEffectType.ON_HIT) {
-    defaultMapGetPlayer(v.run.temporaryOnHitCollectibles, player).push(
-      collectibleType,
-    );
+  switch (duration) {
+    case TemporaryEffectType.ROOM: {
+      defaultMapGetPlayer(v.run.temporaryRoomCollectibles, player).push(
+        collectibleType,
+      );
+
+      break;
+    }
+
+    case TemporaryEffectType.LEVEL: {
+      defaultMapGetPlayer(v.run.temporaryLevelCollectibles, player).push(
+        collectibleType,
+      );
+
+      break;
+    }
+
+    case TemporaryEffectType.ON_HIT: {
+      defaultMapGetPlayer(v.run.temporaryOnHitCollectibles, player).push(
+        collectibleType,
+      );
+
+      break;
+    }
+    // No default
   }
 
   return false;
@@ -244,18 +297,18 @@ export function playerRemovePermanentCollectibleEffect(
 function reapplyTemporaryCollectibleEffects(
   map: DefaultMap<PlayerIndex, CollectibleType[]>,
 ) {
-  map.forEach((temporaryCollectibles, playerIndex) => {
+  for (const [playerIndex, temporaryCollectibles] of map.entries()) {
     if (temporaryCollectibles.length > 0) {
       const player = getPlayerFromIndex(playerIndex);
       if (player !== undefined) {
-        temporaryCollectibles.forEach((collectibleType) => {
+        for (const collectibleType of temporaryCollectibles) {
           player
             .GetEffects()
             .AddCollectibleEffect(collectibleType as TemporaryCollectibleType);
-        });
+        }
       }
     }
-  });
+  }
 }
 
 /**
@@ -265,17 +318,17 @@ function reapplyTemporaryCollectibleEffects(
 function removeTemporaryCollectibles(
   map: DefaultMap<PlayerIndex, CollectibleType[]>,
 ) {
-  map.forEach((collectibleTypes, playerIndex) => {
+  for (const [playerIndex, collectibleTypes] of map.entries()) {
     if (collectibleTypes.length > 0) {
       const player = getPlayerFromIndex(playerIndex);
       if (player !== undefined) {
-        collectibleTypes.forEach((collectibleType) => {
+        for (const collectibleType of collectibleTypes) {
           player.RemoveCollectible(collectibleType);
-        });
+        }
       }
       collectibleTypes.splice(0);
     }
-  });
+  }
 }
 
 /**
@@ -283,17 +336,17 @@ function removeTemporaryCollectibles(
  * room), also updating the map.
  */
 function removeTemporaryTrinkets(map: DefaultMap<PlayerIndex, TrinketType[]>) {
-  map.forEach((trinketTypes, playerIndex) => {
+  for (const [playerIndex, trinketTypes] of map.entries()) {
     if (trinketTypes.length > 0) {
       const player = getPlayerFromIndex(playerIndex);
       if (player !== undefined) {
-        trinketTypes.forEach((trinketType) => {
+        for (const trinketType of trinketTypes) {
           player.TryRemoveTrinket(trinketType);
-        });
+        }
       }
       trinketTypes.splice(0);
     }
-  });
+  }
 }
 
 /**
@@ -306,9 +359,9 @@ function removeTemporaryCollectiblesFromPlayer(
 ) {
   const collectibleTypes = defaultMapGetPlayer(map, player);
   if (collectibleTypes.length > 0) {
-    collectibleTypes.forEach((collectibleType) => {
+    for (const collectibleType of collectibleTypes) {
       player.RemoveCollectible(collectibleType);
-    });
+    }
     collectibleTypes.splice(0);
   }
 }
@@ -323,9 +376,9 @@ function removeTemporaryTrinketsFromPlayer(
 ) {
   const trinketTypes = defaultMapGetPlayer(map, player);
   if (trinketTypes.length > 0) {
-    trinketTypes.forEach((trinketType) => {
+    for (const trinketType of trinketTypes) {
       player.TryRemoveTrinket(trinketType);
-    });
+    }
     trinketTypes.splice(0);
   }
 }
@@ -337,9 +390,9 @@ function removeTemporaryCollectibleEffectsFromPlayer(
   const playerTemporaryCollectibles = defaultMapGetPlayer(map, player);
   if (playerTemporaryCollectibles.length > 0) {
     const playerEffects = player.GetEffects();
-    playerTemporaryCollectibles.forEach((collectibleType) => {
+    for (const collectibleType of playerTemporaryCollectibles) {
       playerEffects.RemoveCollectibleEffect(collectibleType);
-    });
+    }
     playerTemporaryCollectibles.splice(0);
   }
 }

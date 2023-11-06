@@ -1,4 +1,5 @@
 import { getRandomInt } from "isaacscript-common";
+import { getRandomInteger } from "../../helper/randomHelper";
 
 /** Number between 0 and 100. */
 export type Percentage = number;
@@ -11,7 +12,7 @@ export function isPercentage(number: number): number is Percentage {
 /** Errors if number is not a valid Percentage. */
 export function createPercentage(number: number): Percentage {
   if (number > 100 || number < 0) {
-    throw new Error("Percentage: Percentage outside of bounds (0-100).");
+    error("Percentage: Percentage outside of bounds (0-100).");
   }
   return number;
 }
@@ -24,5 +25,5 @@ export function rollPercentage(
   percentageChance: Percentage,
   seed?: Seed,
 ): boolean {
-  return getRandomInt(0, 9999, seed) * 0.01 < percentageChance;
+  return getRandomInteger(0, 9999, seed) * 0.01 < percentageChance;
 }

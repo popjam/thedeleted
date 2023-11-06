@@ -1,6 +1,4 @@
-/** An enum of EntityIDs which correlate to an NPC. */
-// Excluded: Shopkeeper 17, Fireplace 33
-export enum NPCID {
+export enum EntityList {
   FROWNING_GAPER = "10.0.0",
   GAPER = "10.1.0",
   FLAMING_GAPER = "10.2.0",
@@ -744,7 +742,3 @@ export enum NPCID {
   GURDY_JR_BLUE = "99.0.1",
   GURDY_JR_YELLOW = "99.0.2",
 }
-
-/** EntityIDs which correlate to an NPC. */
-
-// export type NPCID = (typeof NPCID)[keyof typeof NPCID];

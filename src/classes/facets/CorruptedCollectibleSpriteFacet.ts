@@ -56,7 +56,7 @@ class CorruptedCollectibleSpriteFacet extends Facet {
     newSubType: number,
   ): void {
     fprint(
-      `CorruptedCollectibleSpriteFacet: ${mod.getPickupIndex(
+      `CorruptedCollectibleSpriteFacet: ${mod["getPickupIndex"](
         pickup,
       )} changed, unsubscribing.`,
     );
@@ -71,7 +71,7 @@ class CorruptedCollectibleSpriteFacet extends Facet {
   @Callback(ModCallback.POST_PICKUP_RENDER, PickupVariant.COLLECTIBLE)
   postPickupRender(pickup: EntityPickup, _renderOffset: Vector): void {
     const corruptedSprite = v.level.replacedPickups.get(
-      mod.getPickupIndex(pickup),
+      mod["getPickupIndex"](pickup),
     );
 
     /** If the pickup is not subscribed. */
@@ -129,7 +129,7 @@ export function replaceCollectibleSpriteWithCorrupted(
   pickup: EntityPickupCollectible,
   sprite: CorruptedCollectibleSprite,
 ): void {
-  const pickupIndex = mod.getPickupIndex(pickup);
+  const pickupIndex = mod["getPickupIndex"](pickup);
 
   /**
    * If the pickup is a TMTRAINER collectible or non-trinket non-collectible pickup, we need to set
@@ -157,7 +157,7 @@ export function replaceCollectibleSpriteWithCorrupted(
   const pickupAlreadyHasCorruptedSprite =
     v.level.replacedPickups.has(pickupIndex);
 
-  v.level.replacedPickups.set(mod.getPickupIndex(pickup), sprite);
+  v.level.replacedPickups.set(mod["getPickupIndex"](pickup), sprite);
   fprint(
     `Replacing item ${getEntityIDFromEntity(pickup)}'s sprite with Corrupted!`,
   );
@@ -180,7 +180,7 @@ export function returnCorruptedCollectibleSpriteToNormal(
   pickup: EntityPickup,
 ): void {
   const corruptedCollectibleSprite = v.level.replacedPickups.get(
-    mod.getPickupIndex(pickup),
+    mod["getPickupIndex"](pickup),
   );
   if (corruptedCollectibleSprite === undefined) {
     fprint("Tried to return a non-corrupted collectible to normal but failed!");
@@ -190,7 +190,7 @@ export function returnCorruptedCollectibleSpriteToNormal(
     `Returning pickup ${pickup.SubType} to normal! (Corrupted Collectible Sprite)`,
   );
 
-  v.level.replacedPickups.delete(mod.getPickupIndex(pickup));
+  v.level.replacedPickups.delete(mod["getPickupIndex"](pickup));
 
   if (isCollectible(pickup)) {
     /** Should not t */

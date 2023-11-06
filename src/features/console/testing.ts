@@ -8,11 +8,14 @@ import {
   EntityCollisionClass,
   EntityFlag,
   EntityType,
+  Gaper2Variant,
   HeartSubType,
   ItemConfigChargeType,
   ItemPoolType,
   ItemType,
   KeySubType,
+  LaserSubType,
+  LaserVariant,
   LevelStage,
   ModCallback,
   PickupVariant,
@@ -32,6 +35,7 @@ import {
   getClosestEntityTo,
   getCollectibleName,
   getEntities,
+  getEnumKeys,
   getEnumValues,
   getKeys,
   getNPCs,
@@ -42,10 +46,12 @@ import {
   getRandomInt,
   getRandomSeed,
   getTSTLClassName,
+  log,
   sfxManager,
   spawnEffect,
   spawnEntityID,
   spawnKey,
+  spawnLaser,
   spawnNPC,
   spawnPickup,
 } from "isaacscript-common";
@@ -136,6 +142,7 @@ import { spawnHybridNPC } from "../../classes/facets/entityModifiers.ts/NPCModif
 import { randomInRangeWithDecimalPrecision } from "../../types/general/Range";
 import { NPCID } from "../../enums/general/ID/NPCID";
 import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import { EntityList } from "../../sets/data/entityList";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -179,19 +186,43 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  spawnNewInvertedCollectible(
-    getQuickAccessiblePosition(),
-    new InvertedActiveActionSet().addEffects(
-      new SpawnNPCResponse()
-        .construct(getRandomNPC())
-        .setAmountOfActivations([1, 10])
-        .setNPCFlags([NPCFlag.UNSTABLE]),
-    ),
-  );
+  const npcIDs: EntityID[] = [];
+  const entityListValues = getEnumValues(EntityList);
+  for (const ent of entityListValues) {
+    const entity = spawnEntityID(ent as EntityID, getQuickAccessiblePosition());
+    if (entity === undefined) {
+      continue;
+    }
+    const npc = entity.ToNPC();
+    if (npc !== undefined) {
+      npcIDs.push(ent as EntityID);
+    }
+    entity.Remove();
+  }
+
+  // Print new EntityList:
+  for (const ent of npcIDs) {
+    const key = getEnumKeys(EntityList).find(
+      (k) => EntityList[k as keyof typeof EntityList] === ent,
+    );
+    log(`${key} = '${ent}',`);
+  }
+
+  // Check which npcIDs are not in NPCID enum:
+  const npcIDValues = getEnumValues(NPCID);
+
+  // Check which NPCIDs are not in npcIDs:
+  for (const npcID of npcIDValues) {
+    if (!npcIDs.includes(npcID as EntityID)) {
+      log(`${npcID} is not in npcIDs.`);
+    }
+  }
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction2(): void {}
+export function testingFunction2(): void {
+  spawnEntityID("3.237.0" as EntityID, getQuickAccessiblePosition());
+}
 
 function getRandomTest<T>(
   th: T[],
@@ -219,7 +250,34 @@ function getRandomTest<T>(
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  spawnNPCWithNPCID(NPCID.ULTRA_DOOR, getQuickAccessiblePosition());
+  const toPrint = [];
+  const countedNPCs = new Set<NPCID>();
+  log("NPC size:");
+  for (const npcid of getEnumValues(NPCID)) {
+    countedNPCs.add(npcid);
+    const npc = spawnNPCWithNPCID(npcid, getQuickAccessiblePosition());
+    const enumKey = getEnumKeys(NPCID).find(
+      (key) => NPCID[key as keyof typeof NPCID] === npcid,
+    );
+    toPrint.push(`[NPCID.${enumKey},${npc.ToNPC()?.Scale}]`);
+    npc.Remove();
+  }
+  const toPrintFirstHalf = toPrint.slice(0, toPrint.length / 2);
+  const toPrintSecondHalf = toPrint.slice(toPrint.length / 2);
+  log(toPrintFirstHalf.join(","));
+  log(toPrintSecondHalf.join(","));
+
+  if (countedNPCs.size !== getEnumValues(NPCID).length) {
+    log("Missing NPCs:");
+    for (const npcid of getEnumValues(NPCID)) {
+      if (!countedNPCs.has(npcid)) {
+        const enumKey = getEnumKeys(NPCID).find(
+          (key) => NPCID[key as keyof typeof NPCID] === npcid,
+        );
+        log(`${enumKey}`);
+      }
+    }
+  }
 }
 
 /** Test stuff as the developer with command 'eted'. */
@@ -242,7 +300,7 @@ export function testingFunction4(): void {
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction5(): void {
   const customPlayerTypes = getEnumValues(PlayerTypeCustom);
-  const randomPlayerType = getRandomArrayElement(customPlayerTypes);
+  const randomPlayerType = getRandomArrayElement(customPlayerTypes, undefined);
   player().ChangePlayerType(randomPlayerType);
 }
 

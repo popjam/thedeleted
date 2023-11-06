@@ -20,7 +20,10 @@ export function getGameInvertedItemActionSet(
 ): InvertedItemActionSet {
   if (isGameInverted()) {
     const invertedPlayers = getInvertedPlayers();
-    const chosenRandomPlayer = getRandomArrayElement(invertedPlayers);
+    const chosenRandomPlayer = getRandomArrayElement(
+      invertedPlayers,
+      undefined,
+    );
     return generateInvertedItemActionSetFromPlayer(chosenRandomPlayer, inputs);
   }
   return generateDefaultInvertedItemActionSet(inputs);
