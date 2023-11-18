@@ -101,25 +101,10 @@ class UnstableEntityFacet extends Facet {
       return undefined;
     }
 
-    const pickupIndex = mod["getPickupIndex"](entity);
+    const pickupIndex = mod.getPickupIndex(entity);
     if (v.level.pickupsBeingExtracted.has(pickupIndex)) {
       v.level.pickupsBeingExtracted.delete(pickupIndex);
       this.unsubscribeIfNotInUse();
-    }
-  }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
     }
   }
 
@@ -271,7 +256,7 @@ export function setEntityInstability(
 ): Entity {
   secToExplode ??= randomInRange(DEFAULT_SEC_TO_EXPLODE_RANGE);
   if (isPickup(entity)) {
-    const pickupIndex = mod["getPickupIndex"](entity);
+    const pickupIndex = mod.getPickupIndex(entity);
     const numFrames = secToExplode * GAME_FRAMES_PER_SECOND;
     v.level.pickupsBeingExtracted.set(pickupIndex, [
       getRoomListIndex(),
@@ -290,7 +275,7 @@ export function setEntityInstability(
 
 /** Returns true if the given pickup is unstable and going to explode. */
 export function isPickupUnstable(entityPickup: EntityPickup): boolean {
-  return v.level.pickupsBeingExtracted.has(mod["getPickupIndex"](entityPickup));
+  return v.level.pickupsBeingExtracted.has(mod.getPickupIndex(entityPickup));
 }
 
 /** Returns true if the NPC is unstable and going to explode. */

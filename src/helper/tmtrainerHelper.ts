@@ -1,5 +1,5 @@
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
-import { getCollectibleItemType } from "isaacscript-common";
+import { getCollectibleItemType, spawnCollectible } from "isaacscript-common";
 import { mod } from "../mod";
 import { TMTRAINER_THRESHOLD } from "../constants/tmtrainerConstants";
 import { doesInvertedItemHaveActionSet } from "../features/corruption/effects/itemEffects";
@@ -18,7 +18,7 @@ export function getRandomTMTRAINERItem(): CollectibleType {
     player.AddCollectible(CollectibleType.TMTRAINER, 0, false);
   }
 
-  const tmtCollectible = mod.spawnCollectible(
+  const tmtCollectible = spawnCollectible(
     CollectibleType.SAD_ONION,
     Vector(0, 0),
     undefined,
@@ -70,7 +70,7 @@ export function getRandomTMTRAINERActiveItem(): CollectibleType {
   let activeItemType = CollectibleType.POOP;
 
   for (let i = 0; i < TMTRAINER_FIND_ACTIVE_ITEM_LIMIT; i++) {
-    const tmtCollectible = mod.spawnCollectible(
+    const tmtCollectible = spawnCollectible(
       CollectibleType.SAD_ONION,
       Vector(0, 0),
       undefined,

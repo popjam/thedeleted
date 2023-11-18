@@ -1,0 +1,87 @@
+import { ReadonlySet } from "isaacscript-common";
+import { FiendFolioNameSubType } from "../../../enums/compatibility/ID/FiendFolioNPCID";
+import { getNameSubTypeFromEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
+
+const MODDED_BOSS_SET = new ReadonlySet<string>([
+  // Fiend Folio.
+  FiendFolioNameSubType.AQUAGOB,
+  FiendFolioNameSubType.BASCO,
+  FiendFolioNameSubType.BASHFUL,
+  FiendFolioNameSubType.BATTIE,
+  FiendFolioNameSubType.BLUE_HORF,
+  FiendFolioNameSubType.BUCK,
+  FiendFolioNameSubType.BUSTER,
+  FiendFolioNameSubType.CACAMANCER,
+  FiendFolioNameSubType.CHASER,
+  FiendFolioNameSubType.DUKE_OF_DEMONS,
+  FiendFolioNameSubType.DUSK,
+  FiendFolioNameSubType.DUSKS_HAND,
+  FiendFolioNameSubType.EARTH,
+  FiendFolioNameSubType.GHOSTBUSTER,
+  FiendFolioNameSubType.GHOSTSE_EASY_MODE,
+  FiendFolioNameSubType.GRAVEDIGGER,
+  FiendFolioNameSubType.GRIDDLE_HORN,
+  FiendFolioNameSubType.GUTSO,
+  FiendFolioNameSubType.HEIRESS,
+  FiendFolioNameSubType.HERMIT,
+  FiendFolioNameSubType.HONEYDROP,
+  FiendFolioNameSubType.HORSE,
+  FiendFolioNameSubType.HORSE_CLASSIC,
+  FiendFolioNameSubType.JUNKSTRAP,
+  FiendFolioNameSubType.KINGPIN,
+  FiendFolioNameSubType.LUNCHEON,
+  FiendFolioNameSubType.MADOMME,
+  FiendFolioNameSubType.MELTDOWN,
+  FiendFolioNameSubType.MELTDOWN_RAPTURED,
+  FiendFolioNameSubType.MINAMITSU_MURASA,
+  FiendFolioNameSubType.MONSOON,
+  FiendFolioNameSubType.MOUSE,
+  FiendFolioNameSubType.MR_DEAD,
+  FiendFolioNameSubType.NEPTUNE,
+  FiendFolioNameSubType.PEAT,
+  FiendFolioNameSubType.PEEPING,
+  FiendFolioNameSubType.PEEPING_PHASE_2,
+  FiendFolioNameSubType.POKEY,
+  FiendFolioNameSubType.POLLUTION,
+  FiendFolioNameSubType.POLLUTION_HORSEPOWERED,
+  FiendFolioNameSubType.PSION,
+  FiendFolioNameSubType.QUEENY_III,
+  FiendFolioNameSubType.SLINGER,
+  FiendFolioNameSubType.SPEEDY,
+  FiendFolioNameSubType.TAINTED_HORSE,
+  FiendFolioNameSubType.THE_WHISPERS,
+  FiendFolioNameSubType.TSAR,
+  FiendFolioNameSubType.VENUS,
+  FiendFolioNameSubType.WARP_ZONE,
+  FiendFolioNameSubType.WHISPERS_CONTROLLER,
+  FiendFolioNameSubType.BLUE_HORF_2,
+  FiendFolioNameSubType.CHASER_BRAIN,
+  FiendFolioNameSubType.COKEDUP_HORSE,
+  FiendFolioNameSubType.ASHEN_HORSE,
+  FiendFolioNameSubType.SECRET_HORSE,
+  FiendFolioNameSubType.GOLDEN_HORSE,
+  FiendFolioNameSubType.MISSING_HORSE,
+  FiendFolioNameSubType.FALSE_HORSE,
+  FiendFolioNameSubType.MINECRAFT_HORSE,
+  FiendFolioNameSubType.STITCHED_HORSE,
+  FiendFolioNameSubType.MINER_HORSE,
+  FiendFolioNameSubType.SPIDER_HORSE,
+  FiendFolioNameSubType.DANK_HORSE,
+  FiendFolioNameSubType.DEAD_HORSE,
+  FiendFolioNameSubType.DARK_HORSE,
+  FiendFolioNameSubType.CURSED_HORSE,
+  FiendFolioNameSubType.HOLY_HORSE,
+  FiendFolioNameSubType.FORGOTTEN_HORSE,
+  FiendFolioNameSubType.SOUR_HORSE,
+  FiendFolioNameSubType.DROWNED_HORSE,
+  FiendFolioNameSubType.FOETAL_HORSE,
+]);
+
+export function _isModdedNPCIDBoss(id: string): boolean | undefined {
+  const nameSubType = getNameSubTypeFromEntityID(id);
+  if (nameSubType === undefined) {
+    return undefined;
+  }
+
+  return MODDED_BOSS_SET.has(nameSubType);
+}

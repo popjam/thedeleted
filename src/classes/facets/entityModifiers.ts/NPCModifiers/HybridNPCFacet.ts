@@ -1,46 +1,22 @@
 import {
   Callback,
   CallbackCustom,
-  GAME_FRAMES_PER_MINUTE,
   GAME_FRAMES_PER_SECOND,
   ModCallbackCustom,
-  filterMap,
   getEntityFromPtrHash,
-  getEntityID,
-  getRandomArrayElement,
   getTSTLClassName,
   round,
-  setHas,
-  spawnNPC,
 } from "isaacscript-common";
 import type { NPCID } from "../../../../enums/general/ID/NPCID";
 import { Facet, initGenericFacet } from "../../../Facet";
 import { ModCallback } from "isaac-typescript-definitions";
 import { fprint } from "../../../../helper/printHelper";
-import { spawnNPCWithNPCID } from "../../../../helper/npcIDHelper";
-import {
-  findMap,
-  mapToString,
-  getRandomMapElement,
-  someMap,
-  getRandomMapElementWithPredicate,
-} from "../../../../helper/mapHelper";
-import {
-  findSet,
-  getRandomSetElementWithPredicate,
-} from "../../../../helper/setHelper";
+import { getRandomMapElementWithPredicate } from "../../../../helper/mapHelper";
+import { findSet } from "../../../../helper/setHelper";
 import { hideNPC, unhideNPC } from "./HideNPCFacet";
-import {
-  getQuickAccessiblePosition,
-  makeEntityInvisible,
-} from "../../../../helper/entityHelper";
-import {
-  multiplyRangeConstituents,
-  randomInRange,
-  randomInRangeWithDecimalPrecision,
-} from "../../../../types/general/Range";
+import { randomInRangeWithDecimalPrecision } from "../../../../types/general/Range";
 import type { Range } from "../../../../types/general/Range";
-import { MILLISECONDS_IN_A_SECOND } from "../../../../constants/generalConstants";
+import { spawnNPCID } from "../../../../helper/entityHelper/npcIDHelper";
 
 const DEFAULT_TRANSFORMATION_TIME_RANGE_SEC = [0.3, 1] as Range;
 const DECIMAL_PRECISION = 3;
@@ -130,21 +106,6 @@ class HybridNPCFacet extends Facet {
   postNewRoomReordered(): void {
     this.unsubscribeAll();
   }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
-    }
-  }
 }
 
 export function initHybridNPCFacet(): void {
@@ -186,7 +147,7 @@ export function spawnHybridNPC(position: Vector, ...npcs: NPCID[]): EntityNPC {
 
   // For each NPC,
   for (const npc of npcs) {
-    const spawnedNPC = spawnNPCWithNPCID(npc, position);
+    const spawnedNPC = spawnNPCID(npc, position);
     hybrid.hp += spawnedNPC.MaxHitPoints;
     const ptrHash = GetPtrHash(spawnedNPC);
     hybrid.npcs.set(npc, ptrHash);

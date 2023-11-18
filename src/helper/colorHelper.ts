@@ -1,4 +1,4 @@
-import { ColorDefault } from "isaacscript-common";
+import { ColorDefault, round } from "isaacscript-common";
 
 /** Sets a Sprite to the DefaultColor (Color(1, 1, 1, 1)). */
 export function setEntityDefaultColor(entity: Entity): void {
@@ -16,8 +16,10 @@ export function colorToKColor(color: Color): KColor {
 export function reddenColor(color: Color, a = 1): Color {
   /** Reduce 'G' value by 0.1, but not less than 0. */
   color.G = color.G - 0.2 < 0 ? 0 : color.G - 0.1;
+
   /** Reduce 'B' value by 0.1, but not less than 0. */
   color.B = color.B - 0.2 < 0 ? 0 : color.B - 0.1;
+
   /** Increase Red offset by a small amount. */
   color.RO = color.RO + 0.01 * a > 1 ? 1 : color.RO + 0.01 * a;
   return color;
@@ -27,8 +29,10 @@ export function reddenColor(color: Color, a = 1): Color {
 export function bluenColor(color: Color, a = 1): Color {
   /** Reduce 'R' value by 0.1, but not less than 0. */
   color.R = color.R - 0.2 < 0 ? 0 : color.R - 0.1;
+
   /** Reduce 'G' value by 0.1, but not less than 0. */
   color.G = color.G - 0.2 < 0 ? 0 : color.G - 0.1;
+
   /** Increase Blue offset by a small amount. */
   color.BO = color.BO + 0.01 * a > 1 ? 1 : color.BO + 0.01 * a;
   return color;
@@ -37,12 +41,12 @@ export function bluenColor(color: Color, a = 1): Color {
 /** Very simple color mixing. Mix any amount of Colors. */
 export function mixColors(...colors: Color[]): Color {
   const mixedColor = Color(0, 0, 0, 0);
-  colors.forEach((color) => {
+  for (const color of colors) {
     mixedColor.R += color.R;
     mixedColor.G += color.G;
     mixedColor.B += color.B;
     mixedColor.A += color.A;
-  });
+  }
   mixedColor.R /= colors.length;
   mixedColor.G /= colors.length;
   mixedColor.B /= colors.length;
@@ -55,4 +59,12 @@ export function colorToColorize(
   color: Color,
 ): [number, number, number, number] {
   return [color.R, color.G, color.B, color.A];
+}
+
+/** Convert a KColor to a string using its rounded RGBA values. */
+export function kColorToString(color: KColor): string {
+  return `${round(color.Red, 2)},${round(color.Green, 2)},${round(
+    color.Blue,
+    2,
+  )},${round(color.Alpha, 2)}`;
 }

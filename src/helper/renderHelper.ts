@@ -25,6 +25,10 @@ export function worldToRenderPosition(position: Vector): Vector {
   );
 }
 
+export function renderToWorldPosition(position: Vector): Vector {
+  return Isaac.ScreenToWorld(position);
+}
+
 /**
  * Renders a collectible in a slot. If the slot is a Pocket slot, the collectible will be rendered
  * in the correct position depending on where the Pocket slot is.

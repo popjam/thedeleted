@@ -18,7 +18,6 @@ import {
   setCollectibleSprite,
 } from "isaacscript-common";
 import { renderCorruptedCollectibleSpriteOverCollectible } from "../../helper/deletedSpecific/funnySprites";
-import { getEntityIDFromEntity } from "../../helper/entityHelper";
 import { isCollectibleFree } from "../../helper/priceHelper";
 import { fprint } from "../../helper/printHelper";
 import { worldToRenderPosition } from "../../helper/renderHelper";
@@ -27,6 +26,7 @@ import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/fun
 import { mod } from "../../mod";
 import { isZazzinatorAny } from "../../sets/zazzSets";
 import { Facet, initGenericFacet } from "../Facet";
+import { getEntityIDFromEntity } from "../../helper/entityHelper/entityIDHelper";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
@@ -56,7 +56,7 @@ class CorruptedCollectibleSpriteFacet extends Facet {
     newSubType: number,
   ): void {
     fprint(
-      `CorruptedCollectibleSpriteFacet: ${mod["getPickupIndex"](
+      `CorruptedCollectibleSpriteFacet: ${mod.getPickupIndex(
         pickup,
       )} changed, unsubscribing.`,
     );
@@ -71,7 +71,7 @@ class CorruptedCollectibleSpriteFacet extends Facet {
   @Callback(ModCallback.POST_PICKUP_RENDER, PickupVariant.COLLECTIBLE)
   postPickupRender(pickup: EntityPickup, _renderOffset: Vector): void {
     const corruptedSprite = v.level.replacedPickups.get(
-      mod["getPickupIndex"](pickup),
+      mod.getPickupIndex(pickup),
     );
 
     /** If the pickup is not subscribed. */
@@ -94,21 +94,6 @@ class CorruptedCollectibleSpriteFacet extends Facet {
       corruptedSprite,
     );
   }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
-    }
-  }
 }
 
 export function initCorruptedCollectibleSpriteFacet(): void {
@@ -129,7 +114,7 @@ export function replaceCollectibleSpriteWithCorrupted(
   pickup: EntityPickupCollectible,
   sprite: CorruptedCollectibleSprite,
 ): void {
-  const pickupIndex = mod["getPickupIndex"](pickup);
+  const pickupIndex = mod.getPickupIndex(pickup);
 
   /**
    * If the pickup is a TMTRAINER collectible or non-trinket non-collectible pickup, we need to set
@@ -157,7 +142,7 @@ export function replaceCollectibleSpriteWithCorrupted(
   const pickupAlreadyHasCorruptedSprite =
     v.level.replacedPickups.has(pickupIndex);
 
-  v.level.replacedPickups.set(mod["getPickupIndex"](pickup), sprite);
+  v.level.replacedPickups.set(mod.getPickupIndex(pickup), sprite);
   fprint(
     `Replacing item ${getEntityIDFromEntity(pickup)}'s sprite with Corrupted!`,
   );
@@ -180,7 +165,7 @@ export function returnCorruptedCollectibleSpriteToNormal(
   pickup: EntityPickup,
 ): void {
   const corruptedCollectibleSprite = v.level.replacedPickups.get(
-    mod["getPickupIndex"](pickup),
+    mod.getPickupIndex(pickup),
   );
   if (corruptedCollectibleSprite === undefined) {
     fprint("Tried to return a non-corrupted collectible to normal but failed!");
@@ -190,7 +175,7 @@ export function returnCorruptedCollectibleSpriteToNormal(
     `Returning pickup ${pickup.SubType} to normal! (Corrupted Collectible Sprite)`,
   );
 
-  v.level.replacedPickups.delete(mod["getPickupIndex"](pickup));
+  v.level.replacedPickups.delete(mod.getPickupIndex(pickup));
 
   if (isCollectible(pickup)) {
     /** Should not t */

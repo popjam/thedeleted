@@ -1,6 +1,7 @@
 import type { LevelStage } from "isaac-typescript-definitions";
 import type { Range } from "../../types/general/Range";
 import type { COLORS } from "isaacscript-common";
+import type { Mods } from "../../enums/compatibility/Mods";
 
 /**
  * Modifiers to describe a subset of all NPCs.
@@ -8,6 +9,12 @@ import type { COLORS } from "isaacscript-common";
  * @example Used to get a random NPC through getRandomNPC().
  */
 export interface NPCAttribute {
+  /**
+   * If the NPC should be modded (true), not modded (false), or either (undefined). Alternatively,
+   * specify a Mod it should be from.
+   */
+  modded?: boolean | Mods;
+
   /** General Color of the NPC. */
   color?: keyof typeof COLORS;
 

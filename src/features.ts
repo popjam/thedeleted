@@ -27,6 +27,7 @@ import { runIndexInit } from "./features/runIndex";
 import { EIDSettingsInit } from "./features/settings/ActionSetThemeSetting";
 import { GeneralSettingsInit } from "./features/settings/GeneralSettings";
 import { happy99SettingsInit } from "./features/settings/HAPPY99Settings";
+import { moddedNPCSettingsInit } from "./features/settings/ModdedNPCSettings";
 import { sophosSettingsInit } from "./features/settings/SOPHOSSettings";
 import { glitchyReplacePlayerSpritesheetInit } from "./helper/deletedSpecific/glitchyPlayerTransform";
 
@@ -63,4 +64,5 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   floorColorHelper,
   customActivesInit,
   activeItemTrackerInit,
+  moddedNPCSettingsInit,
 ];

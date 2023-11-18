@@ -1,5 +1,12 @@
 import { ChestSubType, CollectibleType } from "isaac-typescript-definitions";
-import { isChest, isCollectible } from "isaacscript-common";
+import type { EntityID } from "isaacscript-common";
+import {
+  isChest,
+  isCollectible,
+  spawnEntityID,
+  spawnPickup,
+} from "isaacscript-common";
+import type { PickupID } from "../enums/general/ID/PickupID";
 
 /**
  * If the Pickup is in the process of being collected by playing its 'Collect' animation. Note, not
@@ -11,17 +18,30 @@ export function isPickupBeingCollected(pickup: EntityPickup): boolean {
 
 /** Checks if a Pickup is in a 'opened', 'collected' form, e.g empty pedestals and opened chests. */
 export function isUselessPickup(pickup: EntityPickup): boolean {
-  if (isChest(pickup)) {
-    if (pickup.SubType === (ChestSubType.OPENED as number)) {
-      return true;
-    }
+  if (isChest(pickup) && pickup.SubType === (ChestSubType.OPENED as number)) {
+    return true;
   }
 
-  if (isCollectible(pickup)) {
-    if (pickup.SubType === CollectibleType.NULL) {
-      return true;
-    }
+  if (isCollectible(pickup) && pickup.SubType === CollectibleType.NULL) {
+    return true;
   }
 
   return false;
+}
+
+/** Spawns a pickup using its PickupID. */
+export function spawnPickupID(
+  pickupID: PickupID,
+  positionOrGridIndex: Vector | int,
+  velocity?: Vector,
+  spawner?: Entity | undefined,
+  seedOrRNG?: Seed | RNG | undefined,
+): EntityPickup {
+  return spawnEntityID(
+    pickupID as EntityID,
+    positionOrGridIndex,
+    velocity,
+    spawner,
+    seedOrRNG,
+  ) as EntityPickup;
 }

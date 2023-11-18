@@ -26,6 +26,7 @@ import {
   newRNG,
   setCollectibleGlitched,
   setCollectibleSubType,
+  spawnCollectible,
 } from "isaacscript-common";
 import { SHOP_ITEM_RENDER_OFFSET } from "../constants/renderConstants";
 import { TemporaryEffectType } from "../enums/general/TemporaryEffectType";
@@ -159,7 +160,7 @@ export function renderCollectibleInvisible(
 export function spawnGlitchedCollectible(
   positionOrGridIndex: Vector,
 ): EntityPickupCollectible {
-  const glitchedCollectible = mod.spawnCollectible(
+  const glitchedCollectible = spawnCollectible(
     CollectibleType.SAD_ONION,
     positionOrGridIndex,
     undefined,

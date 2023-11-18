@@ -78,3 +78,17 @@ export function joinWithOr(arr: string[]): string {
   const rest = arr.slice(0, len - 2).join(", ");
   return `${rest}, ${lastTwo}`;
 }
+
+/** Split a string into multiple sub-strings of equal (or near equal) length. */
+export function splitString(s: string, segments: number): string[] {
+  const len = s.length;
+  const segmentLength = math.floor(len / segments);
+  const arr: string[] = [];
+  for (let i = 0; i < segments; i++) {
+    const start = i * segmentLength + 1;
+    const end = (i + 1) * segmentLength;
+    const segment = string.sub(s, start, end);
+    arr.push(segment);
+  }
+  return arr;
+}

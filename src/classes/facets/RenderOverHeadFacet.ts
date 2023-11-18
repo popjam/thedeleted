@@ -64,21 +64,6 @@ class RenderOverHeadFacet extends Facet {
       FACET?.unsubscribe();
     }
   }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
-    }
-  }
 }
 
 export function initRenderOverHeadFacet(): void {

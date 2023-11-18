@@ -1,10 +1,9 @@
 import type { PickupVariant } from "isaac-typescript-definitions";
 import { EntityFlag, EntityType } from "isaac-typescript-definitions";
-import type { EntityID } from "isaacscript-common";
 import {
   DISTANCE_OF_GRID_TILE,
   game,
-  getEntityIDFromConstituents,
+  getEntities,
   getPickups,
   getPlayers,
   getRandom,
@@ -14,6 +13,7 @@ import {
   spawnPickup,
 } from "isaacscript-common";
 import { mod } from "../mod";
+import { EntityCategory } from "../enums/general/EntityCategory";
 
 const RANDOM_POSITION_AVOID_PLAYER_DISTANCE = DISTANCE_OF_GRID_TILE * 2;
 
@@ -248,11 +248,61 @@ export function getClosestPickupTo(
   return closestPickup;
 }
 
-/** Get an EntityID from an Entity. */
-export function getEntityIDFromEntity(entity: Entity): EntityID {
-  return getEntityIDFromConstituents(
-    entity.Type,
-    entity.Variant,
-    entity.SubType,
-  );
+/**
+ * Determine which EntityCategory a non-Grid Entity belongs to.
+ *
+ * @returns EntityCategory or undefined (as the entity can somehow be undefined).
+ */
+export function getEntityCategory(entity: Entity): EntityCategory | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (entity === undefined) {
+    return undefined;
+  }
+
+  if (entity.ToBomb() !== undefined) {
+    return EntityCategory.BOMB;
+  }
+
+  if (entity.ToKnife() !== undefined) {
+    return EntityCategory.KNIFE;
+  }
+
+  if (entity.ToLaser() !== undefined) {
+    return EntityCategory.LASER;
+  }
+
+  if (entity.ToNPC() !== undefined) {
+    return EntityCategory.NPC;
+  }
+
+  if (entity.ToProjectile() !== undefined) {
+    return EntityCategory.PROJECTILE;
+  }
+
+  if (entity.ToPlayer() !== undefined) {
+    return EntityCategory.PLAYER;
+  }
+
+  if (entity.ToEffect() !== undefined) {
+    return EntityCategory.EFFECT;
+  }
+
+  if (entity.ToTear() !== undefined) {
+    return EntityCategory.TEAR;
+  }
+
+  if (entity.ToPickup() !== undefined) {
+    return EntityCategory.PICKUP;
+  }
+
+  if (entity.ToFamiliar() !== undefined) {
+    return EntityCategory.FAMILIAR;
+  }
+
+  return undefined;
+}
+
+/** Find the first entity in the room that matches the initSeed. Warning: Slow. */
+export function getEntityFromInitSeed(initSeed: Seed): Entity | undefined {
+  return getEntities().find((entity) => entity.InitSeed === initSeed);
 }

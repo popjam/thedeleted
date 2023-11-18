@@ -15,7 +15,7 @@ const v = {
   },
 };
 
-const allFacets: Facet[] = [];
+const allFacets = new Map<string, Facet>();
 
 export function facetInit(): void {
   mod.saveDataManager("facetInit", v);
@@ -102,7 +102,7 @@ export abstract class Facet extends ModFeature {
     }
     if (this.initialized) {
       fprint(`Uninitialising ${className} due to unsubscribeAll().`);
-      this.uninit();
+      uninitFacet(className);
     }
   }
 
@@ -136,11 +136,12 @@ export function initGenericFacet<Type extends Facet>(
 ): Facet {
   // eslint-disable-next-line new-cap
   const newFacet = new facet();
-  allFacets.push(newFacet);
   const facetName = getTSTLClassName(newFacet);
   if (facetName === undefined) {
     error("Failed to get the class name.");
   }
+
+  allFacets.set(facetName, newFacet);
 
   fprint(`Initializing ${facetName} due to initGenericFacet().`);
   if (vObject !== undefined) {
@@ -149,19 +150,36 @@ export function initGenericFacet<Type extends Facet>(
   return newFacet;
 }
 
+export function uninitFacet(facetName: string): void {
+  const facet = allFacets.get(facetName);
+  if (facet === undefined) {
+    error(`Failed to get facet with name: ${facetName}.`);
+  }
+  if (facet.initialized) {
+    fprint(`Uninitialising ${facetName} due to uninitFacet().`);
+  }
+}
+
 // POST_GAME_STARTED_REORDERED, isContinued: TRUE. This is called when the game is exited and then
 // continued, and is used to reinitialize Facets.
 export function facetPostGameContinuedReordered(): void {
   // Reinitialize all Facets that have subscribers.
-  for (const facet of allFacets) {
+  for (const [name, facet] of allFacets) {
     fprint(`Trying to Re-Init Facet: ${getTSTLClassName(facet)}.`);
     if (doesFacetHaveSubscribers(facet) && !facet.initialized) {
-      fprint(
-        `Re-initializing ${getTSTLClassName(
-          facet,
-        )} due to POST_GAME_STARTED_REORDERED.`,
-      );
+      fprint(`Re-initializing ${name} due to POST_GAME_STARTED_REORDERED.`);
       facet.init();
+    }
+  }
+}
+
+// PRE_GAME_EXIT, shouldSave: FALSE. This is called when the game is exited and not to be continued.
+export function facetPreGameExit(): void {
+  // Uninitialize all Facets.
+  for (const [name, facet] of allFacets) {
+    fprint(`Uninitialising ${name} due to PRE_GAME_EXIT.`);
+    if (facet.initialized) {
+      facet.uninit();
     }
   }
 }

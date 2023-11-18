@@ -12,7 +12,7 @@ import {
   getNPCFamily,
   isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
-import { Facet, initGenericFacet } from "../../../Facet";
+import { Facet, initGenericFacet, uninitFacet } from "../../../Facet";
 import { fprint } from "../../../../helper/printHelper";
 
 // eslint-disable-next-line isaacscript/require-v-registration
@@ -47,21 +47,6 @@ class FreezeNPCFacet extends Facet {
   @CallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED)
   postNewRoomReordered(): void {
     this.unsubscribeAll();
-  }
-
-  /**
-   * Uninitialize the Facet upon the run ending, as it does not do it automatically. Save Data is
-   * auto-reset.
-   */
-  @Callback(ModCallback.PRE_GAME_EXIT)
-  preGameExit(shouldSave: boolean): void {
-    if (shouldSave) {
-      return;
-    }
-    if (this.initialized) {
-      fprint(`Uninitialising ${getTSTLClassName(this)} due to PRE_GAME_EXIT.`);
-      this.uninit();
-    }
   }
 }
 

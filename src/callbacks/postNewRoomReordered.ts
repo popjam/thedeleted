@@ -1,4 +1,5 @@
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { triggerOnRoomActions } from "../classes/corruption/actions/OnRoomAction";
 import { backdropHelperPostNewRoomReordered } from "../features/general/backdropHelper";
 import { floorColorHelperPostNewRoomReordered } from "../features/general/floorColorHelper";

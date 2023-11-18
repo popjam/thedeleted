@@ -2,7 +2,7 @@ import type {
   CollectibleType,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { spawnPickup } from "isaacscript-common";
+import { spawnCollectible, spawnPickup } from "isaacscript-common";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
@@ -83,7 +83,7 @@ export function spawnInvertedCollectible(
   invertedActionSet?: InvertedItemActionSet,
   inputs?: ActionSetBuilderInput,
 ): EntityPickup {
-  const pedestal = mod.spawnCollectible(collectibleType, position, undefined);
+  const pedestal = spawnCollectible(collectibleType, position, undefined);
   setPedestalInversion(true, pedestal, invertedActionSet, inputs);
   return pedestal;
 }

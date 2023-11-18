@@ -1,154 +1,76 @@
 import {
-  ActiveSlot,
-  BombSubType,
-  ChestSubType,
-  CoinSubType,
-  CollectibleType,
-  EffectVariant,
-  EntityCollisionClass,
-  EntityFlag,
-  EntityType,
-  Gaper2Variant,
-  HeartSubType,
-  ItemConfigChargeType,
-  ItemPoolType,
-  ItemType,
-  KeySubType,
-  LaserSubType,
-  LaserVariant,
   LevelStage,
-  ModCallback,
+  CollectibleType,
+  NPCID,
+  EntityType,
   PickupVariant,
-  SortingLayer,
 } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
 import {
-  COLORS,
-  Callback,
-  CallbackCustom,
-  ModCallbackCustom,
-  ModFeature,
-  VectorZero,
-  arrayRemove,
-  arrayToString,
-  game,
-  getClosestEntityTo,
-  getCollectibleName,
-  getEntities,
   getEnumKeys,
-  getEnumValues,
-  getKeys,
-  getNPCs,
-  getPlayerIndex,
-  getRandomArrayElement,
-  getRandomArrayIndex,
-  getRandomEnumValue,
-  getRandomInt,
-  getRandomSeed,
-  getTSTLClassName,
   log,
-  sfxManager,
-  spawnEffect,
+  getRandomSeed,
+  arrayRemove,
+  getRandomArrayIndex,
+  getEnumValues,
+  getCollectibleName,
+  getRandomArrayElement,
+  getClosestEntityTo,
+  getEntities,
+  getRandomEnumValue,
   spawnEntityID,
-  spawnKey,
-  spawnLaser,
-  spawnNPC,
-  spawnPickup,
+  getRandomSetElement,
+  setAllRNGToSeed,
+  newRNG,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
-import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
-
-import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
-import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import { SoundEffectCustom } from "../../enums/general/SoundEffectCustom";
-import {
-  getRandomCollectibleType,
-  spawnGlitchedCollectible,
-} from "../../helper/collectibleHelper";
-import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inventory/custom actives/invertedActives";
-import {
-  getQuickAccessiblePosition,
-  getRandomAccessiblePosition,
-  makeEntityInvisible,
-  spawnInvisibleEntity,
-} from "../../helper/entityHelper";
-import { fprint } from "../../helper/printHelper";
-import { renderConstantly } from "../../helper/renderHelper";
-import { copySprite } from "../../helper/spriteHelper";
-import { legibleString } from "../../helper/stringHelper";
-import { mod } from "../../mod";
-import { printCustomActiveStatus } from "../../classes/facets/CustomActiveFacet";
-import { getAllCustomActives } from "../corruption/inversion/customActives";
-import { addActionOrResponseToTracker } from "../corruption/effects/playerEffects";
-import { addResponsesToTracker } from "../../helper/deletedSpecific/effects/responseHelper";
 import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
 import {
-  spawnInvertedCollectible,
-  spawnNewInvertedCollectible,
-} from "../../helper/deletedSpecific/inversion/spawnInverted";
-import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
-import {
-  getRandomTMTRAINERActiveItem,
-  getRandomTMTRAINERItem,
-} from "../../helper/tmtrainerHelper";
-import { TMTRAINER_UNIQUE_LIMIT } from "../../constants/tmtrainerConstants";
-import { setInvertedItemActionSet } from "../../helper/deletedSpecific/effects/itemEffects";
-import { getGameInvertedItemActionSet } from "../../helper/deletedSpecific/generation/corruptionGeneration";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import type {
-  ActiveCollectibleAttribute,
-  CollectibleAttribute,
-} from "../../interfaces/general/CollectibleAttribute";
-import { getEIDTextSetting, setEIDTextSetting } from "../settings/EIDSettings";
-import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
-import { RemoveCollectibleResponse } from "../../classes/corruption/responses/RemoveCollectibleResponse";
-import { addNPCFlags } from "../../helper/entityHelper/npcFlagHelper";
-import { NPCFlag } from "../../enums/general/NPCFlag";
-import {
-  getAllChildrenNPCs,
-  getAllParentNPCs,
-  getLastParentNPC,
-  getNPCLineage,
-  getNPCFamily,
-  areNPCsRelated,
-  getRandomNPC,
-  isEntityNPC,
-} from "../../helper/entityHelper/npcHelper";
-import {
-  bolsterAllNPCsInRoom,
-  bolsterNPC,
-  unbolsterAllNPCsInRoom,
-  unbolsterNPC,
-} from "../../classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
-import {
   freezeAllNPCsInRoom,
-  freezeNPC,
   unfreezeAllNPCsInRoom,
 } from "../../classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
-import { makeNPCNonMandatory } from "../../classes/facets/entityModifiers.ts/NPCModifiers/NonMandatoryNPCFacet";
-import { censorNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/CensoredNPCFacet";
-import { fireFunctionConstantly } from "../../helper/gameHelpter";
-import { spawnNPCWithNPCID } from "../../helper/npcIDHelper";
-import { setEntityInstability } from "../../classes/facets/entityModifiers.ts/UnstableEntityFacet";
+import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
+import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
+import { getRandomCollectibleType } from "../../helper/collectibleHelper";
+import { getQuickAccessiblePosition } from "../../helper/entityHelper";
 import {
-  getHideNPCFacet,
-  hideNPC,
-  unhideNPC,
-} from "../../classes/facets/entityModifiers.ts/NPCModifiers/HideNPCFacet";
-import { Facet } from "../../classes/Facet";
-import { setupPC } from "../../classes/facets/pc/PCFacet";
+  getNPCIDName,
+  isNPCIDBoss,
+  isNPCIDModded,
+  spawnNPCID,
+} from "../../helper/entityHelper/npcIDHelper";
+import { fprint } from "../../helper/printHelper";
+import { legibleString, splitString } from "../../helper/stringHelper";
+import { mod } from "../../mod";
+import { filterEntities2Map, logEntities2Map } from "./xmlHelper";
+import { ENTITIES_MAP } from "../../constants/testConstants";
+import { EntityCategory } from "../../enums/general/EntityCategory";
+import { FiendFolioNameSubType } from "../../enums/compatibility/ID/FiendFolioNPCID";
 import { spawnHybridNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/HybridNPCFacet";
-import { randomInRangeWithDecimalPrecision } from "../../types/general/Range";
-import { NPCID } from "../../enums/general/ID/NPCID";
-import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
-import { EntityList } from "../../sets/data/entityList";
+import { spawnEntityByName } from "../../classes/facets/SpawnEntityByNameFacet";
+import { setPlayerCantPickup } from "../../classes/facets/gameModifiers.ts/CantPickupFacet";
+import { bolsterAllNPCsInRoom } from "../../classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
+import {
+  getEntityIDFromEntity,
+  getEntityIDFromName,
+  getEntityIDFromNameSubType,
+  isEntityID,
+} from "../../helper/entityHelper/entityIDHelper";
+import { uninitFacet } from "../../classes/Facet";
+import { getObjectKeys, getObjectValues } from "../../helper/objectHelper";
+import { isFiendFolioActive } from "../../helper/compatibility/FiendFolio/fiendFolioHelper";
+import {
+  getGameFiendFolioNPCIDSet,
+  getGameModdedNPCIDSet,
+  getGameNPCIDSet,
+  getGameNonModdedNPCIDSet,
+} from "../../sets/data/entities/GameNPCIDSets";
+import { getRandomNPC, isNPCModded } from "../../helper/entityHelper/npcHelper";
+import { getNameSubTypeFromEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
 const player2 = () => Isaac.GetPlayer(1);
-const del1ID = 2;
-const del2ID = 0;
 
 /** Testing variables */
 const action1 = new OnFloorAction()
@@ -186,42 +108,37 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const npcIDs: EntityID[] = [];
-  const entityListValues = getEnumValues(EntityList);
-  for (const ent of entityListValues) {
-    const entity = spawnEntityID(ent as EntityID, getQuickAccessiblePosition());
-    if (entity === undefined) {
-      continue;
-    }
-    const npc = entity.ToNPC();
-    if (npc !== undefined) {
-      npcIDs.push(ent as EntityID);
-    }
-    entity.Remove();
-  }
-
-  // Print new EntityList:
-  for (const ent of npcIDs) {
-    const key = getEnumKeys(EntityList).find(
-      (k) => EntityList[k as keyof typeof EntityList] === ent,
-    );
-    log(`${key} = '${ent}',`);
-  }
-
-  // Check which npcIDs are not in NPCID enum:
-  const npcIDValues = getEnumValues(NPCID);
-
-  // Check which NPCIDs are not in npcIDs:
-  for (const npcID of npcIDValues) {
-    if (!npcIDs.includes(npcID as EntityID)) {
-      log(`${npcID} is not in npcIDs.`);
-    }
-  }
+  const npc = spawnNPCID(
+    getRandomNPC({ size: [0, 5], modded: true }) ?? NPCID.BABY,
+    getQuickAccessiblePosition(),
+  );
+  fprint(`NPC: ${getNPCIDName(getEntityIDFromEntity(npc) as NPCID)}`);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  spawnEntityID("3.237.0" as EntityID, getQuickAccessiblePosition());
+  const fiendFolioNPCIDs = getEnumKeys(FiendFolioNameSubType);
+
+  // Get subset up to 'FiendFolioNameSubType.FIEND_FOLIO_SHOPKEEPER'.
+  const fiendFolioNPCIDsSubset = fiendFolioNPCIDs.slice(1000, 1200);
+
+  let str = "";
+  for (const fiendFolioKey of fiendFolioNPCIDsSubset) {
+    const nameSubType =
+      FiendFolioNameSubType[
+        fiendFolioKey as keyof typeof FiendFolioNameSubType
+      ];
+    const npcID = getEntityIDFromNameSubType(nameSubType);
+    if (npcID === undefined) {
+      continue;
+    }
+    const npc = spawnNPCID(npcID as NPCID, getQuickAccessiblePosition());
+    const size = npc.Size;
+    str += `[FiendFolioNameSubType.${fiendFolioKey}, ${size}],`;
+    npc.Remove();
+  }
+
+  log(str);
 }
 
 function getRandomTest<T>(
@@ -255,7 +172,7 @@ export function testingFunction3(): void {
   log("NPC size:");
   for (const npcid of getEnumValues(NPCID)) {
     countedNPCs.add(npcid);
-    const npc = spawnNPCWithNPCID(npcid, getQuickAccessiblePosition());
+    const npc = spawnNPCID(npcid, getQuickAccessiblePosition());
     const enumKey = getEnumKeys(NPCID).find(
       (key) => NPCID[key as keyof typeof NPCID] === npcid,
     );

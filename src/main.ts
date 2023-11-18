@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ModCallback } from "isaac-typescript-definitions";
 import {
   Callback,
@@ -79,6 +78,7 @@ import { fprint } from "./helper/printHelper";
 import { MODE_DATA_MAP, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
 import { initHideNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/HideNPCFacet";
+import { initSpawnEntityByNameFacet } from "./classes/facets/SpawnEntityByNameFacet";
 
 const IS_DEV = true;
 
@@ -109,7 +109,7 @@ function initFeatures() {
 /** Initialize mod features for dev. */
 function devInit() {
   addTestingCommands();
-  mod["enableFastReset"]();
+  mod.enableFastReset();
 }
 
 /** Register all the callbacks. */
@@ -163,7 +163,7 @@ function initStats() {
   for (const mode of modes) {
     const characterStats = MODE_DATA_MAP.get(mode);
     if (characterStats?.characterStats !== undefined) {
-      mod["registerCharacterStats"](
+      mod.registerCharacterStats(
         getModePlayerType(mode),
         characterStats.characterStats,
       );
@@ -172,7 +172,7 @@ function initStats() {
 }
 
 function initClasses() {
-  mod["saveDataManagerRegisterClass"](
+  mod.saveDataManagerRegisterClass(
     InvertedPassiveActionSet,
     InvertedActiveActionSet,
     NonInvertedPickupActionSet,
@@ -210,4 +210,5 @@ function initFacets() {
   initCustomActiveFacet();
   initNonMandatoryNPCFacet();
   initHideNPCFacet();
+  initSpawnEntityByNameFacet();
 }

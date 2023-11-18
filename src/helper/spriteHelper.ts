@@ -1,23 +1,25 @@
-import { EntityType } from "isaac-typescript-definitions";
-import { EntityID, copyColor, spawnEntityID } from "isaacscript-common";
-import { NPCID } from "../enums/general/ID/NPCID";
+import type { EntityType } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
+import { VectorZero, copyColor, spawnEntityID } from "isaacscript-common";
+import type { NPCID } from "../enums/general/ID/NPCID";
+import { renderToWorldPosition, worldToRenderPosition } from "./renderHelper";
 
 /**
  * Copies a sprite into a new fresh sprite.
  *
  * @param oldSprite The sprite to copy.
- * @param play If true, will not play the animation the oldSprite is playing.
+ * @param play If false, will not play the animation the oldSprite is playing (default false).
  * @param copyData If true, will copy attributes from the old sprite such as Color, Scale, Frame,
- *                 etc.
+ *                 etc (default true).
  */
 export function copySprite(
   oldSprite: Sprite,
-  play = true,
+  play = false,
   copyData = true,
 ): Sprite {
   const nSprite = Sprite();
   nSprite.Load(oldSprite.GetFilename(), true);
-  if (!play) {
+  if (play) {
     nSprite.Play(oldSprite.GetAnimation(), true);
   }
   if (!copyData) {
@@ -124,4 +126,26 @@ export function renderSprite(
       topLeftClamp,
     );
   }
+}
+
+export function getPixelColorMap(sprite: Sprite): Map<Vector, KColor> {
+  const xMaxIterations = 600;
+  const yMaxIterations = 600;
+  const pixelColorMap = new Map<Vector, KColor>();
+  for (let x = 0; x < xMaxIterations; x++) {
+    for (let y = 0; y < yMaxIterations; y++) {
+      const pixelKColor = sprite.GetTexel(
+        Vector(x, y),
+        renderToWorldPosition(Vector(300, 100)),
+        1,
+        1,
+      );
+      const position = worldToRenderPosition(Vector(x, y));
+      if (pixelKColor.Alpha === 0) {
+        continue;
+      }
+      pixelColorMap.set(position, pixelKColor);
+    }
+  }
+  return pixelColorMap;
 }

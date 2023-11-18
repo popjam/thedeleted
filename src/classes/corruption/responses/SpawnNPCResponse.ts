@@ -1,25 +1,27 @@
-import type { EntityID } from "isaacscript-common";
-import { DISTANCE_OF_GRID_TILE, game, spawnEntityID } from "isaacscript-common";
+import { DISTANCE_OF_GRID_TILE, game } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { NPCID } from "../../../enums/general/ID/NPCID";
 import {
   getRandomAccessiblePosition,
   isPositionAccessible,
 } from "../../../helper/entityHelper";
-import { getObjectKeyByValue } from "../../../helper/objectHelper";
 import { addTheS } from "../../../helper/stringHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
 import type { Range } from "../../../types/general/Range";
 import { NPCSpawnType } from "../../../enums/general/NPCSpawnType";
 import type { NPCAttribute } from "../../../interfaces/general/NPCAttribute";
-import { getNPCNameFromNPCID } from "../../../maps/data/name/npcNames";
 import type { NPCFlag } from "../../../enums/general/NPCFlag";
 import { addNPCFlags } from "../../../helper/entityHelper/npcFlagHelper";
-import { spawnNPCWithNPCID } from "../../../helper/npcIDHelper";
+import { getRandomNPC } from "../../../helper/entityHelper/npcHelper";
+import {
+  getNPCIDName,
+  spawnNPCID,
+} from "../../../helper/entityHelper/npcIDHelper";
 
 const DEFAULT_NPC = NPCID.GAPER;
 const DEFAULT_RST = NPCSpawnType.ACCESSIBLE_TO_PLAYER_BUT_AVOID_PLAYER;
+const UNKNOWN_NPC_NAME_TEXT = "unknown npc";
 
 /**
  * Response to spawn an NPC.
@@ -81,11 +83,10 @@ export class SpawnNPCResponse extends Response {
     return this;
   }
 
-  // TODO.
   getNPCName(): string {
     const npc = this.getNPC();
     if (typeof npc === "string") {
-      return getNPCNameFromNPCID(npc) ?? "modded npc";
+      return getNPCIDName(npc) ?? UNKNOWN_NPC_NAME_TEXT;
     }
     return "random npc";
   }
@@ -110,6 +111,7 @@ export class SpawnNPCResponse extends Response {
 
   calculatePosition(): Vector {
     const spawnType = this.getSpawnType();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (spawnType === NPCSpawnType.ACCESSIBLE_TO_PLAYER_BUT_AVOID_PLAYER) {
       return (
         getRandomAccessiblePosition(Isaac.GetPlayer().Position) ??
@@ -123,13 +125,17 @@ export class SpawnNPCResponse extends Response {
     );
   }
 
-  spawnNPC(position: Vector): EntityNPC {
+  spawnNPC(position: Vector): EntityNPC | undefined {
     const npc = this.getNPC();
     if (typeof npc === "string") {
-      return this.calculateNPCFlags(spawnNPCWithNPCID(npc, position));
+      return this.calculateNPCFlags(spawnNPCID(npc, position));
     }
-    // TODO.
-    return this.calculateNPCFlags(spawnNPCWithNPCID(NPCID.ARMY_FLY, position));
+    // Random.
+    const randomNPC = getRandomNPC(npc);
+    if (randomNPC === undefined) {
+      return undefined;
+    }
+    return this.calculateNPCFlags(spawnNPCID(randomNPC, position));
   }
 
   getPosition(): Vector | undefined {
@@ -150,7 +156,7 @@ export class SpawnNPCResponse extends Response {
     )}`;
   }
 
-  fire(triggerData: TriggerData): Entity {
+  fire(triggerData: TriggerData): Entity | undefined {
     const player = triggerData.player ?? Isaac.GetPlayer();
 
     // If triggered from killing an NPC, spawn from the NPC position.

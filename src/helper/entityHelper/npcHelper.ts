@@ -1,8 +1,30 @@
-import { getNPCs, getRandomEnumValue, spawnNPC } from "isaacscript-common";
-import { NPCID } from "../../enums/general/ID/NPCID";
+import {
+  getNPCs,
+  getRandomArrayElementAndRemove,
+  getRandomSeed,
+} from "isaacscript-common";
+import type { NPCID } from "../../enums/general/ID/NPCID";
 import { fprint } from "../printHelper";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import { getNPCNameFromNPCID } from "../../maps/data/name/npcNames";
+import {
+  getNPCIDName,
+  getNPCIDSize,
+  isNPCIDBoss,
+  isNPCIDFlying,
+  isNPCIDModded,
+} from "./npcIDHelper";
+import { getEntityIDFromEntity } from "./entityIDHelper";
+import {
+  getGameModdedNPCIDSet,
+  getGameNPCIDSet,
+  getGameNonModdedNPCIDSet,
+} from "../../sets/data/entities/GameNPCIDSets";
+import { getNonModdedBossNPCIDSet } from "../../sets/data/npc/BossNPCSet";
+
+/** Determines if an NPC is modded by checking it against the set of all non-Modded NPCs. */
+export function isNPCModded(npc: EntityNPC): boolean {
+  return isNPCIDModded(getEntityIDFromEntity(npc) as NPCID);
+}
 
 /**
  * Get an ordered list of NPCs children line, including the NPC itself, from specified NPC ->
@@ -92,9 +114,6 @@ export function areNPCsRelated(npc1: EntityNPC, npc2: EntityNPC): boolean {
   const npc2PtrHash = GetPtrHash(npc2);
 
   if (npc1PtrHash === npc2PtrHash) {
-    fprint(
-      `are ${npc1PtrHash} and ${npc2PtrHash} related? they are the same NPC`,
-    );
     return true;
   }
 
@@ -110,13 +129,9 @@ export function areNPCsRelated(npc1: EntityNPC, npc2: EntityNPC): boolean {
   );
 
   if (commonAncestors.size > 0) {
-    fprint(
-      `are ${npc1PtrHash} and ${npc2PtrHash} related? true, they have common ancestors`,
-    );
     return true;
   }
 
-  fprint(`are ${npc1PtrHash} and ${npc2PtrHash} related? false`);
   return false;
 }
 
@@ -183,28 +198,117 @@ export function getNPCFamily(npc: EntityNPC): Set<EntityNPC> {
   return family;
 }
 
-// TODO.
-export function getRandomNPC(): NPCID {
-  return getRandomEnumValue(NPCID, undefined);
+/**
+ * Spawn a random NPC in the room, that matches the specified NPC Attributes.
+ *
+ * @param npcAttributes The NPC Attributes you want the random NPC to match (optional).
+ * @param seedOrRNG The seed or RNG you want to use (optional).
+ * @returns A random NPC or undefined.
+ */
+export function getRandomNPC(
+  npcAttributes?: NPCAttribute,
+  seedOrRNG: Seed | RNG = getRandomSeed(),
+): NPCID | undefined {
+  let setToUse = undefined as ReadonlySet<NPCID> | undefined;
+  if (npcAttributes === undefined) {
+    setToUse = getGameNPCIDSet();
+  } else if (npcAttributes.modded === true) {
+    setToUse = getGameModdedNPCIDSet();
+  } else if (npcAttributes.modded === false) {
+    setToUse = getGameNonModdedNPCIDSet();
+  } else {
+    setToUse = getGameNPCIDSet();
+  }
+
+  // Copy the set to an array.
+  const npcIDArray = [...setToUse];
+
+  if (npcIDArray.length === 0) {
+    return undefined;
+  }
+
+  // Get a random NPC from the array, that matches the attributes.
+  let npcID = getRandomArrayElementAndRemove<NPCID | undefined>(
+    npcIDArray,
+    seedOrRNG,
+  );
+
+  // If there are no attributes, return the NPCID.
+  if (npcAttributes === undefined) {
+    return npcID;
+  }
+
+  // If there are attributes, loop through the array until we find an NPC that matches.
+  while (npcID !== undefined) {
+    if (doesNPCIDMatchNPCAttributes(npcID, npcAttributes)) {
+      break;
+    }
+    if (npcIDArray.length === 0) {
+      return undefined;
+    }
+    npcID = getRandomArrayElementAndRemove(npcIDArray, seedOrRNG);
+  }
+
+  return npcID;
 }
 
+/**
+ * Determines if an NPC matches the specified NPC Attributes.
+ *
+ * @param npcID The NPCID to check.
+ * @param npcAttributes The NPC Attributes to check.
+ * @returns Whether the NPC matches the attributes. Note that if the NPCID is modded, it will not be
+ *          able to ascertain NPCID attributes if the mod is not tracked. In this case, it will
+ *          always return false.
+ */
 export function doesNPCIDMatchNPCAttributes(
   npcID: NPCID,
   npcAttributes: NPCAttribute,
 ): boolean {
+  // Flying.
+  const { flying } = npcAttributes;
+  if (flying !== undefined) {
+    const npcFlying = isNPCIDFlying(npcID);
+    if (npcFlying !== flying) {
+      fprint(
+        `NPCID ${npcID} with name ${getNPCIDName(
+          npcID,
+        )} does not match flying attribute.`,
+      );
+      return false;
+    }
+  }
+
+  // Boss.
+  const { boss } = npcAttributes;
+  if (boss !== undefined) {
+    const npcBoss = isNPCIDBoss(npcID);
+    if (npcBoss !== boss) {
+      return false;
+    }
+  }
+
+  // Size.
+  const { size } = npcAttributes;
+  if (size !== undefined) {
+    const npcSize = getNPCIDSize(npcID);
+    if (npcSize === undefined) {
+      return false;
+    }
+    if (!(npcSize >= size[0] && npcSize <= size[1])) {
+      return false;
+    }
+  }
+
   // Starts with (capitalization doesn't matter). If the NPC does not have a registered name, always
   // return false.
   const { startsWith } = npcAttributes;
   if (startsWith !== undefined) {
-    const npcName = getNPCNameFromNPCID(npcID);
+    const npcName = getNPCIDName(npcID)?.toLowerCase();
     if (npcName === undefined) {
       return false;
     }
-
-    const npcNameStartsWith = npcName
-      .toLowerCase()
-      .startsWith(startsWith.toLowerCase());
-    if (!npcNameStartsWith) {
+    if (!npcName.startsWith(startsWith.toLowerCase())) {
       return false;
     }
   }
@@ -213,15 +317,11 @@ export function doesNPCIDMatchNPCAttributes(
   // return false.
   const { endsWith } = npcAttributes;
   if (endsWith !== undefined) {
-    const npcName = getNPCNameFromNPCID(npcID);
+    const npcName = getNPCIDName(npcID)?.toLowerCase();
     if (npcName === undefined) {
       return false;
     }
-
-    const npcNameEndsWith = npcName
-      .toLowerCase()
-      .endsWith(endsWith.toLowerCase());
-    if (!npcNameEndsWith) {
+    if (!npcName.endsWith(endsWith.toLowerCase())) {
       return false;
     }
   }

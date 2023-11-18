@@ -18,5 +18,6 @@ module.exports = {
     // Insert changed or disabled rules here, if necessary.
     "jsdoc/check-tag-names": 0,
     "isaacscript/complete-sentences-jsdoc": 0,
+    "isaacscript/strict-enums": 0,
   },
 };
