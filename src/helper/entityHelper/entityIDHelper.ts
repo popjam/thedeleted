@@ -7,10 +7,10 @@ import type { EntityID } from "isaacscript-common";
 import { spawnEntityByName } from "../../classes/facets/SpawnEntityByNameFacet";
 import { EntityFlag, NPCID } from "isaac-typescript-definitions";
 import {
-  getGameModdedNPCIDSet,
-  getGameNPCIDSet,
-  getGameNonModdedNPCIDSet,
-} from "../../sets/data/entities/GameNPCIDSets";
+  getModdedNPCIDSet,
+  getNPCIDSet,
+  getNonModdedNPCIDSet,
+} from "../../sets/data/npc/NPCIDSets";
 import { getActiveMods } from "../compatibility/externalModHelper";
 import { getNPCIDNameSubTypesForMod } from "../../maps/data/npc/modded/ModToNameSubTypeMap";
 import { fprint } from "../printHelper";

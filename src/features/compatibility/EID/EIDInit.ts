@@ -5,7 +5,7 @@ import {
   D14_DESCRIPTION,
   ZAZZ_DESCRIPTION,
 } from "../../../constants/mod/itemConstants";
-import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
 import { getKColorFromEIDColorShortcut } from "../../../maps/compatibility/EIDColorMap";
 

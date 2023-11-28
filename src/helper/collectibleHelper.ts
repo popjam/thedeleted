@@ -46,12 +46,15 @@ import { copySprite } from "./spriteHelper";
 import { getItemTypeText } from "../maps/data/name/itemTypeNameMap";
 import {
   addTheS,
+  joinWith,
   joinWithOr,
   legibleString,
   removeUnnecessaryWhiteSpace,
+  uncapitalizeFirstLetter,
 } from "./stringHelper";
 import { itemPoolTypeToText } from "../maps/data/name/itemPoolTypeNameMap";
 import { itemConfigChargeTypeToText } from "../maps/data/name/itemConfigChargeTypeNameMap";
+import { getItemConfigTagText } from "../maps/data/name/itemTagNameMap";
 
 /** Replace an active item with another in a specific ActiveSlot. */
 export function replaceActiveItem(
@@ -264,13 +267,13 @@ export function doesCollectibleTypeMatchAttributes(
         if (player.GetActiveItem(ActiveSlot.POCKET) === collectibleType) {
           return false;
         }
-        const playerIndex = getPlayerIndex(player);
-        return isInArrayOrEquals(playerIndex, playerHas);
+        return true;
       },
     );
-    if (!doSomeHave) {
+    if (playerHas !== doSomeHave) {
       return false;
     }
+    return true;
   }
 
   // Starts with (capitalization doesn't matter).
@@ -336,12 +339,22 @@ export function doesCollectibleTypeMatchAttributes(
 /**
  * Returns a random CollectibleType following the properties defined in the CollectibleAttribute
  * object.
+ *
+ * @param collectibleAttributes The CollectibleAttribute object to follow, or undefined for a random
+ *                              CollectibleType.
+ * @param seedOrRNG The seed or RNG to use.
+ * @param collectibleArray The array of CollectibleTypes to choose from, or undefined for all
+ *                         CollectibleTypes (including modded).
+ * @returns The CollectibleType, or undefined if no CollectibleType was found.
  */
 export function getRandomCollectibleType(
   collectibleAttributes?: CollectibleAttribute,
   seedOrRNG: Seed | RNG = getRandomSeed(),
+  collectibleArray:
+    | CollectibleType[]
+    | readonly CollectibleType[] = mod.getCollectibleTypes(),
 ): CollectibleType | undefined {
-  let filteredCollectibles = [...mod.getCollectibleTypes()];
+  let filteredCollectibles = [...collectibleArray];
   const rng = isRNG(seedOrRNG) ? seedOrRNG : newRNG(seedOrRNG);
   let currentCollectible: CollectibleType | undefined;
   let i = 0;
@@ -381,6 +394,7 @@ export function collectibleAttributeToText(
   plural = false,
 ): string {
   let text = plural ? "random " : "a random ";
+  const isPluralNum = plural ? 2 : 1;
 
   // Item Type.
   if (collectibleAttribute.itemType !== undefined) {
@@ -393,7 +407,7 @@ export function collectibleAttributeToText(
   }
 
   // Item.
-  text = `${text} ${addTheS("item", plural ? 2 : 1)} `;
+  text = `${text} ${addTheS("item", isPluralNum)} `;
 
   // We set up a textArray, so we can join it with 'and' later, and for greater flexibility.
   const textArray = [] as string[];
@@ -426,18 +440,18 @@ export function collectibleAttributeToText(
     }
   }
 
-  // ChargeType
+  // ChargeType.
   if (collectibleAttribute.chargeType !== undefined) {
     textArray.push(
       typeof collectibleAttribute.chargeType === "number"
-        ? `with a charge type of '${itemConfigChargeTypeToText(
+        ? `with has a '${itemConfigChargeTypeToText(
             collectibleAttribute.chargeType,
-          )}'`
-        : `with a charge type of ${joinWithOr(
+          )} charge'`
+        : `with a ${joinWithOr(
             collectibleAttribute.chargeType.flatMap(
               (q) => `${itemConfigChargeTypeToText(q)}`,
             ),
-          )}`,
+          )} charge`,
     );
   }
 
@@ -445,8 +459,8 @@ export function collectibleAttributeToText(
   if (collectibleAttribute.maxCharges !== undefined) {
     textArray.push(
       typeof collectibleAttribute.maxCharges === "number"
-        ? `which has a max charge count of ${collectibleAttribute.maxCharges}`
-        : `which has a max charge count of ${joinWithOr(
+        ? `which has a charge count of ${collectibleAttribute.maxCharges}`
+        : `which has a charge count of ${joinWithOr(
             collectibleAttribute.maxCharges.flatMap((q) => tostring(q)),
           )}`,
     );
@@ -455,9 +469,9 @@ export function collectibleAttributeToText(
   // Owned by player.
   if (collectibleAttribute.playerHas !== undefined) {
     textArray.push(
-      typeof collectibleAttribute.playerHas === "number"
-        ? "that you already own"
-        : "that a player already owns",
+      collectibleAttribute.playerHas
+        ? "that a player already owns"
+        : "that a player doesn't already own",
     );
   }
 
@@ -478,8 +492,23 @@ export function collectibleAttributeToText(
   // Item tags (contains ALL).
   if (collectibleAttribute.itemTagAll !== undefined) {
     textArray.push(
-      `that has the tag/s ${joinWithOr(
-        collectibleAttribute.itemTagAll.flatMap((q) => tostring(q)),
+      `that ${joinWith(
+        "and",
+        collectibleAttribute.itemTagAll.flatMap((q) =>
+          uncapitalizeFirstLetter(getItemConfigTagText(q)),
+        ),
+      )}`,
+    );
+  }
+
+  // Item tags (contains AT LEAST ONE).
+  if (collectibleAttribute.itemTagOne !== undefined) {
+    textArray.push(
+      `that ${joinWith(
+        "or",
+        collectibleAttribute.itemTagOne.flatMap((q) =>
+          uncapitalizeFirstLetter(getItemConfigTagText(q)),
+        ),
       )}`,
     );
   }

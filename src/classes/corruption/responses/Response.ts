@@ -1,6 +1,6 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
-import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import { Morality } from "../../../enums/corruption/Morality";
 import type { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { fprint } from "../../../helper/printHelper";

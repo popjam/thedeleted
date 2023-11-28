@@ -6,7 +6,7 @@ import {
   isColor,
 } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
+import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import type { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { getRandomCollectibleType } from "../../collectibleHelper";

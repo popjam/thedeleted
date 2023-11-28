@@ -1,5 +1,5 @@
 import { ReadonlyMap } from "isaacscript-common";
-import { NPCID } from "../../../enums/general/ID/NPCID";
+import { NPCID } from "../../../enums/data/ID/NPCID";
 
 const NPC_SIZE_MAP = new ReadonlyMap<NPCID, number>([
   [NPCID.FROWNING_GAPER, 13],

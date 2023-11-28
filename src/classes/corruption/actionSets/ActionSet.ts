@@ -1,6 +1,6 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
-import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
-import type { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
+import type { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import { Morality } from "../../../enums/corruption/Morality";
 import type { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";

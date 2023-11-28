@@ -1,5 +1,5 @@
 import { ColorDefault } from "isaacscript-common";
-import { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
+import { EIDColorShortcut } from "../../enums/compatibility/EID/EIDColor";
 import { DeletedColor } from "../../enums/general/DeletedColor";
 import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 

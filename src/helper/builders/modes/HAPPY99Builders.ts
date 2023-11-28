@@ -1,7 +1,7 @@
 import { getRandomInt, isColor } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { HAPPY99InvertedItemSpriteColor } from "../../../constants/modes/HAPPY99Constants";
-import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
+import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
   defaultInvertedActiveActionSetBuilder,

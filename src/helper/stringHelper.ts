@@ -60,6 +60,29 @@ export function getRandomSuffix(s: string): string {
 }
 
 /**
+ * Returns a string joining all elements in the array, where the last element is joined with the
+ * specified string, and the rest are joined with commas.
+ *
+ * @param s The string to join the last element with.
+ * @param arr The array to join.
+ * @returns The joined string.
+ *
+ * @example joinWith("and", ["a", "b", "c"]) // "a, b and c".
+ */
+export function joinWith(s: string, arr: string[]): string {
+  const len = arr.length;
+  if (len === 0) {
+    return "";
+  }
+  if (len === 1) {
+    return arr[0] ?? "";
+  }
+  const last = arr[len - 1];
+  const rest = arr.slice(0, len - 1).join(s);
+  return `${rest} ${s} ${last}`;
+}
+
+/**
  * Returns a string joining all elements in the array, where the last two elements are joined with
  * "or", and the rest are joined with commas.
  */
@@ -91,4 +114,9 @@ export function splitString(s: string, segments: number): string[] {
     arr.push(segment);
   }
   return arr;
+}
+
+/** Returns a string with the first letter un-capitalized. */
+export function uncapitalizeFirstLetter(s: string): string {
+  return string.lower(string.sub(s, 1, 1)) + string.sub(s, 2);
 }

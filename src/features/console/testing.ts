@@ -3,9 +3,7 @@ import {
   CollectibleType,
   NPCID,
   EntityType,
-  PickupVariant,
 } from "isaac-typescript-definitions";
-import type { EntityID } from "isaacscript-common";
 import {
   getEnumKeys,
   log,
@@ -17,11 +15,7 @@ import {
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
-  getRandomEnumValue,
-  spawnEntityID,
-  getRandomSetElement,
-  setAllRNGToSeed,
-  newRNG,
+  getCollectibleDescription,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
@@ -33,40 +27,12 @@ import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { getQuickAccessiblePosition } from "../../helper/entityHelper";
-import {
-  getNPCIDName,
-  isNPCIDBoss,
-  isNPCIDModded,
-  spawnNPCID,
-} from "../../helper/entityHelper/npcIDHelper";
+import { spawnNPCID } from "../../helper/entityHelper/npcIDHelper";
 import { fprint } from "../../helper/printHelper";
-import { legibleString, splitString } from "../../helper/stringHelper";
+import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { filterEntities2Map, logEntities2Map } from "./xmlHelper";
-import { ENTITIES_MAP } from "../../constants/testConstants";
-import { EntityCategory } from "../../enums/general/EntityCategory";
-import { FiendFolioNameSubType } from "../../enums/compatibility/ID/FiendFolioNPCID";
-import { spawnHybridNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/HybridNPCFacet";
-import { spawnEntityByName } from "../../classes/facets/SpawnEntityByNameFacet";
-import { setPlayerCantPickup } from "../../classes/facets/gameModifiers.ts/CantPickupFacet";
-import { bolsterAllNPCsInRoom } from "../../classes/facets/entityModifiers.ts/NPCModifiers/BolsterNPCFacet";
-import {
-  getEntityIDFromEntity,
-  getEntityIDFromName,
-  getEntityIDFromNameSubType,
-  isEntityID,
-} from "../../helper/entityHelper/entityIDHelper";
-import { uninitFacet } from "../../classes/Facet";
-import { getObjectKeys, getObjectValues } from "../../helper/objectHelper";
-import { isFiendFolioActive } from "../../helper/compatibility/FiendFolio/fiendFolioHelper";
-import {
-  getGameFiendFolioNPCIDSet,
-  getGameModdedNPCIDSet,
-  getGameNPCIDSet,
-  getGameNonModdedNPCIDSet,
-} from "../../sets/data/entities/GameNPCIDSets";
-import { getRandomNPC, isNPCModded } from "../../helper/entityHelper/npcHelper";
-import { getNameSubTypeFromEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
+import { logModEntityMaxHitPointsAsObject } from "../../helper/compatibility/XML/entities2XMLHelper";
+import { FiendFolioNPCNameSubTypes } from "../../enums/data/ID/modded/fiendFolio/FiendFolioNPCNameSubTypes";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -108,37 +74,16 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const npc = spawnNPCID(
-    getRandomNPC({ size: [0, 5], modded: true }) ?? NPCID.BABY,
-    getQuickAccessiblePosition(),
-  );
-  fprint(`NPC: ${getNPCIDName(getEntityIDFromEntity(npc) as NPCID)}`);
+  fprint(getCollectibleDescription(900 as CollectibleType));
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  const fiendFolioNPCIDs = getEnumKeys(FiendFolioNameSubType);
-
-  // Get subset up to 'FiendFolioNameSubType.FIEND_FOLIO_SHOPKEEPER'.
-  const fiendFolioNPCIDsSubset = fiendFolioNPCIDs.slice(1000, 1200);
-
-  let str = "";
-  for (const fiendFolioKey of fiendFolioNPCIDsSubset) {
-    const nameSubType =
-      FiendFolioNameSubType[
-        fiendFolioKey as keyof typeof FiendFolioNameSubType
-      ];
-    const npcID = getEntityIDFromNameSubType(nameSubType);
-    if (npcID === undefined) {
-      continue;
-    }
-    const npc = spawnNPCID(npcID as NPCID, getQuickAccessiblePosition());
-    const size = npc.Size;
-    str += `[FiendFolioNameSubType.${fiendFolioKey}, ${size}],`;
-    npc.Remove();
-  }
-
-  log(str);
+  logModEntityMaxHitPointsAsObject(
+    FiendFolioNPCNameSubTypes,
+    "FiendFolioNameSubType",
+    1000,
+  );
 }
 
 function getRandomTest<T>(

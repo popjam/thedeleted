@@ -1,5 +1,5 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
-import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import type { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
 import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";

@@ -1,15 +1,15 @@
 import { NPCID } from "isaac-typescript-definitions";
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import {
-  getGameModdedNPCIDSet,
-  getGameNPCIDSet,
-  getGameNonModdedNPCIDSet,
-} from "../../sets/data/entities/GameNPCIDSets";
+  getModdedNPCIDSet,
+  getNPCIDSet,
+  getNonModdedNPCIDSet,
+} from "../../sets/data/npc/NPCIDSets";
 
 const ENTITY_CATEGORY_TO_GAME_ENTITY_ID_MAP: ReadonlyMap<
   EntityCategory,
   () => Set<string>
-> = new Map([[EntityCategory.NPC, () => getGameNPCIDSet()]]);
+> = new Map([[EntityCategory.NPC, () => getNPCIDSet()]]);
 
 /**
  * From an Entity Category (e.g 'NPCs'), finds the set of all tracked modded + non modded entityIDs.
@@ -28,7 +28,7 @@ export function getGameEntityIDSetForCategory(
 const ENTITY_CATEGORY_TO_GAME_NON_MODDED_ENTITY_ID_MAP: ReadonlyMap<
   EntityCategory,
   () => Set<string>
-> = new Map([[EntityCategory.NPC, () => getGameNonModdedNPCIDSet()]]);
+> = new Map([[EntityCategory.NPC, () => getNonModdedNPCIDSet()]]);
 
 /** From an Entity Category (e.g 'NPCs'), finds the set of all tracked non-modded entityIDs. */
 export function getGameNonModdedEntityIDSetForCategory(
@@ -45,7 +45,7 @@ export function getGameNonModdedEntityIDSetForCategory(
 const ENTITY_CATEGORY_TO_GAME_MODDED_ENTITY_ID_MAP: ReadonlyMap<
   EntityCategory,
   () => Set<string>
-> = new Map([[EntityCategory.NPC, () => getGameModdedNPCIDSet()]]);
+> = new Map([[EntityCategory.NPC, () => getModdedNPCIDSet()]]);
 
 /** From an Entity Category (e.g 'NPCs'), finds the set of all tracked modded entityIDs. */
 export function getGameModdedEntityIDSetForCategory(

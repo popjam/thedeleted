@@ -1,4 +1,4 @@
-import { NPCID } from "../../../enums/general/ID/NPCID";
+import { NPCID } from "../../../enums/data/ID/NPCID";
 
 const NPC_NAME_MAP: ReadonlyMap<NPCID, string> = new Map([
   [NPCID.FROWNING_GAPER, "Frowning Gaper"],

@@ -1,5 +1,5 @@
-/** Fiend Folio NPCs with their EntityIDs. */
-export enum FiendFolioNameSubType {
+/** Fiend Folio NPCs with their Name + SubType values. */
+export enum FiendFolioNPCNameSubTypes {
   MERN = "0.Mern",
   HONEYFOX = "0.HoneyFox",
   HONEYFOX_WORM = "0.HoneyFox (Worm)",

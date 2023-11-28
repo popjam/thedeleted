@@ -1,5 +1,5 @@
 import { getRandomSetElement } from "isaacscript-common";
-import { getGameFiendFolioNPCIDSet } from "../../../sets/data/entities/GameNPCIDSets";
+import { getGameFiendFolioNPCIDSet } from "../../../sets/data/npc/NPCIDSets";
 import type { NPCID } from "isaac-typescript-definitions";
 
 export function isFiendFolioActive(): boolean {

@@ -1,6 +1,6 @@
 import { K_COLORS } from "isaacscript-common";
-import { EIDColorShortcut } from "../../enums/compatibility/EIDColor";
-import { EIDColorTriplet } from "../../enums/compatibility/EIDColorTriplet";
+import { EIDColorShortcut } from "../../enums/compatibility/EID/EIDColor";
+import { EIDColorTriplet } from "../../enums/compatibility/EID/EIDColorTriplet";
 import { Morality } from "../../enums/corruption/Morality";
 import { DeletedColor } from "../../enums/general/DeletedColor";
 import { colorToKColor } from "../../helper/colorHelper";

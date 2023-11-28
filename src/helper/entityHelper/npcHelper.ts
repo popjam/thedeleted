@@ -3,10 +3,11 @@ import {
   getRandomArrayElementAndRemove,
   getRandomSeed,
 } from "isaacscript-common";
-import type { NPCID } from "../../enums/general/ID/NPCID";
+import type { NPCID } from "../../enums/data/ID/NPCID";
 import { fprint } from "../printHelper";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
 import {
+  getNPCIDMaxHitPoints,
   getNPCIDName,
   getNPCIDSize,
   isNPCIDBoss,
@@ -15,11 +16,12 @@ import {
 } from "./npcIDHelper";
 import { getEntityIDFromEntity } from "./entityIDHelper";
 import {
-  getGameModdedNPCIDSet,
-  getGameNPCIDSet,
-  getGameNonModdedNPCIDSet,
-} from "../../sets/data/entities/GameNPCIDSets";
+  getModdedNPCIDSet,
+  getNPCIDSet,
+  getNonModdedNPCIDSet,
+} from "../../sets/data/npc/NPCIDSets";
 import { getNonModdedBossNPCIDSet } from "../../sets/data/npc/BossNPCSet";
+import { getGameNPCIDSetForMod } from "../../maps/data/npc/modded/ModToGameSetMaps";
 
 /** Determines if an NPC is modded by checking it against the set of all non-Modded NPCs. */
 export function isNPCModded(npc: EntityNPC): boolean {
@@ -211,13 +213,16 @@ export function getRandomNPC(
 ): NPCID | undefined {
   let setToUse = undefined as ReadonlySet<NPCID> | undefined;
   if (npcAttributes === undefined) {
-    setToUse = getGameNPCIDSet();
+    setToUse = getNPCIDSet();
+    // eslint-disable-next-line unicorn/prefer-switch
   } else if (npcAttributes.modded === true) {
-    setToUse = getGameModdedNPCIDSet();
+    setToUse = getModdedNPCIDSet();
   } else if (npcAttributes.modded === false) {
-    setToUse = getGameNonModdedNPCIDSet();
+    setToUse = getNonModdedNPCIDSet();
+  } else if (npcAttributes.modded === undefined) {
+    setToUse = getNPCIDSet();
   } else {
-    setToUse = getGameNPCIDSet();
+    setToUse = getGameNPCIDSetForMod(npcAttributes.modded) ?? getNPCIDSet();
   }
 
   // Copy the set to an array.
@@ -296,6 +301,18 @@ export function doesNPCIDMatchNPCAttributes(
       return false;
     }
     if (!(npcSize >= size[0] && npcSize <= size[1])) {
+      return false;
+    }
+  }
+
+  // MaxHitPoints.
+  const { health } = npcAttributes;
+  if (health !== undefined) {
+    const npcSize = getNPCIDMaxHitPoints(npcID);
+    if (npcSize === undefined) {
+      return false;
+    }
+    if (!(npcSize >= health[0] && npcSize <= health[1])) {
       return false;
     }
   }

@@ -1,10 +1,10 @@
 import type { NPCID } from "isaac-typescript-definitions";
 import { fprint } from "../../helper/printHelper";
 import {
-  getGameModdedNPCIDSet,
-  getGameNPCIDSet,
-  getGameNonModdedNPCIDSet,
-} from "../../sets/data/entities/GameNPCIDSets";
+  getModdedNPCIDSet,
+  getNPCIDSet,
+  getNonModdedNPCIDSet,
+} from "../../sets/data/npc/NPCIDSets";
 import { game, getEnumValues } from "isaacscript-common";
 import { getActiveMods } from "../../helper/compatibility/externalModHelper";
 import { getNPCIDNameSubTypesForMod } from "../../maps/data/npc/modded/ModToNameSubTypeMap";
@@ -27,7 +27,7 @@ import {
   _addModdedEntityIDToModMap,
   _clearModdedEntityIDToModMap,
 } from "../../maps/data/moddedEntityIDToModMap";
-import { getNPCIDSetForMod } from "../../maps/data/npc/modded/ModToGameSetMaps";
+import { getGameNPCIDSetForMod } from "../../maps/data/npc/modded/ModToGameSetMaps";
 
 /**
  * Upon starting or continuing a game, re-populate the game EntityID sets
@@ -116,7 +116,7 @@ function populateModdedEntities() {
         }
 
         if (category === EntityCategory.NPC) {
-          const moddedNPCIDSet = getNPCIDSetForMod(mod);
+          const moddedNPCIDSet = getGameNPCIDSetForMod(mod);
           if (moddedNPCIDSet !== undefined) {
             moddedNPCIDSet.add(entityID as NPCID);
           }

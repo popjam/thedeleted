@@ -29,7 +29,7 @@ import { WaitThenTriggerResponse } from "../../classes/corruption/responses/Wait
 import { INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD } from "../../constants/corruptionConstants";
 import { Morality } from "../../enums/corruption/Morality";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { NPCID } from "../../enums/general/ID/NPCID";
+import { NPCID } from "../../enums/data/ID/NPCID";
 import { getAdvancedInvertedItemIconSetting } from "../../features/settings/GeneralSettings";
 import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";

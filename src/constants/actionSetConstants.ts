@@ -1,4 +1,4 @@
-import { EIDMarkup } from "../enums/compatibility/EIDMarkup";
+import { EIDMarkup } from "../enums/compatibility/EID/EIDMarkup";
 
 export const NO_EFFECTS_DEFAULT_TEXT = "does nothing";
 

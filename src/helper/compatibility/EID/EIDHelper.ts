@@ -6,7 +6,7 @@ import {
   getEntityID,
 } from "isaacscript-common";
 import { EID_ENTITY_DATA_KEY } from "../../../constants/eidConstants";
-import type { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import type { Morality } from "../../../enums/corruption/Morality";
 import type { EIDDescObject } from "../../../interfaces/compatibility/EIDDescObject";
 import { getEIDColorShortcutFromMorality } from "../../../maps/compatibility/EIDColorMap";

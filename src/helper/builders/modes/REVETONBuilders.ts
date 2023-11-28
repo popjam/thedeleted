@@ -13,7 +13,7 @@ import {
   REVETONInvertedItemBlueSpriteColor,
   REVETONInvertedItemRedSpriteColor,
 } from "../../../constants/modes/REVETONConstants";
-import { EIDColorShortcut } from "../../../enums/compatibility/EIDColor";
+import { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { DeletedColor } from "../../../enums/general/DeletedColor";

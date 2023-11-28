@@ -29,10 +29,10 @@ export interface CollectibleAttribute {
   maxCharges?: number | number[];
 
   /**
-   * If the item is already owned by a player. If multiple players are specified, only one needs to
-   * have it. Does not include pocket items.
+   * If set to true, the item must already be owned by a player. If set to false, the item must not
+   * be owned by a player.
    */
-  playerHas?: PlayerIndex | PlayerIndex[];
+  playerHas?: boolean;
 
   /** Item name starts with (capitalization doesn't matter). */
   startsWith?: string;

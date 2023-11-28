@@ -1,5 +1,5 @@
 import { getEntityID, ReadonlyMap } from "isaacscript-common";
-import type { PickupID } from "../../../enums/general/ID/PickupID";
+import type { PickupID } from "../../../enums/data/ID/PickupID";
 
 /** Time is in seconds that a pickup takes to 'extract'. */
 const EXTRACT_PICKUP_BURN_TIME_MAP = new ReadonlyMap<PickupID, number>([]);

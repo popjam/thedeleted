@@ -10,7 +10,7 @@ import {
   getRandomSeed,
   getTSTLClassName,
 } from "isaacscript-common";
-import type { NPCID } from "../../../../enums/general/ID/NPCID";
+import type { NPCID } from "../../../../enums/data/ID/NPCID";
 import { getNPCFamily } from "../../../../helper/entityHelper/npcHelper";
 import { fprint } from "../../../../helper/printHelper";
 import { worldToRenderPosition } from "../../../../helper/renderHelper";

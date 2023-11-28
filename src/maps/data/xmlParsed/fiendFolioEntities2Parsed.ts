@@ -1,6 +1,9 @@
 import { ReadonlyMap } from "isaacscript-common";
 
-export const ENTITIES_MAP = new ReadonlyMap<string, [string, number]>([
+export const FIEND_FOLIO_ENTITIES_2_PARSED = new ReadonlyMap<
+  string,
+  [string, number]
+>([
   ["MERN", ["Mern", 0]],
   ["FIEND_MINION", ["Fiend Minion", 1]],
   ["FIEND_MINION_IMMORAL", ["Fiend Minion (Immoral)", 2]],

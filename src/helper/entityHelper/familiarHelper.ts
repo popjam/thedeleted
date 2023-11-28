@@ -1,6 +1,6 @@
 import type { EntityID } from "isaacscript-common";
 import { spawnEntityID } from "isaacscript-common";
-import type { FamiliarID } from "../../enums/general/ID/FamiliarID";
+import type { FamiliarID } from "../../enums/data/ID/FamiliarID";
 
 /** Spawn an NPC by using their NPCID. */
 export function spawnFamiliarID(

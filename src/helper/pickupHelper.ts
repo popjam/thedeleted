@@ -6,7 +6,7 @@ import {
   spawnEntityID,
   spawnPickup,
 } from "isaacscript-common";
-import type { PickupID } from "../enums/general/ID/PickupID";
+import type { PickupID } from "../enums/data/ID/PickupID";
 
 /**
  * If the Pickup is in the process of being collected by playing its 'Collect' animation. Note, not

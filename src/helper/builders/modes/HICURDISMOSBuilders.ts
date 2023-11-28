@@ -1,6 +1,6 @@
 import { colorEquals, getRandomInt, isColor } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { EIDColorTriplet } from "../../../enums/compatibility/EIDColorTriplet";
+import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import { DeletedColor } from "../../../enums/general/DeletedColor";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {

@@ -1,6 +1,6 @@
 import { DISTANCE_OF_GRID_TILE, game } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { NPCID } from "../../../enums/general/ID/NPCID";
+import { NPCID } from "../../../enums/data/ID/NPCID";
 import {
   getRandomAccessiblePosition,
   isPositionAccessible,
