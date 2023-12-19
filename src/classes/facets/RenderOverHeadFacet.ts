@@ -175,7 +175,7 @@ function shouldRenderPickupSprite(
   const animation = playerSprite.GetAnimation();
 
   /** Check if animation is in PlayerItemAnimation enum. */
-  const pickupAnimations: string[] = getEnumValues(PlayerItemAnimation);
+  const pickupAnimations: string[] = [...getEnumValues(PlayerItemAnimation)];
   if (!pickupAnimations.includes(animation)) {
     return false;
   }

@@ -1,5 +1,3 @@
-import { PickupVariant } from "isaac-typescript-definitions";
-
 /** The categories non-Grid Entities belong to. */
 export enum EntityCategory {
   FAMILIAR,
@@ -12,4 +10,7 @@ export enum EntityCategory {
   PICKUP,
   PLAYER,
   EFFECT,
+
+  // Should include as it's not a class?
+  SLOT,
 }

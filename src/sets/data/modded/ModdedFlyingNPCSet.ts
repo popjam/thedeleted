@@ -1,3 +1,4 @@
+import type { EntityID } from "isaacscript-common";
 import { ReadonlySet } from "isaacscript-common";
 import { FiendFolioNPCNameSubTypes } from "../../../enums/data/ID/modded/fiendFolio/FiendFolioNPCNameSubTypes";
 import { getNameSubTypeFromEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
@@ -365,7 +366,7 @@ const MODDED_FLYING_SET = new ReadonlySet<string>([
   FiendFolioNPCNameSubTypes.BUBBLE_LARGE_WATERY,
 ]);
 
-export function _isModdedNPCIDFlying(id: string): boolean | undefined {
+export function _isModdedNPCIDFlying(id: EntityID): boolean | undefined {
   const nameSubType = getNameSubTypeFromEntityID(id);
   if (nameSubType === undefined) {
     return undefined;

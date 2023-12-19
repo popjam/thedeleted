@@ -1,4 +1,4 @@
-import { SoundEffect } from "isaac-typescript-definitions";
+import type { SoundEffect } from "isaac-typescript-definitions";
 
 /**
  * A serializable object containing information for a corrupted sound effect - these sound effects

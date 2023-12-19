@@ -1,4 +1,4 @@
-import { NPCID } from "../../../enums/data/ID/NPCID";
+import { NPCID } from "isaac-typescript-definitions";
 
 /** Map linking every NPC to their Max HitPoints (HP they start with). */
 const NPC_MAX_HITPOINTS_MAP: ReadonlyMap<NPCID, number> = new Map([
@@ -19,7 +19,7 @@ const NPC_MAX_HITPOINTS_MAP: ReadonlyMap<NPCID, number> = new Map([
   [NPCID.TRIACHNID, 500],
   [NPCID.ISAAC, 2000],
   [NPCID.BLUE_BABY, 2000],
-  [NPCID.BLUE_BABY_ALT, 1000],
+  [NPCID.BLUE_BABY_HUSH, 1000],
   [NPCID.GUSHER, 10],
   [NPCID.PACER, 10],
   [NPCID.HORF, 10],
@@ -493,8 +493,8 @@ const NPC_MAX_HITPOINTS_MAP: ReadonlyMap<NPCID, number> = new Map([
   [NPCID.UMBILICAL_CORD_GREEN, 140],
   [NPCID.UMBILICAL_CORD_BLUE, 140],
   [NPCID.MOTER, 10],
-  [NPCID.BLOOD_PUPPY, 20],
-  [NPCID.BLOOD_PUPPY_2, 50],
+  [NPCID.BLOOD_PUPPY_SMALL, 20],
+  [NPCID.BLOOD_PUPPY_LARGE, 50],
   [NPCID.BLIND_BAT, 18],
   [NPCID.QUAKE_GRIMACE_LEFT, 20],
   [NPCID.QUAKE_GRIMACE_UP, 20],
@@ -673,8 +673,8 @@ const NPC_MAX_HITPOINTS_MAP: ReadonlyMap<NPCID, number> = new Map([
   [NPCID.ROTGUT, 600],
   [NPCID.ROTGUT_MAGGOT, 600],
   [NPCID.ROTGUT_HEART, 600],
-  [NPCID.MOTHER, 2222],
-  [NPCID.MOTHER_BACKDROP, 2222],
+  [NPCID.MOTHER_PHASE_1, 2222],
+  [NPCID.MOTHER_PHASE_2, 2222],
   [NPCID.MOTHER_LEFT_ARM, 2222],
   [NPCID.MOTHER_RIGHT_ARM, 2222],
   [NPCID.MOTHER_DISAPPEAR, 2222],

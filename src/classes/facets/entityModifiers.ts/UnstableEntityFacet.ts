@@ -13,7 +13,6 @@ import {
 } from "isaacscript-common";
 import { explodeEntity } from "../../../helper/entityHelper/explodeEntity";
 import { getPickupWithPickupIndex } from "../../../helper/entityHelper/pickupIndexHelper";
-import { secondsToGameFrames } from "../../../helper/gameHelpter";
 import {
   isPickupBeingCollected,
   isUselessPickup,
@@ -24,6 +23,7 @@ import { mod } from "../../../mod";
 import { Facet, initGenericFacet } from "../../Facet";
 import type { Range } from "../../../types/general/Range";
 import { randomInRange } from "../../../types/general/Range";
+import { secondsToGameFrames } from "../../../helper/gameHelper";
 
 const SECONDS_LEFT_UNTIL_FAST_BEEP = 1;
 const SLOW_BEEP_INTERVAL_SEC = 1;

@@ -1,9 +1,16 @@
 import type { ModUpgraded } from "isaacscript-common";
 import { ModCallbackCustom } from "isaacscript-common";
+import { postNPCInitLateNPCIndex } from "../features/general/NPCIndex";
+import { CallbackPriority } from "isaac-typescript-definitions";
 
 export function postNPCInitLateInit(mod: ModUpgraded): void {
-  mod.AddCallbackCustom(ModCallbackCustom.POST_NPC_INIT_LATE, main);
+  mod.AddPriorityCallbackCustom(
+    ModCallbackCustom.POST_NPC_INIT_LATE,
+    CallbackPriority.EARLY,
+    main,
+  );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-function main(_npc: EntityNPC) {}
+function main(npc: EntityNPC) {
+  postNPCInitLateNPCIndex(npc);
+}

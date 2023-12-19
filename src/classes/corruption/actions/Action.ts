@@ -90,7 +90,7 @@ export abstract class Action {
   }
 
   /** Get collectibles involved in the Action and all its responses. */
-  getInvolvedCollectibles(): CollectibleType[] {
+  getInvolvedCollectibles(): readonly CollectibleType[] {
     const response = this.getResponse();
     if (response === undefined) {
       return [];

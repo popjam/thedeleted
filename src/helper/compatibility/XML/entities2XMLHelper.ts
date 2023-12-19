@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { EntityID } from "isaacscript-common";
 import {
-  arrayToString,
   getEnumKeys,
   getEnumValues,
   log,
@@ -14,19 +13,10 @@ import {
   getQuickAccessiblePosition,
 } from "../../entityHelper";
 import type { EntityCategory } from "../../../enums/general/EntityCategory";
-import {
-  getEntityIDFromNameSubType,
-  isEntityID,
-} from "../../entityHelper/entityIDHelper";
+import { getEntityIDFromNameSubType } from "../../entityHelper/entityIDHelper";
 import { splitString } from "../../stringHelper";
 import { fprint } from "../../printHelper";
-import type { FiendFolioNPCNameSubTypes } from "../../../enums/data/ID/modded/fiendFolio/FiendFolioNPCNameSubTypes";
-import { spawnNPCID } from "../../entityHelper/npcIDHelper";
-import {
-  ItemPoolType,
-  CollectibleType,
-  NPCID,
-} from "isaac-typescript-definitions";
+import { ItemPoolType, CollectibleType } from "isaac-typescript-definitions";
 
 /** 1. First, 'entities2Parser.py' is run to generate the */
 

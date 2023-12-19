@@ -1,25 +1,20 @@
 import type { DamageFlag } from "isaac-typescript-definitions";
 import { EntityFlag, ModCallback } from "isaac-typescript-definitions";
-import {
-  Callback,
-  CallbackCustom,
-  getNPCs,
-  getTSTLClassName,
-  isNPC,
-  ModCallbackCustom,
-} from "isaacscript-common";
+import { Callback, getNPCs } from "isaacscript-common";
 import {
   getNPCFamily,
   isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
-import { Facet, initGenericFacet, uninitFacet } from "../../../Facet";
+import { Facet, initGenericFacet } from "../../../Facet";
 import { fprint } from "../../../../helper/printHelper";
+import type { NPCIndex } from "../../../../types/general/NPCIndex";
+import { getNPCIndex } from "../../../../features/general/NPCIndex";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
-  room: {
+  level: {
     /** A set of the Frozen NPCs that are currently in the room. */
-    frozenNPCs: new Map<PtrHash, number>(),
+    frozenNPCs: new Map<NPCIndex, number>(),
   },
 };
 
@@ -27,11 +22,11 @@ let FACET: Facet | undefined;
 class FreezeNPCFacet extends Facet {
   @Callback(ModCallback.POST_NPC_RENDER)
   postNPCRender(npc: EntityNPC): void {
-    if (v.room.frozenNPCs.size === 0) {
+    if (v.level.frozenNPCs.size === 0) {
       return;
     }
 
-    if (!v.room.frozenNPCs.has(GetPtrHash(npc))) {
+    if (!v.level.frozenNPCs.has(getNPCIndex(npc))) {
       return;
     }
 
@@ -44,9 +39,22 @@ class FreezeNPCFacet extends Facet {
     }
   }
 
-  @CallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED)
-  postNewRoomReordered(): void {
-    this.unsubscribeAll();
+  @Callback(ModCallback.POST_ENTITY_REMOVE)
+  postEntityRemove(entity: Entity): void {
+    if (!isEntityNPC(entity)) {
+      return;
+    }
+
+    if (!v.level.frozenNPCs.has(getNPCIndex(entity))) {
+      return;
+    }
+
+    v.level.frozenNPCs.delete(getNPCIndex(entity));
+
+    // Unsubscribe if there are no more frozen NPCs.
+    if (v.level.frozenNPCs.size === 0) {
+      this.unsubscribeAll();
+    }
   }
 }
 
@@ -65,13 +73,14 @@ export function initFreezeNPCFacet(): void {
  *                   will be frozen.
  */
 export function freezeNPC(npc: EntityNPC, individual = false): void {
+  fprint(`Freezing NPC (ptrHash: ${getNPCIndex(npc)})`);
   const npcFamily = individual ? new Set<EntityNPC>([npc]) : getNPCFamily(npc);
   for (const member of npcFamily) {
-    const frozenNPC = v.room.frozenNPCs.get(GetPtrHash(member));
+    const frozenNPC = v.level.frozenNPCs.get(getNPCIndex(member));
     if (frozenNPC === undefined) {
-      v.room.frozenNPCs.set(GetPtrHash(member), 1);
+      v.level.frozenNPCs.set(getNPCIndex(member), 1);
     } else {
-      v.room.frozenNPCs.set(GetPtrHash(member), frozenNPC + 1);
+      v.level.frozenNPCs.set(getNPCIndex(member), frozenNPC + 1);
     }
   }
 
@@ -89,19 +98,19 @@ export function freezeNPC(npc: EntityNPC, individual = false): void {
 export function unfreezeNPC(npc: EntityNPC, individual = false): void {
   const npcFamily = individual ? [npc] : getNPCFamily(npc);
   for (const member of npcFamily) {
-    const frozenNPC = v.room.frozenNPCs.get(GetPtrHash(member));
+    const frozenNPC = v.level.frozenNPCs.get(getNPCIndex(member));
     if (frozenNPC === undefined) {
       continue;
     } else if (frozenNPC === 1) {
-      v.room.frozenNPCs.delete(GetPtrHash(member));
+      v.level.frozenNPCs.delete(getNPCIndex(member));
       member.ClearEntityFlags(EntityFlag.FREEZE);
       member.ClearEntityFlags(EntityFlag.NO_SPRITE_UPDATE);
     } else {
-      v.room.frozenNPCs.set(GetPtrHash(member), frozenNPC - 1);
+      v.level.frozenNPCs.set(getNPCIndex(member), frozenNPC - 1);
     }
   }
 
-  if (v.room.frozenNPCs.size === 0) {
+  if (v.level.frozenNPCs.size === 0) {
     FACET?.unsubscribeAll();
   }
 }
@@ -120,5 +129,5 @@ export function unfreezeAllNPCsInRoom(): void {
 
 /** Check if the NPC has been frozen by the FreezeNPCFacet. */
 export function isNPCFrozen(npc: EntityNPC): boolean {
-  return v.room.frozenNPCs.has(GetPtrHash(npc));
+  return v.level.frozenNPCs.has(getNPCIndex(npc));
 }

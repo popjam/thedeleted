@@ -1,5 +1,9 @@
-import { EntityType, FireplaceVariant } from "isaac-typescript-definitions";
-import { game, spawnNPC } from "isaacscript-common";
+import {
+  Direction,
+  EntityType,
+  FireplaceVariant,
+} from "isaac-typescript-definitions";
+import { directionToVector, game, spawnNPC } from "isaacscript-common";
 import { fprint } from "../printHelper";
 
 const EXPLODE_ENTITY_SCREEN_SHAKE_DURATION = 10;
@@ -14,8 +18,14 @@ export function explodeEntity(entity: Entity, damage = 100): void {
       entity.Variant
     } GAME FRAMES: ${game.GetFrameCount()})`,
   );
-  entity.Remove();
+  entity.Die();
   Isaac.Explode(entity.Position, undefined, damage);
-  spawnNPC(EntityType.FIREPLACE, FireplaceVariant.MOVEABLE, 0, entity.Position);
+  const fire = spawnNPC(
+    EntityType.FIREPLACE,
+    FireplaceVariant.MOVEABLE,
+    0,
+    entity.Position,
+    directionToVector(Direction.LEFT).mul(entity.Velocity),
+  );
   game.ShakeScreen(EXPLODE_ENTITY_SCREEN_SHAKE_DURATION);
 }

@@ -1,4 +1,4 @@
-import { NPCID } from "../../../enums/data/ID/NPCID";
+import { NPCID } from "isaac-typescript-definitions";
 
 /** Set of non-modded NPCs that are considered to be flying. */
 export const FLYING_NPC_SET: ReadonlySet<NPCID> = new Set([
@@ -232,8 +232,8 @@ export const FLYING_NPC_SET: ReadonlySet<NPCID> = new Set([
   NPCID.SWARMER,
   NPCID.ROTGUT_MAGGOT,
   NPCID.ROTGUT_HEART,
-  NPCID.MOTHER,
-  NPCID.MOTHER_BACKDROP,
+  NPCID.MOTHER_PHASE_1,
+  NPCID.MOTHER_PHASE_2,
   NPCID.MOTHER_LEFT_ARM,
   NPCID.MOTHER_RIGHT_ARM,
   NPCID.MOTHER_DISAPPEAR,

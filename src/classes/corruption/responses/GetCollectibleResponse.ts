@@ -47,7 +47,7 @@ export class GetCollectibleResponse extends Response {
   }
 
   /** Get collectibles mentioned. */
-  override getInvolvedCollectibles(): CollectibleType[] {
+  override getInvolvedCollectibles(): readonly CollectibleType[] {
     const collectible = this.getCollectible();
     if (collectible === undefined) {
       return [];

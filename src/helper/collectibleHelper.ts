@@ -132,7 +132,7 @@ export function getRandomAssortmentOfCollectibles(
   range: Range = [1, 5],
   collectibleAttributes: CollectibleAttribute | undefined = undefined,
   seedOrRNG: Seed | RNG = getRandomSeed(),
-): CollectibleType[] {
+): readonly CollectibleType[] {
   const rng = isRNG(seedOrRNG) ? seedOrRNG : newRNG(seedOrRNG);
   const amount = randomInRange(range, rng);
   const collectibles: CollectibleType[] = [];

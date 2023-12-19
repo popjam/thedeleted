@@ -45,7 +45,7 @@ export class UseActiveItemResponse extends Response {
   }
 
   /** Get collectibles mentioned. */
-  override getInvolvedCollectibles(): CollectibleType[] {
+  override getInvolvedCollectibles(): readonly CollectibleType[] {
     const active = this.getActiveItem();
     if (active === undefined) {
       return [];

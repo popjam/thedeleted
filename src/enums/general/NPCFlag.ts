@@ -18,4 +18,16 @@ export enum NPCFlag {
 
   /** The NPC will explode after a random period of time. */
   UNSTABLE,
+
+  /** Existing Flags. */
+  GLASS,
+  FEAR,
+  BURN,
+  CHARMED,
+  CONFUSED,
+  ICE_FREEZE,
+  MIDAS_FREEZE,
+  POISONED,
+  SHRUNKEN,
+  SLOWING,
 }

@@ -7,8 +7,8 @@ import {
   getTSTLClassName,
   round,
 } from "isaacscript-common";
-import type { NPCID } from "../../../../enums/data/ID/NPCID";
 import { Facet, initGenericFacet } from "../../../Facet";
+import type { NPCID } from "isaac-typescript-definitions";
 import { ModCallback } from "isaac-typescript-definitions";
 import { fprint } from "../../../../helper/printHelper";
 import { getRandomMapElementWithPredicate } from "../../../../helper/mapHelper";

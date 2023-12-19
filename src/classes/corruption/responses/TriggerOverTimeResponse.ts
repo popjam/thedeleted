@@ -42,7 +42,7 @@ export class TriggerOverTimeResponse extends Response {
     return this;
   }
 
-  override getInvolvedCollectibles(): CollectibleType[] {
+  override getInvolvedCollectibles(): readonly CollectibleType[] {
     return this.getResponse()?.getInvolvedCollectibles() ?? [];
   }
 

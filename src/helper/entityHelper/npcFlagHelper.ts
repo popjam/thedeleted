@@ -1,4 +1,9 @@
 import {
+  GAME_FRAMES_PER_SECOND,
+  VectorZero,
+  spawnTear,
+} from "isaacscript-common";
+import {
   bolsterNPC,
   isNPCBolstered,
   unbolsterNPC,
@@ -20,6 +25,13 @@ import {
 } from "../../classes/facets/entityModifiers.ts/UnstableEntityFacet";
 import { NPCFlag } from "../../enums/general/NPCFlag";
 import { fprint } from "../printHelper";
+import {
+  DamageFlag,
+  DamageFlagZero,
+  EntityFlag,
+  TearVariant,
+} from "isaac-typescript-definitions";
+import { mod } from "../../mod";
 
 /**
  * Add a custom NPCFlag to an NPC. If they already have the flag, nothing happens unless there is a
@@ -27,7 +39,10 @@ import { fprint } from "../printHelper";
  *
  * @note For multi-segmented NPCs, this will add the flag to all segments.
  */
-export function addNPCFlags(npc: EntityNPC, ...flags: NPCFlag[]): void {
+export function addNPCFlags(
+  npc: EntityNPC,
+  ...flags: readonly NPCFlag[]
+): void {
   for (const flag of flags) {
     fprint(`Adding NPC flag ${NPCFlag[flag]} to npc: ${GetPtrHash(npc)}.`);
     switch (flag) {
@@ -60,6 +75,76 @@ export function addNPCFlags(npc: EntityNPC, ...flags: NPCFlag[]): void {
 
         break;
       }
+
+      case NPCFlag.BURN: {
+        npc.AddEntityFlags(EntityFlag.BURN);
+
+        break;
+      }
+
+      case NPCFlag.CHARMED: {
+        npc.AddEntityFlags(EntityFlag.CHARM);
+
+        break;
+      }
+
+      case NPCFlag.CONFUSED: {
+        npc.AddEntityFlags(EntityFlag.CONFUSION);
+
+        break;
+      }
+
+      case NPCFlag.FEAR: {
+        npc.AddEntityFlags(EntityFlag.FEAR);
+
+        break;
+      }
+
+      case NPCFlag.ICE_FREEZE: {
+        npc.AddEntityFlags(EntityFlag.FREEZE);
+
+        break;
+      }
+
+      case NPCFlag.MIDAS_FREEZE: {
+        npc.AddEntityFlags(EntityFlag.MIDAS_FREEZE);
+
+        break;
+      }
+
+      case NPCFlag.POISONED: {
+        npc.AddEntityFlags(EntityFlag.POISON);
+
+        break;
+      }
+
+      case NPCFlag.SHRUNKEN: {
+        npc.AddEntityFlags(EntityFlag.SHRINK);
+
+        break;
+      }
+
+      case NPCFlag.SLOWING: {
+        npc.AddEntityFlags(EntityFlag.SLOW);
+
+        break;
+      }
+
+      case NPCFlag.GLASS: {
+        npc.AddEntityFlags(EntityFlag.ICE);
+        mod.runInNGameFrames(() => {
+          npc.HitPoints = 1;
+          npc.TakeDamage(
+            999_999,
+            DamageFlag.IGNORE_ARMOR,
+            EntityRef(Isaac.GetPlayer()),
+            0,
+          );
+        }, 4);
+
+        break;
+      }
+
       // No default
     }
   }

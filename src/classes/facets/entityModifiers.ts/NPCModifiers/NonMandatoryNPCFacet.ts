@@ -10,15 +10,18 @@ import {
 import {
   getNPCFamily,
   getNPCLineage,
+  isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
 import { fprint } from "../../../../helper/printHelper";
 import { clearRoom } from "../../../../helper/roomHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
+import type { NPCIndex } from "../../../../types/general/NPCIndex";
+import { getNPCIndex } from "../../../../features/general/NPCIndex";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
-  room: {
-    nonMandatoryNPC: new Set<PtrHash>(),
+  level: {
+    nonMandatoryNPC: new Set<NPCIndex>(),
   },
 };
 
@@ -33,7 +36,7 @@ class NonMandatoryNPCFacet extends Facet {
 
     // Room is not clear, check if any mandatory NPCs are still alive.
     const thereAreMandatoryNPCs = getNPCs().some((npc) => {
-      if (v.room.nonMandatoryNPC.has(GetPtrHash(npc))) {
+      if (v.level.nonMandatoryNPC.has(getNPCIndex(npc))) {
         return false;
       }
 
@@ -49,12 +52,22 @@ class NonMandatoryNPCFacet extends Facet {
     clearRoom();
   }
 
-  @CallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED)
-  postNewRoomReordered() {
-    this.unsubscribeAll();
-    fprint(
-      `Unsubscribed from NonMandatoryNPCFacet, subscriber count: ${this.getSubscriberCount()}`,
-    );
+  @Callback(ModCallback.POST_ENTITY_REMOVE)
+  postEntityRemove(entity: Entity) {
+    if (!isEntityNPC(entity)) {
+      return;
+    }
+
+    if (!v.level.nonMandatoryNPC.has(getNPCIndex(entity))) {
+      return;
+    }
+
+    v.level.nonMandatoryNPC.delete(getNPCIndex(entity));
+
+    // Unsubscribe if there are no more non-mandatory NPCs.
+    if (v.level.nonMandatoryNPC.size === 0) {
+      this.unsubscribeAll();
+    }
   }
 }
 
@@ -74,10 +87,10 @@ export function initNonMandatoryNPCFacet(): void {
 export function makeNPCNonMandatory(npc: EntityNPC, individual = false): void {
   const npcFamily = individual ? new Set<EntityNPC>([npc]) : getNPCFamily(npc);
   for (const member of npcFamily) {
-    if (v.room.nonMandatoryNPC.has(GetPtrHash(member))) {
+    if (v.level.nonMandatoryNPC.has(getNPCIndex(member))) {
       continue;
     }
-    v.room.nonMandatoryNPC.add(GetPtrHash(member));
+    v.level.nonMandatoryNPC.add(getNPCIndex(member));
   }
 
   FACET?.subscribeIfNotAlready();
@@ -100,20 +113,20 @@ export function removeNPCNonMandatoryEffect(
 ): void {
   const npcFamily = individual ? new Set<EntityNPC>([npc]) : getNPCFamily(npc);
   for (const member of npcFamily) {
-    if (!v.room.nonMandatoryNPC.has(GetPtrHash(member))) {
+    if (!v.level.nonMandatoryNPC.has(getNPCIndex(member))) {
       continue;
     }
-    v.room.nonMandatoryNPC.delete(GetPtrHash(member));
+    v.level.nonMandatoryNPC.delete(getNPCIndex(member));
   }
 
-  if (v.room.nonMandatoryNPC.size === 0) {
+  if (v.level.nonMandatoryNPC.size === 0) {
     FACET?.unsubscribeAll();
   }
 }
 
 /** Returns true if an NPC is non-Mandatory (not required to kill to clear the room). */
 export function isNPCNonMandatory(npc: EntityNPC): boolean {
-  return v.room.nonMandatoryNPC.has(GetPtrHash(npc));
+  return v.level.nonMandatoryNPC.has(getNPCIndex(npc));
 }
 
 export function getNonMandatoryNPCFacetSubscriberCount(): number {

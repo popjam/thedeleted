@@ -1,3 +1,4 @@
+import type { NPCID } from "isaac-typescript-definitions";
 import { ModCallback } from "isaac-typescript-definitions";
 import {
   COLORS,
@@ -10,7 +11,6 @@ import {
   getRandomSeed,
   getTSTLClassName,
 } from "isaacscript-common";
-import type { NPCID } from "../../../../enums/data/ID/NPCID";
 import { getNPCFamily } from "../../../../helper/entityHelper/npcHelper";
 import { fprint } from "../../../../helper/printHelper";
 import { worldToRenderPosition } from "../../../../helper/renderHelper";

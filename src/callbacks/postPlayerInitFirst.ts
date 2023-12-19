@@ -1,5 +1,6 @@
 import { PlayerVariant } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { modePostPlayerInitFirst as modePostPlayerInitDeletedFirst } from "../features/modes/mode";
 import { mainPCPostPlayerInitDeletedFirst } from "../features/pc/callbacks/pcPostPlayerInitFirst";
 import {

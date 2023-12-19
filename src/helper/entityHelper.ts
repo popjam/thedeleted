@@ -8,12 +8,14 @@ import {
   getPlayers,
   getRandom,
   getRandomVector,
+  isSlot,
   spawn,
   spawnNPC,
   spawnPickup,
 } from "isaacscript-common";
 import { mod } from "../mod";
 import { EntityCategory } from "../enums/general/EntityCategory";
+import { isLeavingGame } from "../features/general/isLeavingGame";
 
 const RANDOM_POSITION_AVOID_PLAYER_DISTANCE = DISTANCE_OF_GRID_TILE * 2;
 
@@ -249,7 +251,8 @@ export function getClosestPickupTo(
 }
 
 /**
- * Determine which EntityCategory a non-Grid Entity belongs to.
+ * Determine which EntityCategory a non-Grid Entity belongs to using the Entity class. Note: you
+ * probably want to use 'getEntityCategoryFromEntityID' instead, as it should be faster.
  *
  * @returns EntityCategory or undefined (as the entity can somehow be undefined).
  */
@@ -257,6 +260,10 @@ export function getEntityCategory(entity: Entity): EntityCategory | undefined {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (entity === undefined) {
     return undefined;
+  }
+
+  if (isSlot(entity)) {
+    return EntityCategory.SLOT;
   }
 
   if (entity.ToBomb() !== undefined) {
@@ -305,4 +312,15 @@ export function getEntityCategory(entity: Entity): EntityCategory | undefined {
 /** Find the first entity in the room that matches the initSeed. Warning: Slow. */
 export function getEntityFromInitSeed(initSeed: Seed): Entity | undefined {
   return getEntities().find((entity) => entity.InitSeed === initSeed);
+}
+
+/**
+ * Returns true if the entity is persistent and is being (or about to be) unloaded due to
+ * PRE_GAME_EXIT. This is useful as persistent NPCs will return upon continue, so for features which
+ * use 'NPCIndex', these NPCs shouldn't be unsubscribed from the feature.
+ */
+export function isPersistentEntityBeingUnloadedDueToGameExit(
+  entity: Entity,
+): boolean {
+  return entity.HasEntityFlags(EntityFlag.PERSISTENT) && isLeavingGame();
 }

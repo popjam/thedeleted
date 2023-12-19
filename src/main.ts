@@ -79,6 +79,9 @@ import { MODE_DATA_MAP, getModePlayerType } from "./maps/modes/modeMap";
 import { mod } from "./mod";
 import { initHideNPCFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/HideNPCFacet";
 import { initSpawnEntityByNameFacet } from "./classes/facets/SpawnEntityByNameFacet";
+import { postEntityRemoveInit } from "./callbacks/postEntityRemove";
+import { postNPCUpdateInit } from "./callbacks/postNPCUpdate";
+import { initPermanentNPCStatusEffectFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/PermanentNPCStatusEffectFacet";
 
 const IS_DEV = true;
 
@@ -147,6 +150,9 @@ function initCallbacks() {
   prePlayerCollisionInit(mod);
   preSpawnClearAwardInit(mod);
   postFireTearInit(mod);
+  preNewLevelReorderedInit(mod);
+  postEntityRemoveInit(mod);
+  postNPCUpdateInit(mod);
 }
 
 /** Initialize External mods if they exist. */
@@ -211,4 +217,5 @@ function initFacets() {
   initNonMandatoryNPCFacet();
   initHideNPCFacet();
   initSpawnEntityByNameFacet();
+  initPermanentNPCStatusEffectFacet();
 }

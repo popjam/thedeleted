@@ -61,7 +61,7 @@ export abstract class Response {
     return this;
   }
 
-  getInvolvedCollectibles(): CollectibleType[] {
+  getInvolvedCollectibles(): readonly CollectibleType[] {
     return [];
   }
 
@@ -111,6 +111,11 @@ export abstract class Response {
 
   getMorality(): Morality {
     return this.mo ?? DEFAULT_MORALITY;
+  }
+
+  /** Returns true if the 'amountOfActivations' is 1. */
+  doesTriggerOnce(): boolean {
+    return this.getAmountOfActivations() === 1;
   }
 
   /**

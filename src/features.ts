@@ -12,8 +12,11 @@ import { customActivesInit } from "./features/corruption/inversion/customActives
 import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
+import { gameEntitySetBuilderInit } from "./features/data/gameEntitySetBuilder";
 import { backdropHelperInit } from "./features/general/backdropHelper";
 import { floorColorHelper } from "./features/general/floorColorHelper";
+import { isLeavingGameInit } from "./features/general/isLeavingGame";
+import { NPCIndexHelperInit } from "./features/general/NPCIndex";
 import { playerStatsInit } from "./features/general/playerStats";
 import { RNGHelperInit } from "./features/general/RNGHelper";
 import { temporaryItemsInit } from "./features/general/temporaryItems";
@@ -65,4 +68,7 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   customActivesInit,
   activeItemTrackerInit,
   moddedNPCSettingsInit,
+  gameEntitySetBuilderInit,
+  NPCIndexHelperInit,
+  isLeavingGameInit,
 ];

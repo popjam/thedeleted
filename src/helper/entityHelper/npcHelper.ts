@@ -3,7 +3,6 @@ import {
   getRandomArrayElementAndRemove,
   getRandomSeed,
 } from "isaacscript-common";
-import type { NPCID } from "../../enums/data/ID/NPCID";
 import { fprint } from "../printHelper";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
 import {
@@ -16,12 +15,19 @@ import {
 } from "./npcIDHelper";
 import { getEntityIDFromEntity } from "./entityIDHelper";
 import {
-  getModdedNPCIDSet,
-  getNPCIDSet,
-  getNonModdedNPCIDSet,
-} from "../../sets/data/npc/NPCIDSets";
-import { getNonModdedBossNPCIDSet } from "../../sets/data/npc/BossNPCSet";
-import { getGameNPCIDSetForMod } from "../../maps/data/npc/modded/ModToGameSetMaps";
+  getEntityIDSetFromCategory,
+  getModdedEntityIDSetFromCategory,
+  getModdedEntityIDSetFromModAndCategory,
+  getNonModdedEntityIDSetFromCategory,
+} from "../../features/data/gameEntitySetBuilder";
+import { EntityCategory } from "../../enums/general/EntityCategory";
+import type { NPCID } from "isaac-typescript-definitions";
+import { Mods } from "../../enums/compatibility/Mods";
+import {
+  addArticle,
+  legibleString,
+  removeUnnecessaryWhiteSpace,
+} from "../stringHelper";
 
 /** Determines if an NPC is modded by checking it against the set of all non-Modded NPCs. */
 export function isNPCModded(npc: EntityNPC): boolean {
@@ -36,8 +42,10 @@ export function isNPCModded(npc: EntityNPC): boolean {
  * @param npc The specified NPC to look for children.
  * @param children The array of children to add to, should leave this blank.
  */
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function getAllChildrenNPCs(
   npc: EntityNPC,
+  // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
   children: EntityNPC[] | undefined = [],
 ): EntityNPC[] {
   children ??= [];
@@ -75,8 +83,10 @@ export function isEntityNPC(entity: Entity): entity is EntityNPC {
  * @param npc The specified NPC to look for children.
  * @param parents The array of parents to add to, should leave this blank.
  */
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function getAllParentNPCs(
   npc: EntityNPC,
+  // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
   parents: EntityNPC[] | undefined = [],
 ): EntityNPC[] {
   parents ??= [];
@@ -149,6 +159,7 @@ export function areNPCsRelated(npc1: EntityNPC, npc2: EntityNPC): boolean {
  *
  * To find all children, use 'getNPCFamily()'.
  */
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function getNPCLineage(npc: EntityNPC): EntityNPC[] {
   const parentChain = getAllParentNPCs(npc).reverse();
   const childChain = getAllChildrenNPCs(npc);
@@ -173,6 +184,7 @@ export function getNPCLineage(npc: EntityNPC): EntityNPC[] {
  * This is different from getNPCLineage(), as it looks through all NPCs in the room and compares
  * NPC lineages, rather than following the parent / child chain.
  */
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function getNPCFamily(npc: EntityNPC): Set<EntityNPC> {
   const family = new Set<EntityNPC>();
   const tempPtrFamily = new Set<PtrHash>();
@@ -213,22 +225,34 @@ export function getRandomNPC(
 ): NPCID | undefined {
   let setToUse = undefined as ReadonlySet<NPCID> | undefined;
   if (npcAttributes === undefined) {
-    setToUse = getNPCIDSet();
+    setToUse = getEntityIDSetFromCategory(
+      EntityCategory.NPC,
+    ) as ReadonlySet<NPCID>;
     // eslint-disable-next-line unicorn/prefer-switch
   } else if (npcAttributes.modded === true) {
-    setToUse = getModdedNPCIDSet();
+    setToUse = getModdedEntityIDSetFromCategory(
+      EntityCategory.NPC,
+    ) as ReadonlySet<NPCID>;
   } else if (npcAttributes.modded === false) {
-    setToUse = getNonModdedNPCIDSet();
+    setToUse = getNonModdedEntityIDSetFromCategory(
+      EntityCategory.NPC,
+    ) as ReadonlySet<NPCID>;
   } else if (npcAttributes.modded === undefined) {
-    setToUse = getNPCIDSet();
+    setToUse = getEntityIDSetFromCategory(
+      EntityCategory.NPC,
+    ) as ReadonlySet<NPCID>;
   } else {
-    setToUse = getGameNPCIDSetForMod(npcAttributes.modded) ?? getNPCIDSet();
+    setToUse = getModdedEntityIDSetFromModAndCategory(
+      npcAttributes.modded,
+      EntityCategory.NPC,
+    ) as ReadonlySet<NPCID>;
   }
 
   // Copy the set to an array.
   const npcIDArray = [...setToUse];
 
   if (npcIDArray.length === 0) {
+    fprint("No NPCs found in the set.");
     return undefined;
   }
 
@@ -240,6 +264,7 @@ export function getRandomNPC(
 
   // If there are no attributes, return the NPCID.
   if (npcAttributes === undefined) {
+    fprint("No NPC attributes specified, returning random NPC.");
     return npcID;
   }
 
@@ -251,6 +276,7 @@ export function getRandomNPC(
     if (npcIDArray.length === 0) {
       return undefined;
     }
+    fprint(`NPCID with name ${getNPCIDName(npcID)} did not match attributes.`);
     npcID = getRandomArrayElementAndRemove(npcIDArray, seedOrRNG);
   }
 
@@ -275,11 +301,6 @@ export function doesNPCIDMatchNPCAttributes(
   if (flying !== undefined) {
     const npcFlying = isNPCIDFlying(npcID);
     if (npcFlying !== flying) {
-      fprint(
-        `NPCID ${npcID} with name ${getNPCIDName(
-          npcID,
-        )} does not match flying attribute.`,
-      );
       return false;
     }
   }
@@ -344,4 +365,83 @@ export function doesNPCIDMatchNPCAttributes(
   }
 
   return true;
+}
+
+/**
+ * Converts a NPCAttribute object to its appropriate text.
+ *
+ * @example { flying: true, boss: true } -> "a flying boss".
+ * @param npcAttributes The NPC Attributes to convert.
+ * @param plural Whether to make the text plural (e.g "enemies" instead of "enemy").
+ * @param prefixTextBeforeEnemy Any text to add before the enemy (e.g "a random enemy" -> "a random
+ *                              champion enemy").
+ */
+export function npcAttributesToText(
+  npcAttributes: NPCAttribute,
+  plural = false,
+  prefixTextBeforeEnemy = "",
+): string {
+  let text = "";
+
+  // Modded.
+  const { modded } = npcAttributes;
+  if (modded !== undefined) {
+    if (modded === true) {
+      text += "modded ";
+    } else if (modded === false) {
+      text += "non-modded ";
+    }
+    // If modded is a Mod, we add the mod name at the end.
+  }
+
+  // Flying.
+  const { flying } = npcAttributes;
+  if (flying !== undefined) {
+    text += flying ? "flying " : "non-flying ";
+  }
+
+  // Size.
+  const { size } = npcAttributes;
+  if (size !== undefined) {
+    text += `size: ${size}, `;
+  }
+
+  // MaxHitPoints.
+  const { health } = npcAttributes;
+  if (health !== undefined) {
+    text += `health: ${health}, `;
+  }
+
+  // Add the prefix text before the enemy.
+  text += ` ${prefixTextBeforeEnemy} `;
+
+  // Add the 'enemy' at the end.
+  const { boss } = npcAttributes;
+  if (boss === undefined || !boss) {
+    text += plural ? "enemies " : "enemy ";
+  } else {
+    text += plural ? "bosses " : "boss ";
+  }
+
+  // Starts with (capitalization doesn't matter). If the NPC does not have a registered name, always
+  // return false.
+  const { startsWith } = npcAttributes;
+  if (startsWith !== undefined) {
+    text += `starting with "${startsWith.toUpperCase()}" `;
+  }
+
+  // Ends with (capitalization doesn't matter). If the NPC does not have a registered name, always
+  // return false.
+  const { endsWith } = npcAttributes;
+  if (endsWith !== undefined) {
+    text += `ending with "${endsWith.toUpperCase()}" `;
+  }
+
+  // Add the mod name at the end if modded is a Mod.
+  if (modded !== undefined && typeof modded === "string") {
+    text += `from ${modded} `;
+  }
+
+  text = plural ? text : addArticle(text);
+  return text;
 }

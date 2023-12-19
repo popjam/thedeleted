@@ -3,7 +3,7 @@ import { ModCallbackCustom } from "isaacscript-common";
 import { facetPostGameContinuedReordered } from "../classes/Facet";
 import { runIndexPostGameContinuedFacet } from "../features/runIndex";
 import { itemInventoryPostGameContinuedReordered } from "../features/corruption/inventory/passiveItemInventory";
-import { postGameStartedReorderedGameEntitySetBuilder } from "../features/general/gameEntitySetBuilder";
+import { postGameStartedReorderedGameEntitySetBuilder } from "../features/data/gameEntitySetBuilder";
 
 export function postGameStartedReorderedInit(mod: ModUpgraded): void {
   mod.AddCallbackCustom(
@@ -18,6 +18,7 @@ function postGameStartedReordered(isContinued: boolean) {
     facetPostGameContinuedReordered();
     runIndexPostGameContinuedFacet();
     itemInventoryPostGameContinuedReordered();
+  } else {
+    postGameStartedReorderedGameEntitySetBuilder();
   }
-  postGameStartedReorderedGameEntitySetBuilder(isContinued);
 }

@@ -1,28 +1,34 @@
 import type { EntityID } from "isaacscript-common";
 import { getConstituentsFromEntityID, spawnNPC } from "isaacscript-common";
-import type { NPCID } from "../../enums/data/ID/NPCID";
-import { getNonModdedNPCIDSet } from "../../sets/data/npc/NPCIDSets";
 import { getNonModdedNPCName } from "../../maps/data/name/npcNameMap";
 import { getNonModdedBossNPCIDSet } from "../../sets/data/npc/BossNPCSet";
-import { getModFromModdedEntityID } from "../../maps/data/moddedEntityIDToModMap";
 import { getNonModdedFlyingNPCIDSet } from "../../sets/data/npc/FlyingNPCSet";
 import { getNameSubTypeFromEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
 import { getModdedEntityNameAndSubTypeFromNameSubType } from "./entityIDHelper";
-import { _isModdedNPCIDBoss } from "../../sets/data/modded/ModdedNPCBossSet";
 import { _isModdedNPCIDFlying } from "../../sets/data/modded/ModdedFlyingNPCSet";
 import { _getNonModdedNPCSize } from "../../maps/data/npc/NPCSizeMap";
-import { _getModdedNPCSize } from "../../maps/data/npc/modded/ModdedNPCSizeMap";
-import { _getModdedNPCMaxHitPoints } from "../../maps/data/npc/modded/ModdedNPCMaxHitPointsMap";
 import { _getNonModdedNPCIDMaxHitPoints } from "../../maps/data/npc/NPCMaxHitPointsMap";
+import { getNonModdedEntityIDSetFromCategory } from "../../features/data/gameEntitySetBuilder";
+import { EntityCategory } from "../../enums/general/EntityCategory";
+import type { NPCID } from "isaac-typescript-definitions";
+import { getModdedEntityDataFromEntityID } from "../compatibility/XML/moddedXMLParserHelper";
 
 /** Determines if an NPCID is modded by checking it against the set of all NPCs in the base game. */
 export function isNPCIDModded(npcID: NPCID): boolean {
-  return !getNonModdedNPCIDSet().has(npcID);
+  const nonModdedNPCSet = getNonModdedEntityIDSetFromCategory(
+    EntityCategory.NPC,
+  );
+  if (nonModdedNPCSet === undefined) {
+    return false;
+  }
+  return !nonModdedNPCSet.has(npcID as EntityID);
 }
 
 /**
  * Determines if an NPC is flying from its NPCID. Note that if the NPC is modded, if the mod is not
  * tracked, this will return undefined.
+ *
+ * TODO: Fix.
  */
 export function isNPCIDFlying(npcID: NPCID): boolean | undefined {
   const modded = isNPCIDModded(npcID);
@@ -30,7 +36,7 @@ export function isNPCIDFlying(npcID: NPCID): boolean | undefined {
     return getNonModdedFlyingNPCIDSet().has(npcID);
   }
 
-  return _isModdedNPCIDFlying(npcID);
+  return _isModdedNPCIDFlying(npcID as EntityID);
 }
 
 /**
@@ -43,7 +49,17 @@ export function isNPCIDBoss(npcID: NPCID): boolean | undefined {
     return getNonModdedBossNPCIDSet().has(npcID);
   }
 
-  return _isModdedNPCIDBoss(npcID);
+  const data = getModdedEntityDataFromEntityID(npcID as EntityID);
+  if (data === undefined) {
+    return undefined;
+  }
+
+  const { boss } = data._attr;
+  if (boss === undefined) {
+    return false;
+  }
+
+  return boss === "1";
 }
 
 /**
@@ -56,36 +72,40 @@ export function getNPCIDName(npcID: NPCID): string | undefined {
     return getNonModdedNPCName(npcID);
   }
 
-  const m = getModFromModdedEntityID(npcID as EntityID);
-  if (m === undefined) {
-    return undefined;
-  }
   const nameSubType = getNameSubTypeFromEntityID(npcID as EntityID);
   if (nameSubType === undefined) {
     return undefined;
   }
 
-  return getModdedEntityNameAndSubTypeFromNameSubType(nameSubType)[1];
+  return getModdedEntityNameAndSubTypeFromNameSubType(nameSubType).name;
 }
 
-/** Get the size of an NPCID. If modded, and the mod is not tracked, returns undefined. */
+/**
+ * Get the size of an NPCID. If modded, and the mod is not tracked, returns undefined. This is
+ * equivalent to the 'collisionRadius' xml attribute.
+ */
 export function getNPCIDSize(npcID: NPCID): number | undefined {
   const modded = isNPCIDModded(npcID);
   if (!modded) {
     return _getNonModdedNPCSize(npcID);
   }
 
-  const size = _getModdedNPCSize(npcID);
-  if (size === undefined) {
+  const data = getModdedEntityDataFromEntityID(npcID as EntityID);
+  if (data === undefined) {
     return undefined;
   }
 
-  return size;
+  const { collisionRadius } = data._attr;
+  if (collisionRadius === undefined) {
+    return undefined;
+  }
+
+  return Number(collisionRadius);
 }
 
 /**
  * Get the MaxHitPoints of an NPCID. If modded, and the mod is not tracked, returns undefined.
- * MaxHitPoints is the NPCs total health.
+ * MaxHitPoints is the NPCs total health. This is equivalent to the 'baseHP' xml attribute.
  */
 export function getNPCIDMaxHitPoints(npcID: NPCID): number | undefined {
   const modded = isNPCIDModded(npcID);
@@ -93,12 +113,17 @@ export function getNPCIDMaxHitPoints(npcID: NPCID): number | undefined {
     return _getNonModdedNPCIDMaxHitPoints(npcID);
   }
 
-  const hp = _getModdedNPCMaxHitPoints(npcID);
-  if (hp === undefined) {
+  const data = getModdedEntityDataFromEntityID(npcID as EntityID);
+  if (data === undefined) {
     return undefined;
   }
 
-  return hp;
+  const { baseHP } = data._attr;
+  if (baseHP === undefined) {
+    return undefined;
+  }
+
+  return Number(baseHP);
 }
 
 /** Spawn an NPC by using their NPCID. */

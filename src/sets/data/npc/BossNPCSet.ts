@@ -1,4 +1,4 @@
-import { NPCID } from "../../../enums/data/ID/NPCID";
+import { NPCID } from "isaac-typescript-definitions";
 
 /** Set of non-modded NPCs that are considered bosses. */
 const BOSS_NPC_SET: ReadonlySet<NPCID> = new Set([
@@ -10,7 +10,7 @@ const BOSS_NPC_SET: ReadonlySet<NPCID> = new Set([
   NPCID.TRIACHNID,
   NPCID.ISAAC,
   NPCID.BLUE_BABY,
-  NPCID.BLUE_BABY_ALT,
+  NPCID.BLUE_BABY_HUSH,
   NPCID.LARRY_JR,
   NPCID.LARRY_JR_GREEN,
   NPCID.LARRY_JR_BLUE,
@@ -218,8 +218,8 @@ const BOSS_NPC_SET: ReadonlySet<NPCID> = new Set([
   NPCID.ROTGUT,
   NPCID.ROTGUT_MAGGOT,
   NPCID.ROTGUT_HEART,
-  NPCID.MOTHER,
-  NPCID.MOTHER_BACKDROP,
+  NPCID.MOTHER_PHASE_1,
+  NPCID.MOTHER_PHASE_2,
   NPCID.MOTHER_LEFT_ARM,
   NPCID.MOTHER_RIGHT_ARM,
   NPCID.MOTHER_DISAPPEAR,

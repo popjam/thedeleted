@@ -2,6 +2,9 @@ import { capitalizeFirstLetter, getRandomInt } from "isaacscript-common";
 import { patternToPlainString } from "./patternHelper";
 import { getRandomInteger } from "./randomHelper";
 
+const articles = new Set(["a", "an", "the"]);
+const vowels = new Set(["a", "e", "i", "o", "u"]);
+
 /**
  * Removes unnecessary spaces, capitalizes first letter.
  * TODO: fix: "thing ," <-- space before comma.
@@ -25,9 +28,27 @@ export function stringStartsWithDigit(s: string): boolean {
   return string.find(s, "^%d")[0] !== undefined;
 }
 
-/** If n is not 1, will add an 's' to the string. */
-export function addTheS(s: string, n: number): string {
+/**
+ * If n is not 1, will add an 's' to the string.
+ *
+ * @param s The string to add an 's' to.
+ * @param n The number to check. If it's a boolean, will add an 's' if true.
+ * @param careAboutEnding If true, will only add an 's' if the string doesn't end with an 's'. If
+ *                        the string ends with an 's', it will add 'es' instead.
+ */
+export function addTheS(
+  s: string,
+  n: number | boolean,
+  careAboutEnding = true,
+): string {
+  if (type(n) === "boolean") {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    n = n ? 2 : 1;
+  }
   if (n !== 1) {
+    if (careAboutEnding && string.sub(s, -1) === "s") {
+      return `${s}es`;
+    }
     return `${s}s`;
   }
   return s;
@@ -103,7 +124,7 @@ export function joinWithOr(arr: string[]): string {
 }
 
 /** Split a string into multiple sub-strings of equal (or near equal) length. */
-export function splitString(s: string, segments: number): string[] {
+export function splitString(s: string, segments: number): readonly string[] {
   const len = s.length;
   const segmentLength = math.floor(len / segments);
   const arr: string[] = [];
@@ -114,6 +135,31 @@ export function splitString(s: string, segments: number): string[] {
     arr.push(segment);
   }
   return arr;
+}
+
+/**
+ * Adds 'a' or 'an' to the start of a string, depending on whether the first letter is a vowel. If
+ * the string already starts with an article, it will not add one.
+ */
+export function addArticle(s: string): string {
+  // Find the first word in the string.
+  const firstWord = s.split(" ")[0];
+  if (firstWord === undefined) {
+    return s;
+  }
+
+  // If the first word is an article, we don't need to add one.
+  if (articles.has(firstWord)) {
+    return s;
+  }
+
+  // Otherwise, check if the first letter is a vowel.
+  const firstLetter = string.sub(firstWord, 1, 1);
+  if (vowels.has(firstLetter.toLowerCase())) {
+    return `an ${s}`;
+  }
+
+  return `a ${s}`;
 }
 
 /** Returns a string with the first letter un-capitalized. */

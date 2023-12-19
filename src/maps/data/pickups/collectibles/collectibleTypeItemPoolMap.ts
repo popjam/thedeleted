@@ -1186,7 +1186,7 @@ export const itemPools = new Map<CollectibleType, ItemPoolType[]>([
     [ItemPoolType.TREASURE, ItemPoolType.GREED_TREASURE],
   ],
   [CollectibleType.MIDAS_TOUCH, [ItemPoolType.TREASURE]],
-  [CollectibleType.HUMBLING_BUNDLE, [ItemPoolType.SHOP]],
+  [CollectibleType.HUMBLEING_BUNDLE, [ItemPoolType.SHOP]],
   [
     CollectibleType.FANNY_PACK,
     [ItemPoolType.SHOP, ItemPoolType.BEGGAR, ItemPoolType.GREED_SHOP],
@@ -3797,7 +3797,7 @@ export const itemPools = new Map<CollectibleType, ItemPoolType[]>([
 /** Get a non-modded collectible's ItemPools. */
 export function _getNonModdedCollectibleTypeItemPools(
   collectibleType: CollectibleType,
-): ItemPoolType[] {
+): readonly ItemPoolType[] {
   const itemPool = itemPools.get(collectibleType);
   if (itemPool === undefined) {
     error(`No itemPoolAttributes found for ${collectibleType}.`);

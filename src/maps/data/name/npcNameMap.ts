@@ -1,4 +1,4 @@
-import { NPCID } from "../../../enums/data/ID/NPCID";
+import { NPCID } from "isaac-typescript-definitions";
 
 const NPC_NAME_MAP: ReadonlyMap<NPCID, string> = new Map([
   [NPCID.FROWNING_GAPER, "Frowning Gaper"],
@@ -18,7 +18,7 @@ const NPC_NAME_MAP: ReadonlyMap<NPCID, string> = new Map([
   [NPCID.TRIACHNID, "Triachnid"],
   [NPCID.ISAAC, "Isaac"],
   [NPCID.BLUE_BABY, "Blue Baby"],
-  [NPCID.BLUE_BABY_ALT, "Blue Baby Alt"],
+  [NPCID.BLUE_BABY_HUSH, "Blue Baby Hush"],
   [NPCID.GUSHER, "Gusher"],
   [NPCID.PACER, "Pacer"],
   [NPCID.HORF, "Horf"],
@@ -492,8 +492,8 @@ const NPC_NAME_MAP: ReadonlyMap<NPCID, string> = new Map([
   [NPCID.UMBILICAL_CORD_GREEN, "Green Umbilical Cord"],
   [NPCID.UMBILICAL_CORD_BLUE, "Blue Umbilical Cord"],
   [NPCID.MOTER, "Moter"],
-  [NPCID.BLOOD_PUPPY, "Blood Puppy"],
-  [NPCID.BLOOD_PUPPY_2, "Blood Puppy V2"],
+  [NPCID.BLOOD_PUPPY_SMALL, "Blood Puppy"],
+  [NPCID.BLOOD_PUPPY_LARGE, "Blood Puppy V2"],
   [NPCID.BLIND_BAT, "Blind Bat"],
   [NPCID.QUAKE_GRIMACE_LEFT, "Left-facing Quake Grimace"],
   [NPCID.QUAKE_GRIMACE_UP, "Up-facing Quake Grimace"],
@@ -672,8 +672,8 @@ const NPC_NAME_MAP: ReadonlyMap<NPCID, string> = new Map([
   [NPCID.ROTGUT, "Rotgut"],
   [NPCID.ROTGUT_MAGGOT, "Rotgut Maggot"],
   [NPCID.ROTGUT_HEART, "Rotgut Heart"],
-  [NPCID.MOTHER, "Mother"],
-  [NPCID.MOTHER_BACKDROP, "Mother Backdrop"],
+  [NPCID.MOTHER_PHASE_1, "Mother Phase 1"],
+  [NPCID.MOTHER_PHASE_2, "Mother Phase 2"],
   [NPCID.MOTHER_LEFT_ARM, "Mother's Left Arm"],
   [NPCID.MOTHER_RIGHT_ARM, "Mother's Right Arm"],
   [NPCID.MOTHER_DISAPPEAR, "Disappearing Mother"],

@@ -1,5 +1,5 @@
+import { NPCID } from "isaac-typescript-definitions";
 import { ReadonlyMap } from "isaacscript-common";
-import { NPCID } from "../../../enums/data/ID/NPCID";
 
 const NPC_SIZE_MAP = new ReadonlyMap<NPCID, number>([
   [NPCID.FROWNING_GAPER, 13],
@@ -19,7 +19,7 @@ const NPC_SIZE_MAP = new ReadonlyMap<NPCID, number>([
   [NPCID.TRIACHNID, 40],
   [NPCID.ISAAC, 25],
   [NPCID.BLUE_BABY, 25],
-  [NPCID.BLUE_BABY_ALT, 25],
+  [NPCID.BLUE_BABY_HUSH, 25],
   [NPCID.GUSHER, 13],
   [NPCID.PACER, 13],
   [NPCID.HORF, 13],
@@ -493,8 +493,8 @@ const NPC_SIZE_MAP = new ReadonlyMap<NPCID, number>([
   [NPCID.UMBILICAL_CORD_GREEN, 13],
   [NPCID.UMBILICAL_CORD_BLUE, 13],
   [NPCID.MOTER, 17],
-  [NPCID.BLOOD_PUPPY, 13],
-  [NPCID.BLOOD_PUPPY_2, 16],
+  [NPCID.BLOOD_PUPPY_SMALL, 13],
+  [NPCID.BLOOD_PUPPY_LARGE, 16],
   [NPCID.BLIND_BAT, 13],
   [NPCID.QUAKE_GRIMACE_LEFT, 13],
   [NPCID.QUAKE_GRIMACE_UP, 13],
@@ -673,8 +673,8 @@ const NPC_SIZE_MAP = new ReadonlyMap<NPCID, number>([
   [NPCID.ROTGUT, 58],
   [NPCID.ROTGUT_MAGGOT, 74],
   [NPCID.ROTGUT_HEART, 70],
-  [NPCID.MOTHER, 90],
-  [NPCID.MOTHER_BACKDROP, 90],
+  [NPCID.MOTHER_PHASE_1, 90],
+  [NPCID.MOTHER_PHASE_2, 90],
   [NPCID.MOTHER_LEFT_ARM, 90],
   [NPCID.MOTHER_RIGHT_ARM, 90],
   [NPCID.MOTHER_DISAPPEAR, 90],

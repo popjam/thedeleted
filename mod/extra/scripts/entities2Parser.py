@@ -8,7 +8,8 @@ ENTITIES_2_XML = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding
 MODDED_ENTITIES_2_PATH = f"C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\mods\\{MOD_NAME}\\content\\entities2.xml"
 WRITE_TO_DIR = f"C:\\Users\\james\\thedeleted\\src\\maps\\data\\xmlParsed"
 
-ALLOWED_CHARACTERS_REGEX = '[^A-Za-z0-9_ ]+'
+ALLOWED_CHARACTERS_NAME = '[^A-Za-z0-9_ ]+'
+ALLOWED_CHARACTERS_MAP_NAME = '[^A-Za-z_]+'
 
 
 
@@ -25,7 +26,7 @@ def parse_modded_entities_2_xml():
     printf("Parsing file: {}".format(ENTITIES_2_XML))
     tree = ET.parse(MODDED_ENTITIES_2_PATH)
     entities = tree.getroot()
-    str = f"export const {MOD_NAME}Entities2Parsed = new Map([\n"
+    str = f"export const {format_map_name(MOD_NAME)}_ENTITIES_2_PARSED = new ReadonlyMap([\n"
     for entity in entities:
 
         # May have subtype.
@@ -47,7 +48,10 @@ def parse_modded_entities_2_xml():
     write_to_file(str)
 
 def format_name(name):
-    return re.sub(ALLOWED_CHARACTERS_REGEX, '', name).replace(" ", "_").upper()
+    return re.sub(ALLOWED_CHARACTERS_NAME, '', name).replace(" ", "_").upper()
+
+def format_map_name(name):
+    return re.sub(ALLOWED_CHARACTERS_MAP_NAME, '', name).upper()
 
 # escape the special characters
 def escaped_name(name):

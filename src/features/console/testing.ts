@@ -1,12 +1,15 @@
 import {
   LevelStage,
   CollectibleType,
-  NPCID,
   EntityType,
+  SoundEffect,
+  ChampionColor,
+  NPCID,
+  EntityFlag,
+  Gaper2Variant,
+  GaperVariant,
 } from "isaac-typescript-definitions";
 import {
-  getEnumKeys,
-  log,
   getRandomSeed,
   arrayRemove,
   getRandomArrayIndex,
@@ -15,7 +18,12 @@ import {
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
-  getCollectibleDescription,
+  sfxManager,
+  GAME_FRAMES_PER_SECOND,
+  round,
+  getRandomEnumValue,
+  arrayToBitFlags,
+  spawnEntityID,
 } from "isaacscript-common";
 import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
 import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
@@ -31,8 +39,31 @@ import { spawnNPCID } from "../../helper/entityHelper/npcIDHelper";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { logModEntityMaxHitPointsAsObject } from "../../helper/compatibility/XML/entities2XMLHelper";
-import { FiendFolioNPCNameSubTypes } from "../../enums/data/ID/modded/fiendFolio/FiendFolioNPCNameSubTypes";
+import { fireFunctionConstantly } from "../../helper/gameHelper";
+import { getSoundEffectLength } from "../../maps/data/sounds/soundLengths";
+import {
+  getRandomNPC,
+  npcAttributesToText,
+} from "../../helper/entityHelper/npcHelper";
+import { Mods } from "../../enums/compatibility/Mods";
+import {
+  spawnNewInvertedActiveCollectible,
+  spawnNewInvertedCollectible,
+} from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
+import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import { NPCFlag } from "../../enums/general/NPCFlag";
+import { randomInRange } from "../../types/general/Range";
+import { addNPCFlags } from "../../helper/entityHelper/npcFlagHelper";
+import { printPersistentNPCs } from "../general/NPCIndex";
+import { addPermanentStatusEffectToNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/PermanentNPCStatusEffectFacet";
+import {
+  getEntityIDSet,
+  getEntityIDSetFromCategory,
+} from "../data/gameEntitySetBuilder";
+import { EntityCategory } from "../../enums/general/EntityCategory";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -74,16 +105,24 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  fprint(getCollectibleDescription(900 as CollectibleType));
+  const npc = spawnNPCID(
+    getRandomNPC() ?? NPCID.GAPER,
+    getQuickAccessiblePosition(),
+  );
+  addNPCFlags(npc, NPCFlag.UNSTABLE);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  logModEntityMaxHitPointsAsObject(
-    FiendFolioNPCNameSubTypes,
-    "FiendFolioNameSubType",
-    1000,
-  );
+  const entities = getEntityIDSet();
+  let i = 0;
+  for (const entity of entities) {
+    i++;
+    if (i > 100) {
+      break;
+    }
+    spawnEntityID(entity, getQuickAccessiblePosition());
+  }
 }
 
 function getRandomTest<T>(
@@ -112,34 +151,7 @@ function getRandomTest<T>(
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  const toPrint = [];
-  const countedNPCs = new Set<NPCID>();
-  log("NPC size:");
-  for (const npcid of getEnumValues(NPCID)) {
-    countedNPCs.add(npcid);
-    const npc = spawnNPCID(npcid, getQuickAccessiblePosition());
-    const enumKey = getEnumKeys(NPCID).find(
-      (key) => NPCID[key as keyof typeof NPCID] === npcid,
-    );
-    toPrint.push(`[NPCID.${enumKey},${npc.ToNPC()?.Scale}]`);
-    npc.Remove();
-  }
-  const toPrintFirstHalf = toPrint.slice(0, toPrint.length / 2);
-  const toPrintSecondHalf = toPrint.slice(toPrint.length / 2);
-  log(toPrintFirstHalf.join(","));
-  log(toPrintSecondHalf.join(","));
-
-  if (countedNPCs.size !== getEnumValues(NPCID).length) {
-    log("Missing NPCs:");
-    for (const npcid of getEnumValues(NPCID)) {
-      if (!countedNPCs.has(npcid)) {
-        const enumKey = getEnumKeys(NPCID).find(
-          (key) => NPCID[key as keyof typeof NPCID] === npcid,
-        );
-        log(`${enumKey}`);
-      }
-    }
-  }
+  printPersistentNPCs();
 }
 
 /** Test stuff as the developer with command 'eted'. */
@@ -245,7 +257,7 @@ function combineWords(word1: string, word2: string): string {
   return combinedWord;
 }
 
-// Helper function to count the number of consonants in a row in a given string
+// Helper function to count the number of consonants in a row in a given string.
 function consonantsInARow(str: string): number {
   let maxConsonantsInARow = 0;
   let currentConsonantsInARow = 0;

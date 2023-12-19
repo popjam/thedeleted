@@ -83,4 +83,6 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
+  "Lua.diagnostics.globals": ["xml"],
+  "editor.maxTokenizationLineLength": 90000,
 }

@@ -1,7 +1,6 @@
-import type { EntityType } from "isaac-typescript-definitions";
+import type { EntityType, NPCID } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
 import { VectorZero, copyColor, spawnEntityID } from "isaacscript-common";
-import type { NPCID } from "../enums/data/ID/NPCID";
 import { renderToWorldPosition, worldToRenderPosition } from "./renderHelper";
 
 /**
