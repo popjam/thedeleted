@@ -1,42 +1,52 @@
-import { EntityType, PickupVariant } from "isaac-typescript-definitions";
-import {
-  EntityID,
-  NEW_RUN_PLAYER_STARTING_POSITION,
-  spawnEntityID,
-} from "isaacscript-common";
-import { ActionType } from "../../../enums/corruption/actions/ActionType";
+import type { EntityID } from "isaacscript-common";
+import { getRandomSetElement, spawnEntityID } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { getRandomAccessiblePosition } from "../../../helper/entityHelper";
-import { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
+import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameEntitySets";
+import { EntityCategory } from "../../../enums/general/EntityCategory";
+import type { SlotVariant } from "isaac-typescript-definitions";
+import { EntityType } from "isaac-typescript-definitions";
+import { getSlotIDName } from "../../../helper/entityHelper/slotHelper";
+import { addArticle, addTheS } from "../../../helper/stringHelper";
+import { getRandomPosition } from "../../../helper/positionHelper";
+import { getEntityCategoryFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
 
-/** An assortment of different ways to randomly spawn an Entity. */
-export enum EntityRandomSpawnType {
-  ACCESSIBLE_TO_PLAYER_BUT_AVOID_PLAYER,
-  THROW,
-}
-
-const DEFAULT_ENTITY_ID =
-  `${EntityType.PICKUP}.${PickupVariant.POOP}.0` as EntityID;
-const DEFAULT_SPAWN_POSITION = NEW_RUN_PLAYER_STARTING_POSITION;
+const VERB = "spawn";
+const VERB_PARTICIPLE = "spawning";
 const DEFAULT_SPAWN_VELOCITY = Vector(0, 0);
-const DEFAULT_RST = EntityRandomSpawnType.ACCESSIBLE_TO_PLAYER_BUT_AVOID_PLAYER;
+const DEFAULT_SUBTYPE = 0;
+const MACHINE_NOUN = "machine";
+const MACHINE_NOUN_PLURAL = "machines";
+const UNKNOWN_SLOT_NAME_TEXT = `mysterious ${MACHINE_NOUN}`;
 
-/** Response to spawn an Pickup. */
-export class SpawnSlotResponse extends Response {
+/**
+ * Response to spawn a Slot.
+ *
+ * @param e The EntityID referring to the Slot you want to spawn. If undefined, will spawn a random
+ *          Slot.
+ * @param sp The position to spawn the Slot/s at. If not specified, will spawn at a random safe
+ *           position.
+ * @param v The velocity to spawn the Slot/s with. If not specified, will spawn with no velocity.
+ */
+export class SpawnSlotResponse
+  extends Response
+  implements SpawnEntityResponseInterface<SpawnSlotResponse>
+{
   override responseType: ResponseType = ResponseType.SPAWN_SLOT;
   e?: EntityID;
   sp?: Vector;
   v?: Vector;
-  rst?: EntityRandomSpawnType;
 
   construct(
-    rst?: EntityRandomSpawnType,
+    slotVariantOrEntityID?: SlotVariant | EntityID,
+    subType?: number,
     overridePos?: Vector,
     overrideVel?: Vector,
   ): this {
-    if (rst !== undefined) {
-      this.setRandomSpawnType(rst);
+    if (slotVariantOrEntityID !== undefined) {
+      this.setSlot(slotVariantOrEntityID, subType);
     }
     if (overridePos !== undefined) {
       this.setPosition(overridePos);
@@ -47,67 +57,120 @@ export class SpawnSlotResponse extends Response {
     return this;
   }
 
-  getRandomSpawnType(): EntityRandomSpawnType {
-    return this.rst ?? DEFAULT_RST;
+  getSlot(): EntityID | undefined {
+    return this.e;
   }
 
-  setRandomSpawnType(rst: EntityRandomSpawnType): this {
-    this.rst = rst;
-    return this;
-  }
+  /**
+   * If an EntityID is specified, subType will be ignored. If a SlotVariant is specified, and
+   * subType is undefined, subType will default to 0.
+   */
+  setSlot(slot: SlotVariant | EntityID, subType?: number): this {
+    if (typeof slot === "string") {
+      if (getEntityCategoryFromEntityID(slot) !== EntityCategory.SLOT) {
+        error(`EntityID '${slot}' is not a slot!`);
+      }
+      this.e = slot;
+      return this;
+    }
 
-  getEntityID(): EntityID {
-    return this.e ?? DEFAULT_ENTITY_ID;
-  }
-
-  setEntityID(entityID: EntityID): this {
+    // SlotVariant.
+    const entityID = `${EntityType.SLOT}.${slot}.${
+      subType ?? DEFAULT_SUBTYPE
+    }` as EntityID;
     this.e = entityID;
     return this;
   }
 
-  getPosition(): Vector {
-    return this.sp ?? DEFAULT_SPAWN_POSITION;
+  getPosition(): Vector | undefined {
+    return this.sp;
   }
 
-  setPosition(vec: Vector): this {
-    this.sp = vec;
+  setPosition(position?: Vector): this {
+    this.sp = position;
     return this;
   }
 
-  getVelocity(): Vector {
-    return this.v ?? DEFAULT_SPAWN_VELOCITY;
+  getVelocity(): Vector | undefined {
+    return this.v;
   }
 
-  setVelocity(vec: Vector): this {
-    this.v = vec;
+  setVelocity(velocity?: Vector): this {
+    this.v = velocity;
     return this;
   }
 
-  getText(): string {
-    return `spawn ${this.getEntityID()}`;
-  }
-
-  fire(triggerData: TriggerData): Entity {
-    // Determine the subject.
-    let subject: EntityPlayer | EntityNPC | undefined = triggerData.player;
-    if (triggerData.action?.actionType === ActionType.ON_KILL) {
-      subject = triggerData.onKillAction;
-    }
-    // Spawn depending on variables.
-    const rst = this.getRandomSpawnType();
-
-    if (rst === EntityRandomSpawnType.ACCESSIBLE_TO_PLAYER_BUT_AVOID_PLAYER) {
-      return spawnEntityID(
-        this.getEntityID(),
-        getRandomAccessiblePosition(subject?.Position ?? this.getPosition()) ??
-          Vector(0, 0),
-        this.getVelocity(),
-      );
-    }
-    return spawnEntityID(
-      this.getEntityID(),
-      this.getPosition(),
-      this.getVelocity(),
+  calculatePosition(triggerData: TriggerData): Vector {
+    return (
+      this.getPosition() ?? triggerData.spawnPosition ?? getRandomPosition()
     );
+  }
+
+  calculateVelocity(_triggerData: TriggerData): Vector {
+    return this.getVelocity() ?? DEFAULT_SPAWN_VELOCITY;
+  }
+
+  calculateSlot(): EntityID {
+    const slot = this.getSlot();
+    if (slot !== undefined) {
+      return slot;
+    }
+
+    // Random Slot.
+    const slots = getEntityIDSetFromCategory(EntityCategory.SLOT);
+    return getRandomSetElement<EntityID>(slots, undefined);
+  }
+
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  /**
+   * Get noun text.
+   *
+   * @example "a random slot"
+   * @example "3 shell games"
+   */
+  override getNoun(): string {
+    const slot = this.getSlot();
+    const isMultiple = this.isMultiple();
+    if (slot === undefined) {
+      // Random slot.
+      if (isMultiple) {
+        return `${this.getAmountOfActivationsText()} random ${MACHINE_NOUN_PLURAL}`;
+      }
+
+      return `a random ${MACHINE_NOUN}`;
+    }
+
+    // Specific slot.
+    const name = getSlotIDName(slot)?.toLowerCase() ?? UNKNOWN_SLOT_NAME_TEXT;
+    if (isMultiple) {
+      return `${this.getAmountOfActivationsText()} ${addTheS(
+        name,
+        isMultiple,
+      )}`;
+    }
+
+    return `${addArticle(name)}`;
+  }
+
+  getText(_eid: boolean, participle: boolean): string {
+    const verb = this.getVerb(participle);
+    const noun = this.getNoun();
+
+    return `${verb} ${noun}`;
+  }
+
+  override trigger(triggerData?: TriggerData): EntitySlot[] {
+    return super.trigger(triggerData) as EntitySlot[];
+  }
+
+  fire(triggerData: TriggerData): EntitySlot {
+    const position = this.calculatePosition(triggerData);
+    const velocity = this.calculateVelocity(triggerData);
+    const slot = this.calculateSlot();
+
+    return spawnEntityID(slot, position, velocity) as EntitySlot;
   }
 }

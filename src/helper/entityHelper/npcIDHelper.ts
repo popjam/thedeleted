@@ -3,12 +3,12 @@ import { getConstituentsFromEntityID, spawnNPC } from "isaacscript-common";
 import { getNonModdedNPCName } from "../../maps/data/name/npcNameMap";
 import { getNonModdedBossNPCIDSet } from "../../sets/data/npc/BossNPCSet";
 import { getNonModdedFlyingNPCIDSet } from "../../sets/data/npc/FlyingNPCSet";
-import { getNameSubTypeFromEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
+import { getNameSubTypeFromModdedEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
 import { getModdedEntityNameAndSubTypeFromNameSubType } from "./entityIDHelper";
 import { _isModdedNPCIDFlying } from "../../sets/data/modded/ModdedFlyingNPCSet";
 import { _getNonModdedNPCSize } from "../../maps/data/npc/NPCSizeMap";
 import { _getNonModdedNPCIDMaxHitPoints } from "../../maps/data/npc/NPCMaxHitPointsMap";
-import { getNonModdedEntityIDSetFromCategory } from "../../features/data/gameEntitySetBuilder";
+import { getNonModdedEntityIDSetFromCategory } from "../../features/data/gameSets/gameEntitySets";
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import type { NPCID } from "isaac-typescript-definitions";
 import { getModdedEntityDataFromEntityID } from "../compatibility/XML/moddedXMLParserHelper";
@@ -72,7 +72,7 @@ export function getNPCIDName(npcID: NPCID): string | undefined {
     return getNonModdedNPCName(npcID);
   }
 
-  const nameSubType = getNameSubTypeFromEntityID(npcID as EntityID);
+  const nameSubType = getNameSubTypeFromModdedEntityID(npcID as EntityID);
   if (nameSubType === undefined) {
     return undefined;
   }

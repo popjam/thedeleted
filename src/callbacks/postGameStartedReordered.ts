@@ -3,7 +3,7 @@ import { ModCallbackCustom } from "isaacscript-common";
 import { facetPostGameContinuedReordered } from "../classes/Facet";
 import { runIndexPostGameContinuedFacet } from "../features/runIndex";
 import { itemInventoryPostGameContinuedReordered } from "../features/corruption/inventory/passiveItemInventory";
-import { postGameStartedReorderedGameEntitySetBuilder } from "../features/data/gameEntitySetBuilder";
+import { postGameStartedReorderedGameEntitySetBuilder } from "../features/data/gameSets/callbacks/gameSetsPostGameStartedReordered";
 
 export function postGameStartedReorderedInit(mod: ModUpgraded): void {
   mod.AddCallbackCustom(

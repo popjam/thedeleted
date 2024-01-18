@@ -13,9 +13,7 @@ import {
 
 /** Check if a specific room is adjacent to the room the player is currently in. */
 export function isRoomAdjacent(roomListIndex: number): boolean {
-  const adjacentRoomGridIndexes = Array.from(
-    getRoomAdjacentGridIndexes().values(),
-  );
+  const adjacentRoomGridIndexes = [...getRoomAdjacentGridIndexes().values()];
   const adjacentRoomListIndexes = adjacentRoomGridIndexes.map((gridIndex) =>
     getRoomListIndex(gridIndex),
   );
@@ -28,13 +26,13 @@ export function floodRoom(): void {
   const npcs = getNPCs().filter(
     (npc) => !npc.HasEntityFlags(EntityFlag.FRIENDLY),
   );
-  npcs.forEach((npc) => {
+  for (const npc of npcs) {
     npc.AddEntityFlags(EntityFlag.FRIENDLY);
-  });
+  }
   Isaac.GetPlayer().UseActiveItem(CollectibleType.FLUSH, UseFlag.NO_ANIMATION);
-  npcs.forEach((npc) => {
+  for (const npc of npcs) {
     npc.ClearEntityFlags(EntityFlag.FRIENDLY);
-  });
+  }
 }
 
 /**

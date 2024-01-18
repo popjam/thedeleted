@@ -1,6 +1,5 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
-import { UseFlag } from "isaac-typescript-definitions";
-import { getCollectibleName } from "isaacscript-common";
+import { arrayToBitFlags, getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
@@ -8,16 +7,17 @@ import {
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
-import { numberToWords } from "../../../helper/numbers/numberToWords";
 import { useActiveItemAtPosition } from "../../../helper/playerHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import type { ActiveCollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
-import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 import { fprint } from "../../../helper/printHelper";
+import { USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY } from "../../../constants/corruptionConstants";
+import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 
 const EMPTY_COLLECTIBLE_TEXT = "nothing";
 const VERB = "use";
+const VERB_PARTICIPLE = "using";
 
 /**
  * Response which uses Active items. The 'activeItem' field can either be a CollectibleType of the
@@ -31,14 +31,19 @@ const VERB = "use";
 export class UseActiveItemResponse extends Response {
   override responseType: ResponseType = ResponseType.USE_ACTIVE_ITEM;
   private aT?: CollectibleType | ActiveCollectibleAttribute;
+  private pos?: Vector;
 
   /** Alternative constructor so SaveData works with class. */
   construct(
     activeItem: CollectibleType | ActiveCollectibleAttribute,
+    position?: Vector,
     morality?: Morality,
   ): this {
     if (morality !== undefined) {
       this.mo = morality;
+    }
+    if (position !== undefined) {
+      this.setPosition(position);
     }
     this.aT = activeItem;
     return this;
@@ -85,23 +90,59 @@ export class UseActiveItemResponse extends Response {
     return this;
   }
 
+  /** Get the overridden position to use the active item at. */
+  getPosition(): Vector | undefined {
+    return this.pos;
+  }
+
+  /** Set the overridden position to use the active item at. */
+  setPosition(position: Vector): this {
+    this.pos = position;
+    return this;
+  }
+
   // TODO: Map ActiveItems to Morality and return that if undefined.
   override getMorality(): Morality {
     return this.mo ?? Morality.NEUTRAL;
   }
 
   override getAmountOfActivationsText(): string {
-    const amountOfActivations = this.getAmountOfActivations();
-    if (typeof amountOfActivations === "number") {
-      if (amountOfActivations === 1) {
-        return "";
-      }
-      return `${numberToWords(amountOfActivations)} times`;
+    const amountText = super.getAmountOfActivationsText();
+    if (amountText !== undefined) {
+      return `${amountText} times`;
     }
-    return `${rangeToString(amountOfActivations)} times`;
+
+    return "";
   }
 
-  getActiveItemText(): string {
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  /**
+   * Get noun text.
+   *
+   * @example "use fortune cookie"
+   * @example "use a random 3 charge active item 4 times"
+   */
+  override getNoun(eid: boolean): string {
+    const activeItemText = this.getActiveItemText(eid);
+    const amountText = this.getAmountOfActivationsText();
+
+    return `${amountText} ${activeItemText}`;
+  }
+
+  /** If undefined, will spawn at player's position. */
+  calculatePosition(triggerData: TriggerData): Vector | undefined {
+    const position = this.getPosition();
+    if (position !== undefined) {
+      return position;
+    }
+
+    return triggerData.spawnPosition;
+  }
+
+  getActiveItemText(eid: boolean): string {
     const activeItem = this.getActiveItem();
     if (typeof activeItem === "object") {
       return collectibleAttributeToText(activeItem);
@@ -109,40 +150,47 @@ export class UseActiveItemResponse extends Response {
     if (activeItem === undefined) {
       return EMPTY_COLLECTIBLE_TEXT;
     }
-    return getCollectibleName(activeItem);
+    return eid
+      ? getCollectibleNameWithEIDSetting(activeItem)
+      : getCollectibleName(activeItem);
   }
 
-  override getText(): string {
-    const text = `${VERB} ${this.getActiveItemText()} ${this.getAmountOfActivationsText()}`;
-    return text;
+  override getText(eid: boolean, participle: boolean): string {
+    const noun = this.getNoun(eid);
+    const verb = this.getVerb(participle);
+
+    return `${verb} ${noun}`;
   }
 
-  fire(triggerData: TriggerData): void {
+  /** Array may be empty. */
+  override trigger(triggerData?: TriggerData): CollectibleType[] {
+    return super.trigger(triggerData) as CollectibleType[];
+  }
+
+  fire(triggerData: TriggerData): CollectibleType | undefined {
     const player = triggerData.player ?? Isaac.GetPlayer();
     const activeItem = this.calculateActiveItem();
 
     if (activeItem === undefined) {
       fprint("Active item is undefined, can't fire UseActiveItemResponse.");
-      return;
+      return undefined;
     }
 
-    // If it's called from OnKillAction, use the Active item at the killed NPC location.
-    if (triggerData.onKillAction !== undefined) {
-      useActiveItemAtPosition(
+    const position = this.calculatePosition(triggerData);
+    if (position === undefined) {
+      player.UseActiveItem(
         activeItem,
-        triggerData.onKillAction.Position,
-        player,
+        arrayToBitFlags(USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY),
       );
-    } else if (triggerData.onBombExplodedAction === undefined) {
-      // Standard firing procedure.
-      player.UseActiveItem(activeItem, UseFlag.NO_ANIMATION);
-    } else {
-      // If it's called from OnBombExplodedAction, use the Active item at the bomb location.
-      useActiveItemAtPosition(
-        activeItem,
-        triggerData.onBombExplodedAction.bomb.Position,
-        player,
-      );
+      return activeItem;
     }
+
+    useActiveItemAtPosition(
+      activeItem,
+      this.calculatePosition(triggerData) ?? player.Position,
+      player,
+    );
+
+    return activeItem;
   }
 }

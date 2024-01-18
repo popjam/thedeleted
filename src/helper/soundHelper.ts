@@ -1,6 +1,7 @@
 import { SoundEffect } from "isaac-typescript-definitions";
 import { getRandomEnumValue, sfxManager } from "isaacscript-common";
 import { PICKUP_SOUNDS } from "../constants/soundConstants";
+import type { SoundEffectOptions } from "../interfaces/general/SoundEffectOptions";
 
 /**
  * Stops the sounds that run after picking up any sort of item. You may need to run this in the next
@@ -14,4 +15,13 @@ export function stopPickupSounds(): void {
 
 export function getRandomSoundEffect(): SoundEffect {
   return getRandomEnumValue(SoundEffect, undefined);
+}
+
+/** Play a sound effect using a SoundEffectOptions object. */
+export function playSoundEffectWithOptions(
+  soundEffectOptions: SoundEffectOptions,
+): void {
+  const { soundEffect, volume, pitch, frameDelay, loop, pan } =
+    soundEffectOptions;
+  sfxManager.Play(soundEffect, volume, frameDelay, loop, pitch, pan);
 }

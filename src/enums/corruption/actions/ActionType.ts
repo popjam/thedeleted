@@ -22,4 +22,6 @@ export enum ActionType {
   ON_SLOT_USE,
   ON_SLOT_DESTROY,
   ON_TRANSFORMATION,
+
+  ON_FRIENDLY_FIRE,
 }

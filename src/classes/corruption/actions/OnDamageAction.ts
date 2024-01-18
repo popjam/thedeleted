@@ -4,7 +4,7 @@ import { triggerPlayerActionsByType } from "../../../features/corruption/effects
 import { bitFlagsContainsValue } from "../../../helper/bitflagHelper";
 import { isSensibleDamage } from "../../../helper/damageHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getDamageFlagTextFromMap } from "../../../maps/data/name/damageFlagNameMap";
+import { damageFlagToString } from "../../../maps/data/name/damageFlagNameMap";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_DAMAGE;
@@ -19,7 +19,7 @@ export class OnDamageAction extends Action {
     if (damageFlag === undefined) {
       return "";
     }
-    return ` from ${getDamageFlagTextFromMap(damageFlag).toLowerCase()}`;
+    return ` from ${damageFlagToString(damageFlag).toLowerCase()}`;
   }
 
   // Additional Text manipulation for 'RoomType' modifier.

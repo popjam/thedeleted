@@ -11,6 +11,8 @@ import { Response } from "./Response";
 const DEFAULT_INTERVAL_TIMES = 1;
 const DEFAULT_TOTAL_TIME = 60;
 const NO_RESPONSE_MORALITY = Morality.NEUTRAL;
+const EMPTY_RESPONSE_TEXT = "do nothing";
+const EMPTY_RESPONSE_TEXT_PARTICIPLE = "doing nothing";
 
 /**
  * Triggers the set Response a set amount of times (amountOfTriggers) with a waiting period between
@@ -37,7 +39,7 @@ export class TriggerOverTimeResponse extends Response {
     if (amountOfTriggers !== undefined) {
       this.tt = amountOfTriggers * this.getIntervalTimeSec();
     }
-    this.ct = this.getTotalTimeSec();
+    this.ct = this._getTotalTimeSec();
     this.r = response;
     return this;
   }
@@ -62,13 +64,13 @@ export class TriggerOverTimeResponse extends Response {
   }
 
   /** Don't use this. */
-  setTotalTime(seconds: number): this {
+  _setTotalTime(seconds: number): this {
     this.tt = seconds;
     return this;
   }
 
   /** Don't use this. */
-  getTotalTimeSec(): number {
+  _getTotalTimeSec(): number {
     return this.tt ?? DEFAULT_TOTAL_TIME;
   }
 
@@ -87,23 +89,46 @@ export class TriggerOverTimeResponse extends Response {
     error("TriggerOverTimeResponse: Cannot set amount of activations.");
   }
 
-  getWaitText(): string {
+  override getVerb(participle: boolean): string {
+    if (participle) {
+      return "triggering";
+    }
     const intervalTime = this.getIntervalTimeSec();
-    const totalTime = this.getTotalTimeSec();
+    const totalTime = this._getTotalTimeSec();
     return ` every ${intervalTime} ${addTheS(
       "second",
       intervalTime,
     )} for ${totalTime} ${addTheS("second", totalTime)}, `;
   }
 
-  getText(eid = true): string {
-    let text = ` ${this.getWaitText()} `;
-    text += this.getResponse()?.getText(eid) ?? "do nothing.";
-    return text;
+  override getNoun(): string {
+    error("TriggerOverTimeResponse.getNoun() should not be called");
+  }
+
+  getTriggeringResponseText(eid: boolean, participle: boolean): string {
+    return (
+      this.getResponse()?.getText(eid, participle) ??
+      (participle ? EMPTY_RESPONSE_TEXT_PARTICIPLE : EMPTY_RESPONSE_TEXT)
+    );
+  }
+
+  getText(eid: boolean, participle: boolean): string {
+    return ` ${this.getVerb(participle)} ${this.getTriggeringResponseText(
+      eid,
+      participle,
+    )}`;
   }
 
   override getMorality(): Morality {
     return this.mo ?? this.getResponse()?.getMorality() ?? NO_RESPONSE_MORALITY;
+  }
+
+  override shouldFlattenResults(): boolean {
+    return true;
+  }
+
+  override trigger(triggerData?: TriggerData): [] {
+    return super.trigger(triggerData) as [];
   }
 
   fire(triggerData: TriggerData): void {

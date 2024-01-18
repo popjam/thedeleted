@@ -3,7 +3,6 @@ import { fprint } from "../helper/printHelper";
 import { facetPreGameExit } from "../classes/Facet";
 import { PriorityCallback } from "isaacscript-common";
 import type { ModUpgraded } from "isaacscript-common";
-import { preGameExitSavedNPCIndex } from "../features/general/NPCIndex";
 import { isLeavingGamePreGameExitEarly } from "../features/general/isLeavingGame";
 
 export function preGameExitInit(mod: ModUpgraded): void {
@@ -34,6 +33,4 @@ function runEndedMain() {
   facetPreGameExit();
 }
 
-function runSavedMain() {
-  preGameExitSavedNPCIndex();
-}
+function runSavedMain() {}

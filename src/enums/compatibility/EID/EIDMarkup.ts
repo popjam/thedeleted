@@ -49,4 +49,8 @@ export enum EIDMarkup {
   POOP_PICKUP = "{{PoopPickup}}",
   GRAB_BAG = "{{GrabBag}}",
   BLACK_SACK = "{{BlackSack}}",
+
+  // Colors.
+  COLOR_LIME = "{{ColorLime}}",
+  COLOR_RESET = "{{ColorReset}}",
 }

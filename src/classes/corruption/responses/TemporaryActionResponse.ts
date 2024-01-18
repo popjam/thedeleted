@@ -12,6 +12,8 @@ import { Response } from "./Response";
 const DEFAULT_TEMP_ACTION = new OnRoomAction();
 const DEFAULT_REMOVE_ON = new OnRoomAction();
 const DEFAULT_REMOVAL_RESPONSE = new RemoveActionResponse();
+const VERB = "give";
+const VERB_PARTICIPLE = "giving";
 
 const v = {
   run: {
@@ -97,7 +99,15 @@ export class TemporaryActionResponse extends Response {
     return this;
   }
 
-  getText(): string {
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  override getNoun(): string {
+    return "";
+  }
+
+  getText(_eid: boolean, _participle: boolean): string {
     return "";
   }
 

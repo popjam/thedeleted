@@ -39,7 +39,7 @@ const DAMAGE_FLAG_TEXT_MAP: ReadonlyMap<DamageFlag, string> = new Map([
   [DamageFlag.TNT, "TNT"],
 ]);
 
-export function getDamageFlagTextFromMap(damageFlag: DamageFlag): string {
+export function damageFlagToString(damageFlag: DamageFlag): string {
   const text = DAMAGE_FLAG_TEXT_MAP.get(damageFlag);
   if (text !== undefined) {
     return text;

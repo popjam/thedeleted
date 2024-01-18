@@ -10,6 +10,8 @@ import type { Action } from "../actions/Action";
 import { Response } from "./Response";
 
 const DEFAULT_ALL_ACTIONS = false;
+const VERB = "remove";
+const VERB_PARTICIPLE = "removing";
 
 /**
  * Response to Remove Actions that are attached to players. Will remove Actions which match the
@@ -58,10 +60,6 @@ export class RemoveActionResponse extends Response {
     return this;
   }
 
-  getText(): string {
-    return "";
-  }
-
   getActionOrigin(): ActionOrigin | undefined {
     return this.o;
   }
@@ -96,6 +94,18 @@ export class RemoveActionResponse extends Response {
   setActionType(actionType: ActionType): this {
     this.at = actionType;
     return this;
+  }
+
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  override getNoun(): string {
+    return "";
+  }
+
+  override getText(): string {
+    return "";
   }
 
   fire(triggerData: TriggerData): void {

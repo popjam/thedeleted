@@ -12,8 +12,6 @@ import {
   isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
-import type { NPCIndex } from "../../../../types/general/NPCIndex";
-import { getNPCIndex } from "../../../../features/general/NPCIndex";
 import { isLeavingGame } from "../../../../features/general/isLeavingGame";
 import { isPersistentEntityBeingUnloadedDueToGameExit } from "../../../../helper/entityHelper";
 import { fprint } from "../../../../helper/printHelper";
@@ -22,7 +20,7 @@ import { fprint } from "../../../../helper/printHelper";
 const v = {
   run: {
     /** Map of Bolstered NPCs and their positions. */
-    bolsteredNPCs: new Map<NPCIndex, Vector>(),
+    bolsteredNPCs: new Map<PtrHash, Vector>(),
   },
 };
 
@@ -30,7 +28,7 @@ let FACET: Facet | undefined;
 class BolsterNPCFacet extends Facet {
   @Callback(ModCallback.POST_NPC_UPDATE)
   postNPCUpdate(npc: EntityNPC): void {
-    const npcIndex = getNPCIndex(npc);
+    const npcIndex = GetPtrHash(npc);
     if (!v.run.bolsteredNPCs.has(npcIndex)) {
       return;
     }
@@ -49,11 +47,7 @@ class BolsterNPCFacet extends Facet {
       return;
     }
 
-    if (isPersistentEntityBeingUnloadedDueToGameExit(entity)) {
-      return;
-    }
-
-    const npcIndex = getNPCIndex(entity);
+    const npcIndex = GetPtrHash(entity);
     if (!v.run.bolsteredNPCs.has(npcIndex)) {
       return;
     }
@@ -74,11 +68,11 @@ export function initBolsterNPCFacet(): void {
 /** Prevents an NPC from moving. It can still be damaged and attack the player. */
 export function bolsterNPC(npc: EntityNPC, individual = false): void {
   if (individual) {
-    v.run.bolsteredNPCs.set(getNPCIndex(npc), npc.Position);
+    v.run.bolsteredNPCs.set(GetPtrHash(npc), npc.Position);
   } else {
     const npcFamily = getNPCFamily(npc);
     for (const member of npcFamily) {
-      const npcIndex = getNPCIndex(member);
+      const npcIndex = GetPtrHash(member);
       if (v.run.bolsteredNPCs.has(npcIndex)) {
         continue;
       }
@@ -92,11 +86,11 @@ export function bolsterNPC(npc: EntityNPC, individual = false): void {
 /** Returns an NPC to normal after having been bolstered with "bolsterNPC()". */
 export function unbolsterNPC(npc: EntityNPC, individual = false): void {
   if (individual) {
-    v.run.bolsteredNPCs.delete(getNPCIndex(npc));
+    v.run.bolsteredNPCs.delete(GetPtrHash(npc));
   } else {
     const npcFamily = getNPCFamily(npc);
     for (const member of npcFamily) {
-      const npcIndex = getNPCIndex(member);
+      const npcIndex = GetPtrHash(member);
       if (!v.run.bolsteredNPCs.has(npcIndex)) {
         continue;
       }
@@ -128,5 +122,5 @@ export function unbolsterAllNPCsInRoom(): void {
 
 /** Check if an NPC has been bolstered by the BolsterNPCFacet. */
 export function isNPCBolstered(npc: EntityNPC): boolean {
-  return v.run.bolsteredNPCs.has(getNPCIndex(npc));
+  return v.run.bolsteredNPCs.has(GetPtrHash(npc));
 }

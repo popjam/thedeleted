@@ -1,6 +1,5 @@
 import type { ModUpgraded } from "isaacscript-common";
 import { ModCallbackCustom } from "isaacscript-common";
-import { printPersistentNPCs } from "../features/general/NPCIndex";
 import { fprint } from "../helper/printHelper";
 
 export function postPeffectUpdateReorderedInit(mod: ModUpgraded): void {

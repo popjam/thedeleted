@@ -1,14 +1,11 @@
 import {
-  LevelStage,
+  ActiveSlot,
+  BackdropType,
   CollectibleType,
   EntityType,
-  SoundEffect,
-  ChampionColor,
-  NPCID,
-  EntityFlag,
-  Gaper2Variant,
-  GaperVariant,
+  GridEntityType,
 } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import {
   getRandomSeed,
   arrayRemove,
@@ -18,15 +15,15 @@ import {
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
-  sfxManager,
-  GAME_FRAMES_PER_SECOND,
-  round,
-  getRandomEnumValue,
-  arrayToBitFlags,
-  spawnEntityID,
+  removeGridEntities,
+  getAllRoomGridIndexes,
+  getAllGridIndexes,
+  getGridEntities,
+  spawnGridEntityWithVariant,
+  setBackdrop,
+  spawnGridEntity,
+  gridPositionToWorldPosition,
 } from "isaacscript-common";
-import { OnFloorAction } from "../../classes/corruption/actions/OnFloorAction";
-import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
 import {
   freezeAllNPCsInRoom,
   unfreezeAllNPCsInRoom,
@@ -34,46 +31,37 @@ import {
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { getRandomCollectibleType } from "../../helper/collectibleHelper";
-import { getQuickAccessiblePosition } from "../../helper/entityHelper";
-import { spawnNPCID } from "../../helper/entityHelper/npcIDHelper";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { fireFunctionConstantly } from "../../helper/gameHelper";
-import { getSoundEffectLength } from "../../maps/data/sounds/soundLengths";
-import {
-  getRandomNPC,
-  npcAttributesToText,
-} from "../../helper/entityHelper/npcHelper";
-import { Mods } from "../../enums/compatibility/Mods";
-import {
-  spawnNewInvertedActiveCollectible,
-  spawnNewInvertedCollectible,
-} from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
-import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { NPCFlag } from "../../enums/general/NPCFlag";
-import { randomInRange } from "../../types/general/Range";
-import { addNPCFlags } from "../../helper/entityHelper/npcFlagHelper";
-import { printPersistentNPCs } from "../general/NPCIndex";
-import { addPermanentStatusEffectToNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/PermanentNPCStatusEffectFacet";
 import {
-  getEntityIDSet,
-  getEntityIDSetFromCategory,
-} from "../data/gameEntitySetBuilder";
+  getGridEntitiesFromGridID,
+  spawnGridID,
+} from "../../helper/gridEntityHelper/gridIDHelper";
+import { GridID } from "../../enums/data/ID/GridID";
+import { getQuickAccessiblePosition } from "../../helper/positionHelper";
+import { RemoveGridEntityResponse } from "../../classes/corruption/responses/RemoveGridEntityResponse";
+import { SpawnGridEntityResponse } from "../../classes/corruption/responses/SpawnGridEntityResponse";
+import { SpawnEntityResponse } from "../../classes/corruption/responses/SpawnEntityResponse";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import { addInvertedItemToPlayer } from "../../helper/deletedSpecific/inventory/invertedInventoryHelper";
+import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inventory/custom actives/invertedActives";
+import { TriggerInSequenceResponse } from "../../classes/corruption/responses/TriggerInSequenceResponse";
+import {
+  getAllEmptyGridIndexes,
+  positionToClampedGridIndex,
+} from "../../helper/gridEntityHelper/gridEntityHelper";
+import { getBackdrop } from "../general/backdropHelper";
+import { TransformResponse } from "../../classes/corruption/responses/TransformResponse";
 import { EntityCategory } from "../../enums/general/EntityCategory";
+import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
+import { PickupID } from "../../enums/data/ID/PickupID";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
 const player2 = () => Isaac.GetPlayer(1);
-
-/** Testing variables */
-const action1 = new OnFloorAction()
-  .setInterval(1)
-  .setLevelStage(LevelStage.BLUE_WOMB);
-const response1 = new GetCollectibleResponse().construct(CollectibleType.POOP);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -103,55 +91,54 @@ export function addTestingCommands(): void {
   });
 }
 
+const responseToAdd = new TransformResponse().construct(
+  { grid: GridEntityType.ROCK },
+  new SpawnEntityResponse()
+    .construct(PickupID.BLACK_RUNE as EntityID)
+    .setAmountOfActivations(3),
+);
+const actionToAdd = new OnRoomAction().setResponse(responseToAdd);
+
+const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
+
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const npc = spawnNPCID(
-    getRandomNPC() ?? NPCID.GAPER,
-    getQuickAccessiblePosition(),
-  );
-  addNPCFlags(npc, NPCFlag.UNSTABLE);
+  spawnNewInvertedCollectible(getQuickAccessiblePosition(), actionSetToAdd);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  const entities = getEntityIDSet();
-  let i = 0;
-  for (const entity of entities) {
-    i++;
-    if (i > 100) {
-      break;
-    }
-    spawnEntityID(entity, getQuickAccessiblePosition());
-  }
-}
+  const emptyGridIndices = getAllEmptyGridIndexes();
+  const randomEmptyGridIndex = getRandomArrayElement(
+    emptyGridIndices,
+    undefined,
+  );
 
-function getRandomTest<T>(
-  th: T[],
-  seedOrRNG: Seed | RNG = getRandomSeed(),
-  exceptions: [] = [],
-): T {
-  if (th.length === 0) {
-    error(
-      "Failed to get a random array element since the provided array is empty.",
+  // Spawn rock at random empty grid index.
+  const gridEntity = spawnGridEntity(GridEntityType.ROCK, randomEmptyGridIndex);
+
+  if (gridEntity === undefined) {
+    return;
+  }
+
+  // Remove rock.
+  removeGridEntities([gridEntity], false);
+
+  // Function.
+  const func = () =>
+    spawnGridEntity(
+      GridEntityType.LOCK,
+      positionToClampedGridIndex(gridEntity.Position),
+      false,
     );
-  }
 
-  const newArray = arrayRemove(th, ...exceptions);
-  const randomIndex = getRandomArrayIndex(newArray, seedOrRNG);
-  const randomElement = newArray[randomIndex];
-
-  if (randomElement === undefined) {
-    error(
-      `Failed to get a random array element since the random index of ${randomIndex} was not valid.`,
-    );
-  }
-
-  return randomElement;
+  // Spawn a lock at same position.
+  mod.runInNGameFrames(func, 1);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  printPersistentNPCs();
+  mod.runInNGameFrames(testingFunction2, 30);
 }
 
 /** Test stuff as the developer with command 'eted'. */

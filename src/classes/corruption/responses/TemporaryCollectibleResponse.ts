@@ -12,6 +12,8 @@ import { Response } from "./Response";
 const DEFAULT_REMOVE_ON = new OnRoomAction();
 const DEFAULT_REMOVAL_RESPONSE = new RemoveCollectibleResponse();
 const DEFAULT_COLLECTIBLE = CollectibleType.POOP;
+const VERB = "get";
+const VERB_PARTICIPLE = "getting";
 
 /**
  * Response which temporarily gives the player a collectible. The collectible may be in the form of
@@ -53,6 +55,14 @@ export class TemporaryCollectibleResponse extends Response {
   setRemoveOn(action: Action): this {
     this.ro = deepCopy<Action>(action);
     return this;
+  }
+
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  override getNoun(_eid: boolean): string {
+    return "";
   }
 
   getText(): string {

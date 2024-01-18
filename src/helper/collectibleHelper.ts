@@ -43,7 +43,7 @@ import {
 import { isCollectibleFree } from "./priceHelper";
 import { worldToRenderPosition } from "./renderHelper";
 import { copySprite } from "./spriteHelper";
-import { getItemTypeText } from "../maps/data/name/itemTypeNameMap";
+import { itemTypeToString } from "../maps/data/name/itemTypeNameMap";
 import {
   addTheS,
   joinWith,
@@ -52,9 +52,11 @@ import {
   removeUnnecessaryWhiteSpace,
   uncapitalizeFirstLetter,
 } from "./stringHelper";
-import { itemPoolTypeToText } from "../maps/data/name/itemPoolTypeNameMap";
-import { itemConfigChargeTypeToText } from "../maps/data/name/itemConfigChargeTypeNameMap";
-import { getItemConfigTagText } from "../maps/data/name/itemTagNameMap";
+import { itemPoolTypeToString } from "../maps/data/name/itemPoolTypeNameMap";
+import { itemConfigChargeTypeToString } from "../maps/data/name/itemConfigChargeTypeNameMap";
+import { itemConfigTagToString } from "../maps/data/name/itemTagNameMap";
+
+const CURRENT_ROOM_POOL_TEXT = "from the current room pool";
 
 /** Replace an active item with another in a specific ActiveSlot. */
 export function replaceActiveItem(
@@ -387,27 +389,26 @@ export function getRandomCollectibleType(
 /**
  * Convert a CollectibleAttribute object to the appropriate text.
  *
- * @example { quality: 4, itemType: ItemType.ACTIVE } -> "quality 4 active item".
+ * @example { quality: 4, itemType: ItemType.ACTIVE } -> "a random quality 4 active item".
  */
 export function collectibleAttributeToText(
   collectibleAttribute: CollectibleAttribute,
   plural = false,
 ): string {
   let text = plural ? "random " : "a random ";
-  const isPluralNum = plural ? 2 : 1;
 
   // Item Type.
   if (collectibleAttribute.itemType !== undefined) {
     text +=
       typeof collectibleAttribute.itemType === "number"
-        ? `${getItemTypeText(collectibleAttribute.itemType)} `
+        ? `${itemTypeToString(collectibleAttribute.itemType)} `
         : `${joinWithOr(
-            collectibleAttribute.itemType.flatMap((q) => getItemTypeText(q)),
+            collectibleAttribute.itemType.flatMap((q) => itemTypeToString(q)),
           )}`;
   }
 
   // Item.
-  text = `${text} ${addTheS("item", isPluralNum)} `;
+  text = `${text} ${addTheS("item", plural)} `;
 
   // We set up a textArray, so we can join it with 'and' later, and for greater flexibility.
   const textArray = [] as string[];
@@ -426,15 +427,15 @@ export function collectibleAttributeToText(
   // PoolType.
   if (collectibleAttribute.poolType !== undefined) {
     if (collectibleAttribute.poolType === "room") {
-      textArray.push(" from the current room pool ");
+      textArray.push(` ${CURRENT_ROOM_POOL_TEXT}`);
     } else if (typeof collectibleAttribute.poolType === "number") {
       textArray.push(
-        `from the ${itemPoolTypeToText(collectibleAttribute.poolType)} pool`,
+        `from the ${itemPoolTypeToString(collectibleAttribute.poolType)} pool`,
       );
     } else {
       textArray.push(
         `from the ${joinWithOr(
-          collectibleAttribute.poolType.flatMap((q) => itemPoolTypeToText(q)),
+          collectibleAttribute.poolType.flatMap((q) => itemPoolTypeToString(q)),
         )} pool`,
       );
     }
@@ -444,12 +445,12 @@ export function collectibleAttributeToText(
   if (collectibleAttribute.chargeType !== undefined) {
     textArray.push(
       typeof collectibleAttribute.chargeType === "number"
-        ? `with has a '${itemConfigChargeTypeToText(
+        ? `with has a '${itemConfigChargeTypeToString(
             collectibleAttribute.chargeType,
           )} charge'`
         : `with a ${joinWithOr(
             collectibleAttribute.chargeType.flatMap(
-              (q) => `${itemConfigChargeTypeToText(q)}`,
+              (q) => `${itemConfigChargeTypeToString(q)}`,
             ),
           )} charge`,
     );
@@ -495,7 +496,7 @@ export function collectibleAttributeToText(
       `that ${joinWith(
         "and",
         collectibleAttribute.itemTagAll.flatMap((q) =>
-          uncapitalizeFirstLetter(getItemConfigTagText(q)),
+          uncapitalizeFirstLetter(itemConfigTagToString(q)),
         ),
       )}`,
     );
@@ -507,7 +508,7 @@ export function collectibleAttributeToText(
       `that ${joinWith(
         "or",
         collectibleAttribute.itemTagOne.flatMap((q) =>
-          uncapitalizeFirstLetter(getItemConfigTagText(q)),
+          uncapitalizeFirstLetter(itemConfigTagToString(q)),
         ),
       )}`,
     );

@@ -4,7 +4,7 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getRoomNameFromType as getRoomNameFromRoomType } from "../../../maps/data/name/roomTypeNameMap";
+import { roomTypeToString as getRoomNameFromRoomType } from "../../../maps/data/name/roomTypeNameMap";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_ROOM;

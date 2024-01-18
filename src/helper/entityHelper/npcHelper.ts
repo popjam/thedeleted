@@ -19,7 +19,7 @@ import {
   getModdedEntityIDSetFromCategory,
   getModdedEntityIDSetFromModAndCategory,
   getNonModdedEntityIDSetFromCategory,
-} from "../../features/data/gameEntitySetBuilder";
+} from "../../features/data/gameSets/gameEntitySets";
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import type { NPCID } from "isaac-typescript-definitions";
 import { Mods } from "../../enums/compatibility/Mods";
@@ -223,38 +223,30 @@ export function getRandomNPC(
   npcAttributes?: NPCAttribute,
   seedOrRNG: Seed | RNG = getRandomSeed(),
 ): NPCID | undefined {
-  let setToUse = undefined as ReadonlySet<NPCID> | undefined;
+  let setToUse: ReadonlySet<NPCID>;
   if (npcAttributes === undefined) {
-    setToUse = getEntityIDSetFromCategory(
-      EntityCategory.NPC,
-    ) as ReadonlySet<NPCID>;
+    setToUse = getEntityIDSetFromCategory(EntityCategory.NPC);
     // eslint-disable-next-line unicorn/prefer-switch
   } else if (npcAttributes.modded === true) {
-    setToUse = getModdedEntityIDSetFromCategory(
-      EntityCategory.NPC,
-    ) as ReadonlySet<NPCID>;
+    setToUse = getModdedEntityIDSetFromCategory(EntityCategory.NPC);
   } else if (npcAttributes.modded === false) {
-    setToUse = getNonModdedEntityIDSetFromCategory(
-      EntityCategory.NPC,
-    ) as ReadonlySet<NPCID>;
+    setToUse = getNonModdedEntityIDSetFromCategory(EntityCategory.NPC);
   } else if (npcAttributes.modded === undefined) {
-    setToUse = getEntityIDSetFromCategory(
-      EntityCategory.NPC,
-    ) as ReadonlySet<NPCID>;
+    setToUse = getEntityIDSetFromCategory(EntityCategory.NPC);
   } else {
     setToUse = getModdedEntityIDSetFromModAndCategory(
       npcAttributes.modded,
       EntityCategory.NPC,
-    ) as ReadonlySet<NPCID>;
+    );
+  }
+
+  if (setToUse.size === 0) {
+    fprint("getRandomNPC: No NPCs found in the set.");
+    return undefined;
   }
 
   // Copy the set to an array.
   const npcIDArray = [...setToUse];
-
-  if (npcIDArray.length === 0) {
-    fprint("No NPCs found in the set.");
-    return undefined;
-  }
 
   // Get a random NPC from the array, that matches the attributes.
   let npcID = getRandomArrayElementAndRemove<NPCID | undefined>(

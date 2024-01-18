@@ -39,7 +39,7 @@ const ROOM_TYPE_TO_NAME_MAP: ReadonlyMap<RoomType, string> = new Map([
  * @example RoomType.BOSS_RUSH = "boss rush".
  * @example RoomType.CHALLENGE = "challenge room" (added 'room' to make it clearer).
  */
-export function getRoomNameFromType(roomType: RoomType): string {
+export function roomTypeToString(roomType: RoomType): string {
   const name = ROOM_TYPE_TO_NAME_MAP.get(roomType);
   if (name === undefined) {
     error(`RoomTypeNameMap: Cannot find Name of RoomType: ${roomType}`);

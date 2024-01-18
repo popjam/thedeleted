@@ -28,20 +28,3 @@ export function isUselessPickup(pickup: EntityPickup): boolean {
 
   return false;
 }
-
-/** Spawns a pickup using its PickupID. */
-export function spawnPickupID(
-  pickupID: PickupID,
-  positionOrGridIndex: Vector | int,
-  velocity?: Vector,
-  spawner?: Entity | undefined,
-  seedOrRNG?: Seed | RNG | undefined,
-): EntityPickup {
-  return spawnEntityID(
-    pickupID as EntityID,
-    positionOrGridIndex,
-    velocity,
-    spawner,
-    seedOrRNG,
-  ) as EntityPickup;
-}

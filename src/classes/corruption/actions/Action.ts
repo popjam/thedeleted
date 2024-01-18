@@ -235,7 +235,9 @@ export abstract class Action {
   // Only get the 'Responses' part of the text.
   getResponseText(eid = true): string {
     const response = this.getResponse();
-    return response === undefined ? NO_RESPONSE_TEXT : response.getText(eid);
+    return response === undefined
+      ? NO_RESPONSE_TEXT
+      : response.getText(eid, false);
   }
 
   getText(): string {
@@ -283,7 +285,7 @@ export abstract class Action {
 
   /** Fire the action, triggering its responses. */
   fire(triggerData: TriggerData): void {
-    this.getResponse()?.fire(triggerData);
+    this.getResponse()?.trigger(triggerData);
   }
 }
 

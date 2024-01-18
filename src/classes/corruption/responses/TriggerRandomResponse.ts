@@ -4,9 +4,7 @@ import { getRandomFromWeightedArray, isArray } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import { getMostFrequentElementInArray } from "../../../helper/arrayHelper";
-import { numberToWords } from "../../../helper/numbers/numberToWords";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 
 const DEFAULT_WEIGHT = 1;
@@ -14,13 +12,14 @@ const BETWEEN_RESPONSES_TEXT = " or ";
 
 /**
  * Response which contains a WeightedArray of sub-responses. Upon triggering, will trigger a random
- * response in that sub-array, taking into account its weight.
+ * response in that sub-array, taking into account its weight. Default weight is 1.
  */
 export class TriggerRandomResponse extends Response {
   override responseType: ResponseType = ResponseType.TRIGGER_RANDOM;
   r: WeightedArray<Response> = [];
 
   construct(
+    // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
     ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
   ): this {
     return this.addResponses(...responseOrWeightedArrayTuple);
@@ -44,6 +43,7 @@ export class TriggerRandomResponse extends Response {
   }
 
   addResponses(
+    // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
     ...responseOrWeightedArrayTuple: Response[] | Array<[Response, number]>
   ): this {
     for (const responseData of responseOrWeightedArrayTuple) {
@@ -63,32 +63,51 @@ export class TriggerRandomResponse extends Response {
     return this;
   }
 
-  override getText(eid = true): string {
+  getResponses(): readonly Response[] {
+    return this.r.map((responseData) => responseData[0]);
+  }
+
+  /** This Response does not have a Verb. */
+  override getVerb(_participle: boolean): string {
+    error("TriggerRandomResponse: No verb.");
+  }
+
+  /** This Response does not have a Noun. */
+  override getNoun(): string {
+    error("TriggerRandomResponse: No noun.");
+  }
+
+  getResponsesText(eid: boolean, participle: boolean): string {
+    const r = this.getResponses();
     let text = "";
-    let iterations = this.r.length;
-    const amountOfActivations = this.getAmountOfActivations();
-    if (amountOfActivations !== 1) {
-      text +=
-        typeof amountOfActivations === "number"
-          ? ` ${numberToWords(amountOfActivations)}`
-          : ` ${rangeToString(amountOfActivations)}`;
-      text += " times, ";
-    }
-    for (const responseData of this.r) {
-      const [response, weight] = responseData;
-      text +=
-        amountOfActivations === 1
-          ? response.getText(eid)
-          : response.getText(eid);
+    let iterations = r.length;
+    for (const response of r) {
+      text += response.getText(eid, participle);
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
       if (--iterations !== 0) {
         text += BETWEEN_RESPONSES_TEXT;
       }
     }
+
     return text;
   }
 
-  fire(triggerData: TriggerData): void {
-    getRandomFromWeightedArray(this.r, undefined).trigger(triggerData);
+  override getText(eid: boolean, participle: boolean): string {
+    return `${this.getAmountOfActivationsText() ?? ""} ${this.getResponsesText(
+      eid,
+      participle,
+    )}`;
+  }
+
+  override shouldFlattenResults(): boolean {
+    return true;
+  }
+
+  override trigger(triggerData?: TriggerData): unknown[] {
+    return super.trigger(triggerData);
+  }
+
+  fire(triggerData: TriggerData): unknown {
+    return getRandomFromWeightedArray(this.r, undefined).trigger(triggerData);
   }
 }

@@ -14,11 +14,13 @@ import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 import { fprint } from "../../../helper/printHelper";
+import { addTheS } from "../../../helper/stringHelper";
 
 /** Defaults to The Poop if no activeItem is set. */
 const EMPTY_COLLECTIBLE_TEXT = "nothing";
 const FIRST_TIME_PICKING_UP = true;
 const VERB = "get";
+const VERB_PARTICIPLE = "getting";
 
 /**
  * This Response gives the player collectibles. The collectible can be a specific item, or a random
@@ -90,6 +92,10 @@ export class GetCollectibleResponse extends Response {
     return this;
   }
 
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
   override getMorality(): Morality {
     return this.mo ?? Morality.NEUTRAL;
   }
@@ -105,7 +111,7 @@ export class GetCollectibleResponse extends Response {
     return `${rangeToString(amountOfActivations)}x`;
   }
 
-  getCollectibleText(eid = true): string {
+  getCollectibleText(eid: boolean): string {
     const collectible = this.getCollectible();
     if (typeof collectible === "object") {
       return collectibleAttributeToText(collectible);
@@ -118,14 +124,46 @@ export class GetCollectibleResponse extends Response {
       : getCollectibleName(collectible);
   }
 
-  override getText(eid = true): string {
-    const text = `${VERB} ${this.getAmountOfActivationsText()} ${this.getCollectibleText(
-      eid,
-    )}`;
+  /**
+   * Get noun text with amount of activations.
+   *
+   * @example "brimstone"
+   * @example "3 brimstone's"
+   */
+  override getNoun(eid: boolean): string {
+    const collectible = this.getCollectible();
+    const amountOfActivationsText = this.getAmountOfActivationsText();
+    const isMultiple = this.isMultiple();
+    let text = amountOfActivationsText;
+
+    if (typeof collectible === "object") {
+      text += ` ${collectibleAttributeToText(collectible, isMultiple)}`;
+    } else if (collectible === undefined) {
+      text += ` ${addTheS(EMPTY_COLLECTIBLE_TEXT, isMultiple)}`;
+    } else {
+      text += ` ${getCollectibleNameWithEIDSetting(
+        collectible,
+        isMultiple,
+        eid,
+      )}`;
+    }
+
     return text;
   }
 
-  fire(triggerData: TriggerData): void {
+  override getText(eid: boolean, participle: boolean): string {
+    const verb = this.getVerb(participle);
+    const noun = this.getNoun(eid);
+
+    return `${verb} ${noun}`;
+  }
+
+  /** Array may be empty. */
+  override trigger(triggerData?: TriggerData): CollectibleType[] {
+    return super.trigger(triggerData) as CollectibleType[];
+  }
+
+  fire(triggerData: TriggerData): CollectibleType | undefined {
     const player = triggerData.player ?? Isaac.GetPlayer();
 
     // Standard firing procedure.
@@ -134,10 +172,11 @@ export class GetCollectibleResponse extends Response {
       fprint(
         "Failed to get a collectible to fire for the GetCollectibleResponse.",
       );
-      return;
+      return undefined;
     }
 
     player.AddCollectible(collectibleToFire, undefined, FIRST_TIME_PICKING_UP);
+    return collectibleToFire;
   }
 }
 

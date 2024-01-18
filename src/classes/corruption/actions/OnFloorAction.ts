@@ -4,7 +4,7 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getStageNameFromLevelStage } from "../../../maps/data/name/levelStageNameMap";
+import { levelStageToString } from "../../../maps/data/name/levelStageNameMap";
 import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
 
@@ -36,7 +36,7 @@ export class OnFloorAction extends Action {
   getLevelStageText(amount: number): string | undefined {
     const { lS: levelStage } = this;
     if (levelStage !== undefined) {
-      const name = getStageNameFromLevelStage(levelStage);
+      const name = levelStageToString(levelStage);
       return `${addTheS("visit", amount)} to ${name}`;
     }
     return undefined;

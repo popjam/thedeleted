@@ -23,7 +23,7 @@ export const HAPPY99Data: ModeData = {
     boneHearts: 0,
     goldenHearts: 0,
     rottenHearts: 0,
-    brokenHearts: 0,
+    brokenHearts: 3, // For testing.
     soulCharges: 0,
     bloodCharges: 0,
     soulHeartTypes: [HeartSubType.SOUL],

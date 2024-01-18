@@ -7,7 +7,7 @@ const itemConfigChargeTypeTextMap = new Map<ItemConfigChargeType, string>([
 ]);
 
 /** Convert a ItemConfigChargeType value to a text value. */
-export function itemConfigChargeTypeToText(
+export function itemConfigChargeTypeToString(
   chargeType: ItemConfigChargeType,
 ): string {
   const chargeTypeText = itemConfigChargeTypeTextMap.get(chargeType);

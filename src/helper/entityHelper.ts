@@ -1,23 +1,27 @@
-import type { PickupVariant } from "isaac-typescript-definitions";
-import { EntityFlag, EntityType } from "isaac-typescript-definitions";
+import type { PickupVariant, EntityType } from "isaac-typescript-definitions";
+import { EntityFlag } from "isaac-typescript-definitions";
 import {
-  DISTANCE_OF_GRID_TILE,
-  game,
+  getBombs,
+  getEffects,
   getEntities,
+  getFamiliars,
+  getKnives,
+  getLasers,
+  getNPCs,
   getPickups,
   getPlayers,
+  getProjectiles,
   getRandom,
   getRandomVector,
+  getSlots,
+  getTears,
   isSlot,
   spawn,
-  spawnNPC,
   spawnPickup,
 } from "isaacscript-common";
 import { mod } from "../mod";
 import { EntityCategory } from "../enums/general/EntityCategory";
 import { isLeavingGame } from "../features/general/isLeavingGame";
-
-const RANDOM_POSITION_AVOID_PLAYER_DISTANCE = DISTANCE_OF_GRID_TILE * 2;
 
 /** Retrieves the distance between two known entities. */
 export function getDistanceBetweenEntities(
@@ -30,8 +34,8 @@ export function getDistanceBetweenEntities(
 /**
  * Get a random position within a circle.
  *
- * @param centerPos
- * @param radius
+ * @param centerPos The center of the circle.
+ * @param radius The radius of the circle.
  * @param excludeRadius Will add an area to the radius where the chosen position can not be. This
  *                      area originates from the origin point and increases the radius of the
  *                      circle.
@@ -128,65 +132,6 @@ export function spawnPickupThrowFromEntity(
 }
 
 /**
- * Find a random position in the room that has direct access to 'accessorPos'. Poop is ignored and
- * acts as if nothing is there. Does not overlap with any players.
- *
- * @maxIterations The amount of iterations until it gives up (default 100).
- */
-export function getRandomAccessiblePosition(
-  accessorPos: Vector,
-  maxIterations = 100,
-): Vector | undefined {
-  let freePosition = Vector(0, 0);
-  let i = 0;
-  const playerPositions = getPlayers().map((player) => player.Position);
-  while (i < maxIterations) {
-    freePosition = game.GetRoom().GetRandomPosition(DISTANCE_OF_GRID_TILE);
-    const doesOverlapPlayer = playerPositions.some(
-      (playerPosition) =>
-        playerPosition.Distance(freePosition) <
-        RANDOM_POSITION_AVOID_PLAYER_DISTANCE,
-    );
-    if (!doesOverlapPlayer && isPositionAccessible(freePosition, accessorPos)) {
-      break;
-    }
-    i++;
-  }
-  return freePosition;
-}
-
-/**
- * Checks if a position is accessible to another position.
- *
- * @testPos The position you're checking for.
- * @accessorPos The position you want to check it connects to.
- * @ignorePoop Whether to ignore poops (default true).
- */
-export function isPositionAccessible(
-  testPos: Vector,
-  accessorPos: Vector,
-  ignorePoop = true,
-): boolean {
-  const npc = spawnNPC(EntityType.FLY, 0, 0, testPos);
-  npc.Visible = false;
-  const pathfinder = npc.Pathfinder;
-  const hasPath = pathfinder.HasPathToPos(accessorPos, ignorePoop);
-  npc.Remove();
-  return hasPath;
-}
-
-/**
- * Get a random position in the room that has direct access to the first player. Poop is ignored and
- * acts as if nothing is there. Does not overlap with any players. If there are no possible
- * positions, returns Vector(0, 0).
- */
-export function getQuickAccessiblePosition(): Vector {
-  return (
-    getRandomAccessiblePosition(Isaac.GetPlayer().Position) ?? Vector(0, 0)
-  );
-}
-
-/**
  * Spawns an Entity which is invisible. Note: This will not mute sounds, make it friendly or make it
  * be invisible upon exiting / entering game / room.
  */
@@ -240,6 +185,7 @@ export function getClosestPickupTo(
   let closestPickup: undefined | EntityPickup;
   let closestDistance = 10_000;
   const pickupsInRoom = getPickups();
+  // eslint-disable-next-line unicorn/no-array-for-each
   pickupsInRoom.forEach((pickup: EntityPickup) => {
     const pickupDistance = pickup.Position.Distance(referencePosition);
     if (pickupDistance < closestDistance) {
@@ -307,6 +253,69 @@ export function getEntityCategory(entity: Entity): EntityCategory | undefined {
   }
 
   return undefined;
+}
+
+/**
+ * Returns an array of all entities in the room that match the specified EntityCategory. If there
+ * are no entities in the room, returns an empty array.
+ *
+ * @param category The EntityCategory to search for.
+ * @param ignoreFriendly If true, will ignore friendly NPCs if the EntityCategory is
+ *                       EntityCategory.NPC. Defaults to false.
+ */
+export function getAllEntitiesWithCategory(
+  category: EntityCategory,
+  ignoreFriendly?: boolean,
+): readonly Entity[] {
+  switch (category) {
+    case EntityCategory.BOMB: {
+      return getBombs();
+    }
+
+    case EntityCategory.EFFECT: {
+      return getEffects();
+    }
+
+    case EntityCategory.FAMILIAR: {
+      return getFamiliars();
+    }
+
+    case EntityCategory.KNIFE: {
+      return getKnives();
+    }
+
+    case EntityCategory.LASER: {
+      return getLasers();
+    }
+
+    case EntityCategory.NPC: {
+      return getNPCs(undefined, undefined, undefined, ignoreFriendly);
+    }
+
+    case EntityCategory.PLAYER: {
+      return getPlayers();
+    }
+
+    case EntityCategory.PICKUP: {
+      return getPickups();
+    }
+
+    case EntityCategory.PROJECTILE: {
+      return getProjectiles();
+    }
+
+    case EntityCategory.SLOT: {
+      return getSlots();
+    }
+
+    case EntityCategory.TEAR: {
+      return getTears();
+    }
+
+    default: {
+      return [];
+    }
+  }
 }
 
 /** Find the first entity in the room that matches the initSeed. Warning: Slow. */

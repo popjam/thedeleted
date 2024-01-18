@@ -1,15 +1,15 @@
 import { EntityFlag, EntityType } from "isaac-typescript-definitions";
+import type { PlayerIndex } from "isaacscript-common";
 import {
-  PlayerIndex,
   VectorZero,
   arrayToBitFlags,
   copyColor,
   getPlayerIndex,
   spawnNPC,
 } from "isaacscript-common";
-import { FriendlyWormType } from "../../enums/FriendlyWormType";
+import type { FriendlyWormType } from "../../enums/FriendlyWormType";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { getRandomAccessiblePosition } from "../../helper/entityHelper";
+import { getRandomAccessiblePosition } from "../../helper/positionHelper";
 
 export abstract class FriendlyWorm {
   readonly wormType!: FriendlyWormType;

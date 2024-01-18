@@ -9,8 +9,6 @@ import {
   GAME_FRAMES_PER_SECOND,
   ReadonlySet,
 } from "isaacscript-common";
-import type { NPCIndex } from "../../../../types/general/NPCIndex";
-import { getNPCIndex } from "../../../../features/general/NPCIndex";
 import {
   getNPCFamily,
   isEntityNPC,
@@ -19,8 +17,6 @@ import { fprint } from "../../../../helper/printHelper";
 import { setEntityDefaultColor } from "../../../../helper/colorHelper";
 
 const DEFAULT_STATUS_EFFECT_DURATION = 5 * GAME_FRAMES_PER_SECOND;
-const PERMANENT_STATUS_EFFECT_DURATION = -1;
-const MAXIMUM_STATUS_EFFECT_DURATION = 999_999_999;
 const SLOW_STATUS_EFFECT_MULTIPLIER = 0.5;
 const SLOW_COLOR = COLORS.Gray;
 
@@ -28,7 +24,7 @@ const SLOW_COLOR = COLORS.Gray;
 const v = {
   run: {
     /** Map of NPCs with permanent status effects. */
-    npcsWithPermanentStatusEffects: new DefaultMap<NPCIndex, Set<NPCFlag>>(
+    npcsWithPermanentStatusEffects: new DefaultMap<PtrHash, Set<NPCFlag>>(
       () => new Set(),
     ),
   },
@@ -42,7 +38,7 @@ let FACET: Facet | undefined;
 class PermanentNPCStatusEffectFacet extends Facet {
   @Callback(ModCallback.POST_NPC_UPDATE)
   postNPCUpdate(npc: EntityNPC): void {
-    const npcIndex = getNPCIndex(npc);
+    const npcIndex = GetPtrHash(npc);
     if (!v.run.npcsWithPermanentStatusEffects.has(npcIndex)) {
       return;
     }
@@ -64,7 +60,7 @@ class PermanentNPCStatusEffectFacet extends Facet {
       return;
     }
 
-    const npcIndex = getNPCIndex(entity);
+    const npcIndex = GetPtrHash(entity);
     if (!v.run.npcsWithPermanentStatusEffects.has(npcIndex)) {
       return;
     }
@@ -97,7 +93,7 @@ export function addPermanentStatusEffectToNPC(
   individual = false,
 ): void {
   if (individual) {
-    const npcIndex = getNPCIndex(npc);
+    const npcIndex = GetPtrHash(npc);
     const permanentStatusEffects =
       v.run.npcsWithPermanentStatusEffects.getAndSetDefault(npcIndex);
     permanentStatusEffects.add(statusEffect);
@@ -107,7 +103,7 @@ export function addPermanentStatusEffectToNPC(
   } else {
     const npcFamily = getNPCFamily(npc);
     for (const member of npcFamily) {
-      const npcIndex = getNPCIndex(member);
+      const npcIndex = GetPtrHash(member);
       const permanentStatusEffects =
         v.run.npcsWithPermanentStatusEffects.getAndSetDefault(npcIndex);
       permanentStatusEffects.add(statusEffect);

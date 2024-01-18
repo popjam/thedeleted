@@ -13,6 +13,6 @@ const itemTypeTextMap: Record<ItemType, string> = {
  *
  * @example getItemTypeText(ItemType.ACTIVE) // "active".
  */
-export function getItemTypeText(itemType: ItemType): string {
+export function itemTypeToString(itemType: ItemType): string {
   return itemTypeTextMap[itemType];
 }

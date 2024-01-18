@@ -35,9 +35,7 @@ const ChampionColorNameMap: ReadonlyMap<ChampionColor, string> = new Map([
  *
  * @example getChampionColorTextFromMap(ChampionColor.BLACK); // "Black"
  */
-export function getChampionColorTextFromMap(
-  championColor: ChampionColor,
-): string {
+export function championColorToString(championColor: ChampionColor): string {
   const text = ChampionColorNameMap.get(championColor);
   if (text !== undefined) {
     return text;

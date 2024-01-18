@@ -1,0 +1,35 @@
+Corruption Classes:
+- Responses
+- Actions
+- ActionSets
+
+Random Entity Functions:
+- getRandomNPC - done for now (needs color, stage, mass)
+- npcAttributeToText - done for now (needs color, stage, size, mass, health)
+- getRandomCollectible - done for now (needs poolType)
+- collectibleAttributeToText - done
+
+Modes
+- HAPPY99
+- ILOVEYOU
+- MORRIS
+- ZIPBOMBER
+- CRYPTOLOCKER
+- SPYWIPER
+- JERUSALEM,
+- HICURDISMOS
+- VCS
+- MEMZ
+- MYDOOM
+- REVETON
+- SOPHOS
+- BATTLEYE
+
+Misc
+- Corrupted Sound Effects.
+- Conditional functions.
+- Quest functions.
+
+Bugs
+- Spawn inverted active and use, restart, spawn again, charge is 0.
+- Fix leave postEntityRemove thing.

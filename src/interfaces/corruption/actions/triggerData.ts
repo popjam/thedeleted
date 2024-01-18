@@ -1,6 +1,6 @@
-import { DamageFlag } from "isaac-typescript-definitions";
-import { Action } from "../../../classes/corruption/actions/Action";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { DamageFlag } from "isaac-typescript-definitions";
+import type { Action } from "../../../classes/corruption/actions/Action";
+import type { Response } from "../../../classes/corruption/responses/Response";
 
 /**
  * Data that you can provide when triggering an Action or Response. If you pass through triggerData
@@ -28,4 +28,14 @@ export interface TriggerData {
   onBombExplodedAction?: {
     bomb: EntityBomb;
   };
+
+  // If the Action / Response would spawn an Entity, this is the position it should spawn at.
+  spawnPosition?: Vector;
+
+  // If the Action / Response would spawn an Entity, this is the velocity it should spawn with.
+  spawnVelocity?: Vector;
+
+  // If true, the SpawnGridEntity response should be triggered on the next frame. This will also
+  // prevent it from returning any spawned grid entities.
+  shouldSpawnGridEntityResponseDelay?: boolean;
 }

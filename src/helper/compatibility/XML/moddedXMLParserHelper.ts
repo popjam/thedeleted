@@ -7,7 +7,7 @@ import type {
 } from "../../../interfaces/xml/entities2XML";
 import * as moddedXMLParser from "../../../lua/moddedXMLParser";
 import { getModFromModdedEntityID } from "../../../maps/data/moddedEntityIDToModMap";
-import { getNameSubTypeFromEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
+import { getNameSubTypeFromModdedEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
 import type { NameSubType } from "../../../types/data/nameSubType";
 import { getEntityCategoryFromEntityID } from "../../entityHelper/entityIDHelper";
 
@@ -110,7 +110,7 @@ export function getModdedEntityDataFromEntityID(
   if (modFrom === undefined) {
     return undefined;
   }
-  const nameSubType = getNameSubTypeFromEntityID(entityID);
+  const nameSubType = getNameSubTypeFromModdedEntityID(entityID);
   if (nameSubType === undefined) {
     return undefined;
   }

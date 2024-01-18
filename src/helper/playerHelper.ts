@@ -1,10 +1,22 @@
-import type { CollectibleType } from "isaac-typescript-definitions";
-import { UseFlag } from "isaac-typescript-definitions";
+import type { UseFlag } from "isaac-typescript-definitions";
+import {
+  ActiveSlot,
+  CardType,
+  PillColor,
+  PocketItemSlot,
+  CollectibleType,
+} from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import {
   arrayToBitFlags,
+  getActivePocketItemSlot,
+  getEnumValues,
+  getPlayerAvailableHeartSlots,
   getPlayerBlackHearts,
+  getPlayerMaxHeartContainers,
   getPlayerSoulHearts,
 } from "isaacscript-common";
+import { USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY } from "../constants/corruptionConstants";
 
 /** Sets the players' bomb count to a specific amount. */
 export function setPlayerBombs(player: EntityPlayer, amount: number): void {
@@ -116,10 +128,7 @@ export function useActiveItemAtPosition(
   player.Position = roomPos;
   player.UseActiveItem(
     activeItem,
-    arrayToBitFlags<UseFlag>([
-      UseFlag.NO_ANIMATION,
-      UseFlag.NO_ANNOUNCER_VOICE,
-    ]),
+    arrayToBitFlags<UseFlag>(USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY),
   );
   player.Position = currentPos;
 }
@@ -136,4 +145,63 @@ export function isPlayerPlayingAnimation(
   }
 
   return false;
+}
+
+/**
+ * Get the players' total health in half hearts. This counts all types of hearts the player has,
+ * including broken hearts.
+ *
+ * @example If the player has 2 red hearts, 1 soul heart, and 1 black heart, this will return 8.
+ */
+export function getPlayerTotalHealth(player: EntityPlayer): number {
+  return (
+    player.GetEffectiveMaxHearts() +
+    player.GetSoulHearts() +
+    player.GetBrokenHearts() * 2
+  );
+}
+
+/**
+ * Returns true if the player is holding a pill in any slot.
+ *
+ * @param player The player to check.
+ * @param pillColor If set, will only return true if the player is holding a pill of this color.
+ */
+export function isPlayerHoldingPill(
+  player: EntityPlayer,
+  pillColor: PillColor = PillColor.NULL,
+): boolean {
+  return getEnumValues(PocketItemSlot).some((slot) => {
+    const pill = player.GetPill(slot);
+    return (
+      pill !== PillColor.NULL &&
+      (pillColor === PillColor.NULL || pill === pillColor)
+    );
+  });
+}
+
+/**
+ * Returns true if the player is holding a card in any slot.
+ *
+ * @param player The player to check.
+ * @param cardType If set, will only return true if the player is holding a card of this type.
+ */
+export function isPlayerHoldingCard(
+  player: EntityPlayer,
+  cardType: CardType = CardType.NULL,
+): boolean {
+  return getEnumValues(PocketItemSlot).some((slot) => {
+    const card = player.GetCard(slot);
+    return (
+      card !== CardType.NULL &&
+      (cardType === CardType.NULL || card === cardType)
+    );
+  });
+}
+
+/** Returns true if the player has any active item in any slot (including the pocket slot). */
+export function doesPlayerHaveAnyActiveItem(player: EntityPlayer): boolean {
+  return getEnumValues(ActiveSlot).some(
+    (slot) => player.GetActiveItem(slot) !== CollectibleType.NULL,
+  );
 }

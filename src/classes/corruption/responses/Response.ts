@@ -33,7 +33,7 @@ const CHANCE_TO_ACTIVATE_POST_TEXT = "% chance to";
  * beneficial or not.
  */
 export abstract class Response {
-  readonly responseType!: ResponseType;
+  abstract readonly responseType: ResponseType;
   mo?: Morality;
   aoa?: number | Range;
 
@@ -63,6 +63,30 @@ export abstract class Response {
 
   getInvolvedCollectibles(): readonly CollectibleType[] {
     return [];
+  }
+
+  /**
+   * Whether to flatten the results of the triggered Response into a singular array. This method is
+   * overridden by some Responses. It will flatten the results with a depth of 1.
+   *
+   * Flattened Responses will usually be ones which trigger other Responses, such as
+   * TriggerInQueueResponse, as the results of the triggered Response will be an array, and we don't
+   * want to return an array of arrays.
+   *
+   * This can mean the final returned array may consist of different types of values, so caution
+   * should be taken when using those kind of Responses and their return values.
+   */
+  shouldFlattenResults(): boolean {
+    return false;
+  }
+
+  /**
+   * Whether to skip the amount of activations causing the 'fire()' function to be called multiple
+   * times in the trigger() function. This method is overridden by some Responses, particularly
+   * those that recreate the amount of activations in their overridden fire() function.
+   */
+  shouldSkipAmountOfActivations(): boolean {
+    return false;
   }
 
   // Use calculateAmountOfActivations() instead!
@@ -101,6 +125,9 @@ export abstract class Response {
    */
   setAmountOfActivations(amount: number | Range): this {
     this.aoa = typeof amount === "number" ? amount : validifyRange(amount);
+    if (this.aoa === 1) {
+      this.aoa = undefined;
+    }
     return this;
   }
 
@@ -113,9 +140,9 @@ export abstract class Response {
     return this.mo ?? DEFAULT_MORALITY;
   }
 
-  /** Returns true if the 'amountOfActivations' is 1. */
-  doesTriggerOnce(): boolean {
-    return this.getAmountOfActivations() === 1;
+  /** Returns true if the 'amountOfActivations' is either more than 1, or a Range. */
+  isMultiple(): boolean {
+    return this.getAmountOfActivations() !== 1;
   }
 
   /**
@@ -144,8 +171,22 @@ export abstract class Response {
     return `${chanceToActivate}${CHANCE_TO_ACTIVATE_POST_TEXT}`;
   }
 
-  /** Describes the Response in string format. */
-  abstract getText(eid: boolean): string;
+  abstract getVerb(participle: boolean): string;
+
+  abstract getNoun(eid: boolean): string;
+
+  /** Class 'constructor()' behavior is unwanted so we have to create an alternate constructor. */
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  abstract construct(...any: any): this;
+
+  /**
+   * Describes the Response in string format.
+   *
+   * @param eid Whether to use EID formatting.
+   * @param participle Whether to use the participle form of the verb (e.g 'getting' instead of
+   *                   'get').
+   */
+  abstract getText(eid: boolean, participle: boolean): string;
 
   deepCopy(): this {
     return deepCopy(this);
@@ -155,27 +196,51 @@ export abstract class Response {
    * Trigger the Response, which may or may not fire depending on certain Tags. Actions will use
    * this function to fire the Responses tied to them.
    */
-  trigger(triggerData: TriggerData): void {
-    fprint(`Triggering Response: ${this.getText(false)}.`);
+  trigger(triggerData: TriggerData = {}): unknown[] {
+    fprint(`Triggering Response: ${this.getText(false, false)}.`);
 
     // Percentage
     if (!rollPercentage(this.getChanceToActivate())) {
-      return;
+      fprint(
+        `Failed to activate Response due to ${this.getChanceToActivateText()} chance to activate.`,
+      );
+      return [];
     }
 
     // Firing + AmountOfActivations
-    const amountOfActivations = this.calculateAmountOfActivations();
+    const amountOfActivations = this.shouldSkipAmountOfActivations()
+      ? 1
+      : this.calculateAmountOfActivations();
+
+    fprint(`Firing Response ${amountOfActivations} times.`);
+
+    const returnValues: unknown[] = [];
     for (let i = 0; i < amountOfActivations; i++) {
-      fprint(`Firing Response: ${this.getText(false)}.`);
-      this.fire(triggerData);
+      fprint(`Firing Response: ${this.getText(false, false)}.`);
+      const returnValue = this.fire(triggerData);
+
+      // Don't include 'undefined' return values in array.
+      if (returnValue !== undefined) {
+        returnValues.push(returnValue);
+      }
     }
+
+    // Flatten the array of return values if necessary.
+    if (this.shouldFlattenResults()) {
+      fprint("Flattening Response return values.");
+      return returnValues.flat(1);
+    }
+
+    return returnValues;
   }
 
+  // eslint-disable-next-line jsdoc/informative-docs
   /** Fire the response. */
   abstract fire(triggerData: TriggerData): unknown;
 }
 
 /** Type guard. */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export function isResponse(obj: any): obj is Response {
   return "responseType" in obj;
 }

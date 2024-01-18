@@ -32,6 +32,9 @@ import {
   TearVariant,
 } from "isaac-typescript-definitions";
 import { mod } from "../../mod";
+import { addPermanentStatusEffectToNPC } from "../../classes/facets/entityModifiers.ts/NPCModifiers/PermanentNPCStatusEffectFacet";
+
+const PERMANENT_STATUS_EFFECT_DURATION = -1;
 
 /**
  * Add a custom NPCFlag to an NPC. If they already have the flag, nothing happens unless there is a
@@ -77,70 +80,70 @@ export function addNPCFlags(
       }
 
       case NPCFlag.BURN: {
-        npc.AddEntityFlags(EntityFlag.BURN);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.CHARMED: {
-        npc.AddEntityFlags(EntityFlag.CHARM);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.CONFUSED: {
-        npc.AddEntityFlags(EntityFlag.CONFUSION);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.FEAR: {
-        npc.AddEntityFlags(EntityFlag.FEAR);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.ICE_FREEZE: {
-        npc.AddEntityFlags(EntityFlag.FREEZE);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.MIDAS_FREEZE: {
-        npc.AddEntityFlags(EntityFlag.MIDAS_FREEZE);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.POISONED: {
-        npc.AddEntityFlags(EntityFlag.POISON);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.SHRUNKEN: {
-        npc.AddEntityFlags(EntityFlag.SHRINK);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
       case NPCFlag.SLOWING: {
-        npc.AddEntityFlags(EntityFlag.SLOW);
+        addPermanentStatusEffectToNPC(npc, flag);
 
         break;
       }
 
-      case NPCFlag.GLASS: {
-        npc.AddEntityFlags(EntityFlag.ICE);
-        mod.runInNGameFrames(() => {
-          npc.HitPoints = 1;
-          npc.TakeDamage(
-            999_999,
-            DamageFlag.IGNORE_ARMOR,
-            EntityRef(Isaac.GetPlayer()),
-            0,
-          );
-        }, 4);
+      case NPCFlag.FRIENDLY: {
+        npc.AddCharmed(EntityRef(undefined), PERMANENT_STATUS_EFFECT_DURATION);
+
+        // We want to add the persistent flag as friendly bosses are not persistent by default.
+        npc.AddEntityFlags(EntityFlag.PERSISTENT);
+
+        break;
+      }
+
+      case NPCFlag.PERSISTENT: {
+        npc.AddEntityFlags(EntityFlag.PERSISTENT);
 
         break;
       }

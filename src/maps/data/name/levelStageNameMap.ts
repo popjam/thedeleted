@@ -21,7 +21,7 @@ const LEVEL_STAGE_TO_NAME_MAP: ReadonlyMap<LevelStage, string> = new Map([
  *
  * @example RoomType.THE_VOID = "The Void"].
  */
-export function getStageNameFromLevelStage(levelStage: LevelStage): string {
+export function levelStageToString(levelStage: LevelStage): string {
   const name = LEVEL_STAGE_TO_NAME_MAP.get(levelStage);
   if (name === undefined) {
     error(`LevelStageNameMap: Cannot find Name of LevelStage: ${levelStage}`);

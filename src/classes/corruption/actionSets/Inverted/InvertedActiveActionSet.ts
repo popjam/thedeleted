@@ -138,7 +138,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
               this.getActionOrResponseColor(actionOrResponse),
           );
         }
-        text += legibleString(actionOrResponse.getText(eid));
+        text += legibleString(actionOrResponse.getText(eid, false));
         if (eid) {
           text += "{{CR}}";
         }

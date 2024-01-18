@@ -1,5 +1,6 @@
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { ActionSet } from "../actionSets/ActionSet";
+import { fprint } from "../../../helper/printHelper";
+import type { ActionSet } from "../actionSets/ActionSet";
 import { InvertedPassiveActionSet } from "../actionSets/Inverted/InvertedPassiveActionSet";
 import { Response } from "./Response";
 
@@ -18,6 +19,13 @@ export class TemporaryActionSetResponse extends Response {
   // removal.
   a?: ActionSet;
 
+  construct(actionSet?: ActionSet): this {
+    if (actionSet !== undefined) {
+      this.a = actionSet;
+    }
+    return this;
+  }
+
   /** Need to deep copy before use! */
   getActionSet(): ActionSet {
     return this.a ?? DEFAULT_ACTION_SET;
@@ -28,9 +36,19 @@ export class TemporaryActionSetResponse extends Response {
     return this;
   }
 
+  override getVerb(_participle: boolean): string {
+    return "";
+  }
+
+  override getNoun(): string {
+    return "";
+  }
+
   getText(): string {
     return "";
   }
 
-  fire(): void {}
+  fire(): void {
+    fprint("fire");
+  }
 }

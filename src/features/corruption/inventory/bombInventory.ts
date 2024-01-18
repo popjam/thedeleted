@@ -99,6 +99,8 @@ export function bombInventoryPostBombExploded(bomb: EntityBomb): void {
     response.trigger({
       player: getPlayerFromIndex(playerIndex),
       onBombExplodedAction: { bomb },
+      spawnPosition: bomb.Position,
+      spawnVelocity: bomb.Velocity,
     });
   });
 }

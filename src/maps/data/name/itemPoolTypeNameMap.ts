@@ -39,7 +39,7 @@ const itemPoolTypeTextMap = new Map<ItemPoolType, string>([
  *
  * @example itemPoolTypeToText(ItemPoolType.TREASURE) // "Treasure Room".
  */
-export function itemPoolTypeToText(itemPoolType: ItemPoolType): string {
+export function itemPoolTypeToString(itemPoolType: ItemPoolType): string {
   const itemPoolTypeText = itemPoolTypeTextMap.get(itemPoolType);
   return itemPoolTypeText ?? "Unknown Item Pool Type";
 }

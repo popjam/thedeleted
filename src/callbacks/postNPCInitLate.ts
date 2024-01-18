@@ -1,6 +1,5 @@
 import type { ModUpgraded } from "isaacscript-common";
 import { ModCallbackCustom } from "isaacscript-common";
-import { postNPCInitLateNPCIndex } from "../features/general/NPCIndex";
 import { CallbackPriority } from "isaac-typescript-definitions";
 
 export function postNPCInitLateInit(mod: ModUpgraded): void {
@@ -11,6 +10,4 @@ export function postNPCInitLateInit(mod: ModUpgraded): void {
   );
 }
 
-function main(npc: EntityNPC) {
-  postNPCInitLateNPCIndex(npc);
-}
+function main(npc: EntityNPC) {}

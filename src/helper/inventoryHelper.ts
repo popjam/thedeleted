@@ -1,5 +1,9 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { mod } from "../mod";
+import {
+  removePlayerInvertedActive,
+  removePlayerMostRecentInvertedPassive,
+} from "./deletedSpecific/inventory/invertedInventoryHelper";
 
 /** Check if the players' inventory is empty (i.e they have no items). */
 export function isPlayerInventoryEmpty(player: EntityPlayer): boolean {

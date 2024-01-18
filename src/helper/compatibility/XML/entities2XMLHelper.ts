@@ -8,15 +8,13 @@ import {
   log,
   spawnEntityID,
 } from "isaacscript-common";
-import {
-  getEntityCategory,
-  getQuickAccessiblePosition,
-} from "../../entityHelper";
+import { getEntityCategory } from "../../entityHelper";
 import type { EntityCategory } from "../../../enums/general/EntityCategory";
 import { getEntityIDFromNameSubType } from "../../entityHelper/entityIDHelper";
 import { splitString } from "../../stringHelper";
 import { fprint } from "../../printHelper";
 import { ItemPoolType, CollectibleType } from "isaac-typescript-definitions";
+import { getQuickAccessiblePosition } from "../../positionHelper";
 
 /** 1. First, 'entities2Parser.py' is run to generate the */
 

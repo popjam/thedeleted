@@ -23,7 +23,7 @@ export function _addModdedEntityIDToNameSubTypeMap(
  * Get the modded Entity Name + SubType string from its Entity ID. If the EntityID does not exist in
  * the map, return undefined. This may happen when a modded entity is not tracked.
  */
-export function getNameSubTypeFromEntityID(
+export function getNameSubTypeFromModdedEntityID(
   entityID: EntityID,
 ): NameSubType | undefined {
   return moddedEntityIDToNameSubTypeMap.get(entityID);

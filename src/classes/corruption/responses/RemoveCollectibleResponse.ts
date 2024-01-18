@@ -12,15 +12,12 @@ import {
 import { fprint } from "../../../helper/printHelper";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 import { getCollectibleName } from "isaacscript-common";
-import { numberToWords } from "../../../helper/numbers/numberToWords";
 import type { Range } from "../../../types/general/Range";
-import { rangeToString } from "../../../types/general/Range";
-import { addTheS } from "../../../helper/stringHelper";
 import type { Morality } from "../../../enums/corruption/Morality";
 
 const VERB = "lose";
+const VERB_PARTICIPLE = "losing";
 const DEFAULT_CE = false;
-const EMPTY_COLLECTIBLE_TEXT = "nothing";
 
 /**
  * Response for removing a collectible from the player. If the player does not have the collectible,
@@ -29,13 +26,30 @@ const EMPTY_COLLECTIBLE_TEXT = "nothing";
  *
  * @example Remove The Poop.
  * @example Remove the Poop effect.
+ *
+ * @param c The collectible to remove. Can be a CollectibleType, a CollectibleAttribute, or
+ *          undefined.
+ * @param ce Whether the collectible is a Collectible Effect. Default is false.
  */
 export class RemoveCollectibleResponse extends Response {
   override responseType: ResponseType = ResponseType.REMOVE_COLLECTIBLE;
   c?: CollectibleType | CollectibleAttribute;
   ce?: boolean;
 
-  /** Alternative constructor so SaveData works with class. */
+  /**
+   * Response for removing a collectible from the player. If the player does not have the
+   * collectible, nothing happens. The collectible can be in the form of a CollectibleType, a
+   * Collectible Effect, or a CollectibleAttribute.
+   *
+   * @example Remove The Poop.
+   * @example Remove the Poop effect.
+   *
+   * @param collectibleToRemove The collectible to remove. Can be a CollectibleType, a
+   *                            CollectibleAttribute, or undefined.
+   * @param amount The amount of times this Response can be activated. Default is 1.
+   * @param morality The morality of this Response. Default is Morality.NEUTRAL.
+   * @param isEffect Whether the collectible is a Collectible Effect. Default is false.
+   */
   construct(
     collectibleToRemove: CollectibleType | CollectibleAttribute,
     amount?: number | Range,
@@ -108,38 +122,46 @@ export class RemoveCollectibleResponse extends Response {
     return this;
   }
 
-  getCollectibleText(eid = true): string {
+  override getNoun(eid = true): string {
     const collectible = this.getCollectible();
-    const amountOfActivations = this.getAmountOfActivations();
-    const plural = amountOfActivations !== 1;
+    const isMultiple = this.isMultiple();
+    const amountOfActivationsText = this.getAmountOfActivationsText() ?? "";
 
+    // CollectibleAttribute
     if (typeof collectible === "object") {
-      return collectibleAttributeToText(collectible, plural);
+      return `${amountOfActivationsText} ${collectibleAttributeToText(
+        collectible,
+        isMultiple,
+      )}`;
     }
+
+    // Random.
     if (collectible === undefined) {
-      return addTheS("nothing", plural ? 2 : 1);
-    }
-    return eid
-      ? getCollectibleNameWithEIDSetting(collectible)
-      : getCollectibleName(collectible);
-  }
-
-  override getAmountOfActivationsText(): string {
-    const amountOfActivations = this.getAmountOfActivations();
-    if (typeof amountOfActivations === "number") {
-      if (amountOfActivations === 1) {
-        return "";
+      if (isMultiple) {
+        return `${amountOfActivationsText} random collectibles`;
       }
-      return `${numberToWords(amountOfActivations)}`;
+
+      return "a random collectible";
     }
-    return `${rangeToString(amountOfActivations)}`;
+
+    // Specific collectible.
+    const collectibleName = getCollectibleNameWithEIDSetting(
+      collectible,
+      isMultiple,
+      eid,
+    );
+    return `${amountOfActivationsText} ${collectibleName}`;
   }
 
-  override getText(eid = true): string {
-    const text = `${VERB} ${this.getAmountOfActivationsText()} ${this.getCollectibleText(
-      eid,
-    )}`;
-    return text;
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
+  }
+
+  override getText(eid: boolean, participle: boolean): string {
+    const verb = this.getVerb(participle);
+    const noun = this.getNoun(eid);
+
+    return `${verb} ${noun}`;
   }
 
   fire(triggerData: TriggerData): void {

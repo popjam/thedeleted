@@ -127,7 +127,7 @@ export abstract class ActionSet {
             this.getActionOrResponseColor(actionOrResponse),
         );
       }
-      text += legibleString(actionOrResponse.getText(eid));
+      text += legibleString(actionOrResponse.getText(eid, false));
       if (eid) {
         text += "{{CR}}";
       }

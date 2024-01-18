@@ -1,3 +1,5 @@
+import { getEnumValues } from "isaacscript-common";
+
 /** Determine if a BitFlags object contains a BitFlag. */
 export function bitFlagsContainsValue<T extends BitFlag>(
   bitFlagsObject: BitFlags<T>,

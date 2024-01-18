@@ -7,7 +7,6 @@ import {
 import {
   getRandomArrayElement,
   getRandomFromWeightedArray,
-  getRandomInt,
   getRandomSeed,
   shuffleArrayInPlace,
 } from "isaacscript-common";
@@ -22,15 +21,13 @@ import { OnObtainAction } from "../../classes/corruption/actions/OnObtainAction"
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 import type { Response } from "../../classes/corruption/responses/Response";
 import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
-import { TriggerInSequenceResponse } from "../../classes/corruption/responses/TriggerInSequence";
+import { TriggerInSequenceResponse } from "../../classes/corruption/responses/TriggerInSequenceResponse";
 import { TriggerOverTimeResponse } from "../../classes/corruption/responses/TriggerOverTimeResponse";
 import { TriggerRandomResponse } from "../../classes/corruption/responses/TriggerRandomResponse";
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { WaitThenTriggerResponse } from "../../classes/corruption/responses/WaitThenTriggerResponse";
 import { INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD } from "../../constants/corruptionConstants";
 import { Morality } from "../../enums/corruption/Morality";
-import { DeletedColor } from "../../enums/general/DeletedColor";
-import { getAdvancedInvertedItemIconSetting } from "../../features/settings/GeneralSettings";
 import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import type { CorruptedCollectibleSprite } from "../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { rollPercentage } from "../../types/general/Percentage";

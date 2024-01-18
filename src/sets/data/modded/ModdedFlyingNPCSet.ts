@@ -1,7 +1,7 @@
 import type { EntityID } from "isaacscript-common";
 import { ReadonlySet } from "isaacscript-common";
 import { FiendFolioNPCNameSubTypes } from "../../../enums/data/ID/modded/fiendFolio/FiendFolioNPCNameSubTypes";
-import { getNameSubTypeFromEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
+import { getNameSubTypeFromModdedEntityID } from "../../../maps/data/moddedEntityIDToNameSubType";
 
 const MODDED_FLYING_SET = new ReadonlySet<string>([
   // Fiend Folio.
@@ -367,7 +367,7 @@ const MODDED_FLYING_SET = new ReadonlySet<string>([
 ]);
 
 export function _isModdedNPCIDFlying(id: EntityID): boolean | undefined {
-  const nameSubType = getNameSubTypeFromEntityID(id);
+  const nameSubType = getNameSubTypeFromModdedEntityID(id);
   if (nameSubType === undefined) {
     return undefined;
   }

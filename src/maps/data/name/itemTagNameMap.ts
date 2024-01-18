@@ -40,6 +40,6 @@ const itemTagNameMap: Record<ItemConfigTag, string> = {
  *
  * @example getItemTypeText(ItemType.ACTIVE) // "active".
  */
-export function getItemConfigTagText(itemConfigTag: ItemConfigTag): string {
+export function itemConfigTagToString(itemConfigTag: ItemConfigTag): string {
   return itemTagNameMap[itemConfigTag]!;
 }

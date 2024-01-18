@@ -44,5 +44,7 @@ export class OnKillAction extends Action {
 export function triggerOnKillActions(entity: Entity): void {
   triggerPlayersActionsByType(ACTION_TYPE, {
     onKillAction: entity as EntityNPC,
+    spawnPosition: entity.Position,
+    spawnVelocity: entity.Velocity,
   });
 }

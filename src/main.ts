@@ -53,7 +53,7 @@ import { SpawnNPCResponse } from "./classes/corruption/responses/SpawnNPCRespons
 import { SpawnPickupResponse } from "./classes/corruption/responses/SpawnPickupResponse";
 import { TemporaryActionResponse } from "./classes/corruption/responses/TemporaryActionResponse";
 import { TemporaryCollectibleResponse } from "./classes/corruption/responses/TemporaryCollectibleResponse";
-import { TriggerInSequenceResponse } from "./classes/corruption/responses/TriggerInSequence";
+import { TriggerInSequenceResponse } from "./classes/corruption/responses/TriggerInSequenceResponse";
 import { TriggerOverTimeResponse } from "./classes/corruption/responses/TriggerOverTimeResponse";
 import { TriggerRandomResponse } from "./classes/corruption/responses/TriggerRandomResponse";
 import { UseActiveItemResponse } from "./classes/corruption/responses/UseActiveItemResponse";
@@ -82,6 +82,18 @@ import { initSpawnEntityByNameFacet } from "./classes/facets/SpawnEntityByNameFa
 import { postEntityRemoveInit } from "./callbacks/postEntityRemove";
 import { postNPCUpdateInit } from "./callbacks/postNPCUpdate";
 import { initPermanentNPCStatusEffectFacet } from "./classes/facets/entityModifiers.ts/NPCModifiers/PermanentNPCStatusEffectFacet";
+import { RemoveEntityResponse } from "./classes/corruption/responses/RemoveEntityResponse";
+import { SpawnSlotResponse } from "./classes/corruption/responses/SpawnSlotResponse";
+import { SpawnTearResponse } from "./classes/corruption/responses/SpawnTearResponse";
+import { SpawnEffectResponse } from "./classes/corruption/responses/SpawnEffectResponse";
+import { SpawnGridEntityResponse } from "./classes/corruption/responses/SpawnGridEntityResponse";
+import { GetTrinketResponse } from "./classes/corruption/responses/GetTrinketResponse";
+import { SpawnLiveBombResponse } from "./classes/corruption/responses/SpawnLiveBombResponse";
+import { IfThenResponse } from "./classes/corruption/responses/IfThenResponse";
+import { IfThenElseResponse } from "./classes/corruption/responses/IfThenElseResponse";
+import { TransformResponse } from "./classes/corruption/responses/TransformResponse";
+import { RemoveGridEntityResponse } from "./classes/corruption/responses/RemoveGridEntityResponse";
+import { SpawnEntityResponse } from "./classes/corruption/responses/SpawnEntityResponse";
 
 const IS_DEV = true;
 
@@ -200,6 +212,18 @@ function initClasses() {
     SpawnPickupResponse,
     LevelOneWorm,
     GetCollectibleResponse,
+    RemoveEntityResponse,
+    SpawnSlotResponse,
+    SpawnTearResponse,
+    SpawnEffectResponse,
+    SpawnGridEntityResponse,
+    GetTrinketResponse,
+    SpawnLiveBombResponse,
+    IfThenResponse,
+    IfThenElseResponse,
+    TransformResponse,
+    RemoveGridEntityResponse,
+    SpawnEntityResponse,
   );
 }
 

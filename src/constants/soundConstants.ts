@@ -8,3 +8,6 @@ export const PICKUP_SOUNDS = [
   SoundEffect.CHOIR_UNLOCK,
   SoundEffect.DEVIL_ROOM_DEAL,
 ] as const;
+
+// Not tested.
+export const MAX_SOUND_EFFECT_PITCH = 10;

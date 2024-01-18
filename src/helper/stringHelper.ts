@@ -34,7 +34,9 @@ export function stringStartsWithDigit(s: string): boolean {
  * @param s The string to add an 's' to.
  * @param n The number to check. If it's a boolean, will add an 's' if true.
  * @param careAboutEnding If true, will only add an 's' if the string doesn't end with an 's'. If
- *                        the string ends with an 's', it will add 'es' instead.
+ *                        the string ends with an 's', it will add 'es' instead. If the string ends
+ *                        with a 'y', will add 'ies' instead. Default true.
+ * @returns The string with an 's' added if necessary.
  */
 export function addTheS(
   s: string,
@@ -46,8 +48,14 @@ export function addTheS(
     n = n ? 2 : 1;
   }
   if (n !== 1) {
-    if (careAboutEnding && string.sub(s, -1) === "s") {
-      return `${s}es`;
+    if (careAboutEnding) {
+      const lastLetter = string.sub(s, -1);
+      if (lastLetter === "s") {
+        return `${s}es`;
+      }
+      if (lastLetter === "y") {
+        return `${string.sub(s, 1, -2)}ies`;
+      }
     }
     return `${s}s`;
   }
@@ -140,6 +148,8 @@ export function splitString(s: string, segments: number): readonly string[] {
 /**
  * Adds 'a' or 'an' to the start of a string, depending on whether the first letter is a vowel. If
  * the string already starts with an article, it will not add one.
+ *
+ * @returns The string with an article added.
  */
 export function addArticle(s: string): string {
   // Find the first word in the string.
@@ -149,7 +159,7 @@ export function addArticle(s: string): string {
   }
 
   // If the first word is an article, we don't need to add one.
-  if (articles.has(firstWord)) {
+  if (articles.has(firstWord.toLowerCase())) {
     return s;
   }
 

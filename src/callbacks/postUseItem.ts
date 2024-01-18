@@ -1,9 +1,6 @@
-import {
-  CollectibleType,
-  ModCallback,
-  UseFlag,
-} from "isaac-typescript-definitions";
-import { ModUpgraded } from "isaacscript-common";
+import type { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import { ModCallback } from "isaac-typescript-definitions";
+import type { ModUpgraded } from "isaacscript-common";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 import { bitflipPostUseItem } from "../features/items/bitflip";
 import { d14PostUseItem } from "../features/items/d14";
