@@ -62,23 +62,6 @@ export function getInvertedItemActionSet(
   return v.run.invertedItems.get(collectibleType);
 }
 
-/**
- * Retrieves the ActionSet attached to the inverted state of the collectible. Note that the
- * collectible passed can be non-inverted.
- */
-export function getAndSetInvertedPedestalActionSet(
-  collectible: EntityPickupCollectible,
-): InvertedItemActionSet {
-  return getAndSetInvertedItemActionSet(collectible.SubType);
-}
-
-/** If the Inverted Item */
-export function getInvertedPedestalActionSet(
-  collectible: EntityPickupCollectible,
-): InvertedItemActionSet | undefined {
-  return v.run.invertedItems.get(collectible.SubType);
-}
-
 /** Returns true if the Inverted Item is a passive item. */
 export function isInvertedItemPassive(
   collectibleType: CollectibleType,

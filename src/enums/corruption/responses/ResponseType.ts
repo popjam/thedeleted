@@ -43,7 +43,7 @@ export enum ResponseType {
   PLAY_MUSIC,
   GIVE_COSTUME,
   GIVE_STAT,
-  TRANSFORM,
+  TRANSFORM, // done.
   EXECUTE_COMMAND,
   SHOW_FORTUNE,
 

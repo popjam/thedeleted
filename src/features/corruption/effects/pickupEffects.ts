@@ -25,7 +25,7 @@ export function pickupEffectsInit(): void {
 export function getNonInvertedPickupActionSet(
   pickup: EntityPickup,
 ): NonInvertedPickupActionSet | undefined {
-  return v.run.pickup.get(mod["getPickupIndex"](pickup));
+  return v.run.pickup.get(mod.getPickupIndex(pickup));
 }
 
 /** Don't use this function. */

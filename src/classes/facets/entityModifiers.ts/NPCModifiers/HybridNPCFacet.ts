@@ -1,16 +1,29 @@
+/**
+ * This file contains the implementation of the `HybridNPCFacet` class and related functions. The
+ * `HybridNPCFacet` class is a facet that handles the behavior of hybrid NPCs, which are monsters
+ * that are a combination of two or more other monsters. The `spawnHybridNPC` function is used to
+ * spawn a hybrid NPC with the specified NPCs, and the `isHybridNPC` function is used to check if an
+ * NPC is a hybrid NPC. The file also includes helper functions for transforming the hybrid NPC and
+ * managing its state.
+ *
+ * Hybrid NPCs work by combining the characteristics and abilities of multiple NPCs into a single
+ * entity. They have a set of NPCs that are combined, and the currently active NPC determines the
+ * behavior and appearance of the hybrid NPC. The hybrid NPC can transform into a different NPC
+ * after a certain amount of time, and when it dies, it also kills the hidden counterparts at the
+ * same position.
+ */
+
 import {
   Callback,
   CallbackCustom,
   GAME_FRAMES_PER_SECOND,
   ModCallbackCustom,
   getEntityFromPtrHash,
-  getTSTLClassName,
   round,
 } from "isaacscript-common";
 import { Facet, initGenericFacet } from "../../../Facet";
 import type { NPCID } from "isaac-typescript-definitions";
 import { ModCallback } from "isaac-typescript-definitions";
-import { fprint } from "../../../../helper/printHelper";
 import { getRandomMapElementWithPredicate } from "../../../../helper/mapHelper";
 import { findSet } from "../../../../helper/setHelper";
 import { hideNPC, unhideNPC } from "./HideNPCFacet";
@@ -18,9 +31,11 @@ import { randomInRangeWithDecimalPrecision } from "../../../../types/general/Ran
 import type { Range } from "../../../../types/general/Range";
 import { spawnNPCID } from "../../../../helper/entityHelper/npcIDHelper";
 
-const DEFAULT_TRANSFORMATION_TIME_RANGE_SEC = [0.3, 1] as Range;
+// eslint-disable-next-line isaacscript/require-unannotated-const-assertions
+const DEFAULT_TRANSFORMATION_TIME_RANGE_SEC: Range = [0.3, 1] as const;
 const DECIMAL_PRECISION = 3;
 const STARTING_HP = 0;
+const MINIMUM_NPC_COUNT = 2;
 
 export interface HybridNPC {
   /** The NPCs that are combined. */
@@ -52,16 +67,10 @@ let FACET: Facet | undefined;
 class HybridNPCFacet extends Facet {
   @Callback(ModCallback.PRE_NPC_UPDATE)
   preNPCUpdate(npc: EntityNPC): boolean | undefined {
-    const ptrHash = GetPtrHash(npc);
-
-    // Find the HybridNPC that contains the current NPC.
-    const hybridNPC = findSet<HybridNPC>(
-      v.room.hybridNPCs,
-      (h) => h.current === ptrHash,
-    );
+    const hybridNPC = findHybridNPCByCurrentNPC(npc);
 
     if (hybridNPC === undefined) {
-      return;
+      return undefined;
     }
 
     // If the time is up, then we want to transform to the NPC.
@@ -76,19 +85,13 @@ class HybridNPCFacet extends Facet {
 
   @Callback(ModCallback.POST_NPC_DEATH)
   postNPCDeath(npc: EntityNPC): void {
-    const ptrHash = GetPtrHash(npc);
-
-    // Find the HybridNPC that contains the current NPC.
-    const hybridNPC = findSet<HybridNPC>(
-      v.room.hybridNPCs,
-      (h) => h.current === ptrHash,
-    );
+    const hybridNPC = findHybridNPCByCurrentNPC(npc);
 
     if (hybridNPC === undefined) {
       return;
     }
 
-    // We also want to remove the hidden counterparts.
+    // We also want to kill the hidden counterparts, at the same position.
     for (const npcPtrHash of hybridNPC.npcs.values()) {
       if (npcPtrHash === hybridNPC.current) {
         continue;
@@ -119,9 +122,12 @@ export function initHybridNPCFacet(): void {
  * @param position The position to spawn the Hybrid NPC at.
  * @param npcs The NPCs to spawn the Hybrid NPC with.
  */
-export function spawnHybridNPC(position: Vector, ...npcs: NPCID[]): EntityNPC {
+export function spawnHybridNPC(
+  position: Vector,
+  ...npcs: readonly NPCID[]
+): EntityNPC {
   // Must provide at least two NPCs.
-  if (npcs.length < 2) {
+  if (npcs.length < MINIMUM_NPC_COUNT) {
     error("You must provide at least two NPCs to spawn a hybrid NPC.");
   }
 
@@ -176,12 +182,7 @@ export function spawnHybridNPC(position: Vector, ...npcs: NPCID[]): EntityNPC {
 
 /** Returns true if the NPC is apart of a HybridNPC. */
 export function isHybridNPC(entityNPC: EntityNPC): boolean {
-  return (
-    findSet<HybridNPC>(
-      v.room.hybridNPCs,
-      (h) => h.current === GetPtrHash(entityNPC),
-    ) !== undefined
-  );
+  return findHybridNPCByCurrentNPC(entityNPC) !== undefined;
 }
 
 /** When the timer reaches 0 for a HybridNPC, it 'transforms'. */
@@ -199,7 +200,7 @@ function transform(hybrid: HybridNPC, currentNPC: EntityNPC) {
   // Find NPC that we transformed into.
   const newNPC = getEntityFromPtrHash(hybrid.current);
   if (newNPC === undefined) {
-    return undefined;
+    return;
   }
 
   // Update the new NPC's data to that of old NPC.
@@ -220,4 +221,10 @@ function getCountdown(range: Range): number {
     randomInRangeWithDecimalPrecision(range, DECIMAL_PRECISION) *
     GAME_FRAMES_PER_SECOND
   );
+}
+
+/** Find the HybridNPC that contains the current NPC. */
+function findHybridNPCByCurrentNPC(npc: EntityNPC): HybridNPC | undefined {
+  const ptrHash = GetPtrHash(npc);
+  return findSet<HybridNPC>(v.room.hybridNPCs, (h) => h.current === ptrHash);
 }

@@ -1,17 +1,14 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import {
   CollectibleSpriteLayer,
-  ModCallback,
   PlayerItemAnimation,
 } from "isaac-typescript-definitions";
 import type { PlayerIndex } from "isaacscript-common";
 import {
-  Callback,
   CallbackCustom,
   ModCallbackCustom,
   getEnumValues,
   getPlayerIndex,
-  getTSTLClassName,
 } from "isaacscript-common";
 import { PLAYER_PICKUP_ANIMATION_RENDER_OFFSET } from "../../constants/renderConstants";
 import { getCollectibleSpriteFromCache } from "../../features/general/spriteCache";

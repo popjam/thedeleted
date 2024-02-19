@@ -1,11 +1,7 @@
-import {
-  CollectibleAnimation,
-  ItemConfigChargeType,
-  type CollectibleType,
-  ItemType,
-} from "isaac-typescript-definitions";
+import { ItemType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import type { PickingUpItemCollectible } from "isaacscript-common";
-import { game, isColor, newCollectibleSprite } from "isaacscript-common";
+import { game, isColor } from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,
@@ -26,11 +22,8 @@ import type { CorruptedSoundEffect } from "../../../../interfaces/corruption/fun
 import { replaceCollectibleSpriteWithCorrupted } from "../../../facets/CorruptedCollectibleSpriteFacet";
 import { overridePickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import { ActionSet } from "../ActionSet";
-import { createNilLiteral } from "typescript-to-lua";
-import { CollectibleTypeCustom } from "../../../../enums/general/CollectibleTypeCustom";
-import { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
+import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
 import { INVERTED_ACTIVE_EID_ICON } from "../../../../constants/actionSetConstants";
-import { getTrackedPedestalInvertedActive } from "../../../../features/corruption/effects/activeItemTracker";
 
 const DEFAULT_QUALITY = 0;
 const DEFAULT_DESCRIPTION = "Beware...";
@@ -53,8 +46,8 @@ export abstract class InvertedItemActionSet extends ActionSet {
   ngo?: boolean;
 
   /**
-   * If this is not undefined, negative effects will carry over to the non-inverted pedestal the
-   * first time that the pedestal changes from inverted -> non-inverted.
+   * If this is true, negative effects will carry over to the non-inverted pedestal the first time
+   * that the pedestal changes from inverted -> non-inverted.
    */
   getNegativesCarryOver(): boolean {
     return this.ngo ?? false;
@@ -124,15 +117,9 @@ export abstract class InvertedItemActionSet extends ActionSet {
   /** Depending on the Icon form, does the relevant actions. If no icon exist, will generate one. */
   updateIcon(pickup: EntityPickup): void {
     const icon = this.getIcon();
-    if (isColor(icon)) {
-      const sprite = pickup.GetSprite();
-      sprite.Color = icon;
-      sprite.FlipX = true;
-    } else {
-      replaceCollectibleSpriteWithCorrupted(pickup as EntityPickupCollectible, {
-        ...icon,
-      });
-    }
+    replaceCollectibleSpriteWithCorrupted(pickup as EntityPickupCollectible, {
+      ...icon,
+    });
   }
 
   setIcon(icon: CorruptedCollectibleSprite): this {
@@ -210,7 +197,5 @@ export abstract class InvertedItemActionSet extends ActionSet {
     fprint(
       `Picked up inverted item ${this.getName()}, With Description: ${this.getDescription()}`,
     );
-
-    return undefined;
   }
 }

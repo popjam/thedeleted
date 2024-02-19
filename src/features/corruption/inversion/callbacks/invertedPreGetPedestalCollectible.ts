@@ -8,7 +8,6 @@ import {
   ColorDefault,
   getCollectibleName,
   getPlayerIndex,
-  isColor,
 } from "isaacscript-common";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
 import { fprint } from "../../../../helper/printHelper";
@@ -16,10 +15,6 @@ import { stopPickupSounds } from "../../../../helper/soundHelper";
 import { isGlitchedCollectibleSubType } from "../../../../helper/tmtrainerHelper";
 import { mod } from "../../../../mod";
 import { isZazzinatorAny } from "../../../../sets/zazzSets";
-import {
-  getAndSetInvertedItemActionSet,
-  getAndSetInvertedPedestalActionSet,
-} from "../../effects/itemEffects";
 import { getNonInvertedPickupActionSet } from "../../effects/pickupEffects";
 import {
   getLastPickedUpCollectibleData,
@@ -31,8 +26,7 @@ import { isPickupInverted } from "../pickupInversion";
 import { PickupStage } from "../../../../enums/general/PickupStage";
 import type { LastPickedUpCollectibleData } from "../../../../interfaces/corruption/inversion/LastPickedUpCollectibleData";
 import { removeTrackedPedestalInvertedActive } from "../../effects/activeItemTracker";
-import { getCustomActiveCurrentCharge } from "../customActives";
-import { ActiveSlot } from "isaac-typescript-definitions";
+import { getAndSetInvertedPedestalActionSet } from "../../../../helper/deletedSpecific/effects/pedestalEffects";
 
 /**
  * Upon picking up an item, but before it is added to ItemQueue. If the item pedestal is inverted,
@@ -64,7 +58,7 @@ function preGetPedestalNormal(
   const lastPickedUpCollectibleData: LastPickedUpCollectibleData = {
     collectibleType: pickup.SubType,
     pickupStage: PickupStage.PRE_GET_PEDESTAL,
-    pickupIndex: mod["getPickupIndex"](pickup),
+    pickupIndex: mod.getPickupIndex(pickup),
     inverted: false,
     pedestal: pickup,
     nonInvertedCharge: pickup.Charge,
@@ -127,18 +121,10 @@ function preGetPedestalZazz(
     return undefined;
   }
 
-  const iconIsColor = isColor(
-    getAndSetInvertedItemActionSet(
-      lastPickedUpCollectible.collectibleType,
-    ).getIcon(),
-  );
-
   // Stop pickup sound. We will play our own sound effect later.
   mod.runNextGameFrame(() => {
     stopPickupSounds();
-    if (!iconIsColor) {
-      pickup.GetSprite().Color = ColorDefault;
-    }
+    pickup.GetSprite().Color = ColorDefault;
   });
 
   /**
@@ -147,7 +133,7 @@ function preGetPedestalZazz(
    */
   if (isGlitchedCollectibleSubType(lastPickedUpCollectible.collectibleType)) {
     pickup.GetSprite().Color = Color(0, 0, 0, 0);
-  } else if (!iconIsColor) {
+  } else {
     clearCollectibleSprite(pickup);
   }
 

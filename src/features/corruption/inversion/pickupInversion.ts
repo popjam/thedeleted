@@ -35,7 +35,7 @@ export function pickupInversionInit(): void {
 export function isPickupInverted(pickup: EntityPickup): boolean {
   // if (isUselessPickup(pickup)) { return false; }
 
-  return v.level.isInverted.getAndSetDefault(mod["getPickupIndex"](pickup));
+  return v.level.isInverted.getAndSetDefault(mod.getPickupIndex(pickup));
 }
 
 /** Do not use. */
@@ -47,7 +47,7 @@ export function _setPedestalInversion(
     return;
   }
 
-  v.level.isInverted.set(mod["getPickupIndex"](collectible), inverted);
+  v.level.isInverted.set(mod.getPickupIndex(collectible), inverted);
 }
 
 /** Do not use. */

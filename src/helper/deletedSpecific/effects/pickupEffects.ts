@@ -1,12 +1,10 @@
 /** Functions related to non-inverted pickup corrupted effects. */
 
-import type { CollectibleType } from "isaac-typescript-definitions";
 import { PickupVariant } from "isaac-typescript-definitions";
 import type { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
 import { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import type { Action } from "../../../classes/corruption/actions/Action";
 import type { Response } from "../../../classes/corruption/responses/Response";
-import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import {
   _setPickupIndexActionSet,
   getNonInvertedPickupActionSet,
@@ -14,6 +12,7 @@ import {
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { mod } from "../../../mod";
 import { updatePickup } from "../inversion/updateInverted";
+import { getAndSetInvertedPedestalActionSet } from "./pedestalEffects";
 
 /**
  * Sets the ActionSet of the non-inverted pickup (which is unique per PickupIndex). Updates the
@@ -23,7 +22,7 @@ export function setNonInvertedPickupActionSet(
   pickup: EntityPickup,
   actionSet: NonInvertedPickupActionSet,
 ): void {
-  _setPickupIndexActionSet(mod["getPickupIndex"](pickup), actionSet);
+  _setPickupIndexActionSet(mod.getPickupIndex(pickup), actionSet);
   updatePickup(pickup);
   // if (isPickupInverted(pickup)) { }
 }
@@ -51,7 +50,7 @@ export function getAndSetNonInvertedPickupActionSet(
  */
 export function addEffectsToNonInvertedPickup(
   pickup: EntityPickup,
-  ...effects: Array<Response | Action>
+  ...effects: ReadonlyArray<Response | Action>
 ): void {
   const nonInvertedActionSet = getNonInvertedPickupActionSet(pickup);
   if (nonInvertedActionSet === undefined) {
@@ -68,6 +67,10 @@ export function addEffectsToNonInvertedPickup(
 /**
  * General function to get an ActionSet from an inverted or non-inverted pickup. Will take into
  * account if the pickup is inverted.
+ *
+ * @param pickup The pickup to get the ActionSet from.
+ *
+ * @returns The ActionSet of the pickup, or undefined if the pickup does not have an ActionSet.
  */
 export function getPickupActionSet(
   pickup: EntityPickup,
@@ -76,7 +79,10 @@ export function getPickupActionSet(
     pickup.Variant === PickupVariant.COLLECTIBLE && // Inverted Items.
     isPickupInverted(pickup as EntityPickupCollectible)
   ) {
-    return getAndSetInvertedItemActionSet(pickup.SubType as CollectibleType);
+    // TODO: Change to getAndSetTrackedInvertedItemActionSet().
+    return getAndSetInvertedPedestalActionSet(
+      pickup as EntityPickupCollectible,
+    );
   }
   return getNonInvertedPickupActionSet(pickup);
 }

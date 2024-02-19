@@ -12,6 +12,7 @@ import {
 } from "../lastPickedUpInverted";
 import { PickupStage } from "../../../../enums/general/PickupStage";
 import { fprint } from "../../../../helper/printHelper";
+import { getAndSetInvertedPedestalActionSet } from "../../../../helper/deletedSpecific/effects/pedestalEffects";
 
 /**
  * When the item goes into ItemQueue. Despite its name, tracks both inverted and non-inverted items.
@@ -39,7 +40,7 @@ export function invertedPreItemPickupCollectible(
     }
     const invertedActionSet =
       pickedUpItemData.actionSet ??
-      getAndSetInvertedItemActionSet(pickedUpItemData.collectibleType);
+      getAndSetInvertedPedestalActionSet(pickedUpItemData.pedestal);
     invertedActionSet.prePickupCollectible(player, pickingUpItem);
   }
 

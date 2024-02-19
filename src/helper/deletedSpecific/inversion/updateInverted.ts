@@ -13,7 +13,6 @@ import {
   setCollectibleSprite,
 } from "isaacscript-common";
 import { returnCorruptedCollectibleSpriteToNormal } from "../../../classes/facets/CorruptedCollectibleSpriteFacet";
-import { getAndSetInvertedItemActionSet } from "../../../features/corruption/effects/itemEffects";
 import { getNonInvertedPickupActionSet } from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
@@ -23,6 +22,7 @@ import {
   setSpecificEntityEIDDescriptionObject,
 } from "../../compatibility/EID/EIDHelper";
 import { fprint } from "../../printHelper";
+import { getAndSetInvertedPedestalActionSet } from "../effects/pedestalEffects";
 
 /**
  * Update pedestal is unique from the 'update pickup' function in that it needs to take into account
@@ -55,8 +55,8 @@ export function updatePedestal(
   }
   if (isPickupInverted(pedestal)) {
     fprint(`updatePedestal: ${pedestal.SubType} is inverted`);
-    const invertedActionSet = getAndSetInvertedItemActionSet(
-      pedestal.SubType,
+    const invertedActionSet = getAndSetInvertedPedestalActionSet(
+      pedestal,
       inputs,
     );
     invertedActionSet.updateAppearance(pedestal);

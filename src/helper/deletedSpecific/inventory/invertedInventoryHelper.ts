@@ -10,7 +10,6 @@ import {
   _addInvertedPassiveItemToCorruptInventory,
   _doesPlayerHaveInvertedPassiveItem,
   _removeInvertedPassiveItemFromCorruptInventory,
-  getPlayerMostRecentInvertedPassiveItem,
   getPlayerMostRecentInvertedPassiveItemCollectibleType,
 } from "../../../features/corruption/inventory/passiveItemInventory";
 import {
@@ -18,7 +17,6 @@ import {
   getCustomActiveInSlot,
 } from "../../../features/corruption/inversion/customActives";
 import type { InvertedActiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import type { PickupIndex } from "isaacscript-common";
 import { deepCopy } from "isaacscript-common";
 import {
   _addZazzActiveToPlayer,
@@ -35,13 +33,6 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
 import { _addInvertedActiveToPlayer } from "../../../classes/facets/CustomActiveFacet";
 import { addRemovedInvertedItemToTracker } from "../../../features/corruption/inventory/removedInvertedItems";
-import {
-  getAndRemoveTrackedPedestalInvertedActive,
-  getAndRemoveTrackedPedestalInvertedActiveFromPickupIndex,
-  getTrackedPedestalChargeFromPickupIndex,
-  removeTrackedPedestalChargeFromPickupIndex,
-  setTrackedPedestalCharge,
-} from "../../../features/corruption/effects/activeItemTracker";
 import { fprint } from "../../printHelper";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 
@@ -79,8 +70,9 @@ export function doesPlayerHaveInvertedItem(
  *                    any). This is necessary to ascertain if the item on the pedestal is being
  *                    tracked through the activeItemTracker, and if so, the tracked ActionSet should
  *                    be given to the player.
- * @param actionSet
- * @param activeActionSet
+ * @param actionSet The ActionSet to add to the player. This will override the ActionSet attached to
+ *                  the collectibleType. If undefined, will use the ActionSet attached to the
+ *                  collectibleType (or generate a new one if none exists).
  */
 export function addInvertedItemToPlayer(
   player: EntityPlayer,

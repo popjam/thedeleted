@@ -67,6 +67,10 @@ export class NonInvertedPickupActionSet extends ActionSet {
     });
   }
 
+  /**
+   * Adding a non-Inverted Pickup ActionSet to the player will immediately trigger its Responses,
+   * and add its Actions
+   */
   addToPlayer(player: EntityPlayer): void {
     const actionsAndResponses = deepCopy<Array<Action | Response>>(
       this.getEffects(),

@@ -16,6 +16,9 @@ import type { InvertedActiveActionSet } from "../../../classes/corruption/action
  *           is. Active items are unique to the slot they are in.
  * @property referenceCollectible - The inverted collectible that the dummy item represents. This
  *           should be set when adding collectibles to the removedItemTracker.
+ * @property InvertedActiveActionSet - If the removed item is an active item, this will be the
+ *           ActionSet for that item. The activeItemTracker can then register the pedestal as having
+ *           a pre-existing inverted active item.
  */
 interface RemovedZazzItem {
   playerIndex: PlayerIndex;
@@ -53,6 +56,9 @@ export function addRemovedInvertedItemToTracker(
   });
 }
 
+// Get list of removed inverted items in chronological order (oldest first). Mutable as we want to
+// be able to remove items from the list.
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function _getRemovedInvertedItems(): RemovedZazzItem[] {
   return v.room.removedItems;
 }

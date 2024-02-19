@@ -1,4 +1,5 @@
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { pickupInversionPreGetPedestalCollectible } from "../features/corruption/inversion/callbacks/invertedPreGetPedestalCollectible";
 
 export function preGetPedestalInit(mod: ModUpgraded): void {

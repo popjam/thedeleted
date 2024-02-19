@@ -1,3 +1,13 @@
+/**
+ * This file contains functions and data structures related to the passive item inventory in the
+ * game. It provides functionality to track and manipulate the inverted passive items of players.
+ * The inventory is implemented using a DefaultMap, which maps player indices to arrays of
+ * [CollectibleType, ActionSet] tuples. The functions in this file allow retrieving and modifying
+ * the inventory, as well as performing various operations on the items. Additionally, there is a
+ * function to re-add the actions associated with the inverted passive items to the action tracker
+ * after the game is continued.
+ */
+
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { PlayerIndex } from "isaacscript-common";
 import {
@@ -35,7 +45,7 @@ export function invertedItemCorruptInit(): void {
  */
 export function getPlayerInvertedPassiveItems(
   player: EntityPlayer,
-): Array<[CollectibleType, ActionSet]> {
+): ReadonlyArray<[CollectibleType, ActionSet]> {
   return defaultMapGetPlayer(v.run.items, player);
 }
 
@@ -62,14 +72,14 @@ export function getPlayerMostRecentInvertedPassiveItemCollectibleType(
 /** Returns an ordered array of CollectibleType for the passive inverted items a player has. */
 export function getPlayerInvertedPassiveItemCollectibleTypes(
   player: EntityPlayer,
-): CollectibleType[] {
+): readonly CollectibleType[] {
   return defaultMapGetPlayer(v.run.items, player).map(([item]) => item);
 }
 
 /** Returns an ordered array of ActionSets for the passive inverted items a player has. */
 export function getPlayerInvertedPassiveItemActionSets(
   player: EntityPlayer,
-): ActionSet[] {
+): readonly ActionSet[] {
   return defaultMapGetPlayer(v.run.items, player).map(
     ([, actionSet]) => actionSet,
   );

@@ -1,4 +1,8 @@
-import type { LevelStage } from "isaac-typescript-definitions";
+import type {
+  CollectibleType,
+  LevelStage,
+  NPCID,
+} from "isaac-typescript-definitions";
 import type { Range } from "../../types/general/Range";
 import type { COLORS } from "isaacscript-common";
 import type { Mods } from "../../enums/compatibility/Mods";
@@ -45,4 +49,10 @@ export interface NPCAttribute {
 
   /** NPC name ends with (capitalization doesn't matter). */
   endsWith?: string;
+
+  /** Banned NPCIDs. */
+  banned?: NPCID[];
+
+  /** NPCIDs that ignore other tags. */
+  forced?: NPCID[];
 }

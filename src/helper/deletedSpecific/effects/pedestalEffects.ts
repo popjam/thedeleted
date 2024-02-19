@@ -9,16 +9,18 @@ import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actio
  * with the provided builder or inputs (if any). If the inverted pedestal has a tracked active item,
  * will return the tracked active item's ActionSet. This will still work on non-Inverted pedestals.
  *
+ * This will still work if the pedestal is not inverted.
+ *
  * Does not deepCopy!
  *
- * @returns The inverted pedestal's ActionSet, or undefined if the pedestal is null.
+ * @returns The inverted pedestal's ActionSet.
  */
 export function getAndSetInvertedPedestalActionSet(
   collectible: EntityPickupCollectible,
   inputs?: ActionSetBuilderInput,
-): InvertedItemActionSet | undefined {
+): InvertedItemActionSet {
   if (collectible.SubType === CollectibleType.NULL) {
-    return undefined;
+    error("getAndSetInvertedPedestalActionSet: Pedestal is null.");
   }
 
   const trackedActiveItemActionSet =

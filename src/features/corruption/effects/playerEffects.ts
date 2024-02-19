@@ -7,7 +7,6 @@ import {
 import type { Action } from "../../../classes/corruption/actions/Action";
 import { isAction } from "../../../classes/corruption/actions/Action";
 import type { Response } from "../../../classes/corruption/responses/Response";
-import type { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";

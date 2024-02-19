@@ -1,16 +1,15 @@
 /**
- * Functions to do with setting a pedestal's inversion status. These functions will make sure to
- * update the pedestals as well.
+ * This file contains functions related to setting the inversion status of pedestals in the game. It
+ * provides the ability to set the inversion status of individual pedestals as well as all pedestals
+ * on a level. The functions handle updating the pedestals and applying effects based on the
+ * inversion status.
  */
 
 import { CollectibleType } from "isaac-typescript-definitions";
 import { getCollectibles } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { Morality } from "../../../enums/corruption/Morality";
-import {
-  doesInvertedItemHaveActionSet,
-  getAndSetInvertedItemActionSet,
-} from "../../../features/corruption/effects/itemEffects";
+import { doesInvertedItemHaveActionSet } from "../../../features/corruption/effects/itemEffects";
 import {
   _setAllPedestalInversion,
   _setPedestalInversion,
@@ -23,6 +22,7 @@ import { setInvertedItemActionSetIfNone } from "../effects/itemEffects";
 import { addEffectsToNonInvertedPickup } from "../effects/pickupEffects";
 import { updatePedestal } from "./updateInverted";
 import { fprint } from "../../printHelper";
+import { getAndSetInvertedPedestalActionSet } from "../effects/pedestalEffects";
 
 /**
  * Set one pedestal to a specific inversion status. This will also update the pedestal.
@@ -67,8 +67,8 @@ export function setPedestalInversion(
     doesInvertedItemHaveActionSet(collectible.SubType)
   ) {
     fprint(`Carrying over negative effects for ${collectible.SubType}..`);
-    const invertedActionSet = getAndSetInvertedItemActionSet(
-      collectible.SubType,
+    const invertedActionSet = getAndSetInvertedPedestalActionSet(
+      collectible,
       inputs,
     );
     if (invertedActionSet.getNegativesCarryOver()) {

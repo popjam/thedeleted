@@ -1,8 +1,4 @@
-import {
-  getNPCs,
-  getRandomArrayElementAndRemove,
-  getRandomSeed,
-} from "isaacscript-common";
+import { getNPCs, getRandomArrayElementAndRemove } from "isaacscript-common";
 import { fprint } from "../printHelper";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
 import {
@@ -22,12 +18,12 @@ import {
 } from "../../features/data/gameSets/gameEntitySets";
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import type { NPCID } from "isaac-typescript-definitions";
-import { Mods } from "../../enums/compatibility/Mods";
+import { addArticle } from "../stringHelper";
 import {
-  addArticle,
-  legibleString,
-  removeUnnecessaryWhiteSpace,
-} from "../stringHelper";
+  randomInRange,
+  randomInRangeOrNumber,
+} from "../../types/general/Range";
+import type { Range } from "../../types/general/Range";
 
 /** Determines if an NPC is modded by checking it against the set of all non-Modded NPCs. */
 export function isNPCModded(npc: EntityNPC): boolean {
@@ -213,6 +209,47 @@ export function getNPCFamily(npc: EntityNPC): Set<EntityNPC> {
 }
 
 /**
+ * Get an assortment of random NPCIDs, matching the specified NPCAttribute (or any NPCs if
+ * NPCAttribute is undefined).
+ *
+ * @param range The range of how many NPCs to get.
+ * @param npcAttribute The NPC Attribute to match (optional).
+ * @param seedOrRNG The seed or RNG you want to use (optional).
+ * @param unique Whether to make sure the NPCs are unique. If false, the same NPCID may be returned
+ *               multiple times. If true, the same NPCID will never be returned twice.
+ *
+ * @returns An array of NPCIDs or undefined if not enough NPCs were found to match the range.
+ */
+export function getRandomAssortmentOfNPCs(
+  range: Range | number,
+  npcAttribute?: NPCAttribute,
+  seedOrRNG?: Seed | RNG,
+  unique = true,
+): readonly NPCID[] | undefined {
+  const npcAttributeCopy = { ...npcAttribute };
+  const amount = randomInRangeOrNumber(range, seedOrRNG);
+  const npcIDs: NPCID[] = [];
+  for (let i = 0; i < amount; i++) {
+    const npcID = getRandomNPC(npcAttributeCopy, seedOrRNG);
+
+    // If we can't find an NPC, return undefined.
+    if (npcID === undefined) {
+      return undefined;
+    }
+
+    // NPC found, if 'unique' is true add it to banned so we don't get it again.
+    npcIDs.push(npcID);
+
+    if (unique) {
+      npcAttributeCopy.banned ??= [];
+      npcAttributeCopy.banned.push(npcID);
+    }
+  }
+
+  return npcIDs;
+}
+
+/**
  * Spawn a random NPC in the room, that matches the specified NPC Attributes.
  *
  * @param npcAttributes The NPC Attributes you want the random NPC to match (optional).
@@ -221,7 +258,7 @@ export function getNPCFamily(npc: EntityNPC): Set<EntityNPC> {
  */
 export function getRandomNPC(
   npcAttributes?: NPCAttribute,
-  seedOrRNG: Seed | RNG = getRandomSeed(),
+  seedOrRNG?: Seed | RNG,
 ): NPCID | undefined {
   let setToUse: ReadonlySet<NPCID>;
   if (npcAttributes === undefined) {
@@ -288,6 +325,18 @@ export function doesNPCIDMatchNPCAttributes(
   npcID: NPCID,
   npcAttributes: NPCAttribute,
 ): boolean {
+  // Forced match.
+  const { forced } = npcAttributes;
+  if (forced !== undefined && forced.includes(npcID)) {
+    return true;
+  }
+
+  // Banned from being matched.
+  const { banned } = npcAttributes;
+  if (banned !== undefined && banned.includes(npcID)) {
+    return false;
+  }
+
   // Flying.
   const { flying } = npcAttributes;
   if (flying !== undefined) {

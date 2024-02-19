@@ -43,7 +43,7 @@ export function removeTrackedPedestalChargeFromPickupIndex(
 export function getTrackedPedestalCharge(
   pedestal: EntityPickupCollectible,
 ): number | undefined {
-  return v.level.activeItems.get(mod["getPickupIndex"](pedestal)) ?? undefined;
+  return v.level.activeItems.get(mod.getPickupIndex(pedestal)) ?? undefined;
 }
 
 /** Set the charge of the tracked non-Inverted active item. */
@@ -51,13 +51,13 @@ export function setTrackedPedestalCharge(
   pedestal: EntityPickupCollectible,
   charge: number,
 ): void {
-  v.level.activeItems.set(mod["getPickupIndex"](pedestal), charge);
+  v.level.activeItems.set(mod.getPickupIndex(pedestal), charge);
 }
 
 export function removeTrackedPedestalInvertedActive(
   pedestal: EntityPickupCollectible,
 ): void {
-  v.level.invertedActiveItems.delete(mod["getPickupIndex"](pedestal));
+  v.level.invertedActiveItems.delete(mod.getPickupIndex(pedestal));
 }
 
 /**
@@ -71,17 +71,19 @@ export function setTrackedPedestalInvertedActive(
   pedestal: EntityPickupCollectible,
   actionSet: InvertedActiveActionSet,
 ): void {
-  v.level.invertedActiveItems.set(mod["getPickupIndex"](pedestal), actionSet);
+  v.level.invertedActiveItems.set(mod.getPickupIndex(pedestal), actionSet);
 }
 
 /**
  * Get the InvertedActiveActionSet associated with a pedestal, if it exists. This will still return
  * the action set if the pedestal is not inverted. Does not deepCopy.
+ *
+ * Note that 'getAndSetInvertedPedestalActionSet' should probably be used instead of this.
  */
 export function getTrackedPedestalInvertedActive(
   pedestal: EntityPickupCollectible,
 ): InvertedActiveActionSet | undefined {
-  return v.level.invertedActiveItems.get(mod["getPickupIndex"](pedestal));
+  return v.level.invertedActiveItems.get(mod.getPickupIndex(pedestal));
 }
 
 /**

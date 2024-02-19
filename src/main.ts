@@ -94,6 +94,7 @@ import { IfThenElseResponse } from "./classes/corruption/responses/IfThenElseRes
 import { TransformResponse } from "./classes/corruption/responses/TransformResponse";
 import { RemoveGridEntityResponse } from "./classes/corruption/responses/RemoveGridEntityResponse";
 import { SpawnEntityResponse } from "./classes/corruption/responses/SpawnEntityResponse";
+import { SpawnHybridNPCResponse } from "./classes/corruption/responses/SpawnHybridNPCResponse";
 
 const IS_DEV = true;
 
@@ -224,6 +225,7 @@ function initClasses() {
     TransformResponse,
     RemoveGridEntityResponse,
     SpawnEntityResponse,
+    SpawnHybridNPCResponse,
   );
 }
 

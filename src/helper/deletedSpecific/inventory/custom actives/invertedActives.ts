@@ -21,6 +21,7 @@ export function addNewInvertedActiveToPlayer(
     invertedActionSet,
     inputs,
   );
+
   newInvertedPedestal.Remove();
   const actionSet = getAndSetInvertedItemActionSet(newInvertedPedestal.SubType);
   if (isInvertedPassiveActionSet(actionSet)) {

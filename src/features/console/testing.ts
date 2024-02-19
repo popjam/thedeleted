@@ -30,7 +30,10 @@ import {
 } from "../../classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import { getRandomCollectibleType } from "../../helper/collectibleHelper";
+import {
+  getRandomCollectibleType,
+  spawnGlitchedCollectible,
+} from "../../helper/collectibleHelper";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
@@ -58,6 +61,8 @@ import { TransformResponse } from "../../classes/corruption/responses/TransformR
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 import { PickupID } from "../../enums/data/ID/PickupID";
+import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
+import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -91,19 +96,20 @@ export function addTestingCommands(): void {
   });
 }
 
-const responseToAdd = new TransformResponse().construct(
-  { grid: GridEntityType.ROCK },
-  new SpawnEntityResponse()
-    .construct(PickupID.BLACK_RUNE as EntityID)
-    .setAmountOfActivations(3),
-);
+const responseToAdd = new SpawnHybridNPCResponse().construct({
+  boss: false,
+  flying: true,
+} as NPCAttribute);
 const actionToAdd = new OnRoomAction().setResponse(responseToAdd);
 
 const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
+declare let ProceduralItemManager: any;
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  spawnNewInvertedCollectible(getQuickAccessiblePosition(), actionSetToAdd);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const proceduralItem = ProceduralItemManager.CreateProceduralItem(1, 1);
+  fprint(`Collectible subType: ${proceduralItem}`);
 }
 
 /** Test stuff as the developer with command 'eted'. */

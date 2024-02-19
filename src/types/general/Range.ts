@@ -13,12 +13,15 @@ export function randomInRange(range: Range, seedOrRNG?: Seed | RNG): number {
  * Get a random number in the range, inclusive on both ends. If a number is inputted to the
  * function, it will be returned.
  */
-export function randomInRangeOrNumber(rangeOrNumber: Range | number): number {
+export function randomInRangeOrNumber(
+  rangeOrNumber: Range | number,
+  seedOrRNG?: Seed | RNG,
+): number {
   if (typeof rangeOrNumber === "number") {
     return rangeOrNumber;
   }
 
-  return randomInRange(rangeOrNumber);
+  return randomInRange(rangeOrNumber, seedOrRNG);
 }
 
 /**

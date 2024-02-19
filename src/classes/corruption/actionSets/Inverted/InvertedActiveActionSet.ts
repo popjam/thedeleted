@@ -5,14 +5,8 @@ import {
   ItemType,
 } from "isaac-typescript-definitions";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
-import {
-  getLastPickedUpCollectibleData,
-  getPedestalPickingUpData,
-  setLastPickedUpCollectibleData,
-} from "../../../../features/corruption/inversion/lastPickedUpInverted";
 import { fprint } from "../../../../helper/printHelper";
 import { getZazzActiveFromCharge } from "../../../../maps/activeChargeToZazzActive";
-import { mod } from "../../../../mod";
 import { _addInvertedActiveToPlayer } from "../../../facets/CustomActiveFacet";
 import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import type { Action } from "../../actions/Action";
@@ -28,16 +22,7 @@ import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/effect
 import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import type { CustomActiveData } from "../../../../interfaces/corruption/actionSets/CustomActiveData";
-import {
-  getAndRemoveTrackedPedestalInvertedActive,
-  getTrackedPedestalInvertedActive,
-  removeTrackedPedestalInvertedActive,
-  setTrackedPedestalCharge,
-  setTrackedPedestalInvertedActive,
-} from "../../../../features/corruption/effects/activeItemTracker";
-import { getTotalCharges } from "../../../../helper/activeHelper";
 import { getTotalCharge } from "isaacscript-common";
-import { PickupStage } from "../../../../enums/general/PickupStage";
 
 const DEFAULT_NAME = "Corrupted Active Item";
 const DEFAULT_CHARGES = 4;

@@ -6,7 +6,6 @@ import {
   getLastPickedUpCollectibleData,
   getLastPickedUpNonInvertedCollectibleActionSet,
   setLastPickedUpCollectibleData,
-  updateLastPickedUpCollectible,
 } from "../lastPickedUpInverted";
 import { addInvertedItemToPlayer } from "../../../../helper/deletedSpecific/inventory/invertedInventoryHelper";
 import { ActiveSlot } from "isaac-typescript-definitions";

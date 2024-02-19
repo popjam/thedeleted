@@ -35,3 +35,7 @@ export const USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY: readonly UseFlag[] = [
   UseFlag.NO_ANIMATION,
   UseFlag.NO_ANNOUNCER_VOICE,
 ];
+
+export const HYBRID_NPC_MINIMUM_NPC_AMOUNT = 2;
+
+export const HYBRID_NPC_DEFAULT_NPC_AMOUNT = 2;

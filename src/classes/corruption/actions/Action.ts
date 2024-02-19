@@ -110,15 +110,13 @@ export abstract class Action {
     return this;
   }
 
-  /**
-   * Adds one or more responses to the action. Can provide one response, multiple responses or an
-   * array of responses.
-   */
+  /** Adds a Response to the Action. */
   setResponse(response: Response): this {
     this.r = response;
     return this;
   }
 
+  /** Get the Response attached to the Action. */
   getResponse(): Response | undefined {
     return this.r;
   }
