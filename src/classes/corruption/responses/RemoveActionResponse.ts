@@ -3,7 +3,7 @@ import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
   removeActionWithPredicate,
-  removeAllActionsWithPredicate,
+  _removeAllActionsWithPredicate,
 } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import type { Action } from "../actions/Action";
@@ -132,7 +132,7 @@ export class RemoveActionResponse extends Response {
     };
 
     if (removeAll) {
-      removeAllActionsWithPredicate(predicate, player, aT);
+      _removeAllActionsWithPredicate(predicate, player, aT);
     } else {
       removeActionWithPredicate(predicate, player, aT);
     }

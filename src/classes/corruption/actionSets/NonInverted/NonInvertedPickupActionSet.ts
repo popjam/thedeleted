@@ -1,7 +1,7 @@
 import { ColorDefault, deepCopy } from "isaacscript-common";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
-import { addActionsToTracker } from "../../../../features/corruption/effects/playerEffects";
+import { _addActionsToTracker } from "../../../../features/corruption/effects/playerEffects";
 import {
   getGenericEntityEIDDescriptionObject,
   setSpecificEntityEIDDescriptionObject,
@@ -77,7 +77,7 @@ export class NonInvertedPickupActionSet extends ActionSet {
     );
     for (const actionOrResponse of actionsAndResponses) {
       if (isAction(actionOrResponse)) {
-        addActionsToTracker(player, actionOrResponse);
+        _addActionsToTracker(player, actionOrResponse);
       } else {
         actionOrResponse.trigger({ player });
       }

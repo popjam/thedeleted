@@ -3,6 +3,11 @@ Corruption Classes:
 - Actions
 - ActionSets
 
+Game Sets
+- Entity Sets (modded, non-modded and mixed) (entity category & pickup type)
+- Sound Effect Sets (modded, non-modded and mixed)
+-
+
 Random Entity Functions:
 - getRandomNPC - done for now (needs color, stage, mass)
 - npcAttributeToText - done for now (needs color, stage, size, mass, health)

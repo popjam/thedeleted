@@ -1,7 +1,7 @@
 import { CollectibleType } from "isaac-typescript-definitions";
 import { deepCopy } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { addActionsToTracker } from "../../../features/corruption/effects/playerEffects";
+import { _addActionsToTracker } from "../../../features/corruption/effects/playerEffects";
 import { addCollectibleOrEffect } from "../../../helper/collectibleHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import type { Action } from "../actions/Action";
@@ -94,6 +94,6 @@ export class TemporaryCollectibleResponse extends Response {
     const isEffect = addCollectibleOrEffect(player, collectible);
 
     // Add removal Action.
-    addActionsToTracker(player, this.generateRemoveOn(isEffect));
+    _addActionsToTracker(player, this.generateRemoveOn(isEffect));
   }
 }

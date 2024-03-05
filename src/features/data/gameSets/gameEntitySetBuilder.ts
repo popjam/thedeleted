@@ -1,5 +1,5 @@
 import type { EntityID } from "isaacscript-common";
-import { getEnumValues } from "isaacscript-common";
+import { game, getEnumValues } from "isaacscript-common";
 import type { Mods } from "../../../enums/compatibility/Mods";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
 import {
@@ -33,6 +33,7 @@ import {
 } from "./gameEntitySets";
 import { getPickupTypeFromPickupID } from "../../../helper/entityHelper/pickupIDHelper";
 import type { PickupID } from "../../../enums/data/ID/PickupID";
+import { ModCallbackRepentogon } from "isaac-typescript-definitions";
 
 /**
  * Upon starting or continuing a game, re-populate the game EntityID sets

@@ -26,8 +26,8 @@ import { isInvertedActiveActionSet } from "../actionSetHelper";
 import type { InvertedPassiveActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import { isAction } from "../../../classes/corruption/actions/Action";
 import {
-  addActionsToTracker,
-  removeActionFromTracker,
+  _addActionsToTracker,
+  _removeActionFromTracker,
 } from "../../../features/corruption/effects/playerEffects";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { CollectibleTypeCustom } from "../../../enums/general/CollectibleTypeCustom";
@@ -52,8 +52,8 @@ export function doesPlayerHaveInvertedItem(
 }
 
 /**
- * Adds the ActionSet contents attached to the inverted CollectibleType to the player. Also adds a
- * logo to the inventory and updates the inventory.
+ * Adds the ActionSet associated with the specified CollectibleType to the player. Also adds a logo
+ * to the inventory and updates the inventory.
  *
  * For corrupted passives, actions will be added to the player, and effects will trigger
  * immediately.
@@ -127,7 +127,7 @@ function addInvertedActiveToPlayer(
     if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
       actionOrResponse.trigger({ player });
     } else {
-      addActionsToTracker(player, actionOrResponse);
+      _addActionsToTracker(player, actionOrResponse);
     }
   }
 
@@ -167,7 +167,7 @@ function addInvertedPassiveToPlayer(
       if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
         actionOrResponse.trigger({ player });
       } else {
-        addActionsToTracker(player, actionOrResponse);
+        _addActionsToTracker(player, actionOrResponse);
       }
     } else {
       actionOrResponse.trigger({ player });
@@ -210,7 +210,7 @@ export function removePlayerMostRecentInvertedPassive(
   // Remove the Actions from the tracker.
   const actionSet = getAndSetInvertedItemActionSet(collectibleType);
   for (const action of actionSet.getActions()) {
-    removeActionFromTracker(player, action);
+    _removeActionFromTracker(player, action);
   }
 
   // Remove physical item.

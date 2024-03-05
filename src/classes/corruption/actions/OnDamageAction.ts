@@ -14,6 +14,19 @@ export class OnDamageAction extends Action {
   override actionType = ACTION_TYPE;
   df?: DamageFlag;
 
+  /**
+   * Constructs an instance of the OnDamageAction class.
+   *
+   * @param damageFlag The damage flag to set (optional).
+   * @returns The instance of the OnDamageAction class.
+   */
+  construct(damageFlag?: DamageFlag): this {
+    if (damageFlag !== undefined) {
+      this.setDamageFlag(damageFlag);
+    }
+    return this;
+  }
+
   getDamageFlagText(): string {
     const damageFlag = this.df;
     if (damageFlag === undefined) {

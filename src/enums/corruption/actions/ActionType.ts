@@ -1,10 +1,10 @@
 /** The possible types of Actions. */
 export enum ActionType {
-  ON_FLOOR,
-  ON_ROOM,
-  ON_OBTAIN,
-  ON_DAMAGE,
-  ON_KILL,
+  ON_FLOOR, // done.
+  ON_ROOM, // done.
+  ON_OBTAIN, // done.
+  ON_DAMAGE, // done.
+  ON_KILL, // partly done.
   ON_DEATH,
   ON_TEAR,
   ON_ACTIVE_USE,

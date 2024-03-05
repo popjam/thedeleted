@@ -1,14 +1,16 @@
+import type { DamageFlag } from "isaac-typescript-definitions";
 import {
-  DamageFlag,
   EntityType,
   ModCallback,
   PlayerVariant,
 } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { triggerOnDamageActions } from "../classes/corruption/actions/OnDamageAction";
 import { PlayerTypeCustom } from "../enums/general/PlayerTypeCustom";
 import { temporaryItemsPlayerTakeDMG } from "../features/general/temporaryItems";
 import { iloveyouPlayerTakeDMG } from "../features/modes/ILOVEYOU/ILOVEYOU";
+import { fprint } from "../helper/printHelper";
 
 // Add new callback for every use case, unless order is needed.
 export function playerTakeDMGInit(mod: ModUpgraded): void {
@@ -36,6 +38,7 @@ function temporaryItems(
   source: EntityRef,
   countdownFrames: int,
 ): boolean | undefined {
+  fprint("playerTakeDMGInit: temporaryItems");
   return temporaryItemsPlayerTakeDMG(
     entity,
     amount,

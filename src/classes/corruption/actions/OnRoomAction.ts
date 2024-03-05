@@ -18,6 +18,19 @@ export class OnRoomAction extends Action {
   override actionType = ACTION_TYPE;
   rT?: RoomType;
 
+  /**
+   * Constructs an instance of the OnRoomAction class.
+   *
+   * @param roomType The room type to set (optional).
+   * @returns The instance of the OnRoomAction class.
+   */
+  construct(roomType?: RoomType): this {
+    if (roomType !== undefined) {
+      this.setRoomType(roomType);
+    }
+    return this;
+  }
+
   /** If set, will only fire on the specified RoomType. */
   getRoomType(): RoomType | undefined {
     return this.rT;

@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/informative-docs */
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import type { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
@@ -206,6 +207,16 @@ export abstract class Action {
     return this.i;
   }
 
+  /**
+   * Returns the interval text based on the interval value. If the interval is undefined, an empty
+   * string is returned. If the interval is a number and equals the default interval, an empty
+   * string is returned. Otherwise, the interval value is converted to a string and appended with "
+   * times".
+   *
+   * @returns The interval text.
+   *
+   * @example 1-3 -> "1-3 times"
+   */
   getIntervalText(): string {
     const interval = this.getInterval();
     if (interval === undefined) {

@@ -12,6 +12,15 @@ export class OnObtainAction extends Action {
   override actionType = ActionType.ON_OBTAIN;
 
   /**
+   * Constructs an instance of the OnObtainAction class.
+   *
+   * @returns The instance of the OnObtainAction class.
+   */
+  construct(): this {
+    return this;
+  }
+
+  /**
    * Overrides any ActionText and provides a 'dummy' value, which is randomly chosen from a set.
    *
    * @example 'On uninstalling isaac, ' ...

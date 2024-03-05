@@ -10,7 +10,13 @@ const ACTION_TYPE = ActionType.ON_KILL;
 export class OnKillAction extends Action {
   override actionType = ACTION_TYPE;
 
-  // Additional Text manipulation for 'RoomType' modifier.
+  /**
+   * Returns the action text for the OnKillAction. If the action text is overridden, it returns the
+   * overridden text. Otherwise, it constructs the action text based on the fireAfterThenRemove
+   * value.
+   *
+   * @returns The action text.
+   */
   override getActionText(): string {
     // If overridden.
     if (this.oat !== undefined) {

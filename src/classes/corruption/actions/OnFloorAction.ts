@@ -9,8 +9,7 @@ import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_FLOOR;
-const SINGULAR_NUMBER = 1;
-const PLURAL_NUMBER = 2;
+
 const DEFAULT_INTERVAL = 1;
 
 /**
@@ -21,6 +20,17 @@ const DEFAULT_INTERVAL = 1;
 export class OnFloorAction extends Action {
   override actionType = ACTION_TYPE;
   lS?: LevelStage;
+
+  /**
+   * Constructs an instance of the OnFloorAction class.
+   *
+   * @param levelStage The level stage for the action. Undefined for all.
+   * @returns The constructed instance of the OnFloorAction class.
+   */
+  construct(levelStage?: LevelStage | undefined): this {
+    this.lS = levelStage;
+    return this;
+  }
 
   /** If set, will only fire on the specified LevelStage. */
   getLevelStage(): LevelStage | undefined {
@@ -79,12 +89,12 @@ export class OnFloorAction extends Action {
     } else if (fireAfterThenRemove === undefined) {
       text += `every ${this.getIntervalText()} ${
         this.getLevelStageText(intervalNoRange) ??
-        `${addTheS("floor", intervalNoRange)}`
+        addTheS("floor", intervalNoRange)
       }`;
     } else {
       text += `up to ${fireAfterThenRemove} times, every ${this.getIntervalText()} ${
         this.getLevelStageText(intervalNoRange) ??
-        `${addTheS("floor", intervalNoRange)}`
+        addTheS("floor", intervalNoRange)
       }`;
     }
     text += ", ";

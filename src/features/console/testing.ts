@@ -3,6 +3,7 @@ import {
   BackdropType,
   CollectibleType,
   EntityType,
+  FamiliarVariant,
   GridEntityType,
 } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
@@ -23,6 +24,7 @@ import {
   setBackdrop,
   spawnGridEntity,
   gridPositionToWorldPosition,
+  removeAllFamiliars,
 } from "isaacscript-common";
 import {
   freezeAllNPCsInRoom,
@@ -63,6 +65,14 @@ import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 import { PickupID } from "../../enums/data/ID/PickupID";
 import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
+import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
+import { GetTrinketResponse } from "../../classes/corruption/responses/GetTrinketResponse";
+import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
+import { OnDeathAction } from "../../classes/corruption/actions/OnDeathAction";
+import { playerAddTemporaryCollectible } from "../general/temporaryItems";
+import { TemporaryEffectType } from "../../enums/general/TemporaryEffectType";
+import { spawnFamiliarID } from "../../helper/entityHelper/familiarHelper";
+import { FamiliarID } from "../../enums/data/ID/FamiliarID";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -103,14 +113,9 @@ const responseToAdd = new SpawnHybridNPCResponse().construct({
 const actionToAdd = new OnRoomAction().setResponse(responseToAdd);
 
 const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
-declare let ProceduralItemManager: any;
 
 /** Test stuff as the developer with command 'del'. */
-export function testingFunction1(): void {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const proceduralItem = ProceduralItemManager.CreateProceduralItem(1, 1);
-  fprint(`Collectible subType: ${proceduralItem}`);
-}
+export function testingFunction1(): void {}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {

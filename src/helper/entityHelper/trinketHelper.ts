@@ -11,6 +11,7 @@ import {
   getConstituentsFromEntityID,
   getPlayerTrinkets,
   getRandomSetElement,
+  log,
 } from "isaacscript-common";
 import type { PickupID } from "../../enums/data/ID/PickupID";
 import { fprint } from "../printHelper";

@@ -48,7 +48,11 @@ export function pickupInversionPreGetPedestalCollectible(
   return preGetPedestalNormal(player, pickup, isInverted);
 }
 
-// PickupStage.PRE_GET_PEDESTAL.
+/**
+ * This function handles the logic for when a player picks up a normal (non-ZAZZ) item from a
+ * pedestal. It checks if the item is inverted and updates the game state accordingly. It also
+ * tracks the last picked up item and handles special cases like glitched items.
+ */
 function preGetPedestalNormal(
   player: EntityPlayer,
   pickup: EntityPickupCollectible,

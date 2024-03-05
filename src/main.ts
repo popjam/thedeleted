@@ -95,6 +95,8 @@ import { TransformResponse } from "./classes/corruption/responses/TransformRespo
 import { RemoveGridEntityResponse } from "./classes/corruption/responses/RemoveGridEntityResponse";
 import { SpawnEntityResponse } from "./classes/corruption/responses/SpawnEntityResponse";
 import { SpawnHybridNPCResponse } from "./classes/corruption/responses/SpawnHybridNPCResponse";
+import { OnDeathAction } from "./classes/corruption/actions/OnDeathAction";
+import { preCustomReviveInit } from "./callbacks/preCustomRevive";
 
 const IS_DEV = true;
 
@@ -166,6 +168,7 @@ function initCallbacks() {
   preNewLevelReorderedInit(mod);
   postEntityRemoveInit(mod);
   postNPCUpdateInit(mod);
+  preCustomReviveInit(mod);
 }
 
 /** Initialize External mods if they exist. */
@@ -200,6 +203,7 @@ function initClasses() {
     OnObtainAction,
     OnRoomAction,
     OnKillAction,
+    OnDeathAction,
     UseActiveItemResponse,
     WaitThenTriggerResponse,
     TriggerRandomResponse,

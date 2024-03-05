@@ -5,9 +5,10 @@ import { Response } from "./Response";
 import { getRandomTrinket } from "../../../helper/entityHelper/trinketHelper";
 import { getTrinketNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
-import { getTrinketName, smeltTrinket } from "isaacscript-common";
+import { getTrinketName, log, smeltTrinket } from "isaacscript-common";
 import { getEIDTextSetting } from "../../../features/settings/EIDSettings";
 import { EIDObjectDisplaySetting } from "../../../enums/settings/EIDObjectDisplaySetting";
+import { fprint } from "../../../helper/printHelper";
 
 const DEFAULT_TRINKET = TrinketType.BROKEN_MAGNET;
 const NON_GULP_VERB = "get";
@@ -128,6 +129,8 @@ export class GetTrinketResponse extends Response {
     const shouldGulp = this.getGulpSetting();
     const trinket = this.calculateTrinket();
     const player = triggerData.player ?? Isaac.GetPlayer();
+
+    log(`Giving player trinket: ${trinket}`);
 
     if (shouldGulp) {
       smeltTrinket(player, trinket);

@@ -38,4 +38,9 @@ export interface TriggerData {
   // If true, the SpawnGridEntity response should be triggered on the next frame. This will also
   // prevent it from returning any spawned grid entities.
   shouldSpawnGridEntityResponseDelay?: boolean;
+
+  // If the Action is onDeath.
+  onDeathAction?: {
+    player: EntityPlayer;
+  };
 }

@@ -35,8 +35,8 @@ import {
 } from "../../helper/deletedSpecific/inventory/custom actives/customActiveHelper";
 import { renderCorruptedCollectibleSpriteInSlot } from "../../helper/deletedSpecific/funnySprites";
 import {
-  addActionsToTracker,
-  removeActionFromTracker,
+  _addActionsToTracker,
+  _removeActionFromTracker,
 } from "../../features/corruption/effects/playerEffects";
 import { ActionType } from "../../enums/corruption/actions/ActionType";
 import { getTotalCharges } from "../../helper/activeHelper";
@@ -185,7 +185,7 @@ class CustomActiveFacet extends Facet {
         const actions = customActive
           .getActions()
           .filter((action) => action.actionType !== ActionType.ON_OBTAIN);
-        addActionsToTracker(player, ...actions);
+        _addActionsToTracker(player, ...actions);
       }
     }
   }
@@ -351,7 +351,7 @@ function checkActiveRemoved(
 
   // Remove the Actions from the tracker.
   for (const action of active.getActions()) {
-    removeActionFromTracker(player, action);
+    _removeActionFromTracker(player, action);
   }
 
   // Track removed item.

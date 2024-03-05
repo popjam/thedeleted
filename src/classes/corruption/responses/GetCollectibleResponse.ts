@@ -1,4 +1,4 @@
-import type { CollectibleType } from "isaac-typescript-definitions";
+import { CollectibleType } from "isaac-typescript-definitions";
 import { getCollectibleName } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -17,10 +17,12 @@ import { fprint } from "../../../helper/printHelper";
 import { addTheS } from "../../../helper/stringHelper";
 
 /** Defaults to The Poop if no activeItem is set. */
-const EMPTY_COLLECTIBLE_TEXT = "nothing";
+const EMPTY_COLLECTIBLE_TEXT = "a random collectible";
+const EMPTY_COLLECTIBLE_TEXT_PLURAL = "random collectibles";
 const FIRST_TIME_PICKING_UP = true;
 const VERB = "get";
 const VERB_PARTICIPLE = "getting";
+const DEFAULT_COLLECTIBLE = CollectibleType.POOP;
 
 /**
  * This Response gives the player collectibles. The collectible can be a specific item, or a random
@@ -36,15 +38,24 @@ export class GetCollectibleResponse extends Response {
   override responseType: ResponseType = ResponseType.GET_COLLECTIBLE;
   private aT?: CollectibleType | CollectibleAttribute;
 
-  /** Alternative constructor so SaveData works with class. */
+  /**
+   * Constructs a new instance of the GetCollectibleResponse class.
+   *
+   * @param collectible The collectible type or attribute. Leave undefined to get a random
+   *                    collectible.
+   * @param morality The morality value.
+   * @returns The constructed GetCollectibleResponse instance.
+   */
   construct(
-    collectible: CollectibleType | CollectibleAttribute,
+    collectible?: CollectibleType | CollectibleAttribute,
     morality?: Morality,
   ): this {
     if (morality !== undefined) {
       this.mo = morality;
     }
-    this.aT = collectible;
+    if (collectible !== undefined) {
+      this.aT = collectible;
+    }
     return this;
   }
 
@@ -67,12 +78,12 @@ export class GetCollectibleResponse extends Response {
    * If a collectible can not be found, returns undefined (which will mean this Response will not
    * fire properly).
    */
-  calculateCollectible(): CollectibleType | undefined {
+  calculateCollectible(): CollectibleType {
     const collectible = this.getCollectible();
-    if (typeof collectible === "object") {
-      return getRandomCollectibleType(collectible);
+    if (typeof collectible === "number") {
+      return collectible;
     }
-    return collectible;
+    return getRandomCollectibleType(collectible) ?? DEFAULT_COLLECTIBLE;
   }
 
   /**
@@ -139,7 +150,9 @@ export class GetCollectibleResponse extends Response {
     if (typeof collectible === "object") {
       text += ` ${collectibleAttributeToText(collectible, isMultiple)}`;
     } else if (collectible === undefined) {
-      text += ` ${addTheS(EMPTY_COLLECTIBLE_TEXT, isMultiple)}`;
+      text += isMultiple
+        ? EMPTY_COLLECTIBLE_TEXT_PLURAL
+        : EMPTY_COLLECTIBLE_TEXT;
     } else {
       text += ` ${getCollectibleNameWithEIDSetting(
         collectible,

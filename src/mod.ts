@@ -22,6 +22,7 @@ const MOD_FEATURES = [
   ISCFeature.ROOM_HISTORY,
   ISCFeature.DISABLE_INPUTS,
   ISCFeature.PLAYER_COLLECTIBLE_TRACKING,
+  ISCFeature.CUSTOM_REVIVE,
 ] as const;
 // export const ItemDisplayLibrary = CCO.ItemDisplay.API;
 

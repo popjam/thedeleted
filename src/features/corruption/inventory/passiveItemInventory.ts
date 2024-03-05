@@ -19,7 +19,7 @@ import type { ActionSet } from "../../../classes/corruption/actionSets/ActionSet
 import { findLastIndexOfArray } from "../../../helper/arrayHelper";
 import { mod } from "../../../mod";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
-import { addActionsToTracker } from "../effects/playerEffects";
+import { _addActionsToTracker } from "../effects/playerEffects";
 
 /**
  * We use this inventory to track a players' inverted passive items (in order). Inverted active
@@ -150,7 +150,7 @@ export function itemInventoryPostGameContinuedReordered(): void {
       const actions = actionSet
         .getActions()
         .filter((action) => action.actionType !== ActionType.ON_OBTAIN);
-      addActionsToTracker(player, ...actions);
+      _addActionsToTracker(player, ...actions);
     }
   }
 }

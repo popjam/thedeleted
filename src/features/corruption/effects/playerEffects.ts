@@ -27,6 +27,18 @@ const v = {
   },
 };
 
+const vPermanent = {
+  run: {
+    /**
+     * Permanent Actions are Actions given to the player that are not tied to an item. These need to
+     * be a separate map as they are saved to disk.
+     */
+    playerActions: new DefaultMap<PlayerIndex, Map<ActionType, Action[]>>(
+      playerActionsCreateMap,
+    ),
+  },
+};
+
 /**
  * We are no longer saving player effects to disk. Instead, we save player ActionSets to disk, and
  * each time the game is loaded, we re-create the player effects from the ActionSets. This allows us
@@ -36,13 +48,21 @@ const v = {
  * When an ActionSet is added to the player, we also add its Actions here. They both share the same
  * space in memory, so we can easily access them from either place without having to worry about
  * syncing them.
+ *
+ * An additional 'playerEffectsPermanent' map is used to store permanent effects that are not tied
+ * to an item. These are saved to disk and persist on the player until a new run or they are
+ * manually removed.
  */
 export function playerEffectsInit(): void {
   mod.saveDataManager("playerEffects", v, false);
+  mod.saveDataManager("playerEffectsPermanent", vPermanent);
 }
 
-/** Removes the specified Action from the tracker, by checking if they reference the same object. */
-export function removeActionFromTracker(
+/**
+ * Removes the specified Action from the tracker, by checking if they reference the same object.
+ * This shouldn't get called outside of specific circumstances.
+ */
+export function _removeActionFromTracker(
   player: EntityPlayer,
   action: Action,
 ): void {
@@ -81,8 +101,11 @@ export function getNumActions(player: EntityPlayer): int {
  *
  * Actions added through this method that are not saved upon exiting, and should generally only be
  * used upon adding an ActionSet!
+ *
+ * This should not be used outside of specific scenarios, use 'addPermanentActionsToPlayer' instead,
+ * as this will not save the actions to disk.
  */
-export function addActionsToTracker(
+export function _addActionsToTracker(
   player: EntityPlayer,
   ...actions: Action[]
 ): void {
@@ -99,13 +122,13 @@ export function addActionsToTracker(
  * Actions added through this method that are not saved upon exiting, and should generally only be
  * used upon adding an ActionSet!
  */
-export function addActionOrResponseToTracker(
+export function _addActionOrResponseToTracker(
   player: EntityPlayer,
   ...effects: Array<Action | Response>
 ): void {
   for (const effect of effects) {
     if (isAction(effect)) {
-      addActionsToTracker(player, effect);
+      _addActionsToTracker(player, effect);
     } else {
       effect.trigger({ player });
     }
@@ -113,11 +136,11 @@ export function addActionOrResponseToTracker(
 }
 
 /** Removes actions that are flagged for removal from the player. */
-export function removeFlaggedActionsOfType(
+export function _removeFlaggedActionsOfType(
   player: EntityPlayer,
   actionType: ActionType,
 ): void {
-  removeAllActionsWithPredicate(
+  _removeAllActionsWithPredicate(
     (action: Action) => action.getFlagForRemoval(),
     player,
     actionType,
@@ -170,11 +193,11 @@ export function removeActionWithPredicate(
  * mentioned, will remove from all players. If no actionType is mentioned, will remove from all
  * actionTypes. Returns an array of the removed actions, which will be empty if nothing matches.
  */
-export function removeAllActionsWithPredicate(
+export function _removeAllActionsWithPredicate(
   predicate: (action: Action) => boolean,
   player?: EntityPlayer,
   actionType?: ActionType,
-): Action[] {
+): readonly Action[] {
   const playersLoop = player === undefined ? getPlayers() : [player];
   const removedActions: Action[] = [];
 
@@ -220,14 +243,16 @@ export function triggerPlayerActionsByType(
   player: EntityPlayer,
   actionType: ActionType,
   triggerData: TriggerData,
-): void {
+): readonly unknown[] {
   triggerData.player ??= player;
   let anyFlaggedForRemoval = false as boolean;
   const playerActionsOfType = getAndSetActionArray(player, actionType);
+  const returnValues: unknown[] = [];
   for (const action of playerActionsOfType) {
     fprint(`Triggering: ${action.getText()}`);
     triggerData.action = action;
-    action.trigger({ ...triggerData });
+    const returnValue = action.trigger({ ...triggerData });
+    returnValues.push(returnValue);
     if (action.ffR === true) {
       anyFlaggedForRemoval = true;
     }
@@ -250,6 +275,8 @@ export function triggerPlayerActionsByType(
       index--;
     }
   }
+
+  return returnValues;
 }
 
 /**
