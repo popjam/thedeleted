@@ -57,32 +57,17 @@ export class OnRoomAction extends Action {
     return undefined;
   }
 
-  // Additional Text manipulation for 'RoomType' modifier.
-  override getActionText(): string {
-    // If overridden.
-    if (this.oat !== undefined) {
-      return this.oat;
+  // Override the trigger clause for OnRoomAction.
+  protected override getTriggerClause(): string {
+    const amount = this.getInterval() ?? 1;
+    let intervalNoRange = amount;
+    if (typeof intervalNoRange !== "number") {
+      intervalNoRange = intervalNoRange[1];
     }
-
-    let text = "";
-    const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove === undefined) {
-      const intervalText = this.getIntervalText();
-      text +=
-        intervalText === ""
-          ? `every ${this.getRoomTypeText(SINGULAR_NUMBER) ?? "room"}`
-          : `every ${intervalText} ${
-              this.getRoomTypeText(PLURAL_NUMBER) ?? "rooms"
-            }`;
-    } else if (fireAfterThenRemove === 1) {
-      text += `next ${this.getRoomTypeText(fireAfterThenRemove) ?? "room"}`;
-    } else {
-      text += `after ${fireAfterThenRemove} ${
-        this.getRoomTypeText(fireAfterThenRemove) ?? "rooms"
-      }`;
-    }
-    text += ", ";
-    return text;
+    return `you enter ${
+      this.getRoomTypeText(intervalNoRange) ??
+      addTheS("a room", intervalNoRange)
+    }`;
   }
 
   override trigger(triggerData: TriggerData): void {

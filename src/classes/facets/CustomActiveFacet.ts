@@ -27,7 +27,7 @@ import {
   getAllCustomActives,
   getAllCustomActivesWithSlot,
   getCustomActiveInSlot,
-  setCustomActiveInSlot,
+  _setCustomActiveInSlot,
 } from "../../features/corruption/inversion/customActives";
 import {
   _removeZazzActiveFromPlayer,
@@ -82,8 +82,8 @@ class CustomActiveFacet extends Facet {
         slot2Active !== undefined &&
         player.GetActiveItem(ActiveSlot.SECONDARY) === CollectibleType.NULL
       ) {
-        setCustomActiveInSlot(player, ActiveSlot.PRIMARY, slot2Active);
-        setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
+        _setCustomActiveInSlot(player, ActiveSlot.PRIMARY, slot2Active);
+        _setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
       }
       return;
     }
@@ -126,7 +126,7 @@ class CustomActiveFacet extends Facet {
     }
 
     fprint(
-      `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getCharges()}`,
+      `Using inverted active item with chargeType: ${actionSet.getChargeType()}, charge: ${actionSet.getTotalCharges()}`,
     );
     return actionSet.use(player, activeSlot as ActiveSlot);
   }
@@ -170,8 +170,8 @@ class CustomActiveFacet extends Facet {
         primaryActive !== undefined &&
         !isZazzinatorActive(player.GetActiveItem(ActiveSlot.PRIMARY))
       ) {
-        setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primaryActive);
-        setCustomActiveInSlot(player, ActiveSlot.PRIMARY, undefined);
+        _setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primaryActive);
+        _setCustomActiveInSlot(player, ActiveSlot.PRIMARY, undefined);
       }
     }
   }
@@ -226,27 +226,27 @@ export function _addInvertedActiveToPlayer(
   // Pocket item.
   if (slot === ActiveSlot.POCKET) {
     fprint("Adding inverted active to pocket slot...");
-    setCustomActiveInSlot(player, ActiveSlot.POCKET, actionSet);
+    _setCustomActiveInSlot(player, ActiveSlot.POCKET, actionSet);
     return;
   }
 
   // Single use pocket item (unimplemented).
   if (slot === ActiveSlot.POCKET_SINGLE_USE) {
     fprint("Adding inverted active to single use pocket slot...");
-    setCustomActiveInSlot(player, ActiveSlot.POCKET_SINGLE_USE, actionSet);
+    _setCustomActiveInSlot(player, ActiveSlot.POCKET_SINGLE_USE, actionSet);
     return;
   }
 
   if (player.HasCollectible(CollectibleType.SCHOOLBAG)) {
     fprint("Player has schoolbag, switching primary slot to secondary slot...");
-    setCustomActiveInSlot(
+    _setCustomActiveInSlot(
       player,
       ActiveSlot.SECONDARY,
       getCustomActiveInSlot(player, ActiveSlot.PRIMARY),
     );
   }
   fprint("Adding inverted active to primary slot...");
-  setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet);
+  _setCustomActiveInSlot(player, ActiveSlot.PRIMARY, actionSet);
 }
 
 /** This function fires when the 'drop' (switch active) key is pressed. */
@@ -280,8 +280,8 @@ function dropKeyPressed(player: EntityPlayer) {
 
   // Switch the custom actives.
   fprint("Switching custom actives in primary and secondary slot...");
-  setCustomActiveInSlot(player, ActiveSlot.PRIMARY, secondarySlotCustomActive);
-  setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primarySlotCustomActive);
+  _setCustomActiveInSlot(player, ActiveSlot.PRIMARY, secondarySlotCustomActive);
+  _setCustomActiveInSlot(player, ActiveSlot.SECONDARY, primarySlotCustomActive);
 }
 
 /**
@@ -316,7 +316,7 @@ function updateCustomActiveCurrentCharge(
   // Do not update the charge when player is picking up an item as this messed up extra battery
   // charge.
   if (!isPlayerPickingUpItem(player)) {
-    actionSet.setCurrentCharge(charge);
+    actionSet._setCurrentCharge(charge);
   }
 }
 
@@ -363,7 +363,7 @@ function checkActiveRemoved(
   );
 
   fprint(
-    `removed custom active charge at time of removal: ${active.getCurrentCharge()}`,
+    `removed custom active charge at time of removal: ${active._getCurrentCharge()}`,
   );
 
   // Edge case where custom active in slot1 is removed, and player has schoolbag. In this case, we
@@ -372,12 +372,12 @@ function checkActiveRemoved(
     player.HasCollectible(CollectibleType.SCHOOLBAG) &&
     removedActiveSlot === ActiveSlot.PRIMARY
   ) {
-    setCustomActiveInSlot(
+    _setCustomActiveInSlot(
       player,
       ActiveSlot.PRIMARY,
       getCustomActiveInSlot(player, ActiveSlot.SECONDARY),
     );
-    setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
+    _setCustomActiveInSlot(player, ActiveSlot.SECONDARY, undefined);
 
     fprint(
       `Removed custom active with type: ${active.oi} in slot1, moving slot2 to slot1.`,
@@ -386,7 +386,7 @@ function checkActiveRemoved(
   }
 
   // Update data.
-  setCustomActiveInSlot(player, removedActiveSlot, undefined);
+  _setCustomActiveInSlot(player, removedActiveSlot, undefined);
 
   fprint(
     `Removed custom active with type: ${active.oi} from slot ${removedActiveSlot}.`,

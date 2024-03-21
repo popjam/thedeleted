@@ -3,6 +3,7 @@ import {
   DefaultMap,
   defaultMapGetPlayer,
   getPlayers,
+  isActiveCollectible,
 } from "isaacscript-common";
 import type { Action } from "../../../classes/corruption/actions/Action";
 import { isAction } from "../../../classes/corruption/actions/Action";
@@ -11,6 +12,8 @@ import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { fprint } from "../../../helper/printHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
+import { _removeActionFromCorruptInventory } from "../inventory/passiveItemInventory";
+import { _removeActionFromCustomActive } from "../inversion/customActives";
 
 const playerActionsCreateMap = () => new Map<ActionType, Action[]>();
 
@@ -24,38 +27,78 @@ const v = {
     playerActions: new DefaultMap<PlayerIndex, Map<ActionType, Action[]>>(
       playerActionsCreateMap,
     ),
-  },
-};
 
-const vPermanent = {
-  run: {
     /**
-     * Permanent Actions are Actions given to the player that are not tied to an item. These need to
-     * be a separate map as they are saved to disk.
+     * Temporary Action ID - For Actions added to the tracker that are independent of ActionSets and
+     * are permanent, they need a unique ID so they can be retrieved for removal.
      */
-    playerActions: new DefaultMap<PlayerIndex, Map<ActionType, Action[]>>(
-      playerActionsCreateMap,
-    ),
+    temporaryActionID: 0,
   },
 };
 
 /**
- * We are no longer saving player effects to disk. Instead, we save player ActionSets to disk, and
- * each time the game is loaded, we re-create the player effects from the ActionSets. This allows us
- * easier management of the players inverted items, while also allowing us to save individual
- * effects here for increased performance.
+ * Actions are saved to disk. However, to prevent redundancy, Actions which belong to an ActionSet
+ * that belongs to an item are wiped from disk upon exiting the game. They are re-added every time
+ * the game starts up again. This allows us easier management of the players inverted items, while
+ * also allowing us to save individual effects here for increased performance.
+ *
+ * Currently temporary actions are removed in the PRE_GAME_EXIT callback, but note that we're saving
+ * data on the last POST_ENTITY_REMOVE callback, which is called after the PRE_GAME_EXIT callback.
+ * Actions should not be added in any of these callbacks.
  *
  * When an ActionSet is added to the player, we also add its Actions here. They both share the same
  * space in memory, so we can easily access them from either place without having to worry about
  * syncing them.
  *
- * An additional 'playerEffectsPermanent' map is used to store permanent effects that are not tied
- * to an item. These are saved to disk and persist on the player until a new run or they are
- * manually removed.
+ * To add an Action that is saved to disk, the 'permanent' flag should be set to true.
  */
 export function playerEffectsInit(): void {
-  mod.saveDataManager("playerEffects", v, false);
-  mod.saveDataManager("playerEffectsPermanent", vPermanent);
+  mod.saveDataManager("playerEffects", v);
+}
+
+/**
+ * Adds the specified Action to the player. This will be saved to disk. This will not deepCopy!
+ *
+ * Use this function when you want to add an action to the player, independent of an ActionSet.
+ * Despite being named 'temporary', this does not handle removing the action. To do so, you should
+ * probably use the 'TemporaryActionResponse' Response.
+ *
+ * @param player The player to add the action to.
+ * @param action The action to add.
+ *
+ * @returns The unique TemporaryActionID of the action. To remove the action, use
+ *          'removeTemporaryActionFromPlayer' with this ID.
+ */
+export function addTemporaryActionToPlayer(
+  player: EntityPlayer,
+  action: Action,
+): int {
+  // Create a unique ID for the action.
+  const newTemporaryActionID = v.run.temporaryActionID++;
+  action.setTemporaryActionID(newTemporaryActionID);
+  _addActionsToTracker(player, action);
+  return newTemporaryActionID;
+}
+
+/**
+ * Removes a temporary action from the player using the unique TemporaryActionID.
+ *
+ * @param player The player entity.
+ * @param temporaryActionID The ID of the temporary action to remove.
+ *
+ * @param actionType
+ * @returns The removed action, if found.
+ */
+export function removeTemporaryActionFromPlayer(
+  player: EntityPlayer,
+  temporaryActionID: int,
+  actionType?: ActionType,
+): Action | undefined {
+  return removeActionWithPredicate(
+    (action) => action.getTemporaryActionID() === temporaryActionID,
+    player,
+    actionType,
+  );
 }
 
 /**
@@ -148,7 +191,9 @@ export function _removeFlaggedActionsOfType(
 }
 
 /** Get an array of ActionTypes that the player has Actions of. */
-export function getPlayerActionTypes(player: EntityPlayer): ActionType[] {
+export function getPlayerActionTypes(
+  player: EntityPlayer,
+): readonly ActionType[] {
   return [...defaultMapGetPlayer(v.run.playerActions, player).keys()];
 }
 
@@ -156,6 +201,9 @@ export function getPlayerActionTypes(player: EntityPlayer): ActionType[] {
  * Removes one Action that matches the predicate, player and ActionType. If an Action is found, the
  * function returns it. If not, it returns undefined. If a player is not specified, it looks through
  * all players. If an actionType is not specified, it looks through all actionTypes.
+ *
+ * Note that this will not remove the action from the ActionSet it belongs to, only from the
+ * tracker.
  */
 export function removeActionWithPredicate(
   predicate: (action: Action) => boolean,
@@ -178,7 +226,7 @@ export function removeActionWithPredicate(
       while (index >= 0) {
         const action = playerActionsOfType[index];
         if (action !== undefined && predicate(action)) {
-          playerActionsOfType.splice(index, 1);
+          playerActionsOfType.splice(index, 1); // TODO: Remove from ActionSet?
           return action;
         }
         index--;
@@ -215,7 +263,7 @@ export function _removeAllActionsWithPredicate(
       while (index >= 0) {
         const action = playerActionsOfType[index];
         if (action !== undefined && predicate(action)) {
-          playerActionsOfType.splice(index, 1);
+          playerActionsOfType.splice(index, 1); // TODO: Remove from ActionSet?
           removedActions.push(action);
         }
         index--;
@@ -245,7 +293,6 @@ export function triggerPlayerActionsByType(
   triggerData: TriggerData,
 ): readonly unknown[] {
   triggerData.player ??= player;
-  let anyFlaggedForRemoval = false as boolean;
   const playerActionsOfType = getAndSetActionArray(player, actionType);
   const returnValues: unknown[] = [];
   for (const action of playerActionsOfType) {
@@ -253,26 +300,20 @@ export function triggerPlayerActionsByType(
     triggerData.action = action;
     const returnValue = action.trigger({ ...triggerData });
     returnValues.push(returnValue);
-    if (action.ffR === true) {
-      anyFlaggedForRemoval = true;
-    }
-  }
 
-  // If there are any actions that are flagged for removal. Don't do this every time as it may cause
-  // additional lag. Will not remove actions with 'permanent' tag.
-  if (anyFlaggedForRemoval) {
-    let index = playerActionsOfType.length - 1;
-    while (index >= 0) {
-      const action = playerActionsOfType[index];
-      if (
-        action !== undefined &&
-        action.ffR === true &&
-        !action.getPermanence()
-      ) {
-        fprint(`Removing: ${playerActionsOfType[index]?.getText()}`);
-        playerActionsOfType.splice(index, 1);
+    // Remove the action if it's flagged for removal.
+    if (action.getFlagForRemoval()) {
+      _removeActionFromTracker(player, action);
+
+      // If the Action is from an inverted collectible, remove it from the ActionSet.
+      const collectibleOrigin = action.getInvertedCollectibleOrigin();
+      if (collectibleOrigin !== undefined) {
+        if (isActiveCollectible(collectibleOrigin)) {
+          _removeActionFromCustomActive(player, collectibleOrigin, action);
+        } else {
+          _removeActionFromCorruptInventory(player, collectibleOrigin, action);
+        }
       }
-      index--;
     }
   }
 
@@ -283,6 +324,7 @@ export function triggerPlayerActionsByType(
  * Function to simulate DefaultMap functionality for the Map<ActionType, Action[]> map, as you
  * cannot save nested DefaultMaps. Returns array of actions for player, creating one if necessary.
  */
+// eslint-disable-next-line isaacscript/no-mutable-return
 function getAndSetActionArray(
   player: EntityPlayer,
   actionType: ActionType,
@@ -300,5 +342,23 @@ function getAndSetActionArray(
     error("getAndSetActionArray: Something went wrong!");
   } else {
     return actions;
+  }
+}
+
+/** Removes actions that are from inverted collectibles. */
+export function _preGameExitRemoveInvertedCollectibleActions(): void {
+  const { playerActions } = v.run;
+  // Loop through playerActions, and remove any actions that are from inverted collectibles.
+  for (const playerActionsOfType of playerActions.values()) {
+    for (const actions of playerActionsOfType.values()) {
+      let index = actions.length - 1;
+      while (index >= 0) {
+        const action = actions[index];
+        if (action !== undefined && action.isFromInvertedCollectible()) {
+          actions.splice(index, 1);
+        }
+        index--;
+      }
+    }
   }
 }

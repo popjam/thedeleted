@@ -1,4 +1,4 @@
-/** Functions related to inverted item ActionSets. */
+/** Functions related to inverted item ActionSets (not player inventory passive ActionSets). */
 
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { Action } from "../../../classes/corruption/actions/Action";

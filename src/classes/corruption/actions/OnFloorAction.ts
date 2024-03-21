@@ -43,6 +43,19 @@ export class OnFloorAction extends Action {
     return this;
   }
 
+  protected override getTriggerClause(): string {
+    const amount = this.getInterval() ?? 1;
+    let intervalNoRange = amount;
+    if (typeof intervalNoRange !== "number") {
+      intervalNoRange = intervalNoRange[1];
+    }
+
+    return (
+      this.getLevelStageText(intervalNoRange) ??
+      addTheS("you reach a floor", intervalNoRange)
+    );
+  }
+
   getLevelStageText(amount: number): string | undefined {
     const { lS: levelStage } = this;
     if (levelStage !== undefined) {

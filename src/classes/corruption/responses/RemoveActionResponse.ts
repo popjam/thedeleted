@@ -111,10 +111,6 @@ export class RemoveActionResponse extends Response {
   fire(triggerData: TriggerData): void {
     const { player } = triggerData;
 
-    if (player === undefined) {
-      return;
-    }
-
     const aT = this.getActionType();
     const actionOrigin = this.getActionOrigin();
     const id = this.getID();

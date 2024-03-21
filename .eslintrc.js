@@ -19,5 +19,7 @@ module.exports = {
     "jsdoc/check-tag-names": 0,
     "isaacscript/complete-sentences-jsdoc": 0,
     "isaacscript/strict-enums": 0,
+    "jsdoc/informative-docs": 0,
+    "isaacscript/no-unsafe-plusplus": 0,
   },
 };

@@ -1,11 +1,10 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { ModUpgraded } from "isaacscript-common";
-import { getCollectibleName, ModCallbackCustom } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import {
   invertedItemEffectsPostZazzActiveCollectibleRemoved,
   invertedItemEffectsPostZazzPassiveCollectibleRemoved,
 } from "../features/corruption/effects/callbacks/postZazzRemoved";
-import { fprint } from "../helper/printHelper";
 import { isZazzinatorActive, isZazzinatorPassive } from "../sets/zazzSets";
 
 export function postPlayerCollectibleRemovedInit(mod: ModUpgraded): void {
@@ -25,6 +24,6 @@ function mainZazzRemoved(
       collectibleType,
     );
   } else if (isZazzinatorActive(collectibleType)) {
-    invertedItemEffectsPostZazzActiveCollectibleRemoved(player);
+    invertedItemEffectsPostZazzActiveCollectibleRemoved(player, collectibleType);
   }
 }

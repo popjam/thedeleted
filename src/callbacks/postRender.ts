@@ -1,5 +1,5 @@
 import { ModCallback } from "isaac-typescript-definitions";
-import { ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
 import { uiPCPostRender } from "../features/pc/uiPC";
 
 export function postRenderInit(mod: ModUpgraded): void {

@@ -28,6 +28,7 @@ export function invertedItemEffectsPostZazzPassiveCollectibleRemoved(
 // PLAYER_COLLECTIBLE_REMOVED
 export function invertedItemEffectsPostZazzActiveCollectibleRemoved(
   player: EntityPlayer,
+  collectibleType: CollectibleType,
 ): void {
   // removePlayerMostRecentInvertedActiveItem(player, false);
 }

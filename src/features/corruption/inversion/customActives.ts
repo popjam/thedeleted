@@ -5,6 +5,7 @@ import type { InvertedActiveActionSet } from "../../../classes/corruption/action
 import { mod } from "../../../mod";
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActiveSlot } from "isaac-typescript-definitions";
+import type { Action } from "../../../classes/corruption/actions/Action";
 
 /**
  * This file stores data regarding players' currently held custom active items. It is used by the
@@ -73,7 +74,7 @@ export function getCustomActiveInSlot(
  */
 export function getAllCustomActives(
   player: EntityPlayer,
-): InvertedActiveActionSet[] {
+): readonly InvertedActiveActionSet[] {
   const playerIndex = getPlayerIndex(player);
   return [
     v.run.primarySlot.get(playerIndex),
@@ -91,7 +92,7 @@ export function getAllCustomActives(
  */
 export function getAllCustomActivesWithSlot(
   player: EntityPlayer,
-): Array<[ActiveSlot, InvertedActiveActionSet]> {
+): ReadonlyArray<[ActiveSlot, InvertedActiveActionSet]> {
   const playerIndex = getPlayerIndex(player);
   const customActives: Array<[ActiveSlot, InvertedActiveActionSet]> = [];
   if (v.run.primarySlot.get(playerIndex) !== undefined) {
@@ -129,7 +130,7 @@ export function getAllCustomActivesWithSlot(
  * Will override existing CustomActiveSlot data. Does not actually add the CustomActive, use
  * addNewInvertedActiveToPlayer() for that. Does not deepCopy!
  */
-export function setCustomActiveInSlot(
+export function _setCustomActiveInSlot(
   player: EntityPlayer,
   slot: ActiveSlot,
   customActive: InvertedActiveActionSet | undefined,
@@ -239,5 +240,39 @@ export function getCustomActiveCurrentCharge(
   if (customActive === undefined) {
     return undefined;
   }
-  return customActive.getCurrentCharge();
+  return customActive._getCurrentCharge();
+}
+
+/**
+ * Removes an action from the custom active items of a player.
+ *
+ * @param player The player entity.
+ * @param collectibleType The type of inverted collectible to remove the action from.
+ * @param action The action to remove.
+ * @returns True if the action was successfully removed, false otherwise.
+ */
+export function _removeActionFromCustomActive(
+  player: EntityPlayer,
+  collectibleType: CollectibleType,
+  action: Action,
+): boolean {
+  const playerIndex = getPlayerIndex(player);
+  const customActives = [
+    v.run.primarySlot.get(playerIndex),
+    v.run.secondarySlot.get(playerIndex),
+    v.run.pocketSlot.get(playerIndex),
+    v.run.singleUsePocketSlot.get(playerIndex),
+  ];
+  for (const customActive of customActives) {
+    if (customActive?.getCollectibleType() === collectibleType) {
+      // Check if the action exists by reference, and if so, remove it.
+      const actions = customActive.getActions();
+      const actionIndex = actions.indexOf(action);
+      if (actionIndex !== -1) {
+        actions.splice(actionIndex, 1);
+        return true;
+      }
+    }
+  }
+  return false;
 }

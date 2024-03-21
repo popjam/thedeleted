@@ -1,9 +1,9 @@
 import { CallbackPriority, ModCallback } from "isaac-typescript-definitions";
 import { fprint } from "../helper/printHelper";
 import { facetPreGameExit } from "../classes/Facet";
-import { PriorityCallback } from "isaacscript-common";
 import type { ModUpgraded } from "isaacscript-common";
 import { isLeavingGamePreGameExitEarly } from "../features/general/isLeavingGame";
+import { _preGameExitRemoveInvertedCollectibleActions } from "../features/corruption/effects/playerEffects";
 
 export function preGameExitInit(mod: ModUpgraded): void {
   mod.AddCallback(ModCallback.PRE_GAME_EXIT, main); // 35
@@ -33,4 +33,6 @@ function runEndedMain() {
   facetPreGameExit();
 }
 
-function runSavedMain() {}
+function runSavedMain() {
+  _preGameExitRemoveInvertedCollectibleActions();
+}

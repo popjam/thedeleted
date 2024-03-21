@@ -1,7 +1,7 @@
 import { ItemType } from "isaac-typescript-definitions";
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { PickingUpItemCollectible } from "isaacscript-common";
-import { game, isColor } from "isaacscript-common";
+import { game } from "isaacscript-common";
 import {
   DEFAULT_CORRUPTED_SOUND_EFFECT_AMOUNT,
   DEFAULT_CORRUPTED_SOUND_EFFECT_LENGTH,

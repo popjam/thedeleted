@@ -35,6 +35,11 @@ import { _addInvertedActiveToPlayer } from "../../../classes/facets/CustomActive
 import { addRemovedInvertedItemToTracker } from "../../../features/corruption/inventory/removedInvertedItems";
 import { fprint } from "../../printHelper";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
+
+// Used to prevent endless loops with the 'postZazzRemoved' callback and the
+// removePlayerMostRecentInvertedPassive function.
+let preventUnnecessaryPostZazzRemovedCallbackFlag = false;
 
 /**
  * Returns true if the player has at least one inverted item of the provided CollectibleType. Can be
@@ -66,10 +71,6 @@ export function doesPlayerHaveInvertedItem(
  *                item. Default true.
  * @param slot The slot the inverted active item should go into (if it is an
  *             InvertedActiveActionSet). Default primary.
- * @param pickupIndex The pickup index of the pedestal the inverted item was picked up from (if
- *                    any). This is necessary to ascertain if the item on the pedestal is being
- *                    tracked through the activeItemTracker, and if so, the tracked ActionSet should
- *                    be given to the player.
  * @param actionSet The ActionSet to add to the player. This will override the ActionSet attached to
  *                  the collectibleType. If undefined, will use the ActionSet attached to the
  *                  collectibleType (or generate a new one if none exists).
@@ -123,11 +124,13 @@ function addInvertedActiveToPlayer(
   invertedActionSet.oi = collectible;
 
   // Add actions to tracker.
-  for (const actionOrResponse of invertedActionSet.getActions()) {
-    if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
-      actionOrResponse.trigger({ player });
+  for (const action of invertedActionSet.getActions()) {
+    // Set ActionOrigin.
+    action.o = [ActionOrigin.INVERTED_COLLECTIBLE, collectible];
+    if (action.actionType === ActionType.ON_OBTAIN) {
+      action.trigger({ player });
     } else {
-      _addActionsToTracker(player, actionOrResponse);
+      _addActionsToTracker(player, action);
     }
   }
 
@@ -154,6 +157,8 @@ function addInvertedPassiveToPlayer(
   collectible: CollectibleType,
   addLogo = true,
 ) {
+  invertedPassiveActionSet.oi = collectible;
+
   // Add to the corrupt inventory.
   _addInvertedPassiveItemToCorruptInventory(
     player,
@@ -164,6 +169,8 @@ function addInvertedPassiveToPlayer(
   // Add actions to tracker for optimization. Trigger effects and 'on obtain' Actions.
   for (const actionOrResponse of invertedPassiveActionSet.getEffects()) {
     if (isAction(actionOrResponse)) {
+      // Set ActionOrigin.
+      actionOrResponse.o = [ActionOrigin.INVERTED_COLLECTIBLE, collectible];
       if (actionOrResponse.actionType === ActionType.ON_OBTAIN) {
         actionOrResponse.trigger({ player });
       } else {
@@ -189,13 +196,18 @@ function addInvertedPassiveToPlayer(
  * @param collectibleType The CollectibleType of the item to remove. If undefined, will remove the
  *                        most recent item.
  * @param removeLogo Whether to remove the physical item from the inventory (default true).
- * @returns True if an item was removed.
+ * @returns The CollectibleType of the item that was removed, or undefined if no item was removed.
  */
 export function removePlayerMostRecentInvertedPassive(
   player: EntityPlayer,
   collectibleType?: CollectibleType,
   removeLogo = true,
 ): CollectibleType | undefined {
+  if (preventUnnecessaryPostZazzRemovedCallbackFlag) {
+    preventUnnecessaryPostZazzRemovedCallbackFlag = false;
+    return undefined;
+  }
+
   // If collectibleType is undefined, get the most recent item.
   if (collectibleType === undefined) {
     collectibleType =
@@ -214,9 +226,10 @@ export function removePlayerMostRecentInvertedPassive(
   }
 
   // Remove physical item.
-  if (removeLogo) {
-    // Disabled currently due to triggering 'postZazzRemoved' callback.
-    // player.RemoveCollectible(CollectibleTypeCustom.ZAZZ);
+  if (removeLogo && player.HasCollectible(CollectibleTypeCustom.ZAZZ)) {
+    // Set a flag to prevent the 'postZazzRemoved' callback from triggering.
+    preventUnnecessaryPostZazzRemovedCallbackFlag = true;
+    player.RemoveCollectible(CollectibleTypeCustom.ZAZZ);
   }
 
   // Track the item that was removed.

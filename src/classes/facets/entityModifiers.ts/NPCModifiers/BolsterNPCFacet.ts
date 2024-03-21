@@ -1,20 +1,10 @@
 import { ModCallback } from "isaac-typescript-definitions";
+import { Callback, getNPCs } from "isaacscript-common";
 import {
-  Callback,
-  CallbackCustom,
-  getNPCs,
-  getTSTLClassName,
-  ModCallbackCustom,
-} from "isaacscript-common";
-import {
-  getNPCLineage,
   getNPCFamily,
   isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
-import { isLeavingGame } from "../../../../features/general/isLeavingGame";
-import { isPersistentEntityBeingUnloadedDueToGameExit } from "../../../../helper/entityHelper";
-import { fprint } from "../../../../helper/printHelper";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {

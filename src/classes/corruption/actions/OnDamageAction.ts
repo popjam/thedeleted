@@ -35,28 +35,9 @@ export class OnDamageAction extends Action {
     return ` from ${damageFlagToString(damageFlag).toLowerCase()}`;
   }
 
-  // Additional Text manipulation for 'RoomType' modifier.
-  override getActionText(): string {
-    // If overridden.
-    if (this.oat !== undefined) {
-      return this.oat;
-    }
-
-    let text = "";
-    const intervalText = this.getIntervalText();
-    const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove !== undefined) {
-      text +=
-        fireAfterThenRemove === 1
-          ? `next time you take damage ${this.getDamageFlagText()} ${intervalText}`
-          : `up to ${fireAfterThenRemove} times, after taking damage ${this.getDamageFlagText()} ${intervalText}`;
-    } else if (intervalText === "") {
-      text += `every time you take damage${this.getDamageFlagText()}`;
-    } else {
-      text += `every time you take damage ${this.getDamageFlagText()} ${intervalText}`;
-    }
-    text += ", ";
-    return text;
+  // Override the trigger clause for OnDamageAction.
+  protected override getTriggerClause(): string {
+    return `you take damage${this.getDamageFlagText()}`;
   }
 
   /** Only fires on this damage flag. */
@@ -104,7 +85,7 @@ export function triggerOnDamageActions(
 ): boolean | undefined {
   const player = entity.ToPlayer();
   if (player === undefined) {
-    return;
+    return undefined;
   }
 
   triggerPlayerActionsByType(player, ACTION_TYPE, {

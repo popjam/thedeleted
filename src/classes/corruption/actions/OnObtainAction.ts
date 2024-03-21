@@ -39,4 +39,8 @@ export class OnObtainAction extends Action {
 
     return "";
   }
+
+  protected override getTriggerClause(): string {
+    return "";
+  }
 }

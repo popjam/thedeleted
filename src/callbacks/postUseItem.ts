@@ -10,8 +10,10 @@ import { eye1PostUseItem } from "../features/items/eyes/eye1";
 import { eye2PostUseItem } from "../features/items/eyes/eye2";
 import { eye3PostUseItem } from "../features/items/eyes/eye3";
 import { trashPostUseItem } from "../features/items/trash";
+import { triggerOnActiveUseActions } from "../classes/corruption/actions/OnActiveUseAction";
 
 export function postUseItemInit(mod: ModUpgraded): void {
+  mod.AddCallback(ModCallback.POST_USE_ITEM, main);
   mod.AddCallback(
     ModCallback.POST_USE_ITEM,
     mainBitflip,
@@ -206,4 +208,19 @@ function mainEye1(
     activeSlot,
     customVarData,
   );
+}
+
+function main(
+  collectibleType: CollectibleType,
+  _rng: RNG,
+  player: EntityPlayer,
+  _useFlags: BitFlags<UseFlag>,
+  _activeSlot: int,
+  _customVarData: int,
+):
+  | boolean
+  | { Discharge: boolean; Remove: boolean; ShowAnim: boolean }
+  | undefined {
+  triggerOnActiveUseActions(player, collectibleType);
+  return undefined;
 }

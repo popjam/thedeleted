@@ -18,7 +18,7 @@ export function doesInvertedActiveActionSetMatchZazzActive(
   zazzActive: CollectibleType,
 ): boolean {
   const chargeType = actionSet.getChargeType();
-  const charges = actionSet.getCharges();
+  const charges = actionSet.getTotalCharges();
 
   if (!isZazzinatorActive(zazzActive)) {
     return false;
@@ -52,7 +52,7 @@ export function _addZazzActiveToPlayer(
   if (slot === ActiveSlot.PRIMARY || slot === ActiveSlot.SECONDARY) {
     player.AddCollectible(
       actionSet.getZazzActive(actionSet),
-      actionSet.getCharges(),
+      actionSet.getTotalCharges(),
       undefined,
       slot,
     );

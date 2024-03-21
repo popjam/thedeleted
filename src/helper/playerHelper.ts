@@ -6,14 +6,10 @@ import {
   PocketItemSlot,
   CollectibleType,
 } from "isaac-typescript-definitions";
-import type { EntityID } from "isaacscript-common";
 import {
   arrayToBitFlags,
-  getActivePocketItemSlot,
   getEnumValues,
-  getPlayerAvailableHeartSlots,
   getPlayerBlackHearts,
-  getPlayerMaxHeartContainers,
   getPlayerSoulHearts,
 } from "isaacscript-common";
 import { USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY } from "../constants/corruptionConstants";

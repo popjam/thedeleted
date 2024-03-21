@@ -5,21 +5,22 @@ export enum ActionType {
   ON_OBTAIN, // done.
   ON_DAMAGE, // done.
   ON_KILL, // partly done.
-  ON_DEATH,
+  ON_DEATH, // partly done.
+  ON_REVIVE, // partly done.
   ON_TEAR,
-  ON_ACTIVE_USE,
-  ON_PILL_USE,
-  ON_CARD_USE,
-  ON_BOMB_EXPLODE,
-  ON_PICKUP_COLLECT,
-  ON_GREED_WAVE_CLEAR,
+  ON_ACTIVE_USE, // partly done.
+  ON_PILL_USE, // partly done.
+  ON_CARD_USE, // partly done.
+  ON_BOMB_EXPLODE, // partly done.
+  ON_PICKUP_COLLECT, // partly done.
+  ON_GREED_WAVE_CLEAR, // partly done.
   ON_GRID_BREAK,
   ON_HOLY_MANTLE_BREAK,
-  ON_STAT,
-  ON_PURCHASE,
-  ON_ROOM_CLEAR,
-  ON_SACRIFICE,
-  ON_SLOT_USE,
+  ON_STAT, // partly done.
+  ON_PURCHASE, // partly done.
+  ON_ROOM_CLEAR, // partly done.
+  ON_SACRIFICE, // partly done.
+  ON_SLOT_USE, // partly done.
   ON_SLOT_DESTROY,
   ON_TRANSFORMATION,
 

@@ -13,13 +13,12 @@ import type { PlayerIndex } from "isaacscript-common";
 import {
   DefaultMap,
   defaultMapGetPlayer,
-  getPlayers,
+  getPlayerIndex,
 } from "isaacscript-common";
 import type { ActionSet } from "../../../classes/corruption/actionSets/ActionSet";
 import { findLastIndexOfArray } from "../../../helper/arrayHelper";
 import { mod } from "../../../mod";
-import { ActionType } from "../../../enums/corruption/actions/ActionType";
-import { _addActionsToTracker } from "../effects/playerEffects";
+import type { Action } from "../../../classes/corruption/actions/Action";
 
 /**
  * We use this inventory to track a players' inverted passive items (in order). Inverted active
@@ -141,16 +140,28 @@ export function _removeInvertedPassiveItemFromCorruptInventory(
   }
 }
 
-// POST_GAME_CONTINUED, isContinued: TRUE. This is called when the game is exited and then
-// continued, and used to re-add Actions to the Action tracker from saved item ActionSets.
-export function itemInventoryPostGameContinuedReordered(): void {
-  for (const player of getPlayers()) {
-    const actionSets = getPlayerInvertedPassiveItemActionSets(player);
-    for (const actionSet of actionSets) {
-      const actions = actionSet
-        .getActions()
-        .filter((action) => action.actionType !== ActionType.ON_OBTAIN);
-      _addActionsToTracker(player, ...actions);
+/**
+ * Removes a specific action from an ActionSet for a given player and collectible type. This should
+ * only be used in certain circumstances.
+ */
+export function _removeActionFromCorruptInventory(
+  player: EntityPlayer,
+  collectibleType: CollectibleType,
+  actionToRemove: Action,
+): boolean {
+  const playerInventory = v.run.items.getAndSetDefault(getPlayerIndex(player));
+
+  for (const [item, actionSet] of playerInventory) {
+    if (item === collectibleType) {
+      const actions = actionSet.getActions();
+      const actionIndex = actions.indexOf(actionToRemove);
+      if (actionIndex !== -1) {
+        actions.splice(actionIndex, 1);
+        // Return the action that was removed.
+        return true;
+      }
     }
   }
+
+  return false;
 }

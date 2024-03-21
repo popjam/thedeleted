@@ -1,11 +1,14 @@
 import { PlayerVariant } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { PlayerTypeCustom } from "../enums/general/PlayerTypeCustom";
 import { happy99PostPlayerFatalDamage } from "../features/modes/HAPPY99/HAPPY99";
 import { iloveyouPostPlayerFatalDamage } from "../features/modes/ILOVEYOU/ILOVEYOU";
 import { playerInversionPostPlayerFatalDamage } from "../helper/deletedSpecific/inversion/playerInversion";
+import { triggerOnDeathActions } from "../classes/corruption/actions/OnDeathAction";
 
 export function postPlayerFatalDamageInit(mod: ModUpgraded): void {
+  mod.AddCallbackCustom(ModCallbackCustom.POST_PLAYER_FATAL_DAMAGE, main);
   mod.AddCallbackCustom(
     ModCallbackCustom.POST_PLAYER_FATAL_DAMAGE,
     happy99,
@@ -35,4 +38,9 @@ function iloveyou(player: EntityPlayer): boolean | undefined {
 
 function corruption(player: EntityPlayer): boolean | undefined {
   return playerInversionPostPlayerFatalDamage(player);
+}
+
+function main(player: EntityPlayer): boolean | undefined {
+  triggerOnDeathActions(player);
+  return undefined;
 }

@@ -52,7 +52,7 @@ export function generateHybridActiveActionSet(
   }
 
   actionSet.setChargeType(overallChargeType ?? ItemConfigChargeType.NORMAL);
-  actionSet.setCharges(totalCharges);
+  actionSet.setTotalCharges(totalCharges);
 
   return actionSet;
 }

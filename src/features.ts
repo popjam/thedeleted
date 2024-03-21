@@ -57,7 +57,6 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
   invertedItemCorruptInit,
   zipbomberInit,
   bombInventoryInit,
-  temporaryActionResponseInit,
   RNGHelperInit,
   GeneralSettingsInit,
   lastPickedUpInvertedCollectibleInit,

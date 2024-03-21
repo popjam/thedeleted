@@ -1,30 +1,16 @@
 import {
-  ActiveSlot,
-  BackdropType,
   CollectibleType,
   EntityType,
-  FamiliarVariant,
   GridEntityType,
 } from "isaac-typescript-definitions";
-import type { EntityID } from "isaacscript-common";
 import {
-  getRandomSeed,
-  arrayRemove,
-  getRandomArrayIndex,
   getEnumValues,
   getCollectibleName,
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
   removeGridEntities,
-  getAllRoomGridIndexes,
-  getAllGridIndexes,
-  getGridEntities,
-  spawnGridEntityWithVariant,
-  setBackdrop,
   spawnGridEntity,
-  gridPositionToWorldPosition,
-  removeAllFamiliars,
 } from "isaacscript-common";
 import {
   freezeAllNPCsInRoom,
@@ -32,47 +18,24 @@ import {
 } from "../../classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import {
-  getRandomCollectibleType,
-  spawnGlitchedCollectible,
-} from "../../helper/collectibleHelper";
+import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
 import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import {
-  getGridEntitiesFromGridID,
-  spawnGridID,
-} from "../../helper/gridEntityHelper/gridIDHelper";
-import { GridID } from "../../enums/data/ID/GridID";
 import { getQuickAccessiblePosition } from "../../helper/positionHelper";
-import { RemoveGridEntityResponse } from "../../classes/corruption/responses/RemoveGridEntityResponse";
-import { SpawnGridEntityResponse } from "../../classes/corruption/responses/SpawnGridEntityResponse";
-import { SpawnEntityResponse } from "../../classes/corruption/responses/SpawnEntityResponse";
 import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { addInvertedItemToPlayer } from "../../helper/deletedSpecific/inventory/invertedInventoryHelper";
-import { addNewInvertedActiveToPlayer } from "../../helper/deletedSpecific/inventory/custom actives/invertedActives";
-import { TriggerInSequenceResponse } from "../../classes/corruption/responses/TriggerInSequenceResponse";
 import {
   getAllEmptyGridIndexes,
   positionToClampedGridIndex,
 } from "../../helper/gridEntityHelper/gridEntityHelper";
-import { getBackdrop } from "../general/backdropHelper";
-import { TransformResponse } from "../../classes/corruption/responses/TransformResponse";
-import { EntityCategory } from "../../enums/general/EntityCategory";
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
-import { PickupID } from "../../enums/data/ID/PickupID";
 import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import { OnDamageAction } from "../../classes/corruption/actions/OnDamageAction";
-import { GetTrinketResponse } from "../../classes/corruption/responses/GetTrinketResponse";
-import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
-import { OnDeathAction } from "../../classes/corruption/actions/OnDeathAction";
-import { playerAddTemporaryCollectible } from "../general/temporaryItems";
-import { TemporaryEffectType } from "../../enums/general/TemporaryEffectType";
-import { spawnFamiliarID } from "../../helper/entityHelper/familiarHelper";
-import { FamiliarID } from "../../enums/data/ID/FamiliarID";
+import { OnPurchaseAction } from "../../classes/corruption/actions/OnPurchaseAction";
+import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import { OnRoomClearAction } from "../../classes/corruption/actions/OnRoomClearAction";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -115,7 +78,15 @@ const actionToAdd = new OnRoomAction().setResponse(responseToAdd);
 const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
 
 /** Test stuff as the developer with command 'del'. */
-export function testingFunction1(): void {}
+export function testingFunction1(): void {
+  fprint("Testing function 1");
+  spawnNewInvertedCollectible(
+    getQuickAccessiblePosition(),
+    new InvertedPassiveActionSet().addEffects(
+      new OnRoomClearAction().setResponse(new SpawnNPCResponse()),
+    ),
+  );
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {

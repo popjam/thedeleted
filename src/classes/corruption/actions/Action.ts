@@ -1,6 +1,6 @@
-/* eslint-disable jsdoc/informative-docs */
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
+import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import type { ActionOriginType } from "../../../enums/corruption/actions/ActionOrigin";
 import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { Morality } from "../../../enums/corruption/Morality";
@@ -14,6 +14,7 @@ import {
 } from "../../../types/general/Range";
 
 import type { Response } from "../responses/Response";
+import { arrayEquals } from "isaacscript-common";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
 const TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER = 0;
@@ -54,7 +55,7 @@ export abstract class Action {
   i?: Range | number;
 
   /**
-   * Only fires after X triggers. Once triggered, will be removed.
+   * Only fires after X triggers. Once triggered, will be disabled.
    *
    * @example "After 3 rooms", get brimstone. --> activateAfter: 3
    */
@@ -100,8 +101,80 @@ export abstract class Action {
     return response.getInvolvedCollectibles();
   }
 
+  /** Get the origin of the Action. */
+  getOrigin(): ActionOriginType | undefined {
+    return this.o;
+  }
+
+  /**
+   * Retrieves the ID of the temporary action origin, if it exists.
+   *
+   * @returns The ID of the temporary action origin, or undefined if it doesn't exist.
+   */
+  getTemporaryActionID(): int | undefined {
+    const origin = this.getOrigin();
+    if (origin === undefined) {
+      return undefined;
+    }
+
+    const [actionOrigin, id] = origin;
+    return actionOrigin === ActionOrigin.TEMPORARY_ACTION ? id : undefined;
+  }
+
+  /**
+   * Checks if the origin of the action matches the specified origin type.
+   *
+   * @param origin The origin type to compare against (e.g [ActionOrigin.TEMPORARY_ACTION, 5]).
+   * @returns Returns `true` if the origin matches, `false` otherwise. If the action has no origin,
+   *          returns `false`.
+   */
+  doesOriginMatch(origin: ActionOriginType): boolean {
+    const actionOrigin = this.getOrigin();
+    if (actionOrigin === undefined) {
+      return false;
+    }
+
+    return arrayEquals(actionOrigin, origin);
+  }
+
+  /**
+   * Sets the origin of the Action to a temporary action with the given ID. This will override any
+   * previous origin.
+   *
+   * @param id The ID of the temporary action origin.
+   * @returns The Action instance, for chaining.
+   */
+  setTemporaryActionID(id: int): this {
+    this.o = [ActionOrigin.TEMPORARY_ACTION, id];
+    return this;
+  }
+
+  /**
+   * Retrieves the ID of the inverted collectible origin, if it exists.
+   *
+   * @returns The ID of the inverted collectible origin, or undefined if it doesn't exist.
+   */
+  getInvertedCollectibleOrigin(): int | undefined {
+    const origin = this.getOrigin();
+    if (origin === undefined) {
+      return undefined;
+    }
+
+    const [actionOrigin, id] = origin;
+    return actionOrigin === ActionOrigin.INVERTED_COLLECTIBLE ? id : undefined;
+  }
+
+  /**
+   * Checks if the action is from an inverted collectible.
+   *
+   * @returns A boolean indicating whether the action is from an inverted collectible.
+   */
+  isFromInvertedCollectible(): boolean {
+    return this.getInvertedCollectibleOrigin() !== undefined;
+  }
+
   /** If an Action is permanent, it can not be rerolled or removed with Action-altering effects. */
-  getPermanence(): boolean {
+  isPermanent(): boolean {
     return this.p ?? DEFAULT_PERMANENCE;
   }
 
@@ -138,8 +211,9 @@ export abstract class Action {
     return this.ffR ?? DEFAULT_FLAG_FOR_REMOVAL;
   }
 
-  flagForRemoval(): this {
-    this.ffR = true;
+  /** If the Action wants to be removed. */
+  setFlagForRemoval(flag: boolean): this {
+    this.ffR = flag || undefined;
     return this;
   }
 
@@ -238,8 +312,39 @@ export abstract class Action {
     return this;
   }
 
-  // Only get the 'Action' part of the text, not including responses.
-  abstract getActionText(): string;
+  // Function to get the "trigger" part of the action text.
+  protected getTriggerText(intervalText: string): string {
+    const fireAfterThenRemove = this.getFireAfterThenRemove();
+    if (fireAfterThenRemove !== undefined) {
+      return fireAfterThenRemove === 1
+        ? `the next time ${this.getTriggerClause()}`
+        : `for the next ${fireAfterThenRemove} times ${this.getTriggerClause()}`;
+    }
+    if (intervalText !== "") {
+      return `every ${intervalText} times ${this.getTriggerClause()}`;
+    }
+    return `every time ${this.getTriggerClause()}`;
+  }
+
+  // Function to get the specific trigger clause for the action type.
+  protected abstract getTriggerClause(): string;
+
+  // Get the action text.
+  getActionText(): string {
+    // If overridden, use the overridden text.
+    if (this.oat !== undefined) {
+      return this.oat;
+    }
+
+    // Get interval text.
+    const intervalText = this.getIntervalText();
+
+    // Combine trigger text and interval text.
+    let text = this.getTriggerText(intervalText);
+
+    text += ", "; // Add comma and space for consistency.
+    return text;
+  }
 
   // Only get the 'Responses' part of the text.
   getResponseText(eid = true): string {
@@ -260,7 +365,7 @@ export abstract class Action {
    * @example Interval.
    * @example Fire.
    */
-  trigger(triggerData: TriggerData): void {
+  trigger(triggerData: TriggerData): unknown {
     // Interval
     const interval = this.getInterval();
     if (interval !== undefined) {
@@ -290,6 +395,8 @@ export abstract class Action {
         this.ffR = true;
       }
     }
+
+    return true;
   }
 
   /** Fire the action, triggering its responses. */

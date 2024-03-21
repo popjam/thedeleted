@@ -10,35 +10,12 @@ const ACTION_TYPE = ActionType.ON_KILL;
 export class OnKillAction extends Action {
   override actionType = ACTION_TYPE;
 
-  /**
-   * Returns the action text for the OnKillAction. If the action text is overridden, it returns the
-   * overridden text. Otherwise, it constructs the action text based on the fireAfterThenRemove
-   * value.
-   *
-   * @returns The action text.
-   */
-  override getActionText(): string {
-    // If overridden.
-    if (this.oat !== undefined) {
-      return this.oat;
-    }
-
-    let text = "";
-    const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove === undefined) {
-      const intervalText = this.getIntervalText();
-      text +=
-        intervalText === ""
-          ? "every kill"
-          : `every time you kill ${intervalText} enemies`;
-    } else if (fireAfterThenRemove === 1) {
-      text += "next kill";
-    } else {
-      text += `after killing ${fireAfterThenRemove} enemies
-        }`;
-    }
-    text += ", ";
-    return text;
+  // Override the trigger clause for OnKillAction.
+  protected override getTriggerClause(): string {
+    const intervalText = this.getIntervalText();
+    return intervalText === ""
+      ? "you kill an enemy"
+      : `you kill ${intervalText} enemies`;
   }
 
   override trigger(triggerData: TriggerData): void {

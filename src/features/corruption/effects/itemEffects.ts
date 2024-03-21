@@ -31,7 +31,7 @@ export function itemEffectsInit(): void {
 
 /**
  * Get the ActionSet attached to the inverted collectibleType. If there is none, will generate a
- * fresh one with the provided inputs (if any).
+ * fresh one with the provided inputs (if any). Does not deepCopy!
  */
 export function getAndSetInvertedItemActionSet(
   collectibleType: CollectibleType,

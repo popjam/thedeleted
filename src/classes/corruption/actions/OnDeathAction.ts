@@ -1,4 +1,3 @@
-import { CollectibleType } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -10,44 +9,11 @@ const ACTION_TYPE = ActionType.ON_DEATH;
 export class OnDeathAction extends Action {
   override actionType = ACTION_TYPE;
 
-  /**
-   * Constructs an instance of the OnDeathAction class.
-   *
-   * @returns The instance of the OnDeathAction class.
-   */
-  construct(): this {
-    return this;
-  }
-
-  override getActionText(): string {
-    // If overridden.
-    if (this.oat !== undefined) {
-      return this.oat;
-    }
-
-    let text = "";
-    const intervalText = this.getIntervalText();
-    const fireAfterThenRemove = this.getFireAfterThenRemove();
-    if (fireAfterThenRemove !== undefined) {
-      text +=
-        fireAfterThenRemove === 1
-          ? `next time you die ${intervalText}`
-          : `up to ${fireAfterThenRemove} times, after dying ${intervalText}`;
-    } else if (intervalText === "") {
-      text += "every time you die";
-    } else {
-      text += `every time you die ${intervalText}`;
-    }
-    text += ", ";
-    return text;
+  protected override getTriggerClause(): string {
+    return "you die";
   }
 
   override trigger(triggerData: TriggerData): void {
-    const onDeathTriggerData = triggerData.onDeathAction;
-    if (onDeathTriggerData === undefined) {
-      return;
-    }
-
     super.trigger({ ...triggerData });
   }
 }
@@ -55,14 +21,13 @@ export class OnDeathAction extends Action {
 /**
  * Triggers all OnDeathActions for all players.
  *
- * PRE_CUSTOM_REVIVE callback, return a value to revive the player.
+ * POST_PLAYER_FATAL_DAMAGE callback.
  */
-export function triggerOnDeathActions(player: EntityPlayer): int | undefined {
+export function triggerOnDeathActions(player: EntityPlayer): void {
   triggerPlayerActionsByType(player, ACTION_TYPE, {
     player,
     onDeathAction: {
       player,
     },
   });
-  return CollectibleType.SAD_ONION;
 }

@@ -1,33 +1,23 @@
 import { deepCopy } from "isaacscript-common";
 import { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
-import { _addActionsToTracker } from "../../../features/corruption/effects/playerEffects";
+import {
+  _addActionsToTracker,
+  addTemporaryActionToPlayer,
+} from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { mod } from "../../../mod";
 import type { Action } from "../actions/Action";
 import { OnRoomAction } from "../actions/OnRoomAction";
 import { RemoveActionResponse } from "./RemoveActionResponse";
 import { Response } from "./Response";
+import { ActionType } from "../../../enums/corruption/actions/ActionType";
 
 const DEFAULT_TEMP_ACTION = new OnRoomAction();
 const DEFAULT_REMOVE_ON = new OnRoomAction();
 const DEFAULT_REMOVAL_RESPONSE = new RemoveActionResponse();
 const VERB = "give";
 const VERB_PARTICIPLE = "giving";
-
-const v = {
-  run: {
-    /**
-     * TemporaryActionResponses added to the player need to have a unique ID attached to them so
-     * that they can be identified and removed from the RemoveActionAction added.
-     */
-    tempActionResponseID: 1,
-  },
-};
-
-export function temporaryActionResponseInit(): void {
-  mod.saveDataManager("temporaryActionResponse", v);
-}
 
 /**
  * Gives the player a temporary Action until it is triggered for removal.
@@ -55,18 +45,27 @@ export class TemporaryActionResponse extends Response {
     return this.a ?? DEFAULT_TEMP_ACTION;
   }
 
+  /**
+   * Get the ActionType of the temporary Action, or the ActionType of the default temporary Action.
+   */
+  getActionType(): ActionType {
+    return this.a?.actionType ?? ActionType.ON_ROOM;
+  }
+
   /** Set the Action that should be temporarily added. This will deep copy it. */
   setAction(action: Action): this {
     this.a = deepCopy<Action>(action);
     return this;
   }
 
-  /** Deep copies the temporary Action, and generates a new ID for it. */
-  generateAction(): Action {
-    const action = deepCopy<Action>(this.getAction());
-    // eslint-disable-next-line isaacscript/no-unsafe-plusplus
-    action.o = [ActionOrigin.TEMPORARY_ACTION, v.run.tempActionResponseID++];
-    return action;
+  /**
+   * Deep copies the temporary Action, adding it to the player.
+   *
+   * @returns The TemporaryActionID of the temporary Action that was added to the player.
+   */
+  addTemporaryActionToPlayer(player: EntityPlayer): int {
+    const deepCopiedAction = deepCopy<Action>(this.getAction());
+    return addTemporaryActionToPlayer(player, deepCopiedAction);
   }
 
   /** When to remove the Action. When this action fires, the temporary Action will be removed. */
@@ -75,17 +74,26 @@ export class TemporaryActionResponse extends Response {
   }
 
   /**
-   * Generates the removal Action. Will always set 'FireAfterThenRemove' to 1, as the Action should
-   * always remove itself after firing.
+   * Deep copies the RemoveOn Action, adding it to the player. Will always set 'FireAfterThenRemove'
+   * to 1, as the Action should always remove itself after firing. Permanence will be set to true so
+   * that it will not be removed by other means.
    *
+   * @param player The player to add the RemoveOn Action to.
    * @param id The. ID of the temporary Action that should be removed.
    */
-  generateRemoveOn(id: number): Action {
-    const removeOn = deepCopy<Action>(this.getRemoveOn());
+  addRemoveOnToPlayer(player: EntityPlayer, id: number): void {
+    const removeOn = deepCopy<Action>(this.getRemoveOn())
+      .setFireAfterThenRemove(1)
+      .setPermanence(true);
     removeOn.setResponse(
-      deepCopy<RemoveActionResponse>(DEFAULT_REMOVAL_RESPONSE).setID(id),
+      deepCopy<RemoveActionResponse>(DEFAULT_REMOVAL_RESPONSE).construct(
+        ActionOrigin.TEMPORARY_ACTION,
+        id,
+        this.getActionType(),
+        true,
+      ),
     );
-    return removeOn;
+    addTemporaryActionToPlayer(player, removeOn);
   }
 
   /**
@@ -114,19 +122,7 @@ export class TemporaryActionResponse extends Response {
   fire(triggerData: TriggerData): void {
     const player = triggerData.player ?? Isaac.GetPlayer();
 
-    const temporaryAction = this.generateAction();
-    const id = temporaryAction.o?.[1];
-
-    if (id === undefined) {
-      return;
-    }
-
-    const removeOn = this.generateRemoveOn(id);
-
-    // Add temporary Action.
-    _addActionsToTracker(player, temporaryAction);
-
-    // Add removal Action.
-    _addActionsToTracker(player, removeOn);
+    const temporaryActionID = this.addTemporaryActionToPlayer(player);
+    this.addRemoveOnToPlayer(player, temporaryActionID);
   }
 }

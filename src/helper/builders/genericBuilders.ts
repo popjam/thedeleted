@@ -187,7 +187,7 @@ export function defaultInvertedActiveActionSetBuilder(
     .addEffects(...effectArray)
     .setQuality(3)
     .setChargeType(ItemConfigChargeType.NORMAL)
-    .setCharges(getRandomInteger(1, 6));
+    .setTotalCharges(getRandomInteger(1, 6));
   return invertedActiveActionSet;
 }
 

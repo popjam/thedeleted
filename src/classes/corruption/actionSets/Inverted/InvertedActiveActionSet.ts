@@ -22,7 +22,8 @@ import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/effect
 import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import type { CustomActiveData } from "../../../../interfaces/corruption/actionSets/CustomActiveData";
-import { getTotalCharge } from "isaacscript-common";
+import { getTotalCharge, repeat } from "isaacscript-common";
+import type { IfThenResponse } from "../../responses/IfThenResponse";
 
 const DEFAULT_NAME = "Corrupted Active Item";
 const DEFAULT_CHARGES = 4;
@@ -68,10 +69,10 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
    * On use condition - E.g requires a key to use. If the condition is not satisfied, will not be
    * used.
    */
-  uc?: Response;
+  uc?: IfThenResponse;
 
   /** Data related to the custom active item this ActionSet is attached to. */
-  cd?: CustomActiveData;
+  // cd?: CustomActiveData;
 
   /** The current charge count of the custom active item. */
   cc?: number;
@@ -93,7 +94,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       Quality: this.getQuality(),
       Icon: EID?.getIcon(INVERTED_ACTIVE_EID_ICON),
       ItemType: ItemType.ACTIVE,
-      Charges: this.getCharges(),
+      Charges: this.getTotalCharges(),
       ChargeType: this.getChargeType(),
     };
   }
@@ -139,7 +140,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
    * Update the tracking of the custom active's current charge. This does not actually change the
    * current charge of the custom active.
    */
-  setCurrentCharge(charge: number): this {
+  _setCurrentCharge(charge: number): this {
     this.cc = charge;
     return this;
   }
@@ -149,8 +150,8 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
    * charge tracked. This does not actually get the current charge of the custom active, but rather
    * the charge that is tracked.
    */
-  getCurrentCharge(): number {
-    return this.cc ?? this.getCharges();
+  _getCurrentCharge(): number {
+    return this.cc ?? this.getTotalCharges();
   }
 
   /**
@@ -172,18 +173,18 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
   }
 
   /**
-   * Get number of charges the active item has. This will have different meanings depending on the
-   * ChargeType.
+   * Get total number of charges the active item has. This will have different meanings depending on
+   * the ChargeType.
    */
-  getCharges(): number {
+  getTotalCharges(): number {
     return this.ch ?? DEFAULT_CHARGES;
   }
 
   /**
-   * Set the amount of charges the item has. This will have different meanings depending on the
-   * ChargeType.
+   * Set the total amount of charges the item has. This will have different meanings depending on
+   * the ChargeType.
    */
-  setCharges(charges: number): this {
+  setTotalCharges(charges: number): this {
     this.ch = charges;
     return this;
   }
@@ -205,7 +206,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
   getZazzActive(actionSet: InvertedActiveActionSet): CollectibleType {
     return getZazzActiveFromCharge(
       actionSet.getChargeType(),
-      actionSet.getCharges(),
+      actionSet.getTotalCharges(),
     );
   }
 
@@ -219,7 +220,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     | { Discharge: boolean; Remove: boolean; ShowAnim: boolean }
     | undefined {
     fprint(
-      `Inverted Active with ${this.getCharges()} charges used, triggering ${
+      `Inverted Active with ${this.getTotalCharges()} charges used, triggering ${
         this.getResponses().length
       } responses..`,
     );
@@ -227,13 +228,13 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     /** Trigger responses. Do it twice if they have car battery. */
     const hasCarBattery = player.HasCollectible(CollectibleType.CAR_BATTERY);
     const repeatAmount = hasCarBattery ? 2 : 1;
-    for (let i = 0; i < repeatAmount; i++) {
+    repeat(repeatAmount, () => {
       for (const response of this.getResponses()) {
         response.trigger({
           player,
         });
       }
-    }
+    });
 
     /** Play sound. */
     this.playSoundEffect();
@@ -243,7 +244,9 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     playPickupAnimationWithCustomSprite(player, icon, 2);
 
     /** Update charges tracker. */
-    this.setCurrentCharge(getTotalCharge(player, slot) - this.getCharges());
+    this._setCurrentCharge(
+      getTotalCharge(player, slot) - this.getTotalCharges(),
+    );
 
     return { Discharge: true, Remove: false, ShowAnim: false };
   }
@@ -255,16 +258,16 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
     // Quickly change the item on the pedestal to the correct Zazzinator item.
     pedestal.SubType = getZazzActiveFromCharge(
       this.getChargeType(),
-      this.getCharges(),
+      this.getTotalCharges(),
     );
 
     // If the inverted active item associated with the pedestal already existed and is being
     // tracked, we use the tracked charge instead of the default charge. We don't remove it as we
     // still need to track it for postItemPickup.
     fprint(
-      `preGetPedestal: Setting pedestal charge to ${this.getCurrentCharge()}`,
+      `preGetPedestal: Setting pedestal charge to ${this._getCurrentCharge()}`,
     );
-    pedestal.Charge = this.getCurrentCharge();
+    pedestal.Charge = this._getCurrentCharge();
 
     return false;
   }
