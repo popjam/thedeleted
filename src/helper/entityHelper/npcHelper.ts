@@ -1,34 +1,30 @@
-import { getNPCs, getRandomArrayElementAndRemove } from "isaacscript-common";
+import type { EntityID } from "isaacscript-common";
+import {
+  VectorZero,
+  getConstituentsFromEntityID,
+  getNPCs,
+  getRandomArrayElementAndRemove,
+  spawnNPC,
+} from "isaacscript-common";
 import { fprint } from "../printHelper";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import {
-  getNPCIDMaxHitPoints,
-  getNPCIDName,
-  getNPCIDSize,
-  isNPCIDBoss,
-  isNPCIDFlying,
-  isNPCIDModded,
-} from "./npcIDHelper";
-import { getEntityIDFromEntity } from "./entityIDHelper";
 import {
   getEntityIDSetFromCategory,
   getModdedEntityIDSetFromCategory,
   getModdedEntityIDSetFromModAndCategory,
   getNonModdedEntityIDSetFromCategory,
-} from "../../features/data/gameSets/gameEntitySets";
+} from "../../features/data/gameSets/gameSets";
 import { EntityCategory } from "../../enums/general/EntityCategory";
 import type { NPCID } from "isaac-typescript-definitions";
 import { addArticle } from "../stringHelper";
-import {
-  randomInRange,
-  randomInRangeOrNumber,
-} from "../../types/general/Range";
+import { randomInRangeOrNumber } from "../../types/general/Range";
 import type { Range } from "../../types/general/Range";
-
-/** Determines if an NPC is modded by checking it against the set of all non-Modded NPCs. */
-export function isNPCModded(npc: EntityNPC): boolean {
-  return isNPCIDModded(getEntityIDFromEntity(npc) as NPCID);
-}
+import {
+  getEntityBaseHPFromEntityID,
+  getEntityConfigFromEntityID,
+  getEntityNameFromEntityID,
+  getEntitySizeFromEntityID,
+} from "./entityIDHelper";
 
 /**
  * Get an ordered list of NPCs children line, including the NPC itself, from specified NPC ->
@@ -41,7 +37,7 @@ export function isNPCModded(npc: EntityNPC): boolean {
 // eslint-disable-next-line isaacscript/no-mutable-return
 export function getAllChildrenNPCs(
   npc: EntityNPC,
-  // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
+
   children: EntityNPC[] | undefined = [],
 ): EntityNPC[] {
   children ??= [];
@@ -82,7 +78,7 @@ export function isEntityNPC(entity: Entity): entity is EntityNPC {
 // eslint-disable-next-line isaacscript/no-mutable-return
 export function getAllParentNPCs(
   npc: EntityNPC,
-  // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
+
   parents: EntityNPC[] | undefined = [],
 ): EntityNPC[] {
   parents ??= [];
@@ -305,11 +301,79 @@ export function getRandomNPC(
     if (npcIDArray.length === 0) {
       return undefined;
     }
-    fprint(`NPCID with name ${getNPCIDName(npcID)} did not match attributes.`);
+    fprint(
+      `NPCID with name ${getEntityNameFromEntityID(
+        npcID as EntityID,
+      )} did not match attributes.`,
+    );
     npcID = getRandomArrayElementAndRemove(npcIDArray, seedOrRNG);
   }
 
   return npcID;
+}
+
+/**
+ * Helper function to spawn an NPC using its NPCID.
+ *
+ * Note that if you pass a non-NPC EntityID to this function, it will cause a run-time error, since
+ * the Entity.ToNPC method will return undefined.
+ *
+ * @param npcID The NPCID to spawn.
+ * @param positionOrGridIndex The position or grid index to spawn the NPC at.
+ * @param velocity The velocity of the NPC (optional).
+ * @param spawner The entity that spawned the NPC (optional).
+ * @param seedOrRNG The seed or RNG you want to use (optional).
+ * @returns The spawned NPC.
+ */
+export function spawnNPCID(
+  npcID: NPCID,
+  positionOrGridIndex: int | Vector,
+  velocity?: Vector | undefined,
+  spawner?: Entity | undefined,
+  seedOrRNG?: Seed | RNG,
+): EntityNPC {
+  const constituents = getConstituentsFromEntityID(npcID as EntityID);
+  return spawnNPC(
+    constituents[0],
+    constituents[1],
+    constituents[2],
+    positionOrGridIndex,
+    velocity,
+    spawner,
+    seedOrRNG,
+  );
+}
+
+/**
+ * Determines if an NPC is a boss.
+ *
+ * @param npcID The NPCID to check.
+ * @returns Whether the NPC is a boss, undefined if invalid NPCID.
+ */
+export function isNPCIDBoss(npcID: NPCID): boolean | undefined {
+  const config = getEntityConfigFromEntityID(npcID as EntityID);
+  return config?.IsBoss();
+}
+
+/**
+ * Determines if an NPC is flying, by quickly spawning and removing it. Note that this may cause
+ * additional lag or problems in some cases.
+ *
+ * @param npcID The NPCID to check.
+ * @returns Whether the NPC is flying, undefined if invalid NPCID.
+ */
+export function isNPCIDFlying(npcID: NPCID): boolean {
+  const constituents = getConstituentsFromEntityID(npcID as EntityID);
+  const npc = spawnNPC(
+    constituents[0],
+    constituents[1],
+    constituents[2],
+    VectorZero,
+  );
+  npc.Visible = false;
+  const flying = npc.IsFlying();
+  npc.Remove();
+  return flying;
 }
 
 /**
@@ -349,7 +413,7 @@ export function doesNPCIDMatchNPCAttributes(
   // Boss.
   const { boss } = npcAttributes;
   if (boss !== undefined) {
-    const npcBoss = isNPCIDBoss(npcID);
+    const npcBoss = isNPCIDBoss(npcID) ?? false;
     if (npcBoss !== boss) {
       return false;
     }
@@ -358,7 +422,7 @@ export function doesNPCIDMatchNPCAttributes(
   // Size.
   const { size } = npcAttributes;
   if (size !== undefined) {
-    const npcSize = getNPCIDSize(npcID);
+    const npcSize = getEntitySizeFromEntityID(npcID as EntityID);
     if (npcSize === undefined) {
       return false;
     }
@@ -370,7 +434,7 @@ export function doesNPCIDMatchNPCAttributes(
   // MaxHitPoints.
   const { health } = npcAttributes;
   if (health !== undefined) {
-    const npcSize = getNPCIDMaxHitPoints(npcID);
+    const npcSize = getEntityBaseHPFromEntityID(npcID as EntityID);
     if (npcSize === undefined) {
       return false;
     }
@@ -383,7 +447,7 @@ export function doesNPCIDMatchNPCAttributes(
   // return false.
   const { startsWith } = npcAttributes;
   if (startsWith !== undefined) {
-    const npcName = getNPCIDName(npcID)?.toLowerCase();
+    const npcName = getEntityNameFromEntityID(npcID as EntityID)?.toLowerCase();
     if (npcName === undefined) {
       return false;
     }
@@ -396,7 +460,7 @@ export function doesNPCIDMatchNPCAttributes(
   // return false.
   const { endsWith } = npcAttributes;
   if (endsWith !== undefined) {
-    const npcName = getNPCIDName(npcID)?.toLowerCase();
+    const npcName = getEntityNameFromEntityID(npcID as EntityID)?.toLowerCase();
     if (npcName === undefined) {
       return false;
     }

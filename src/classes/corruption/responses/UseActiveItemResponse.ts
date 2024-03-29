@@ -129,7 +129,7 @@ export class UseActiveItemResponse extends Response {
     const activeItemText = this.getActiveItemText(eid);
     const amountText = this.getAmountOfActivationsText();
 
-    return `${amountText} ${activeItemText}`;
+    return `${activeItemText} ${amountText}`;
   }
 
   /** If undefined, will spawn at player's position. */

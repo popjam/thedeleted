@@ -1,4 +1,5 @@
 import { EntityType, PickupVariant } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import { VectorZero } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -6,8 +7,6 @@ import { Response } from "./Response";
 import type { PickupID } from "../../../enums/data/ID/PickupID";
 import type { PickupType } from "../../../enums/general/PickupType";
 import {
-  getPickupIDName,
-  getRandomPickupID,
   getRandomPickupIDFromPickupType,
   getSoftRandomPickupIDFromPickupType,
   spawnPickupID,
@@ -18,6 +17,11 @@ import { addArticle, addTheS } from "../../../helper/stringHelper";
 import { pickupTypeToString } from "../../../maps/data/name/pickupTypeNameMap";
 import { getRandomPosition } from "../../../helper/positionHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
+import {
+  getEntityNameFromEntityID,
+  getRandomEntityIDFromCategory,
+} from "../../../helper/entityHelper/entityIDHelper";
+import { EntityCategory } from "../../../enums/general/EntityCategory";
 
 const DEFAULT_PICKUP_ID =
   `${EntityType.PICKUP}.${PickupVariant.POOP}.0` as PickupID;
@@ -129,10 +133,10 @@ export class SpawnPickupResponse
       if (softRandom) {
         return RANDOM_PICKUP_ID;
       }
-      return (
-        getRandomPickupID(moddedPickupSetting ? undefined : false) ??
-        DEFAULT_PICKUP_ID
-      );
+      return (getRandomEntityIDFromCategory(
+        EntityCategory.PICKUP,
+        moddedPickupSetting ? undefined : false,
+      ) ?? DEFAULT_PICKUP_ID) as PickupID;
     }
 
     if (typeof pickup === "string") {
@@ -191,14 +195,15 @@ export class SpawnPickupResponse
 
     // Is a PickupID.
     if (typeof pickup === "string") {
-      const pickupName = getPickupIDName(pickup) ?? UNKNOWN_PICKUP_TEXT;
+      const pickupName =
+        getEntityNameFromEntityID(pickup as EntityID) ?? UNKNOWN_PICKUP_TEXT;
 
       if (isMultiple) {
         const amountOfActivationsText = this.getAmountOfActivationsText();
         return `${amountOfActivationsText} ${addTheS(pickup, isMultiple)}`;
       }
 
-      return `${addArticle(pickupName)}`;
+      return addArticle(pickupName);
     }
 
     // It's a PickupType.

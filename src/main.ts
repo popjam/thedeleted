@@ -64,7 +64,7 @@ import { postPurchaseInit } from "./callbacks/postPurchase";
 import { initClasses } from "./classes";
 import { postRoomClearInit } from "./callbacks/postRoomClear";
 import { postSacrificeInit } from "./callbacks/postSacrifice";
-import { postSlotAnimationChanged } from "./callbacks/postSlotUse";
+import { postSlotUseInit } from "./callbacks/postSlotUse";
 
 const IS_DEV = true;
 
@@ -146,7 +146,7 @@ function initCallbacks() {
   postPurchaseInit(mod);
   postRoomClearInit(mod);
   postSacrificeInit(mod);
-  postSlotAnimationChanged(mod);
+  postSlotUseInit(mod);
 }
 
 /** Initialize External mods if they exist. */

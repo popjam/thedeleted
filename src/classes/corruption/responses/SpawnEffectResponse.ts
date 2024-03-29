@@ -3,14 +3,16 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { Response } from "./Response";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
 import { EffectID } from "../../../enums/data/ID/EffectID";
-import {
-  getEffectIDName,
-  getRandomEffectID,
-} from "../../../helper/entityHelper/effectIDHelper";
 import { getIncludeModdedEffectsInGenerationSetting } from "../../../features/settings/ModdedEffectSettings";
 import { spawnEffectID } from "../../../helper/entityHelper/effectHelper";
 import { getRandomPosition } from "../../../helper/positionHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
+import {
+  getEntityNameFromEntityID,
+  getRandomEntityIDFromCategory,
+} from "../../../helper/entityHelper/entityIDHelper";
+import type { EntityID } from "isaacscript-common";
+import { EntityCategory } from "../../../enums/general/EntityCategory";
 
 const VERB = "spawn";
 const VERB_PARTICIPLE = "spawning";
@@ -89,10 +91,10 @@ export class SpawnEffectResponse
     }
     const moddedEffectSetting = getIncludeModdedEffectsInGenerationSetting();
     // Random Effect.
-    return (
-      getRandomEffectID(moddedEffectSetting ? undefined : false) ??
-      DEFAULT_EFFECT
-    );
+    return (getRandomEntityIDFromCategory(
+      EntityCategory.EFFECT,
+      moddedEffectSetting ? undefined : false,
+    ) ?? DEFAULT_EFFECT) as EffectID;
   }
 
   override getVerb(participle: boolean): string {
@@ -120,12 +122,13 @@ export class SpawnEffectResponse
 
     // Specific effect.
     const name =
-      getEffectIDName(effect)?.toLowerCase() ?? UNKNOWN_TEAR_NAME_TEXT;
+      getEntityNameFromEntityID(effect as EntityID)?.toLowerCase() ??
+      UNKNOWN_TEAR_NAME_TEXT;
     if (isMultiple) {
       return `${this.getAmountOfActivationsText()} ${addTheS(effect, true)}`;
     }
 
-    return `${addArticle(name)}`;
+    return addArticle(name);
   }
 
   getText(_eid: boolean, participle: boolean): string {

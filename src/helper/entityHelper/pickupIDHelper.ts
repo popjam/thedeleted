@@ -6,20 +6,13 @@ import {
   isRune,
   spawnPickup,
 } from "isaacscript-common";
-import type { ReadonlySet, EntityID } from "isaacscript-common";
-import { EntityCategory } from "../../enums/general/EntityCategory";
+import type { EntityID } from "isaacscript-common";
 import {
-  getEntityIDSetFromCategory,
-  getModdedEntityIDSetFromCategory,
   getModdedPickupIDSetOfPickupType,
-  getNonModdedEntityIDSetFromCategory,
   getNonModdedPickupIDSetOfPickupType,
   getPickupIDSetOfPickupType,
-} from "../../features/data/gameSets/gameEntitySets";
+} from "../../features/data/gameSets/gameSets";
 import type { PickupID } from "../../enums/data/ID/PickupID";
-import { getNonModdedPickupName } from "../../maps/data/name/pickupNameMap";
-import { getNameSubTypeFromModdedEntityID } from "../../maps/data/moddedEntityIDToNameSubType";
-import { getModdedEntityNameAndSubTypeFromNameSubType } from "./entityIDHelper";
 import { PickupType } from "../../enums/general/PickupType";
 import { fprint } from "../printHelper";
 import type { CardType } from "isaac-typescript-definitions";
@@ -30,72 +23,7 @@ import {
   RANDOM_SOFT_NON_MODDED_SOUL_PICKUP_ID_SPREAD,
   SOUL_PREFIX,
 } from "../../constants/pickupConstants";
-
-/**
- * Determines if a EntityID that refers to a pickup is modded by checking it against the set of all
- * non-modded PickupIDs.
- */
-export function isPickupIDModded(pickupID: PickupID): boolean {
-  const nonModdedPickupSet = getNonModdedEntityIDSetFromCategory(
-    EntityCategory.PICKUP,
-  );
-  return !nonModdedPickupSet.has(pickupID as EntityID);
-}
-
-/**
- * Get the name of a PickupID. If it is modded, and the mod is not tracked, this will return
- * undefined. For modded pickups, this is the same as its 'name' xml attribute.
- */
-export function getPickupIDName(pickupID: PickupID): string | undefined {
-  const modded = isPickupIDModded(pickupID);
-  if (!modded) {
-    return getNonModdedPickupName(pickupID);
-  }
-
-  const nameSubType = getNameSubTypeFromModdedEntityID(pickupID as EntityID);
-  if (nameSubType === undefined) {
-    return undefined;
-  }
-
-  return getModdedEntityNameAndSubTypeFromNameSubType(nameSubType).name;
-}
-
-/**
- * Retrieves a random PickupID from the pool of available PickupIDs from the game set.
- *
- * @param modded Whether to get a modded or non-modded PickupID. If undefined, will get a random
- *               PickupID from either. If there are no modded PickupIDs with this set to true, this
- *               will return undefined.
- * @param seedOrRNG The seed or RNG to use for randomization. If undefined, will use undefined.
- */
-export function getRandomPickupID(
-  modded: boolean | undefined = undefined,
-  seedOrRNG: Seed | RNG | undefined = undefined,
-): PickupID | undefined {
-  if (modded === undefined) {
-    const pickupIDSet = getEntityIDSetFromCategory<PickupID>(
-      EntityCategory.PICKUP,
-    );
-    return getRandomSetElement(pickupIDSet, seedOrRNG);
-  }
-
-  if (modded) {
-    const pickupIDSet = getModdedEntityIDSetFromCategory<PickupID>(
-      EntityCategory.PICKUP,
-    );
-    if (pickupIDSet.size === 0) {
-      fprint("No modded PickupIDs found!");
-      return undefined;
-    }
-    return getRandomSetElement(pickupIDSet, seedOrRNG);
-  }
-
-  const pickupIDSet = getNonModdedEntityIDSetFromCategory<PickupID>(
-    EntityCategory.PICKUP,
-  );
-
-  return getRandomSetElement(pickupIDSet, seedOrRNG);
-}
+import { getEntityNameFromEntityID } from "./entityIDHelper";
 
 /**
  * Retrieves a random PickupID that corresponds to the specified PickupType using the game PickupID
@@ -341,7 +269,7 @@ export function getPickupTypeFromPickupID(pickupID: PickupID): PickupType {
     }
 
     case PickupVariant.CARD: {
-      const cardName = getPickupIDName(pickupID);
+      const cardName = getEntityNameFromEntityID(pickupID as EntityID);
       if (cardName === undefined) {
         return PickupType.CARD;
       }
@@ -360,7 +288,7 @@ export function getPickupTypeFromPickupID(pickupID: PickupID): PickupType {
 
     default: {
       // Check if name contains 'Chest'.
-      const pickupName = getPickupIDName(pickupID);
+      const pickupName = getEntityNameFromEntityID(pickupID as EntityID);
       if (
         pickupName !== undefined &&
         pickupName.toLowerCase().includes("chest")

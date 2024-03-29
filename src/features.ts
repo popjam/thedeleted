@@ -1,4 +1,3 @@
-import { temporaryActionResponseInit } from "./classes/corruption/responses/TemporaryActionResponse";
 import { facetInit } from "./classes/Facet";
 import { corruptionGenerationInit } from "./features/corruption/corruptionGeneration";
 import { activeItemTrackerInit } from "./features/corruption/effects/activeItemTracker";
@@ -12,7 +11,7 @@ import { customActivesInit } from "./features/corruption/inversion/customActives
 import { lastPickedUpInvertedCollectibleInit } from "./features/corruption/inversion/lastPickedUpInverted";
 import { pickupInversionInit } from "./features/corruption/inversion/pickupInversion";
 import { inversionInit } from "./features/corruption/inversion/playerInversion";
-import { gameEntitySetBuilderInit } from "./features/data/gameSets/gameEntitySets";
+import { gameEntitySetBuilderInit } from "./features/data/gameSets/gameSets";
 import { backdropHelperInit } from "./features/general/backdropHelper";
 import { floorColorHelper } from "./features/general/floorColorHelper";
 import { isLeavingGameInit } from "./features/general/isLeavingGame";

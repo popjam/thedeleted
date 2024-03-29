@@ -10,7 +10,7 @@ export function getPickupWithPickupIndex(
   pickupIndex: PickupIndex,
 ): EntityPickup | undefined {
   for (const pickup of getPickups()) {
-    if (mod["getPickupIndex"](pickup) === pickupIndex) {
+    if (mod.getPickupIndex(pickup) === pickupIndex) {
       return pickup;
     }
   }

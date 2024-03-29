@@ -1,0 +1,101 @@
+import { getConstituentsFromEntityID } from "isaacscript-common";
+import { EntityCategory } from "../../../enums/general/EntityCategory";
+import { getEntityCategoryFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import { fprint } from "../../../helper/printHelper";
+import {
+  _getEntityIDSetEditable,
+  _getEntityIDSetEditableFromCategory,
+  _getMapOfCategoryToEntityIDSetFromMod,
+  _getModdedEntityIDSetEditable,
+  _getModdedEntityIDSetEditableFromCategory,
+  _getModdedEntityIDSetEditableFromMod,
+  _getModdedPickupIDSetEditableOfPickupType,
+  _getNonModdedEntityIDSetEditable,
+  _getNonModdedEntityIDSetEditableFromCategory,
+  _getNonModdedPickupIDSetEditableOfPickupType,
+  _getPickupIDSetEditableOfPickupType,
+} from "./gameSets";
+import { getPickupTypeFromPickupID } from "../../../helper/entityHelper/pickupIDHelper";
+import type { PickupID } from "../../../enums/data/ID/PickupID";
+import { XMLNode } from "../../../temporary/XMLNode";
+import { getEntityIDFromEntities2XMLDataEntry } from "../../../helper/xmlHelper";
+
+/**
+ * Upon starting or continuing a game, re-populate the game sets
+ * (e.g. gameNPCIDSet, gamePickupIDSet, etc.). These sets hold reference to all entities, sounds,
+ * mods, etc that are currently in the game, for easy access. This prevents the need to traverse the
+ * XML data every time we need to access a random entity, sound, etc.
+ */
+export function populateGameSets(): void {
+  fprint("Populating game EntityID sets..");
+
+  // Add non-modded and modded entities:
+  populateEntitySets();
+}
+
+function populateEntitySets() {
+  const nodeType = XMLNode.ENTITY;
+  const numEntries = XMLData.GetNumEntries(nodeType);
+
+  for (let i = 0; i < numEntries; i++) {
+    const entry = XMLData.GetEntryByOrder(nodeType, i) as
+      | Entities2XMLData
+      | undefined;
+
+    // To prevent unnecessary traversing of the XML data, we should do everything in this loop.
+    if (entry) {
+      // Get the EntityID for the entry.
+      const entityID = getEntityIDFromEntities2XMLDataEntry(entry);
+      const [entityType, variant, subType] =
+        getConstituentsFromEntityID(entityID);
+      const entityConfigEntry = EntityConfig.GetEntity(
+        entityType,
+        variant,
+        subType,
+      );
+
+      if (entityConfigEntry === undefined) {
+        continue;
+      }
+
+      // Check if the entity is modded.
+      const modded = entityConfigEntry.GetModName() !== undefined;
+      const category = getEntityCategoryFromEntityID(entityID);
+      const isPickup = category === EntityCategory.PICKUP;
+
+      // Add to entity sets.
+      _getEntityIDSetEditable().add(entityID);
+      _getEntityIDSetEditableFromCategory(category).add(entityID);
+
+      if (modded) {
+        // Add to modded entity sets.
+        _getModdedEntityIDSetEditable().add(entityID);
+        _getModdedEntityIDSetEditableFromCategory(category).add(entityID);
+      } else {
+        // Add to non-modded entity sets.
+        _getNonModdedEntityIDSetEditable().add(entityID);
+        _getNonModdedEntityIDSetEditableFromCategory(category).add(entityID);
+      }
+
+      // Add to pickup sets.
+      if (isPickup) {
+        const pickupType = getPickupTypeFromPickupID(entityID as PickupID);
+
+        // Add to pickup sets.
+        _getPickupIDSetEditableOfPickupType(pickupType).add(
+          entityID as PickupID,
+        );
+
+        if (modded) {
+          _getModdedPickupIDSetEditableOfPickupType(pickupType).add(
+            entityID as PickupID,
+          );
+        } else {
+          _getNonModdedPickupIDSetEditableOfPickupType(pickupType).add(
+            entityID as PickupID,
+          );
+        }
+      }
+    }
+  }
+}

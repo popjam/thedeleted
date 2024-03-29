@@ -3,15 +3,13 @@ import {
   getModdedPickupIDSetOfPickupType,
   getNonModdedPickupIDSetOfPickupType,
   getPickupIDSetOfPickupType,
-} from "../../features/data/gameSets/gameEntitySets";
+} from "../../features/data/gameSets/gameSets";
 import { PickupType } from "../../enums/general/PickupType";
 import type { EntityID } from "isaacscript-common";
 import {
-  anyPlayerHasTrinket,
   getConstituentsFromEntityID,
   getPlayerTrinkets,
   getRandomSetElement,
-  log,
 } from "isaacscript-common";
 import type { PickupID } from "../../enums/data/ID/PickupID";
 import { fprint } from "../printHelper";

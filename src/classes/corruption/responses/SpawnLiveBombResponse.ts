@@ -12,9 +12,8 @@ import {
 } from "isaacscript-common";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
 import { getEntityCategoryFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
-import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameEntitySets";
+import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameSets";
 import { getRandomPosition } from "../../../helper/positionHelper";
-import { getBombEntityIDName } from "../../../helper/entityHelper/bombEntityHelper";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
 
@@ -160,11 +159,10 @@ export class SpawnLiveBombResponse
         : "a random live bomb";
     }
 
-    const bombName =
-      getBombEntityIDName(bomb)?.toLowerCase() ?? UNKNOWN_BOMB_NAME;
+    const bombName = "FUCK OFF";
     return isMultiple
       ? `${this.getAmountOfActivationsText()} live ${addTheS(bombName, true)}`
-      : `${addArticle(bombName)}`;
+      : addArticle(bombName);
   }
 
   override getVerb(participle: boolean): string {

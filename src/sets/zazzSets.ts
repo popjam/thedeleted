@@ -1,4 +1,4 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import { CollectibleTypeCustom } from "../enums/general/CollectibleTypeCustom";
 
 /** Set of all passive Zazzinator items. */

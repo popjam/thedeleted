@@ -202,7 +202,7 @@ export function defaultInvertedPassiveActionSetBuilder(
 
   const amountOfEffects = getRandomInteger(1, 3);
   const effectArray: Action[] = [];
-  const randomActions: Action = getRandomFromWeightedArray(
+  const randomActions: Action = getRandomFromWeightedArray<Action>(
     [
       [new OnDamageAction(), 1],
       [new OnFloorAction(), 1],

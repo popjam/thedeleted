@@ -11,12 +11,12 @@ import { Response } from "./Response";
 import {
   getEntityIDSet,
   getEntityIDSetFromCategory,
-} from "../../../features/data/gameSets/gameEntitySets";
+} from "../../../features/data/gameSets/gameSets";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
 import { getRandomPosition } from "../../../helper/positionHelper";
 import { entityCategoryToString } from "../../../maps/data/name/entityCategoryNameMap";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
-import { getEntityIDName } from "../../../helper/entityHelper/entityIDNameHelper";
+import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
 
 const VERB = "spawn";
 const VERB_PARTICIPLE = "spawning";
@@ -163,12 +163,12 @@ export class SpawnEntityResponse
     // Specific entity.
     if (isMultiple) {
       return `${this.getAmountOfActivationsText()} ${addTheS(
-        getEntityIDName(entityID) ?? UNKNOWN_ENTITY,
+        getEntityNameFromEntityID(entityID) ?? UNKNOWN_ENTITY,
         true,
       )}`;
     }
 
-    return addArticle(getEntityIDName(entityID) ?? UNKNOWN_ENTITY);
+    return addArticle(getEntityNameFromEntityID(entityID) ?? UNKNOWN_ENTITY);
   }
 
   override getText(eid: boolean, participle: boolean): string {

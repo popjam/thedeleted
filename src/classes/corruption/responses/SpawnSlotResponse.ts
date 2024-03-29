@@ -3,14 +3,16 @@ import { getRandomSetElement, spawnEntityID } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
-import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameEntitySets";
+import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameSets";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
 import type { SlotVariant } from "isaac-typescript-definitions";
 import { EntityType } from "isaac-typescript-definitions";
-import { getSlotIDName } from "../../../helper/entityHelper/slotHelper";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
 import { getRandomPosition } from "../../../helper/positionHelper";
-import { getEntityCategoryFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import {
+  getEntityCategoryFromEntityID,
+  getEntityNameFromEntityID,
+} from "../../../helper/entityHelper/entityIDHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
 
 const VERB = "spawn";
@@ -144,7 +146,8 @@ export class SpawnSlotResponse
     }
 
     // Specific slot.
-    const name = getSlotIDName(slot)?.toLowerCase() ?? UNKNOWN_SLOT_NAME_TEXT;
+    const name =
+      getEntityNameFromEntityID(slot)?.toLowerCase() ?? UNKNOWN_SLOT_NAME_TEXT;
     if (isMultiple) {
       return `${this.getAmountOfActivationsText()} ${addTheS(
         name,
@@ -152,7 +155,7 @@ export class SpawnSlotResponse
       )}`;
     }
 
-    return `${addArticle(name)}`;
+    return addArticle(name);
   }
 
   getText(_eid: boolean, participle: boolean): string {

@@ -4,12 +4,13 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { Action } from "./Action";
 import type { PickupID } from "../../../enums/data/ID/PickupID";
 import type { PickupType } from "../../../enums/general/PickupType";
+import { getPickupTypeFromPickupID } from "../../../helper/entityHelper/pickupIDHelper";
 import {
-  getPickupIDName,
-  getPickupTypeFromPickupID,
-} from "../../../helper/entityHelper/pickupIDHelper";
-import { getEntityIDFromEntity } from "../../../helper/entityHelper/entityIDHelper";
+  getEntityIDFromEntity,
+  getEntityNameFromEntityID,
+} from "../../../helper/entityHelper/entityIDHelper";
 import { pickupTypeToString } from "../../../maps/data/name/pickupTypeNameMap";
+import type { EntityID } from "isaacscript-common";
 
 const ACTION_TYPE = ActionType.ON_PURCHASE;
 
@@ -68,7 +69,7 @@ export class OnPurchaseAction extends Action {
       ? "you purchase an item"
       : `you purchase ${
           typeof pickup === "string"
-            ? getPickupIDName(pickup) ?? "an item"
+            ? getEntityNameFromEntityID(pickup as EntityID) ?? "an item"
             : pickupTypeToString(pickup)
         }`;
   }

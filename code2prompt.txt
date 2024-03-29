@@ -1,4 +1,4 @@
-Project Path: \\?\C:\Users\james\thedeleted\src
+Project Path: \\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src
 
 Source Tree:
 
@@ -594,7 +594,7 @@ src
 
 ```
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\evaluateCache.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\evaluateCache.ts`:
 
 ```````ts
 import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
@@ -617,7 +617,7 @@ function tearColor(player: EntityPlayer) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\playerCollectibleAdded.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\playerCollectibleAdded.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -632,7 +632,7 @@ function main(player: EntityPlayer, collectibleType: CollectibleType) {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\playerCollectibleRemoved.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\playerCollectibleRemoved.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -667,7 +667,7 @@ function mainZazzRemoved(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\playerTakeDMG.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\playerTakeDMG.ts`:
 
 ```````ts
 import type { DamageFlag } from "isaac-typescript-definitions";
@@ -757,7 +757,7 @@ function iloveyou(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postBombExploded.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postBombExploded.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -777,7 +777,7 @@ function main(bomb: EntityBomb) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postBombInitLate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postBombInitLate.ts`:
 
 ```````ts
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
@@ -794,7 +794,7 @@ function mainCorruptBomb(bomb: EntityBomb) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postBombUpdate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postBombUpdate.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -812,7 +812,7 @@ function mainCorruptBomb(bomb: EntityBomb) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postEntityKill.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postEntityKill.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -829,7 +829,7 @@ function main(entity: Entity) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postEntityRemove.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postEntityRemove.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -860,7 +860,7 @@ function main(entity: Entity) {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postFireTear.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postFireTear.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -877,7 +877,7 @@ function main(tear: EntityTear) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postGameStartedReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postGameStartedReordered.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -909,7 +909,7 @@ function postGameStartedReordered(isContinued: boolean) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postGreedWaveClear.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postGreedWaveClear.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -927,7 +927,7 @@ function main(_oldWave: int, _newWave: int) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postGridEntityCollision.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postGridEntityCollision.ts`:
 
 ```````ts
 import { SoundEffect } from "isaac-typescript-definitions";
@@ -944,7 +944,7 @@ function main(gridEntity: GridEntity, entity: Entity) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postItemPickup.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postItemPickup.ts`:
 
 ```````ts
 import { ItemType } from "isaac-typescript-definitions";
@@ -991,7 +991,7 @@ function mainTrinketPickup(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNewLevel.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNewLevel.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1005,7 +1005,7 @@ function main() {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNewLevelReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNewLevelReordered.ts`:
 
 ```````ts
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
@@ -1022,7 +1022,7 @@ function main() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNewRoom.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNewRoom.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1036,7 +1036,7 @@ function main() {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNewRoomReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNewRoomReordered.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -1063,7 +1063,7 @@ function main() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNPCInitLate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNPCInitLate.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -1082,7 +1082,7 @@ function main(npc: EntityNPC) {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postNPCUpdate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postNPCUpdate.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1099,7 +1099,7 @@ function main(entity: Entity): boolean | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPeffectUpdateReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPeffectUpdateReordered.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -1114,7 +1114,7 @@ function main(player: EntityPlayer) {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPickupChanged.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPickupChanged.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -1163,7 +1163,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPickupCollect.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPickupCollect.ts`:
 
 ```````ts
 import { PickupVariant } from "isaac-typescript-definitions";
@@ -1201,7 +1201,7 @@ function mainBombCollection(pickup: EntityPickup, player: EntityPlayer) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPickupInitFirst.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPickupInitFirst.ts`:
 
 ```````ts
 import { PickupVariant } from "isaac-typescript-definitions";
@@ -1222,7 +1222,7 @@ function main(pickup: EntityPickup) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPickupInitLate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPickupInitLate.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -1249,7 +1249,7 @@ function all(pickup: EntityPickup) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPlayerChangeStat.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPlayerChangeStat.ts`:
 
 ```````ts
 import { ModCallbackCustom } from "isaacscript-common";
@@ -1270,7 +1270,7 @@ function main<T extends PlayerStat>(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPlayerChangeType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPlayerChangeType.ts`:
 
 ```````ts
 import { PlayerType } from "isaac-typescript-definitions";
@@ -1292,7 +1292,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPlayerFatalDamage.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPlayerFatalDamage.ts`:
 
 ```````ts
 import { PlayerVariant } from "isaac-typescript-definitions";
@@ -1344,7 +1344,7 @@ function main(player: EntityPlayer): boolean | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPlayerInit.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPlayerInit.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1361,7 +1361,7 @@ function main(player: EntityPlayer) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPlayerInitFirst.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPlayerInitFirst.ts`:
 
 ```````ts
 import { PlayerVariant } from "isaac-typescript-definitions";
@@ -1403,7 +1403,7 @@ function taintedDeletedInit(player: EntityPlayer) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postPurchase.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postPurchase.ts`:
 
 ```````ts
 import { ModCallbackCustom } from "isaacscript-common";
@@ -1420,7 +1420,7 @@ function main(player: EntityPlayer, pickup: EntityPickup) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postRender.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postRender.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1437,7 +1437,7 @@ function main() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postRoomClear.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postRoomClear.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -1459,7 +1459,7 @@ function onRoomClearMain() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postSacrifice.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postSacrifice.ts`:
 
 ```````ts
 import { ModCallbackCustom } from "isaacscript-common";
@@ -1476,7 +1476,7 @@ function main(player: EntityPlayer, numSacrifices: int) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postSlotUse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postSlotUse.ts`:
 
 ```````ts
 import { ModCallbackCustom } from "isaacscript-common";
@@ -1499,7 +1499,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postUpdate.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postUpdate.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1513,7 +1513,7 @@ function main() {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postUseCard.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postUseCard.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1535,7 +1535,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postUseItem.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postUseItem.ts`:
 
 ```````ts
 import type { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -1767,7 +1767,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\postUsePill.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\postUsePill.ts`:
 
 ```````ts
 import { ModCallback, RoomType } from "isaac-typescript-definitions";
@@ -1789,7 +1789,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preCustomRevive.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preCustomRevive.ts`:
 
 ```````ts
 import { ModCallbackCustom } from "isaacscript-common";
@@ -1805,7 +1805,7 @@ export function preCustomReviveInit(mod: ModUpgraded): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preGameExit.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preGameExit.ts`:
 
 ```````ts
 import { CallbackPriority, ModCallback } from "isaac-typescript-definitions";
@@ -1849,7 +1849,7 @@ function runSavedMain() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preGetPedestal.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preGetPedestal.ts`:
 
 ```````ts
 import type { ModUpgraded } from "isaacscript-common";
@@ -1870,7 +1870,7 @@ function main(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preItemPickup.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preItemPickup.ts`:
 
 ```````ts
 import { ItemType } from "isaac-typescript-definitions";
@@ -1909,7 +1909,7 @@ function mainTrinketPickup(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preNewLevel.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preNewLevel.ts`:
 
 ```````ts
 import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
@@ -1925,7 +1925,7 @@ function main(player: EntityPlayer) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\prePickupCollision.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\prePickupCollision.ts`:
 
 ```````ts
 import { ModUpgraded } from "isaacscript-common";
@@ -1935,7 +1935,7 @@ export function prePickupCollisionInit(mod: ModUpgraded): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\prePlayerCollision.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\prePlayerCollision.ts`:
 
 ```````ts
 import { ModCallback, PlayerVariant } from "isaac-typescript-definitions";
@@ -1961,7 +1961,7 @@ function iloveyou(player: EntityPlayer, collider: Entity): boolean | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\callbacks\preSpawnClearAward.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\callbacks\preSpawnClearAward.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -1981,7 +1981,7 @@ function mainPreSpawnClearAward(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\Action.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\Action.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -2399,7 +2399,7 @@ export function isAction(obj: any): obj is Action {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnActiveUseAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnActiveUseAction.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -2486,7 +2486,7 @@ export function triggerOnActiveUseActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnBombExplodeAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnBombExplodeAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -2538,7 +2538,7 @@ export function triggerOnBombExplodeActions(bomb: EntityBomb): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnCardUseAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnCardUseAction.ts`:
 
 ```````ts
 import type { CardType } from "isaac-typescript-definitions";
@@ -2621,7 +2621,7 @@ export function triggerOnCardUseActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnDamageAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnDamageAction.ts`:
 
 ```````ts
 import type { DamageFlag } from "isaac-typescript-definitions";
@@ -2728,7 +2728,7 @@ export function triggerOnDamageActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnDeathAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnDeathAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -2767,7 +2767,7 @@ export function triggerOnDeathActions(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnFloorAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnFloorAction.ts`:
 
 ```````ts
 import type { LevelStage } from "isaac-typescript-definitions";
@@ -2906,7 +2906,7 @@ export function triggerOnFloorActions(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnGreedWaveClearAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnGreedWaveClearAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -2940,7 +2940,7 @@ export function triggerOnGreedWaveClearActions(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnKillAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnKillAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -2979,7 +2979,7 @@ export function triggerOnKillActions(entity: Entity): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnObtainAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnObtainAction.ts`:
 
 ```````ts
 import { getRandomSetElement } from "isaacscript-common";
@@ -3031,7 +3031,7 @@ export class OnObtainAction extends Action {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnPickupCollectAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnPickupCollectAction.ts`:
 
 ```````ts
 import type { PickupVariant } from "isaac-typescript-definitions";
@@ -3124,7 +3124,7 @@ export function triggerOnPickupCollectActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnPillUseAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnPillUseAction.ts`:
 
 ```````ts
 import type {
@@ -3280,7 +3280,7 @@ export function triggerOnPillUseActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnPurchaseAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnPurchaseAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -3393,7 +3393,7 @@ export function triggerOnPurchaseActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnReviveAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnReviveAction.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -3448,7 +3448,7 @@ export function triggerOnReviveActions(player: EntityPlayer): int | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnRoomAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnRoomAction.ts`:
 
 ```````ts
 import { RoomType } from "isaac-typescript-definitions";
@@ -3544,7 +3544,7 @@ export function triggerOnRoomActions(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnRoomClearAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnRoomClearAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -3580,7 +3580,7 @@ export function triggerOnRoomClearActions(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnSacrificeAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnSacrificeAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -3625,7 +3625,7 @@ export function triggerOnSacrificeActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnSlotDestroyAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnSlotDestroyAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -3718,7 +3718,7 @@ export function triggerOnSlotDestroyActions(slot: Entity): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnSlotUseAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnSlotUseAction.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -3799,7 +3799,7 @@ export function triggerOnSlotUseActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actions\OnStatAction.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actions\OnStatAction.ts`:
 
 ```````ts
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
@@ -3934,7 +3934,7 @@ export function triggerOnStatActions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actionSets\ActionSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actionSets\ActionSet.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -4082,7 +4082,7 @@ export abstract class ActionSet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedActiveActionSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedActiveActionSet.ts`:
 
 ```````ts
 import type { ActiveSlot } from "isaac-typescript-definitions";
@@ -4362,7 +4362,7 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedItemActionSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedItemActionSet.ts`:
 
 ```````ts
 import { ItemType } from "isaac-typescript-definitions";
@@ -4569,7 +4569,7 @@ export abstract class InvertedItemActionSet extends ActionSet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedPassiveActionSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actionSets\Inverted\InvertedPassiveActionSet.ts`:
 
 ```````ts
 import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSetType";
@@ -4604,7 +4604,7 @@ export class InvertedPassiveActionSet extends InvertedItemActionSet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\actionSets\NonInverted\NonInvertedPickupActionSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\actionSets\NonInverted\NonInvertedPickupActionSet.ts`:
 
 ```````ts
 import { ColorDefault, deepCopy } from "isaacscript-common";
@@ -4702,7 +4702,7 @@ export class NonInvertedPickupActionSet extends ActionSet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\GetCollectibleResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\GetCollectibleResponse.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -4909,7 +4909,7 @@ export function isGetCollectibleResponse(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\GetTrinketResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\GetTrinketResponse.ts`:
 
 ```````ts
 import { TrinketType } from "isaac-typescript-definitions";
@@ -5058,7 +5058,7 @@ export class GetTrinketResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\IfThenElseResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\IfThenElseResponse.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -5244,7 +5244,7 @@ export class IfThenElseResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\IfThenResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\IfThenResponse.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -5412,7 +5412,7 @@ export class IfThenResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\PlaySoundResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\PlaySoundResponse.ts`:
 
 ```````ts
 import type { SoundEffect } from "isaac-typescript-definitions";
@@ -5501,7 +5501,7 @@ export class PlaySoundResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\RemoveActionResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\RemoveActionResponse.ts`:
 
 ```````ts
 import type { ActionOrigin } from "../../../enums/corruption/actions/ActionOrigin";
@@ -5643,7 +5643,7 @@ export class RemoveActionResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\RemoveCollectibleResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\RemoveCollectibleResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -5842,7 +5842,7 @@ export class RemoveCollectibleResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\RemoveEntityResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\RemoveEntityResponse.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -6086,7 +6086,7 @@ export class RemoveEntityResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\RemoveGridEntityResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\RemoveGridEntityResponse.ts`:
 
 ```````ts
 import type { GridEntityID } from "isaacscript-common";
@@ -6350,7 +6350,7 @@ export class RemoveGridEntityResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\Response.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\Response.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -6602,7 +6602,7 @@ export function isResponse(obj: any): obj is Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnEffectResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnEffectResponse.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -6757,7 +6757,7 @@ export class SpawnEffectResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnEntityResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnEntityResponse.ts`:
 
 ```````ts
 import {
@@ -6954,7 +6954,7 @@ export class SpawnEntityResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnGridEntityResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnGridEntityResponse.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -7199,7 +7199,7 @@ export class SpawnGridEntityResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnHybridNPCResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnHybridNPCResponse.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -7357,7 +7357,7 @@ export class SpawnHybridNPCResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnLiveBombResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnLiveBombResponse.ts`:
 
 ```````ts
 import type { BombVariant } from "isaac-typescript-definitions";
@@ -7561,7 +7561,7 @@ export class SpawnLiveBombResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnNPCResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnNPCResponse.ts`:
 
 ```````ts
 import {
@@ -7854,7 +7854,7 @@ export class SpawnNPCResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnPickupResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnPickupResponse.ts`:
 
 ```````ts
 import { EntityType, PickupVariant } from "isaac-typescript-definitions";
@@ -8096,7 +8096,7 @@ export class SpawnPickupResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnSlotResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnSlotResponse.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -8278,7 +8278,7 @@ export class SpawnSlotResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\SpawnTearResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\SpawnTearResponse.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -8431,7 +8431,7 @@ export class SpawnTearResponse
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TemporaryActionResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TemporaryActionResponse.ts`:
 
 ```````ts
 import { deepCopy } from "isaacscript-common";
@@ -8565,7 +8565,7 @@ export class TemporaryActionResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TemporaryActionSetResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TemporaryActionSetResponse.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -8625,7 +8625,7 @@ export class TemporaryActionSetResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TemporaryCollectibleResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TemporaryCollectibleResponse.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -8730,7 +8730,7 @@ export class TemporaryCollectibleResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TransformResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TransformResponse.ts`:
 
 ```````ts
 import { VectorZero, isGridEntity } from "isaacscript-common";
@@ -9038,7 +9038,7 @@ export class TransformResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TriggerInQueueResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TriggerInQueueResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9137,7 +9137,7 @@ export class TriggerInQueueResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TriggerInSequenceResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TriggerInSequenceResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9234,7 +9234,7 @@ export class TriggerInSequenceResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TriggerOverTimeResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TriggerOverTimeResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9387,7 +9387,7 @@ export class TriggerOverTimeResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\TriggerRandomResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\TriggerRandomResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9506,7 +9506,7 @@ export class TriggerRandomResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\UseActiveItemResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\UseActiveItemResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9708,7 +9708,7 @@ export class UseActiveItemResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\corruption\responses\WaitThenTriggerResponse.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\corruption\responses\WaitThenTriggerResponse.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -9853,7 +9853,7 @@ export class WaitThenTriggerResponse extends Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\Facet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\Facet.ts`:
 
 ```````ts
 /**
@@ -10044,7 +10044,7 @@ export function facetPreGameExit(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\CorruptedCollectibleSpriteFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\CorruptedCollectibleSpriteFacet.ts`:
 
 ```````ts
 import {
@@ -10243,7 +10243,7 @@ export function returnCorruptedCollectibleSpriteToNormal(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\CustomActiveFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\CustomActiveFacet.ts`:
 
 ```````ts
 import type { UseFlag } from "isaac-typescript-definitions";
@@ -10734,7 +10734,7 @@ export function printCustomActiveStatus(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\BolsterNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\BolsterNPCFacet.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -10856,7 +10856,7 @@ export function isNPCBolstered(npc: EntityNPC): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\CensoredNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\CensoredNPCFacet.ts`:
 
 ```````ts
 import type { NPCID } from "isaac-typescript-definitions";
@@ -10985,7 +10985,7 @@ export function censorAllNPCsInRoom(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\FreezeNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\FreezeNPCFacet.ts`:
 
 ```````ts
 import type { DamageFlag } from "isaac-typescript-definitions";
@@ -11122,7 +11122,7 @@ export function isNPCFrozen(npc: EntityNPC): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\HideNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\HideNPCFacet.ts`:
 
 ```````ts
 import {
@@ -11308,7 +11308,7 @@ export function getHideNPCFacet(): Facet | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\HybridNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\HybridNPCFacet.ts`:
 
 ```````ts
 /**
@@ -11544,7 +11544,7 @@ function findHybridNPCByCurrentNPC(npc: EntityNPC): HybridNPC | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\NonMandatoryNPCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\NonMandatoryNPCFacet.ts`:
 
 ```````ts
 import { ModCallback } from "isaac-typescript-definitions";
@@ -11682,7 +11682,7 @@ export function getNonMandatoryNPCFacetSubscriberCount(): number {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\PermanentNPCStatusEffectFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\NPCModifiers\PermanentNPCStatusEffectFacet.ts`:
 
 ```````ts
 import { ModCallback, EntityFlag } from "isaac-typescript-definitions";
@@ -11867,7 +11867,7 @@ function applyNPCStatusEffectFromNPCFlag(npc: EntityNPC, npcFlag: NPCFlag) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\pickupModifiers\EveryItemIsFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\pickupModifiers\EveryItemIsFacet.ts`:
 
 ```````ts
 import {
@@ -12052,7 +12052,7 @@ function morphItem(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\entityModifiers.ts\UnstableEntityFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\entityModifiers.ts\UnstableEntityFacet.ts`:
 
 ```````ts
 import { ModCallback, SoundEffect } from "isaac-typescript-definitions";
@@ -12349,7 +12349,7 @@ export function isNPCUnstable(entityNPC: EntityNPC): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\ExampleFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\ExampleFacet.ts`:
 
 ```````ts
 import type { PlayerIndex } from "isaacscript-common";
@@ -12409,7 +12409,7 @@ export function isExampleFacetInitialized(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\gameModifiers.ts\CantPickupFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\gameModifiers.ts\CantPickupFacet.ts`:
 
 ```````ts
 import type { PickupVariant } from "isaac-typescript-definitions";
@@ -12530,7 +12530,7 @@ export function removePlayerCantPickup(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\pc\PCFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\pc\PCFacet.ts`:
 
 ```````ts
 import type { SlotVariant } from "isaac-typescript-definitions";
@@ -12783,7 +12783,7 @@ function playIdleOnAnimation() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\RenderOverHeadFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\RenderOverHeadFacet.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -12974,7 +12974,7 @@ function shouldRenderPickupSprite(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\facets\SpawnEntityByNameFacet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\facets\SpawnEntityByNameFacet.ts`:
 
 ```````ts
 import { Callback, spawnEntityID } from "isaacscript-common";
@@ -13060,7 +13060,7 @@ export function spawnEntityByName(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\worms\FriendlyWorm.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\worms\FriendlyWorm.ts`:
 
 ```````ts
 import { EntityFlag, EntityType } from "isaac-typescript-definitions";
@@ -13103,7 +13103,7 @@ export abstract class FriendlyWorm {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes\worms\LevelOneWorm.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes\worms\LevelOneWorm.ts`:
 
 ```````ts
 import { FriendlyWormType } from "../../enums/FriendlyWormType";
@@ -13115,7 +13115,7 @@ export class LevelOneWorm extends FriendlyWorm {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\classes.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\classes.ts`:
 
 ```````ts
 import { InvertedActiveActionSet } from "./classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
@@ -13222,7 +13222,7 @@ export function initClasses(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\actionSetConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\actionSetConstants.ts`:
 
 ```````ts
 import { EIDMarkup } from "../enums/compatibility/EID/EIDMarkup";
@@ -13233,7 +13233,7 @@ export const INVERTED_ACTIVE_EID_ICON = EIDMarkup.ERROR;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\corruptionConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\corruptionConstants.ts`:
 
 ```````ts
 import type { WeightedArray } from "isaacscript-common";
@@ -13280,7 +13280,7 @@ export const HYBRID_NPC_DEFAULT_NPC_AMOUNT = 2;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\eidConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\eidConstants.ts`:
 
 ```````ts
 /** The key EID uses for the Entity.GetData() method. */
@@ -13288,7 +13288,7 @@ export const EID_ENTITY_DATA_KEY = "EID_Description";
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\fileConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\fileConstants.ts`:
 
 ```````ts
 /** Normal Deleted non-inverted starting character spritesheet png path. */
@@ -13320,14 +13320,14 @@ export const DEFAULT_NORMAL_STARTING_SPRITESHEET_PATH = `${NORMAL_NONINVERTED_ST
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\generalConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\generalConstants.ts`:
 
 ```````ts
 export const MILLISECONDS_IN_A_SECOND = 1000;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\HUDConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\HUDConstants.ts`:
 
 ```````ts
 import { RESOLUTION_FULL_SCREEN } from "isaacscript-common";
@@ -13339,7 +13339,7 @@ export const RIGHT_HUD_QUADRANTS_Y_POSITION_CUTOFF = 242;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\items\MYDOOMEyeConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\items\MYDOOMEyeConstants.ts`:
 
 ```````ts
 import { Percentage } from "../../types/general/Percentage";
@@ -13348,7 +13348,7 @@ export const MYDOOM_EYE_CHANCE_TO_DEGRADE: Percentage = 20;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\mod\itemConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\mod\itemConstants.ts`:
 
 ```````ts
 export const BITFLIP_DESCRIPTION = "Bitflip Description.";
@@ -13358,7 +13358,7 @@ export const ZAZZ_DESCRIPTION = "Zazz Description";
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\mod\modConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\mod\modConstants.ts`:
 
 ```````ts
 import { ISCFeature } from "isaacscript-common";
@@ -13367,7 +13367,7 @@ export const MOD_NAME = "thedeleted";
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\modes\HAPPY99Constants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\modes\HAPPY99Constants.ts`:
 
 ```````ts
 import { ColorDefault } from "isaacscript-common";
@@ -13387,7 +13387,7 @@ export const HAPPY99InvertedItemSpriteColor: AdvancedColor = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\modes\ILOVEYOUConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\modes\ILOVEYOUConstants.ts`:
 
 ```````ts
 import { ColorDefault } from "isaacscript-common";
@@ -13419,7 +13419,7 @@ export const ILOVEYOUInvertedItemSpriteColor: AdvancedColor = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\modes\MORRISConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\modes\MORRISConstants.ts`:
 
 ```````ts
 import { ColorDefault } from "isaacscript-common";
@@ -13439,7 +13439,7 @@ export const MORRISInvertedItemSpriteColor: AdvancedColor = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\modes\REVETONConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\modes\REVETONConstants.ts`:
 
 ```````ts
 import { ColorDefault } from "isaacscript-common";
@@ -13472,7 +13472,7 @@ export const REVETONInvertedItemBlueSpriteColor: AdvancedColor = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\npcConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\npcConstants.ts`:
 
 ```````ts
 import { EntityType } from "isaac-typescript-definitions";
@@ -13481,7 +13481,7 @@ export const FIRST_NPC_ENTITY_TYPE = EntityType.GAPER;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\pcConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\pcConstants.ts`:
 
 ```````ts
 import { Mode } from "../enums/modes/Mode";
@@ -13515,7 +13515,7 @@ export const TaintedModeCarousel = [Mode.SOPHOS, Mode.BATTLEYE];
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\pickupConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\pickupConstants.ts`:
 
 ```````ts
 import { EntityType, PickupVariant } from "isaac-typescript-definitions";
@@ -13559,7 +13559,7 @@ export const RANDOM_SOFT_NON_MODDED_MISCELLANEOUS_PICKUP_ID_SPREAD = [
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\renderConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\renderConstants.ts`:
 
 ```````ts
 /**
@@ -13671,7 +13671,7 @@ export const PEDESTAL_HEIGHT = 45;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\soundConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\soundConstants.ts`:
 
 ```````ts
 import { SoundEffect } from "isaac-typescript-definitions";
@@ -13690,7 +13690,7 @@ export const MAX_SOUND_EFFECT_PITCH = 10;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\spriteConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\spriteConstants.ts`:
 
 ```````ts
 /** A 30x30 pure white sprite to be used for various things. */
@@ -13701,7 +13701,7 @@ export const FILL_SPRITE_TO_SCREEN_VECTOR_SCALE = Vector(100, 100);
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\constants\tmtrainerConstants.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\constants\tmtrainerConstants.ts`:
 
 ```````ts
 /** TMTRAINER items subTypes will be over this number. */
@@ -13712,7 +13712,7 @@ export const TMTRAINER_UNIQUE_LIMIT = 1024;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\compatibility\EID\EIDColor.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\compatibility\EID\EIDColor.ts`:
 
 ```````ts
 /** Shortcuts for setting the Color of EID Text. */
@@ -13755,7 +13755,7 @@ export enum EIDColorShortcut {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\compatibility\EID\EIDColorTriplet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\compatibility\EID\EIDColorTriplet.ts`:
 
 ```````ts
 /**
@@ -13771,7 +13771,7 @@ export enum EIDColorTriplet {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\compatibility\EID\EIDMarkup.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\compatibility\EID\EIDMarkup.ts`:
 
 ```````ts
 /** EID Icon Markup. */
@@ -13833,7 +13833,7 @@ export enum EIDMarkup {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\compatibility\Mods.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\compatibility\Mods.ts`:
 
 ```````ts
 /** An assortment of mods the player may have installed that are recognized by this mod. */
@@ -13844,7 +13844,7 @@ export enum Mods {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\actions\ActionBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\actions\ActionBuilders.ts`:
 
 ```````ts
 /**
@@ -13858,7 +13858,7 @@ export enum ActionBuilders {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\actions\ActionOrigin.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\actions\ActionOrigin.ts`:
 
 ```````ts
 /** The 'parent' of the Action. */
@@ -13878,7 +13878,7 @@ export type ActionOriginType = [ActionOrigin, number];
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\actions\ActionType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\actions\ActionType.ts`:
 
 ```````ts
 /** The possible types of Actions. */
@@ -13912,7 +13912,7 @@ export enum ActionType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\actionSets\ActionSetBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\actionSets\ActionSetBuilders.ts`:
 
 ```````ts
 /**
@@ -13931,7 +13931,7 @@ export enum InvertedItemActionSetBuilderReference {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\actionSets\ActionSetType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\actionSets\ActionSetType.ts`:
 
 ```````ts
 /** The possible types of Responses. */
@@ -13943,7 +13943,7 @@ export enum ActionSetType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\Morality.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\Morality.ts`:
 
 ```````ts
 /** Classifies effects by their benefit to the player. Order matters for ActionSet color setting. */
@@ -13955,7 +13955,7 @@ export enum Morality {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\corruption\responses\ResponseType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\corruption\responses\ResponseType.ts`:
 
 ```````ts
 /** The possible types of Responses. */
@@ -14039,7 +14039,7 @@ export enum ResponseType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\data\ID\EffectID.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\data\ID\EffectID.ts`:
 
 ```````ts
 export enum EffectID {
@@ -14311,7 +14311,7 @@ export enum EffectID {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\data\ID\FamiliarID.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\data\ID\FamiliarID.ts`:
 
 ```````ts
 /* eslint-disable isaacscript/enum-member-number-separation */
@@ -14491,7 +14491,7 @@ export enum FamiliarID {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\data\ID\GridID.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\data\ID\GridID.ts`:
 
 ```````ts
 /** A list of unique grid entities, indexed using their GridEntityID. */
@@ -14561,7 +14561,7 @@ export enum GridID {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\data\ID\PickupID.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\data\ID\PickupID.ts`:
 
 ```````ts
 /** An enum of EntityIDs which correlate to a Pickup. */
@@ -14752,7 +14752,7 @@ export enum PickupID {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\FriendlyWormType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\FriendlyWormType.ts`:
 
 ```````ts
 export enum FriendlyWormType {
@@ -14761,7 +14761,7 @@ export enum FriendlyWormType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\CharacterType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\CharacterType.ts`:
 
 ```````ts
 /** A type to differentiate 'non tainted a.k.a normal' elements from tainted. */
@@ -14772,7 +14772,7 @@ export enum CharacterType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\CollectibleTypeCustom.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\CollectibleTypeCustom.ts`:
 
 ```````ts
 export const CollectibleTypeCustom = {
@@ -14818,7 +14818,7 @@ export const CollectibleTypeCustom = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\Conditional.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\Conditional.ts`:
 
 ```````ts
 /**
@@ -14926,7 +14926,7 @@ export enum Conditional {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\DeletedColor.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\DeletedColor.ts`:
 
 ```````ts
 /** Colors that are commonly used in The Deleted mod. */
@@ -14967,7 +14967,7 @@ export const DeletedColor = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\EntityCategory.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\EntityCategory.ts`:
 
 ```````ts
 /** The categories non-Grid Entities belong to. */
@@ -15006,7 +15006,7 @@ export enum EntityCategoryWithGrid {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\HUDQuandrant.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\HUDQuandrant.ts`:
 
 ```````ts
 /**
@@ -15022,7 +15022,7 @@ export enum HUDQuadrant {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\NPCFlag.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\NPCFlag.ts`:
 
 ```````ts
 /**
@@ -15138,7 +15138,7 @@ export enum NPCFlag {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\PickupStage.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\PickupStage.ts`:
 
 ```````ts
 /** Set of callbacks a picked up collectible can be in. */
@@ -15150,7 +15150,7 @@ export enum PickupStage {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\PickupType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\PickupType.ts`:
 
 ```````ts
 /**
@@ -15178,7 +15178,7 @@ export enum PickupType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\PlayerTypeCustom.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\PlayerTypeCustom.ts`:
 
 ```````ts
 /** TODO: Change back to Deleted. */
@@ -15202,7 +15202,7 @@ export const PlayerTypeCustom = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\SoundEffectCustom.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\SoundEffectCustom.ts`:
 
 ```````ts
 export const SoundEffectCustom = {
@@ -15243,7 +15243,7 @@ export const SoundEffectCustom = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\general\TemporaryEffectType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\general\TemporaryEffectType.ts`:
 
 ```````ts
 /** Dictates how long various effects affect the player or other beings. */
@@ -15260,7 +15260,7 @@ export enum TemporaryEffectType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\modes\Mode.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\modes\Mode.ts`:
 
 ```````ts
 /** Both Normal-Deleted and Tainted-Deleted's modes. */
@@ -15285,7 +15285,7 @@ export enum Mode {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\pc\PCAnimation.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\pc\PCAnimation.ts`:
 
 ```````ts
 /** Animations that the PC can play. */
@@ -15297,7 +15297,7 @@ export enum PCAnimation {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\pc\PCStatus.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\pc\PCStatus.ts`:
 
 ```````ts
 /** Tracks state of PC in starting room. */
@@ -15313,7 +15313,7 @@ export enum PCState {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\settings\EIDObjectDisplaySetting.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\settings\EIDObjectDisplaySetting.ts`:
 
 ```````ts
 /**
@@ -15328,7 +15328,7 @@ export enum EIDObjectDisplaySetting {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\SlotCustom.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\SlotCustom.ts`:
 
 ```````ts
 export const SlotCustom = {
@@ -15337,7 +15337,7 @@ export const SlotCustom = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\enums\worlds\Worlds.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\enums\worlds\Worlds.ts`:
 
 ```````ts
 export enum World {
@@ -15352,7 +15352,7 @@ export enum World {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\compatibility\EID\EIDInit.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\compatibility\EID\EIDInit.ts`:
 
 ```````ts
 import { getEnumValues, KColorDefault } from "isaacscript-common";
@@ -15398,7 +15398,7 @@ function initEIDColors(EID: EIDInterface) {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\compatibility\ITEM_DISPLAY\ItemDisplayLibrary.d.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\compatibility\ITEM_DISPLAY\ItemDisplayLibrary.d.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -15423,7 +15423,7 @@ declare global {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\compatibility\ITEM_DISPLAY\ItemDisplayLibrary.lua`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\compatibility\ITEM_DISPLAY\ItemDisplayLibrary.lua`:
 
 ```````lua
 local ItemDisplay_libVersion = 1.1
@@ -15852,7 +15852,7 @@ return script
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\console\testing.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\console\testing.ts`:
 
 ```````ts
 import {
@@ -16104,7 +16104,7 @@ function consonantsInARow(str: string): number {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\corruptionGeneration.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\corruptionGeneration.ts`:
 
 ```````ts
 /** Responsible for creating populated InvertedActionSets, Actions and Responses. */
@@ -16209,7 +16209,7 @@ export function generateDefaultInvertedItemActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\effects\activeItemTracker.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\effects\activeItemTracker.ts`:
 
 ```````ts
 /**
@@ -16344,7 +16344,7 @@ export function getAndRemoveTrackedPedestalInvertedActiveFromPickupIndex(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\effects\callbacks\postZazzRemoved.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\effects\callbacks\postZazzRemoved.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -16384,7 +16384,7 @@ export function invertedItemEffectsPostZazzActiveCollectibleRemoved(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\effects\itemEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\effects\itemEffects.ts`:
 
 ```````ts
 /**
@@ -16489,7 +16489,7 @@ export function _setInvertedItemActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\effects\pickupEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\effects\pickupEffects.ts`:
 
 ```````ts
 import type { PickupIndex } from "isaacscript-common";
@@ -16533,7 +16533,7 @@ export function _setPickupIndexActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\effects\playerEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\effects\playerEffects.ts`:
 
 ```````ts
 import type { PlayerIndex } from "isaacscript-common";
@@ -16903,7 +16903,7 @@ export function _preGameExitRemoveInvertedCollectibleActions(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inventory\bombInventory.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inventory\bombInventory.ts`:
 
 ```````ts
 import { SoundEffect } from "isaac-typescript-definitions";
@@ -17015,7 +17015,7 @@ export function bombInventoryPostBombExploded(bomb: EntityBomb): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inventory\callbacks\itemInventoryPostGameContinuedReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inventory\callbacks\itemInventoryPostGameContinuedReordered.ts`:
 
 ```````ts
 import { getPlayers } from "isaacscript-common";
@@ -17039,7 +17039,7 @@ export function _itemInventoryPostGameContinuedReordered(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inventory\callbacks\postPickupChangedToInverted.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inventory\callbacks\postPickupChangedToInverted.ts`:
 
 ```````ts
 /**
@@ -17077,7 +17077,7 @@ export function postCollectibleInitLateZazzinator(pickup: EntityPickup): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inventory\passiveItemInventory.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inventory\passiveItemInventory.ts`:
 
 ```````ts
 /**
@@ -17250,7 +17250,7 @@ export function _removeActionFromCorruptInventory(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inventory\removedInvertedItems.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inventory\removedInvertedItems.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -17320,7 +17320,7 @@ export function _getRemovedInvertedItems(): RemovedZazzItem[] {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\bombCollection.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\bombCollection.ts`:
 
 ```````ts
 // POST_PICKUP_COLLECT.
@@ -17363,7 +17363,7 @@ export function nonInvertedBombPostPickupCollect(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\coinCollection.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\coinCollection.ts`:
 
 ```````ts
 // POST_PICKUP_COLLECT.
@@ -17401,7 +17401,7 @@ export function nonInvertedCoinPostPickupCollect(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\invertedPostItemPickupCollectible.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\invertedPostItemPickupCollectible.ts`:
 
 ```````ts
 import type { PickingUpItemCollectible } from "isaacscript-common";
@@ -17471,7 +17471,7 @@ export function invertedPostItemPickupCollectible(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\invertedPostPickupChanged.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\invertedPostPickupChanged.ts`:
 
 ```````ts
 import type { PickupVariant } from "isaac-typescript-definitions";
@@ -17497,7 +17497,7 @@ export function invertedPostPickupChanged(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\invertedPreGetPedestalCollectible.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\invertedPreGetPedestalCollectible.ts`:
 
 ```````ts
 /**
@@ -17659,7 +17659,7 @@ function preGetPedestalZazz(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\callbacks\invertedPreItemPickupCollectible.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\callbacks\invertedPreItemPickupCollectible.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -17742,7 +17742,7 @@ export function invertedPreItemPickupCollectible(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\customActivePostGameContinuedReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\customActivePostGameContinuedReordered.ts`:
 
 ```````ts
 import { getPlayers } from "isaacscript-common";
@@ -17766,7 +17766,7 @@ export function _customActiveInventoryPostGameContinuedReordered(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\customActives.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\customActives.ts`:
 
 ```````ts
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -18050,7 +18050,7 @@ export function _removeActionFromCustomActive(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\lastPickedUpInverted.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\lastPickedUpInverted.ts`:
 
 ```````ts
 /** This file tracks the last picked up inverted collectible that each player has picked up. */
@@ -18252,7 +18252,7 @@ export function isPlayerPickingUpItem(player: EntityPlayer): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\pickupInversion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\pickupInversion.ts`:
 
 ```````ts
 /**
@@ -18316,7 +18316,7 @@ export function _setAllPedestalInversion(inverted: boolean): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\playerInversion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\playerInversion.ts`:
 
 ```````ts
 /** Functions related to player and hence game inversion status. */
@@ -18380,7 +18380,7 @@ export function isGameInverted(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\corruption\inversion\seenInvertedPickups.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\corruption\inversion\seenInvertedPickups.ts`:
 
 ```````ts
 import type { PickupIndex } from "isaacscript-common";
@@ -18411,7 +18411,7 @@ export function _invertedPickupHasBeenSeen(pickup: EntityPickup): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\data\gameSets\callbacks\gameSetsPostGameStartedReordered.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\data\gameSets\callbacks\gameSetsPostGameStartedReordered.ts`:
 
 ```````ts
 import { populateGameEntitySets } from "../gameEntitySetBuilder";
@@ -18423,7 +18423,7 @@ export function postGameStartedReorderedGameEntitySetBuilder(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\data\gameSets\gameEntitySetBuilder.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\data\gameSets\gameEntitySetBuilder.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -18577,7 +18577,7 @@ function addNonModdedEntityIDToSets(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\data\gameSets\gameEntitySets.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\data\gameSets\gameEntitySets.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -18809,7 +18809,7 @@ export function _getModdedPickupIDSetEditableOfPickupType(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\backdropHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\backdropHelper.ts`:
 
 ```````ts
 import { BackdropType } from "isaac-typescript-definitions";
@@ -18875,7 +18875,7 @@ export function backdropHelperPostNewRoomReordered(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\floorColorHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\floorColorHelper.ts`:
 
 ```````ts
 import {
@@ -19048,7 +19048,7 @@ export function floorColorHelperPostNewRoomReordered(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\isLeavingGame.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\isLeavingGame.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -19079,7 +19079,7 @@ export function isLeavingGamePreGameExitEarly(_shouldSave: boolean): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\lastRoomVisited.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\lastRoomVisited.ts`:
 
 ```````ts
 import { getRoomListIndex } from "isaacscript-common";
@@ -19125,7 +19125,7 @@ export function lastRoomVisitedPostNewRoomReordered(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\lateSave.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\lateSave.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -19146,7 +19146,7 @@ export function lateSavePostEntityRemoveLate(_entity: Entity): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\playerStats.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\playerStats.ts`:
 
 ```````ts
 import { CacheFlag } from "isaac-typescript-definitions";
@@ -19307,7 +19307,7 @@ export function playerStatsEvaluateCache(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\RNGHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\RNGHelper.ts`:
 
 ```````ts
 import { game, newRNG } from "isaacscript-common";
@@ -19333,7 +19333,7 @@ export function getRunRNG(): RNG {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\spriteCache.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\spriteCache.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -19363,7 +19363,7 @@ export function getCollectibleSpriteFromCache(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\general\temporaryItems.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\general\temporaryItems.ts`:
 
 ```````ts
 /**
@@ -19767,7 +19767,7 @@ function removeTemporaryCollectibleEffectsFromPlayer(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\bitflip.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\bitflip.ts`:
 
 ```````ts
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -19795,7 +19795,7 @@ function bitFlipUse(player: EntityPlayer): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\d14.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\d14.ts`:
 
 ```````ts
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -19855,7 +19855,7 @@ function d14Use(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\extract.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\extract.ts`:
 
 ```````ts
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -19888,7 +19888,7 @@ export function extractPostUseItem(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\extractVariants\extractFire.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\extractVariants\extractFire.ts`:
 
 ```````ts
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -19932,7 +19932,7 @@ export function extractFirePostUseItem(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\eyes\eye1.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\eyes\eye1.ts`:
 
 ```````ts
 import {
@@ -19981,7 +19981,7 @@ function eye1Use(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\eyes\eye2.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\eyes\eye2.ts`:
 
 ```````ts
 import {
@@ -20037,7 +20037,7 @@ function eye2Use(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\eyes\eye3.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\eyes\eye3.ts`:
 
 ```````ts
 import {
@@ -20093,7 +20093,7 @@ function eye3Use(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\eyes\eyeGeneral.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\eyes\eyeGeneral.ts`:
 
 ```````ts
 import { getNPCs, getProjectiles } from "isaacscript-common";
@@ -20125,7 +20125,7 @@ export function eyeBlink(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\items\trash.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\items\trash.ts`:
 
 ```````ts
 import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
@@ -20178,7 +20178,7 @@ function trashUse(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\BATTLEYE\BATTLEYE.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\BATTLEYE\BATTLEYE.ts`:
 
 ```````ts
 /** Initiate the player to the BATTLEYE mode. */
@@ -20189,7 +20189,7 @@ export function battleyeModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\CRYPTOLOCKER\CRYPTOLOCKER.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\CRYPTOLOCKER\CRYPTOLOCKER.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20217,7 +20217,7 @@ export function cryptolockerModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\HAPPY99\HAPPY99.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\HAPPY99\HAPPY99.ts`:
 
 ```````ts
 import { EffectVariant } from "isaac-typescript-definitions";
@@ -20254,7 +20254,7 @@ export function happy99PostPlayerFatalDamage(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\HICURDISMOS\HICURDISMOS.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\HICURDISMOS\HICURDISMOS.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20282,7 +20282,7 @@ export function hicurdismosModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\ILOVEYOU\ILOVEYOU.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\ILOVEYOU\ILOVEYOU.ts`:
 
 ```````ts
 import type { DamageFlag } from "isaac-typescript-definitions";
@@ -20430,7 +20430,7 @@ export function iloveyouPostPlayerFatalDamage(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\JERUSALEM\JERUSALEM.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\JERUSALEM\JERUSALEM.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20458,7 +20458,7 @@ export function jerusalemModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\MEMZ\MEMZ.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\MEMZ\MEMZ.ts`:
 
 ```````ts
 import { mod } from "../../../mod";
@@ -20477,7 +20477,7 @@ export function memzModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\mode.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\mode.ts`:
 
 ```````ts
 import type { PlayerType } from "isaac-typescript-definitions";
@@ -20664,7 +20664,7 @@ export function modeEvaluateCacheTearColor(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\MORRIS\MORRIS.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\MORRIS\MORRIS.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20691,7 +20691,7 @@ export function morrisModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\MYDOOM\MYDOOM.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\MYDOOM\MYDOOM.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20719,7 +20719,7 @@ export function mydoomModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\REVETON\REVETON.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\REVETON\REVETON.ts`:
 
 ```````ts
 import { getPlayerIndex, isEven } from "isaacscript-common";
@@ -20776,7 +20776,7 @@ export function revetonPostFireTear(tear: EntityTear): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\SOPHOS\SOPHOS.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\SOPHOS\SOPHOS.ts`:
 
 ```````ts
 /** The traditional Tainted Deleted mode. */
@@ -20825,7 +20825,7 @@ export function sophosPostCollectibleInitFirst(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\SPYWIPER\SPYWIPER.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\SPYWIPER\SPYWIPER.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20853,7 +20853,7 @@ export function spywiperModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\VCS\VCS.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\VCS\VCS.ts`:
 
 ```````ts
 import { getPlayerIndex } from "isaacscript-common";
@@ -20881,7 +20881,7 @@ export function vcsModeFin(player: EntityPlayer): void {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\modes\ZIPBOMBER\ZIPBOMBER.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\modes\ZIPBOMBER\ZIPBOMBER.ts`:
 
 ```````ts
 import { PickupVariant } from "isaac-typescript-definitions";
@@ -20918,7 +20918,7 @@ export function zipbomberModeFin(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\pc\callbacks\pcPostPlayerInitFirst.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\pc\callbacks\pcPostPlayerInitFirst.ts`:
 
 ```````ts
 import { setupPC } from "../../../classes/facets/pc/PCFacet";
@@ -20930,7 +20930,7 @@ export function mainPCPostPlayerInitDeletedFirst(_player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\pc\uiPC.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\pc\uiPC.ts`:
 
 ```````ts
 import { isPCActive } from "../../classes/facets/pc/PCFacet";
@@ -20955,7 +20955,7 @@ export function uiPCPostRender(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\runIndex.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\runIndex.ts`:
 
 ```````ts
 import { mod } from "../mod";
@@ -20986,7 +20986,7 @@ export function getRunIndex(): number {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\ActionSetThemeSetting.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\ActionSetThemeSetting.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21019,7 +21019,7 @@ export function getActionSetThemeSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\EIDSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\EIDSettings.ts`:
 
 ```````ts
 import { EIDObjectDisplaySetting } from "../../enums/settings/EIDObjectDisplaySetting";
@@ -21054,7 +21054,7 @@ export function getEIDTextSetting(): EIDObjectDisplaySetting {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\GeneralSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\GeneralSettings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21089,7 +21089,7 @@ export function getAdvancedInvertedItemIconSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\HAPPY99Settings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\HAPPY99Settings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21118,7 +21118,7 @@ export function getHAPPY99NegativePersistSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\ModdedEffectSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\ModdedEffectSettings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21153,7 +21153,7 @@ export function getIncludeModdedEffectsInGenerationSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\ModdedNPCSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\ModdedNPCSettings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21186,7 +21186,7 @@ export function getIncludeModdedNPCInGenerationSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\ModdedPickupSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\ModdedPickupSettings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21221,7 +21221,7 @@ export function getIncludeModdedPickupsInGenerationSetting(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features\settings\SOPHOSSettings.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features\settings\SOPHOSSettings.ts`:
 
 ```````ts
 import { mod } from "../../mod";
@@ -21255,7 +21255,7 @@ export function getSOPHOSChanceForNormalItemSetting(): Percentage {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\features.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\features.ts`:
 
 ```````ts
 import { temporaryActionResponseInit } from "./classes/corruption/responses/TemporaryActionResponse";
@@ -21336,7 +21336,7 @@ export const FEATURE_INIT_FUNCTIONS: Array<() => void> = [
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\globals.d.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\globals.d.ts`:
 
 ```````ts
 declare let FiendFolio: undefined | unknown;
@@ -21348,7 +21348,7 @@ declare let CCO: undefined | unknown;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\activeHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\activeHelper.ts`:
 
 ```````ts
 import type { ActiveSlot } from "isaac-typescript-definitions";
@@ -21364,7 +21364,7 @@ export function getTotalCharges(player: EntityPlayer, slot: ActiveSlot): int {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\advancedColorHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\advancedColorHelper.ts`:
 
 ```````ts
 import { copyColor, isColor } from "isaacscript-common";
@@ -21418,7 +21418,7 @@ export function simplifyAndCopyColor(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\arrayHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\arrayHelper.ts`:
 
 ```````ts
 import { getRandomArrayIndex, getRandomSeed } from "isaacscript-common";
@@ -21505,7 +21505,7 @@ export function getRandomArrayElementFast<T>(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\bitflagHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\bitflagHelper.ts`:
 
 ```````ts
 import { getEnumValues } from "isaacscript-common";
@@ -21540,14 +21540,14 @@ export function bitFlagsContainsAtLeastOneBitflags<T extends BitFlag>(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\actionSetBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\actionSetBuilders.ts`:
 
 ```````ts
 /** Generalized ActionSetBuilders which return an ActionSet. */
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\extra\hybridActiveBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\extra\hybridActiveBuilders.ts`:
 
 ```````ts
 import {
@@ -21611,7 +21611,7 @@ export function generateHybridActiveActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\genericBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\genericBuilders.ts`:
 
 ```````ts
 import {
@@ -21912,7 +21912,7 @@ export function defaultInvertedPassiveActionSetBuilder(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\items\EXTRACTBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\items\EXTRACTBuilders.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -21929,7 +21929,7 @@ export function extractResponseBuilder(): Response {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\HAPPY99Builders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\HAPPY99Builders.ts`:
 
 ```````ts
 import { getRandomInt, isColor } from "isaacscript-common";
@@ -21979,7 +21979,7 @@ export function happy99DefaultBuilder(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\HICURDISMOSBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\HICURDISMOSBuilders.ts`:
 
 ```````ts
 import { colorEquals, getRandomInt, isColor } from "isaacscript-common";
@@ -22033,7 +22033,7 @@ export function hicurdismosDefaultBuilder(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\ILOVEYOUBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\ILOVEYOUBuilders.ts`:
 
 ```````ts
 import { getRandomInt, isColor } from "isaacscript-common";
@@ -22079,7 +22079,7 @@ export function iLoveYouDefaultBuilder(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\MORRISBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\MORRISBuilders.ts`:
 
 ```````ts
 import { getRandomInt, isColor } from "isaacscript-common";
@@ -22125,7 +22125,7 @@ export function morrisDefaultBuilder(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\MYDOOMBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\MYDOOMBuilders.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -22218,7 +22218,7 @@ function generateMydoomCorruptedCollectibleSprite(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\builders\modes\REVETONBuilders.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\builders\modes\REVETONBuilders.ts`:
 
 ```````ts
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
@@ -22446,7 +22446,7 @@ function generateRevetonCorruptedCollectibleSprite(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\collectibleHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\collectibleHelper.ts`:
 
 ```````ts
 import type { TrinketType, ItemType } from "isaac-typescript-definitions";
@@ -22979,7 +22979,7 @@ export function collectibleAttributeToText(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\colorHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\colorHelper.ts`:
 
 ```````ts
 import { ColorDefault, round } from "isaacscript-common";
@@ -23055,7 +23055,7 @@ export function kColorToString(color: KColor): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\Andromeda\andromedaHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\Andromeda\andromedaHelper.ts`:
 
 ```````ts
 /** Returns true if the 'Andromeda' mod is currently active. */
@@ -23065,7 +23065,7 @@ export function isAndromedaActive(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\EID\EIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\EID\EIDHelper.ts`:
 
 ```````ts
 import type {
@@ -23215,7 +23215,7 @@ export function getTrinketNameWithEIDSetting(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\externalModHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\externalModHelper.ts`:
 
 ```````ts
 import { getEnumValues, log } from "isaacscript-common";
@@ -23238,7 +23238,7 @@ export function getActiveMods(): Mods[] {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\FiendFolio\fiendFolioHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\FiendFolio\fiendFolioHelper.ts`:
 
 ```````ts
 export function isFiendFolioActive(): boolean {
@@ -23247,7 +23247,7 @@ export function isFiendFolioActive(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\XML\entities2XMLHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\XML\entities2XMLHelper.ts`:
 
 ```````ts
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -23556,7 +23556,7 @@ export function logNonModdedCollectibleTypeItemPoolMap(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\compatibility\XML\moddedXMLParserHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\compatibility\XML\moddedXMLParserHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -23685,7 +23685,7 @@ export function getModdedEntityDataFromEntityID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\costumeHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\costumeHelper.ts`:
 
 ```````ts
 import {
@@ -23710,7 +23710,7 @@ export function removeAllCostumes(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\curseHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\curseHelper.ts`:
 
 ```````ts
 import type { LevelCurse } from "isaac-typescript-definitions";
@@ -23728,7 +23728,7 @@ export function hasAnyCurse(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\damageHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\damageHelper.ts`:
 
 ```````ts
 import { DamageFlag } from "isaac-typescript-definitions";
@@ -23748,7 +23748,7 @@ export function isSensibleDamage(damageFlags: BitFlags<DamageFlag>): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\actionSetHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\actionSetHelper.ts`:
 
 ```````ts
 import type { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
@@ -23788,7 +23788,7 @@ export function isNonInvertedPickupActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\deletedHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\deletedHelper.ts`:
 
 ```````ts
 import { getPlayers } from "isaacscript-common";
@@ -23847,7 +23847,7 @@ export function getDeletedInvertedSprite(player: EntityPlayer): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\effects\itemEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\effects\itemEffects.ts`:
 
 ```````ts
 /** Functions related to inverted item ActionSets (not player inventory passive ActionSets). */
@@ -23905,7 +23905,7 @@ export function setInvertedItemActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\effects\moralityHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\effects\moralityHelper.ts`:
 
 ```````ts
 import type { Action } from "../../../classes/corruption/actions/Action";
@@ -23937,7 +23937,7 @@ export function sortEffectsByMorality(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\effects\pedestalEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\effects\pedestalEffects.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -23976,7 +23976,7 @@ export function getAndSetInvertedPedestalActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\effects\pickupEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\effects\pickupEffects.ts`:
 
 ```````ts
 /** Functions related to non-inverted pickup corrupted effects. */
@@ -24070,7 +24070,7 @@ export function getPickupActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\effects\responseHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\effects\responseHelper.ts`:
 
 ```````ts
 import type { Response } from "../../../classes/corruption/responses/Response";
@@ -24089,7 +24089,7 @@ export function addResponsesToTracker(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\funnyNames.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\funnyNames.ts`:
 
 ```````ts
 // TODO: Get funny item name. Arguments (0-5) CollectibleType / TrinketType.
@@ -24106,7 +24106,7 @@ export function getCorruptedName(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\funnySounds.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\funnySounds.ts`:
 
 ```````ts
 /** This file contains functions used to create glitched sound effects. */
@@ -24202,7 +24202,7 @@ export function playCorruptedSound(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\funnySprites.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\funnySprites.ts`:
 
 ```````ts
 import {
@@ -24449,7 +24449,7 @@ export function renderCorruptedCollectibleSpriteInSlot(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\generation\corruptionGeneration.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\generation\corruptionGeneration.ts`:
 
 ```````ts
 import { getRandomArrayElement } from "isaacscript-common";
@@ -24485,7 +24485,7 @@ export function getGameInvertedItemActionSet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\glitchyPlayerTransform.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\glitchyPlayerTransform.ts`:
 
 ```````ts
 import {
@@ -24522,7 +24522,7 @@ export function glitchyReplacePlayerSpritesheet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inventory\custom actives\customActiveHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inventory\custom actives\customActiveHelper.ts`:
 
 ```````ts
 /** Functions that aid the CustomActiveHelper. */
@@ -24605,7 +24605,7 @@ export function _removeZazzActiveFromPlayer(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inventory\custom actives\invertedActives.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inventory\custom actives\invertedActives.ts`:
 
 ```````ts
 /** General functions revolving around inverted active items. */
@@ -24643,7 +24643,7 @@ export function addNewInvertedActiveToPlayer(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inventory\invertedInventoryHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inventory\invertedInventoryHelper.ts`:
 
 ```````ts
 /** Core functions related to inverted actions and passives the player owns. */
@@ -24915,7 +24915,7 @@ export function removePlayerInvertedActive(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inventory\removedItems.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inventory\removedItems.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -24995,7 +24995,7 @@ export function setZazzinatorToRemovedItem(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inversion\pedestalInversion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inversion\pedestalInversion.ts`:
 
 ```````ts
 /**
@@ -25111,7 +25111,7 @@ export function setAllPedestalsOnLevelInversion(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inversion\playerInversion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inversion\playerInversion.ts`:
 
 ```````ts
 import { game, getPlayerIndex } from "isaacscript-common";
@@ -25268,7 +25268,7 @@ export function playerInversionPostPlayerFatalDamage(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inversion\spawnInverted.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inversion\spawnInverted.ts`:
 
 ```````ts
 import type {
@@ -25375,7 +25375,7 @@ export function spawnPickupWithEffects(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inversion\updateInverted.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inversion\updateInverted.ts`:
 
 ```````ts
 /**
@@ -25503,7 +25503,7 @@ export function updatePickup(pickup: EntityPickup): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\inversion\worldInversionHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\inversion\worldInversionHelper.ts`:
 
 ```````ts
 /** Helper functions related to the corrupted-world. */
@@ -25538,7 +25538,7 @@ export function isWorldInverted(): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\items\extractHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\items\extractHelper.ts`:
 
 ```````ts
 import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
@@ -25672,7 +25672,7 @@ export function extractPickup(pickup: EntityPickup): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\modeHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\modeHelper.ts`:
 
 ```````ts
 /** Functions related to the players' 'Modes'. */
@@ -25713,7 +25713,7 @@ export function switchToNextModeOnCarousel(player: EntityPlayer): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\deletedSpecific\worlds\worldHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\deletedSpecific\worlds\worldHelper.ts`:
 
 ```````ts
 import type { World } from "../../../enums/worlds/Worlds";
@@ -25725,7 +25725,7 @@ export function isWorld(_world: World): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\bombEntityHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\bombEntityHelper.ts`:
 
 ```````ts
 import { getConstituentsFromEntityID } from "isaacscript-common";
@@ -25769,7 +25769,7 @@ export function getBombEntityIDName(entityID: EntityID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\effectHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\effectHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -25796,7 +25796,7 @@ export function spawnEffectID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\effectIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\effectIDHelper.ts`:
 
 ```````ts
 import { getRandomSeed, getRandomSetElement } from "isaacscript-common";
@@ -25880,7 +25880,7 @@ export function getRandomEffectID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\entityIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\entityIDHelper.ts`:
 
 ```````ts
 import {
@@ -26136,7 +26136,7 @@ export function getEntitiesFromEntityID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\entityIDNameHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\entityIDNameHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -26229,7 +26229,7 @@ export function getEntityIDName(entityID: EntityID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\explodeEntity.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\explodeEntity.ts`:
 
 ```````ts
 import {
@@ -26266,7 +26266,7 @@ export function explodeEntity(entity: Entity, damage = 100): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\familiarHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\familiarHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -26292,7 +26292,7 @@ export function spawnFamiliarID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\familiarIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\familiarIDHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -26333,7 +26333,7 @@ export function getFamiliarIDName(familiarID: FamiliarID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\npcFlagHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\npcFlagHelper.ts`:
 
 ```````ts
 import {
@@ -26559,7 +26559,7 @@ export function removeNPCFlags(npc: EntityNPC, ...flags: NPCFlag[]): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\npcHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\npcHelper.ts`:
 
 ```````ts
 import { getNPCs, getRandomArrayElementAndRemove } from "isaacscript-common";
@@ -27053,7 +27053,7 @@ export function npcAttributesToText(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\npcIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\npcIDHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -27206,7 +27206,7 @@ export function spawnNPCID(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\pickupIDHelper copy.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\pickupIDHelper copy.ts`:
 
 ```````ts
 import {
@@ -27585,7 +27585,7 @@ export function getPickupTypeFromPickupID(pickupID: PickupID): PickupType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\pickupIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\pickupIDHelper.ts`:
 
 ```````ts
 import {
@@ -27964,7 +27964,7 @@ export function getPickupTypeFromPickupID(pickupID: PickupID): PickupType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\pickupIndexHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\pickupIndexHelper.ts`:
 
 ```````ts
 import type { PickupIndex } from "isaacscript-common";
@@ -27989,7 +27989,7 @@ export function getPickupWithPickupIndex(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\slotHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\slotHelper.ts`:
 
 ```````ts
 import { getConstituentsFromEntityID, getSlotName } from "isaacscript-common";
@@ -28032,7 +28032,7 @@ export function getSlotIDName(entityID: EntityID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\tearHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\tearHelper.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -28078,7 +28078,7 @@ export function getTearIDName(entityID: EntityID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper\trinketHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper\trinketHelper.ts`:
 
 ```````ts
 import type { TrinketType } from "isaac-typescript-definitions";
@@ -28139,7 +28139,7 @@ export function isPlayerHoldingTrinkets(player: EntityPlayer): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityHelper.ts`:
 
 ```````ts
 import type { PickupVariant, EntityType } from "isaac-typescript-definitions";
@@ -28480,7 +28480,7 @@ export function isPersistentEntityBeingUnloadedDueToGameExit(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\entityTypeHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\entityTypeHelper.ts`:
 
 ```````ts
 import { EntityType } from "isaac-typescript-definitions";
@@ -28495,7 +28495,7 @@ export function isNPC(entityType: EntityType): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\floorHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\floorHelper.ts`:
 
 ```````ts
 import { EffectVariant, SortingLayer } from "isaac-typescript-definitions";
@@ -28599,7 +28599,7 @@ export function setTemporaryFloorColor(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\gameHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\gameHelper.ts`:
 
 ```````ts
 import { game, GAME_FRAMES_PER_SECOND } from "isaacscript-common";
@@ -28640,7 +28640,7 @@ export function secondsToGameFrames(seconds: number): int {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\gridEntityHelper\gridEntityHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\gridEntityHelper\gridEntityHelper.ts`:
 
 ```````ts
 import { game, getAllGridIndexes, getGridEntityID } from "isaacscript-common";
@@ -28723,7 +28723,7 @@ export function positionToClampedGridIndex(position: Vector): int {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\gridEntityHelper\gridIDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\gridEntityHelper\gridIDHelper.ts`:
 
 ```````ts
 import type { GridEntityID } from "isaacscript-common";
@@ -28814,7 +28814,7 @@ export function isGridEntityID(variable: unknown): variable is GridEntityID {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\HUDHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\HUDHelper.ts`:
 
 ```````ts
 import { ActiveSlot, PocketItemSlot } from "isaac-typescript-definitions";
@@ -29010,7 +29010,7 @@ export function getPocketActiveRenderPosition(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\inputHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\inputHelper.ts`:
 
 ```````ts
 /** Functions to help assist player input. */
@@ -29029,7 +29029,7 @@ export function activeSlotToButtonAction(activeSlot: ActiveSlot): ButtonAction {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\inventoryHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\inventoryHelper.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -29060,7 +29060,7 @@ export function getLatestItemInPlayerInventory(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\mapHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\mapHelper.ts`:
 
 ```````ts
 /**
@@ -29155,7 +29155,7 @@ export function mapToString(map: Map<unknown, unknown>): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\numbers\numberHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\numbers\numberHelper.ts`:
 
 ```````ts
 import { getRandomInt } from "isaacscript-common";
@@ -29168,7 +29168,7 @@ export function getRandomRotation(seedOrRNG?: Seed | RNG | undefined): number {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\numbers\numberToWords.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\numbers\numberToWords.ts`:
 
 ```````ts
 const TEN = 10;
@@ -29291,7 +29291,7 @@ function generateWords(number: number, words: string[] = []): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\objectHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\objectHelper.ts`:
 
 ```````ts
 import { getRandomArrayIndex } from "isaacscript-common";
@@ -29380,7 +29380,7 @@ export function objectToString<T>(obj: any): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\patternHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\patternHelper.ts`:
 
 ```````ts
 export function patternToPlainString(pattern: string): string {
@@ -29389,7 +29389,7 @@ export function patternToPlainString(pattern: string): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\pickupHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\pickupHelper.ts`:
 
 ```````ts
 import { ChestSubType, CollectibleType } from "isaac-typescript-definitions";
@@ -29425,7 +29425,7 @@ export function isUselessPickup(pickup: EntityPickup): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\playerHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\playerHelper.ts`:
 
 ```````ts
 import type { UseFlag } from "isaac-typescript-definitions";
@@ -29634,7 +29634,7 @@ export function doesPlayerHaveAnyActiveItem(player: EntityPlayer): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\positionHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\positionHelper.ts`:
 
 ```````ts
 import { EntityType } from "isaac-typescript-definitions";
@@ -29719,7 +29719,7 @@ export function getQuickAccessiblePosition(): Vector {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\priceHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\priceHelper.ts`:
 
 ```````ts
 import { PickupPrice } from "isaac-typescript-definitions";
@@ -29736,7 +29736,7 @@ export function isCollectibleFree(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\printHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\printHelper.ts`:
 
 ```````ts
 import { log, logTable } from "isaacscript-common";
@@ -29748,7 +29748,7 @@ export function fprint(arg: unknown): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\randomHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\randomHelper.ts`:
 
 ```````ts
 import { getRandomInt } from "isaacscript-common";
@@ -29797,7 +29797,7 @@ export function getRandomInteger(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\renderHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\renderHelper.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -29892,7 +29892,7 @@ export function renderCollectibleInSlot(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\rngHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\rngHelper.ts`:
 
 ```````ts
 import { nextSeed } from "isaacscript-common";
@@ -29907,7 +29907,7 @@ export function nextSeeds(seed: Seed, amount: number): Seed {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\roomHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\roomHelper.ts`:
 
 ```````ts
 import {
@@ -29964,7 +29964,7 @@ export function clearRoom(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\setHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\setHelper.ts`:
 
 ```````ts
 /**
@@ -30030,7 +30030,7 @@ export function getRandomSetElement<T>(set: Set<T>): T {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\soundHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\soundHelper.ts`:
 
 ```````ts
 import { SoundEffect } from "isaac-typescript-definitions";
@@ -30063,7 +30063,7 @@ export function playSoundEffectWithOptions(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\spriteHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\spriteHelper.ts`:
 
 ```````ts
 import type { EntityType, NPCID } from "isaac-typescript-definitions";
@@ -30219,7 +30219,7 @@ export function getPixelColorMap(sprite: Sprite): Map<Vector, KColor> {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\statHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\statHelper.ts`:
 
 ```````ts
 import { CacheFlag } from "isaac-typescript-definitions";
@@ -30235,7 +30235,7 @@ export function triggerCacheUpdate(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\stringHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\stringHelper.ts`:
 
 ```````ts
 import { capitalizeFirstLetter, getRandomInt } from "isaacscript-common";
@@ -30419,14 +30419,14 @@ export function uncapitalizeFirstLetter(s: string): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\textHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\textHelper.ts`:
 
 ```````ts
 /** Functions related to rendering text on the screen. */
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\helper\tmtrainerHelper.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\helper\tmtrainerHelper.ts`:
 
 ```````ts
 import { CollectibleType, ItemType } from "isaac-typescript-definitions";
@@ -30523,7 +30523,7 @@ export function getRandomTMTRAINERActiveItem(): CollectibleType {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\compatibility\EIDDescObject.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\compatibility\EIDDescObject.ts`:
 
 ```````ts
 import type {
@@ -30579,7 +30579,7 @@ export interface EIDDescObject {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\actions\TriggerData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\actions\TriggerData.ts`:
 
 ```````ts
 import type {
@@ -30698,7 +30698,7 @@ export interface TriggerData {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\actionSets\ActionSetBuilderInput.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\actionSets\ActionSetBuilderInput.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -30717,7 +30717,7 @@ export interface ActionSetBuilderInput {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\actionSets\CustomActiveData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\actionSets\CustomActiveData.ts`:
 
 ```````ts
 /** Tracks data relevant to the Custom Active that the InvertedActiveActionSet relates to. */
@@ -30733,7 +30733,7 @@ export interface CustomActiveData {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\funny\CorruptedCollectibleSprite.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\funny\CorruptedCollectibleSprite.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -30783,7 +30783,7 @@ export interface CorruptedCollectibleSprite {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\funny\CorruptedSoundEffect.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\funny\CorruptedSoundEffect.ts`:
 
 ```````ts
 import type { SoundEffect } from "isaac-typescript-definitions";
@@ -30804,7 +30804,7 @@ export interface CorruptedSoundEffect {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\inversion\LastPickedUpCollectibleData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\inversion\LastPickedUpCollectibleData.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -30828,7 +30828,7 @@ export interface LastPickedUpCollectibleData {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\responses\LogicResponseInterface.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\responses\LogicResponseInterface.ts`:
 
 ```````ts
 import type { Response } from "../../../classes/corruption/responses/Response";
@@ -30838,7 +30838,7 @@ export interface LogicResponseInterface<T extends Response> {}
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\responses\ResponseReturnData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\responses\ResponseReturnData.ts`:
 
 ```````ts
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -30853,7 +30853,7 @@ const thing: ResponseReturnData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\corruption\responses\SpawnEntityResponseInterface.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\corruption\responses\SpawnEntityResponseInterface.ts`:
 
 ```````ts
 import type { Response } from "../../../classes/corruption/responses/Response";
@@ -30894,7 +30894,7 @@ export interface SpawnEntityResponseInterface<T extends Response> {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\general\AdvancedColor.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\general\AdvancedColor.ts`:
 
 ```````ts
 /**
@@ -30909,7 +30909,7 @@ export interface AdvancedColor {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\general\CollectibleAttribute.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\general\CollectibleAttribute.ts`:
 
 ```````ts
 import type {
@@ -30977,7 +30977,7 @@ export interface ActiveCollectibleAttribute extends CollectibleAttribute {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\general\NPCAttribute.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\general\NPCAttribute.ts`:
 
 ```````ts
 import type {
@@ -31041,7 +31041,7 @@ export interface NPCAttribute {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\general\SoundEffectOptions.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\general\SoundEffectOptions.ts`:
 
 ```````ts
 import type { SoundEffect } from "isaac-typescript-definitions";
@@ -31069,7 +31069,7 @@ export interface SoundEffectOptions {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\modes\ModeData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\modes\ModeData.ts`:
 
 ```````ts
 import type { CacheFlag, CollectibleType } from "isaac-typescript-definitions";
@@ -31136,7 +31136,7 @@ export interface ModeData {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\xml\entities2XML.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\xml\entities2XML.ts`:
 
 ```````ts
 import type { EntityCategory } from "../../enums/general/EntityCategory";
@@ -31209,7 +31209,7 @@ export type Entities2XML = Record<NameSubType, EntityXML>;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\xml\itemPoolXML.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\xml\itemPoolXML.ts`:
 
 ```````ts
 /**
@@ -31236,7 +31236,7 @@ export type ItemPoolsXML = ItemPoolXML[];
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\xml\itemsXML.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\xml\itemsXML.ts`:
 
 ```````ts
 /** Can be referencing a Trinket, Active, Passive or Familiar. */
@@ -31287,7 +31287,7 @@ export interface ItemsXML {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\interfaces\xml\playersXML.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\interfaces\xml\playersXML.ts`:
 
 ```````ts
 /** References a player entry from players.xml. */
@@ -31326,7 +31326,7 @@ export type PlayersXML = PlayerXML[];
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\main.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\main.ts`:
 
 ```````ts
 import { getEnumValues } from "isaacscript-common";
@@ -31522,7 +31522,7 @@ function initFacets() {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\activeChargeToZazzActive.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\activeChargeToZazzActive.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -31608,7 +31608,7 @@ export function getZazzActiveFromCharge(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\activeSlotRenderMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\activeSlotRenderMap.ts`:
 
 ```````ts
 import { ActiveSlot } from "isaac-typescript-definitions";
@@ -31633,7 +31633,7 @@ export function getActiveSlotRenderPosition(activeSlot: ActiveSlot): Vector {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\builders\actionSetBuilderMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\builders\actionSetBuilderMap.ts`:
 
 ```````ts
 import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
@@ -31700,7 +31700,7 @@ export function getInvertedItemActionSetBuilderFromReference(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\collectiblePrefixes.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\collectiblePrefixes.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -31726,7 +31726,7 @@ const COLLECTIBLE_SUFFIX_MAP: ReadonlyMap<CollectibleType, string[]> = new Map([
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\compatibility\EIDColorMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\compatibility\EIDColorMap.ts`:
 
 ```````ts
 import { K_COLORS } from "isaacscript-common";
@@ -31883,7 +31883,7 @@ export function getEIDColorTupleFromTriplet(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\conditionalToFunctionMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\conditionalToFunctionMap.ts`:
 
 ```````ts
 import {
@@ -32062,7 +32062,7 @@ export function isConditionalSatisfied(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\corruption\responses\entityCategoryToResponseMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\corruption\responses\entityCategoryToResponseMap.ts`:
 
 ```````ts
 import type { Response } from "../../../classes/corruption/responses/Response";
@@ -32114,7 +32114,7 @@ export function getResponseFromEntityCategory(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\moddedEntityIDToModMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\moddedEntityIDToModMap.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -32141,7 +32141,7 @@ export function _clearModdedEntityIDToModMap(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\moddedEntityIDToNameSubType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\moddedEntityIDToNameSubType.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -32181,7 +32181,7 @@ export function _clearModdedEntityIDToNameSubTypeMap(): void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\bombEntityNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\bombEntityNameMap.ts`:
 
 ```````ts
 import { BombVariant } from "isaac-typescript-definitions";
@@ -32221,7 +32221,7 @@ export function getNonModdedBombEntityName(bombVariant: BombVariant): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\championColorNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\championColorNameMap.ts`:
 
 ```````ts
 import { ChampionColor } from "isaac-typescript-definitions";
@@ -32271,7 +32271,7 @@ export function championColorToString(championColor: ChampionColor): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\conditionToNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\conditionToNameMap.ts`:
 
 ```````ts
 import { getCollectibleName } from "isaacscript-common";
@@ -32320,7 +32320,7 @@ export function conditionalToString(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\damageFlagNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\damageFlagNameMap.ts`:
 
 ```````ts
 import { DamageFlag } from "isaac-typescript-definitions";
@@ -32374,7 +32374,7 @@ export function damageFlagToString(damageFlag: DamageFlag): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\effectNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\effectNameMap.ts`:
 
 ```````ts
 import { EffectID } from "../../../enums/data/ID/EffectID";
@@ -32655,7 +32655,7 @@ export function getNonModdedEffectName(effectID: EffectID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\entityCategoryNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\entityCategoryNameMap.ts`:
 
 ```````ts
 import { EntityCategory } from "../../../enums/general/EntityCategory";
@@ -32690,7 +32690,7 @@ export function entityCategoryToString(entityCategory: EntityCategory): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\familiarNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\familiarNameMap.ts`:
 
 ```````ts
 import { FamiliarID } from "../../../enums/data/ID/FamiliarID";
@@ -32876,7 +32876,7 @@ export function getNonModdedFamiliarIDName(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\gridEntityTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\gridEntityTypeNameMap.ts`:
 
 ```````ts
 import { GridEntityType } from "isaac-typescript-definitions";
@@ -32923,7 +32923,7 @@ export function gridEntityTypeToString(gridEntityType: GridEntityType): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\gridIDNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\gridIDNameMap.ts`:
 
 ```````ts
 import { GridID } from "../../../enums/data/ID/GridID";
@@ -33013,7 +33013,7 @@ export function gridIDToString(gridID: GridID): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\itemConfigChargeTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\itemConfigChargeTypeNameMap.ts`:
 
 ```````ts
 import { ItemConfigChargeType } from "isaac-typescript-definitions";
@@ -33034,7 +33034,7 @@ export function itemConfigChargeTypeToString(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\itemPoolTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\itemPoolTypeNameMap.ts`:
 
 ```````ts
 import { ItemPoolType } from "isaac-typescript-definitions";
@@ -33085,7 +33085,7 @@ export function itemPoolTypeToString(itemPoolType: ItemPoolType): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\itemTagNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\itemTagNameMap.ts`:
 
 ```````ts
 import { ItemConfigTag, ItemType } from "isaac-typescript-definitions";
@@ -33136,7 +33136,7 @@ export function itemConfigTagToString(itemConfigTag: ItemConfigTag): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\itemTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\itemTypeNameMap.ts`:
 
 ```````ts
 import { ItemType } from "isaac-typescript-definitions";
@@ -33160,7 +33160,7 @@ export function itemTypeToString(itemType: ItemType): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\levelStageNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\levelStageNameMap.ts`:
 
 ```````ts
 import { LevelStage } from "isaac-typescript-definitions";
@@ -33196,7 +33196,7 @@ export function levelStageToString(levelStage: LevelStage): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\npcFlagNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\npcFlagNameMap.ts`:
 
 ```````ts
 import { NPCFlag } from "../../../enums/general/NPCFlag";
@@ -33236,7 +33236,7 @@ export function npcFlagToString(flag: NPCFlag): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\npcNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\npcNameMap.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -33992,7 +33992,7 @@ export function getNonModdedNPCName(npcid: NPCID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\pickupNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\pickupNameMap.ts`:
 
 ```````ts
 import { PickupID } from "../../../enums/data/ID/PickupID";
@@ -34188,7 +34188,7 @@ export function getNonModdedPickupName(pickupID: PickupID): string | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\pickupTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\pickupTypeNameMap.ts`:
 
 ```````ts
 import { ReadonlyMap } from "isaacscript-common";
@@ -34235,7 +34235,7 @@ export function pickupTypeToString(pickupType: PickupType): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\roomTypeNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\roomTypeNameMap.ts`:
 
 ```````ts
 import { RoomType } from "isaac-typescript-definitions";
@@ -34289,7 +34289,7 @@ export function roomTypeToString(roomType: RoomType): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\name\tearVariantNameMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\name\tearVariantNameMap.ts`:
 
 ```````ts
 import { TearVariant } from "isaac-typescript-definitions";
@@ -34365,7 +34365,7 @@ export function tearVariantToString(tearVariant: TearVariant): string {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\npc\NPCMaxHitPointsMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\npc\NPCMaxHitPointsMap.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -35124,7 +35124,7 @@ export function _getNonModdedNPCIDMaxHitPoints(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\npc\NPCSizeMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\npc\NPCSizeMap.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -35881,7 +35881,7 @@ export function _getNonModdedNPCSize(npcID: NPCID): number | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\pickups\collectibles\collectibleTypeItemPoolMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\pickups\collectibles\collectibleTypeItemPoolMap.ts`:
 
 ```````ts
 import { CollectibleType, ItemPoolType } from "isaac-typescript-definitions";
@@ -39694,7 +39694,7 @@ export function _getNonModdedCollectibleTypeItemPools(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\pickups\collectibles\modded\moddedCollectibleTypeItemPoolMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\pickups\collectibles\modded\moddedCollectibleTypeItemPoolMap.ts`:
 
 ```````ts
 import type { CollectibleType } from "isaac-typescript-definitions";
@@ -39719,7 +39719,7 @@ export function _getModdedCollectibleTypeItemPools(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\data\sounds\soundLengths.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\data\sounds\soundLengths.ts`:
 
 ```````ts
 import type { SoundEffect } from "isaac-typescript-definitions";
@@ -40447,7 +40447,7 @@ export function getSoundEffectLength(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\JERUSALEMData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\JERUSALEMData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -40493,7 +40493,7 @@ export const JERUSALEMData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\modeInitMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\modeInitMap.ts`:
 
 ```````ts
 import { Mode } from "../../enums/modes/Mode";
@@ -40765,7 +40765,7 @@ export function getModeFin(mode: Mode): (player: EntityPlayer) => void {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\modeMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\modeMap.ts`:
 
 ```````ts
 import type { PlayerType, SoundEffect } from "isaac-typescript-definitions";
@@ -40908,7 +40908,7 @@ export function getModeVoiceover(mode: Mode): SoundEffect | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\MYDOOMData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\MYDOOMData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -40954,7 +40954,7 @@ export const MYDOOMData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\SOPHOSData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\SOPHOSData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -40991,7 +40991,7 @@ export const SOPHOSData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\maps\modes\ZIPBOMBER\extractPickupBurnTimeMap.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\maps\modes\ZIPBOMBER\extractPickupBurnTimeMap.ts`:
 
 ```````ts
 import { getEntityID, ReadonlyMap } from "isaacscript-common";
@@ -41019,7 +41019,7 @@ export function getPickupExtractExplosionDmg(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\mod.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\mod.ts`:
 
 ```````ts
 import { CacheFlag, PlayerType } from "isaac-typescript-definitions";
@@ -41061,7 +41061,7 @@ mod.registerCharacterStats(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\BATTLEYEData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\BATTLEYEData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41099,7 +41099,7 @@ export const BATTLEYEData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\CRYPTOLOCKERData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\CRYPTOLOCKERData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41145,7 +41145,7 @@ export const CRYPTOLOCKERData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\HAPPY99Data.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\HAPPY99Data.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41190,7 +41190,7 @@ export const HAPPY99Data: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\HICURDISMOSData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\HICURDISMOSData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41235,7 +41235,7 @@ export const HICURDISMOSData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\ILOVEYOUData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\ILOVEYOUData.ts`:
 
 ```````ts
 import { CacheFlag } from "isaac-typescript-definitions";
@@ -41280,7 +41280,7 @@ export const ILOVEYOUData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\JERUSALEMData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\JERUSALEMData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41326,7 +41326,7 @@ export const JERUSALEMData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\MEMZData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\MEMZData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41371,7 +41371,7 @@ export const MEMZData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\MORRISData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\MORRISData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41416,7 +41416,7 @@ export const MORRISData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\MYDOOMData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\MYDOOMData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41462,7 +41462,7 @@ export const MYDOOMData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\REVETONData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\REVETONData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41506,7 +41506,7 @@ export const REVETONData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\SOPHOSData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\SOPHOSData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41543,7 +41543,7 @@ export const SOPHOSData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\SPYWIPERData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\SPYWIPERData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41589,7 +41589,7 @@ export const SPYWIPERData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\VCSData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\VCSData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41635,7 +41635,7 @@ export const VCSData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\objects\modes\ZIPBOMBERData.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\objects\modes\ZIPBOMBERData.ts`:
 
 ```````ts
 import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
@@ -41677,7 +41677,7 @@ export const ZIPBOMBERData: ModeData = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\data\modded\ModdedFlyingNPCSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\data\modded\ModdedFlyingNPCSet.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -42059,7 +42059,7 @@ export function _isModdedNPCIDFlying(id: EntityID): boolean | undefined {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\data\npc\BossNPCSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\data\npc\BossNPCSet.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -42331,7 +42331,7 @@ export function getNonModdedBossNPCIDSet(): ReadonlySet<NPCID> {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\data\npc\FlyingNPCSet.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\data\npc\FlyingNPCSet.ts`:
 
 ```````ts
 import { NPCID } from "isaac-typescript-definitions";
@@ -42619,7 +42619,7 @@ export function getNonModdedFlyingNPCIDSet(): ReadonlySet<NPCID> {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\funnyActionTexts.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\funnyActionTexts.ts`:
 
 ```````ts
 import { getRandomInt } from "isaacscript-common";
@@ -42667,7 +42667,7 @@ export const FUNNY_ACTION_TEXT_SET: ReadonlySet<string> = new Set([
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\workingCollectibleEffects.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\workingCollectibleEffects.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -42899,7 +42899,7 @@ export function addTemporaryCollectibleOrNormalCollectible(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\sets\zazzSets.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\sets\zazzSets.ts`:
 
 ```````ts
 import { CollectibleType } from "isaac-typescript-definitions";
@@ -43012,7 +43012,7 @@ export function isZazzinatorPassive(collectible: CollectibleType): boolean {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\corruption\LogicResponseUnion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\corruption\LogicResponseUnion.ts`:
 
 ```````ts
 import type { IfThenElseResponse } from "../../classes/corruption/responses/IfThenElseResponse";
@@ -43034,7 +43034,7 @@ export type LogicResponseUnion =
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\corruption\SpawnResponseUnion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\corruption\SpawnResponseUnion.ts`:
 
 ```````ts
 import type { SpawnEffectResponse } from "../../classes/corruption/responses/SpawnEffectResponse";
@@ -43055,7 +43055,7 @@ export type SpawnResponseUnion =
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\data\IDTypes.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\data\IDTypes.ts`:
 
 ```````ts
 import type { EntityID } from "isaacscript-common";
@@ -43073,7 +43073,7 @@ export type EntityIDTypeUnion =
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\data\nameSubType.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\data\nameSubType.ts`:
 
 ```````ts
 /**
@@ -43090,7 +43090,7 @@ export type NameSubType = `${string}.${string}`;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\general\Builder.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\general\Builder.ts`:
 
 ```````ts
 import { ActionSet } from "../../classes/corruption/actionSets/ActionSet";
@@ -43107,7 +43107,7 @@ export type InvertedItemActionSetBuilder = (
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\general\EntityUnion.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\general\EntityUnion.ts`:
 
 ```````ts
 /** A union of Entity and GridEntity types. */
@@ -43115,7 +43115,7 @@ export type EntityOrGridEntity = Entity | GridEntity;
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\general\Mutable.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\general\Mutable.ts`:
 
 ```````ts
 /** Make a readonly value writeable. */
@@ -43125,7 +43125,7 @@ export type Mutable<T> = {
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\general\Percentage.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\general\Percentage.ts`:
 
 ```````ts
 import { getRandomInt } from "isaacscript-common";
@@ -43160,7 +43160,7 @@ export function rollPercentage(
 
 ```````
 
-`\\?\C:\Users\james\thedeleted\src\types\general\Range.ts`:
+`\\?\C:\Users\james\OneDrive\Desktop\stuff\stuff-large\programming\isaac\thedeleted\src\types\general\Range.ts`:
 
 ```````ts
 import { deepCopy, getRandomInt } from "isaacscript-common";

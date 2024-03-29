@@ -1,3 +1,4 @@
+import type { EntityID } from "isaacscript-common";
 import {
   DISTANCE_OF_GRID_TILE,
   VectorZero,
@@ -15,11 +16,8 @@ import { addNPCFlags } from "../../../helper/entityHelper/npcFlagHelper";
 import {
   getRandomNPC,
   npcAttributesToText,
-} from "../../../helper/entityHelper/npcHelper";
-import {
-  getNPCIDName,
   spawnNPCID,
-} from "../../../helper/entityHelper/npcIDHelper";
+} from "../../../helper/entityHelper/npcHelper";
 import type { ChampionColor } from "isaac-typescript-definitions";
 import { NPCID } from "isaac-typescript-definitions";
 import { championColorToString } from "../../../maps/data/name/championColorNameMap";
@@ -29,6 +27,7 @@ import {
   getRandomAccessiblePosition,
 } from "../../../helper/positionHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
+import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
 
 const DEFAULT_NPC = NPCID.GAPER;
 const UNKNOWN_NPC_NAME_TEXT = "unknown npc";
@@ -115,7 +114,8 @@ export class SpawnNPCResponse
     const npc = this.getNPC();
     const plural = this.isMultiple();
     if (typeof npc === "string") {
-      let npcNameClause = getNPCIDName(npc) ?? UNKNOWN_NPC_NAME_TEXT;
+      let npcNameClause =
+        getEntityNameFromEntityID(npc as EntityID) ?? UNKNOWN_NPC_NAME_TEXT;
       if (plural) {
         // Add the plural 's' to the end of the name.
         npcNameClause = addTheS(npcNameClause, true);

@@ -10,9 +10,11 @@ import type { EntityCategory } from "../../../enums/general/EntityCategory";
 import { getAllEntitiesWithCategory } from "../../../helper/entityHelper";
 import { entityCategoryToString } from "../../../maps/data/name/entityCategoryNameMap";
 import { addArticle, addTheS } from "../../../helper/stringHelper";
-import { getEntitiesFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import {
+  getEntitiesFromEntityID,
+  getEntityNameFromEntityID,
+} from "../../../helper/entityHelper/entityIDHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
-import { getEntityIDName } from "../../../helper/entityHelper/entityIDNameHelper";
 import { fprint } from "../../../helper/printHelper";
 
 const VERB = "remove";
@@ -139,7 +141,9 @@ export class RemoveEntityResponse extends Response {
           true,
         )}`;
       }
-      return addArticle(getEntityIDName(entityID) ?? UNKNOWN_ENTITY_NAME);
+      return addArticle(
+        getEntityNameFromEntityID(entityID) ?? UNKNOWN_ENTITY_NAME,
+      );
     }
     if (entityID === undefined) {
       if (isAll) {

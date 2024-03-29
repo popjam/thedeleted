@@ -3,8 +3,10 @@ import { triggerPlayerActionsByType } from "../../../features/corruption/effects
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
 import type { EntityID } from "isaacscript-common";
-import { getSlotIDName } from "../../../helper/entityHelper/slotHelper";
-import { getEntityIDFromEntity } from "../../../helper/entityHelper/entityIDHelper";
+import {
+  getEntityIDFromEntity,
+  getEntityNameFromEntityID,
+} from "../../../helper/entityHelper/entityIDHelper";
 
 const ACTION_TYPE = ActionType.ON_SLOT_DESTROY;
 
@@ -53,7 +55,7 @@ export class OnSlotDestroyAction extends Action {
     if (slotID === undefined) {
       return undefined;
     }
-    return getSlotIDName(slotID);
+    return getEntityNameFromEntityID(slotID);
   }
 
   /** Triggers the action with the provided trigger data. */

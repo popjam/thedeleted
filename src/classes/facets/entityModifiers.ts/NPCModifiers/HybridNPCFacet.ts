@@ -29,7 +29,7 @@ import { findSet } from "../../../../helper/setHelper";
 import { hideNPC, unhideNPC } from "./HideNPCFacet";
 import { randomInRangeWithDecimalPrecision } from "../../../../types/general/Range";
 import type { Range } from "../../../../types/general/Range";
-import { spawnNPCID } from "../../../../helper/entityHelper/npcIDHelper";
+import { spawnNPCID } from "../../../../helper/entityHelper/npcHelper";
 
 // eslint-disable-next-line isaacscript/require-unannotated-const-assertions
 const DEFAULT_TRANSFORMATION_TIME_RANGE_SEC: Range = [0.3, 1] as const;

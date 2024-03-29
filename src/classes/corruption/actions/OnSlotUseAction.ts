@@ -3,7 +3,7 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
-import { getSlotIDName } from "../../../helper/entityHelper/slotHelper";
+import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
 
 const ACTION_TYPE = ActionType.ON_SLOT_USE;
 
@@ -46,7 +46,7 @@ export class OnSlotUseAction extends Action {
     const slotID = this.getSlotID();
     return slotID === undefined
       ? "you use a slot"
-      : `you use the ${getSlotIDName(slotID) ?? "slot"}`;
+      : `you use the ${getEntityNameFromEntityID(slotID) ?? "slot"}`;
   }
 
   /** Triggers the action with the provided trigger data. */

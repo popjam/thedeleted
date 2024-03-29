@@ -1,19 +1,11 @@
 import type { EntityID } from "isaacscript-common";
 import { DefaultMap } from "isaacscript-common";
 import type { EntityCategory } from "../../../enums/general/EntityCategory";
-import {
-  _addModdedEntityIDToNameSubTypeMap,
-  _clearModdedEntityIDToNameSubTypeMap,
-} from "../../../maps/data/moddedEntityIDToNameSubType";
-import {
-  _addModdedEntityIDToModMap,
-  _clearModdedEntityIDToModMap,
-} from "../../../maps/data/moddedEntityIDToModMap";
 import { mod } from "../../../mod";
-import type { Mods } from "../../../enums/compatibility/Mods";
 import type { PickupID } from "../../../enums/data/ID/PickupID";
 import type { EntityIDTypeUnion } from "../../../types/data/IDTypes";
 import type { PickupType } from "../../../enums/general/PickupType";
+import type { ModName } from "../../../types/compatibility/ModName";
 
 /**
  * This feature is responsible for generating sets filled with EntityIDs for easy access (e.g for
@@ -22,6 +14,9 @@ import type { PickupType } from "../../../enums/general/PickupType";
  */
 const v = {
   run: {
+    /** Mods recognized by the game. This should be the name value found in 'metadata.xml'. */
+    mods: new Set<ModName>(),
+
     /** Entity sets. */
     nonModdedEntities: new Set<EntityID>(),
     moddedEntities: new Set<EntityID>(),
@@ -39,10 +34,11 @@ const v = {
     ),
 
     /** Sets specific to mods. */
-    modSets: new DefaultMap<Mods, Set<EntityID>>(() => new Set<EntityID>()),
-    modCategorySets: new DefaultMap<Mods, Map<EntityCategory, Set<EntityID>>>(
-      () => new Map<EntityCategory, Set<EntityID>>(),
-    ),
+    modSets: new DefaultMap<ModName, Set<EntityID>>(() => new Set<EntityID>()),
+    modCategorySets: new DefaultMap<
+      ModName,
+      Map<EntityCategory, Set<EntityID>>
+    >(() => new Map<EntityCategory, Set<EntityID>>()),
 
     /** Sets specific to pickups. */
     pickupIDOfPickupTypeMap: new DefaultMap<PickupType, Set<PickupID>>(
@@ -156,14 +152,14 @@ export function _getEntityIDSetEditableFromCategory(
  * entities for the given mod.
  */
 export function getModdedEntityIDSetFromMod(
-  activeMod: Mods,
+  activeMod: ModName,
 ): ReadonlySet<EntityID> | undefined {
   return v.run.modSets.get(activeMod);
 }
 
 // eslint-disable-next-line isaacscript/no-mutable-return
 export function _getModdedEntityIDSetEditableFromMod(
-  activeMod: Mods,
+  activeMod: ModName,
 ): Set<EntityID> {
   return v.run.modSets.getAndSetDefault(activeMod);
 }
@@ -174,14 +170,14 @@ export function _getModdedEntityIDSetEditableFromMod(
  */
 export function getModdedEntityIDSetFromModAndCategory<
   Type extends EntityIDTypeUnion = EntityID,
->(activeMod: Mods, category: EntityCategory): ReadonlySet<Type> {
+>(activeMod: ModName, category: EntityCategory): ReadonlySet<Type> {
   return (v.run.modCategorySets.getAndSetDefault(activeMod).get(category) ??
     new Set()) as ReadonlySet<Type>;
 }
 
 // eslint-disable-next-line isaacscript/no-mutable-return
 export function _getMapOfCategoryToEntityIDSetFromMod(
-  activeMod: Mods,
+  activeMod: ModName,
 ): Map<EntityCategory, Set<EntityID>> {
   return v.run.modCategorySets.getAndSetDefault(activeMod);
 }

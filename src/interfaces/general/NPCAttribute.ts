@@ -1,11 +1,7 @@
-import type {
-  CollectibleType,
-  LevelStage,
-  NPCID,
-} from "isaac-typescript-definitions";
+import type { LevelStage, NPCID } from "isaac-typescript-definitions";
 import type { Range } from "../../types/general/Range";
 import type { COLORS } from "isaacscript-common";
-import type { Mods } from "../../enums/compatibility/Mods";
+import type { ModName } from "../../types/compatibility/ModName";
 
 /**
  * Modifiers to describe a subset of all NPCs.
@@ -17,7 +13,7 @@ export interface NPCAttribute {
    * If the NPC should be modded (true), not modded (false), or either (undefined). Alternatively,
    * specify a Mod it should be from.
    */
-  modded?: boolean | Mods;
+  modded?: boolean | ModName;
 
   /** General Color of the NPC. */
   color?: keyof typeof COLORS;

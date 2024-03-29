@@ -3,14 +3,14 @@ import { getRandomSetElement, spawnEntityID } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
-import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameEntitySets";
+import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameSets";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
 import type { TearVariant } from "isaac-typescript-definitions";
 import { EntityType } from "isaac-typescript-definitions";
 import { addArticle } from "../../../helper/stringHelper";
-import { getTearIDName } from "../../../helper/entityHelper/tearHelper";
 import { getRandomPosition } from "../../../helper/positionHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
+import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
 
 const VERB = "spawn";
 const VERB_PARTICIPLE = "spawning";
@@ -116,7 +116,7 @@ export class SpawnTearResponse
 
     // Specific tear.
     const name =
-      getTearIDName(
+      getEntityNameFromEntityID(
         `${EntityType.TEAR}.${tear}.0` as EntityID,
       )?.toLowerCase() ?? UNKNOWN_TEAR_NAME_TEXT;
     if (isMultiple) {

@@ -3,6 +3,7 @@ import {
   EntityType,
   GridEntityType,
 } from "isaac-typescript-definitions";
+import type { EntityID } from "isaacscript-common";
 import {
   getEnumValues,
   getCollectibleName,
@@ -22,10 +23,7 @@ import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { fprint } from "../../helper/printHelper";
 import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
 import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
-import { getQuickAccessiblePosition } from "../../helper/positionHelper";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
 import {
   getAllEmptyGridIndexes,
   positionToClampedGridIndex,
@@ -33,9 +31,18 @@ import {
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
 import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import { OnPurchaseAction } from "../../classes/corruption/actions/OnPurchaseAction";
-import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
-import { OnRoomClearAction } from "../../classes/corruption/actions/OnRoomClearAction";
+import {
+  getEntityIDFromEntities2XMLDataEntry,
+  getEntitiesXMLData,
+} from "../../helper/xmlHelper";
+import {
+  getEntityIDSet,
+  getEntityIDSetFromCategory,
+  getPickupIDSetOfPickupType,
+} from "../data/gameSets/gameSets";
+import { getEntityNameFromEntityID } from "../../helper/entityHelper/entityIDHelper";
+import { EntityCategory } from "../../enums/general/EntityCategory";
+import { PickupType } from "../../enums/general/PickupType";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -79,13 +86,12 @@ const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  fprint("Testing function 1");
-  spawnNewInvertedCollectible(
-    getQuickAccessiblePosition(),
-    new InvertedPassiveActionSet().addEffects(
-      new OnRoomClearAction().setResponse(new SpawnNPCResponse()),
-    ),
-  );
+  const allEntities = getPickupIDSetOfPickupType(PickupType.COLLECTIBLE);
+
+  // Print them all.
+  for (const entity of allEntities) {
+    fprint(getEntityNameFromEntityID(entity as EntityID));
+  }
 }
 
 /** Test stuff as the developer with command 'eted'. */
