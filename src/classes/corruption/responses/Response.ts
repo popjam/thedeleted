@@ -44,6 +44,37 @@ export abstract class Response {
   oc?: EIDColorShortcut;
 
   /**
+   * Get the Response's 'severity'. Severity is the measure of how gamebreaking / detrimental a
+   * Response is for a particular run. On this scale, 0 is completely neutral, 100 is completely
+   * positively gamebreaking, and -100 will completely decimate a run.
+   *
+   * E.g 'Spawn 3 spiders' -> Severity -5.
+   *
+   * E.g 'Spawn 3 items' -> Severity 30.
+   *
+   * E.g 'Use Death Certificate' -> Severity 50.
+   *
+   * E.g 'Play X Sound' -> Severity 0.
+   *
+   * The 'percentage' and 'amountOfActivations' properties also modify the severity of the Response.
+   */
+  getSeverity(responseSeverity = 0): number {
+    let amountOfActivations = this.getAmountOfActivations();
+    const chanceToActivate = this.getChanceToActivate();
+
+    // If amountOfActivations is a range, we'll use the median value.
+    if (typeof amountOfActivations !== "number") {
+      const [min, max] = amountOfActivations;
+      amountOfActivations = (min + max) / 2;
+    }
+
+    responseSeverity *= amountOfActivations;
+    responseSeverity *= chanceToActivate / 100;
+
+    return responseSeverity;
+  }
+
+  /**
    * Get the assigned EID Color Shortcut used to represent the Response. This can either be derived
    * from the Morality or overridden with overrideTextColor(). Note if this Response is wrapped in
    * an Action, it will use the Actions textColor instead.
@@ -234,7 +265,6 @@ export abstract class Response {
     return returnValues;
   }
 
-  // eslint-disable-next-line jsdoc/informative-docs
   /** Fire the response. */
   abstract fire(triggerData: TriggerData): unknown;
 }

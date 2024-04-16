@@ -17,9 +17,19 @@ export function seenInvertedPickupInit(): void {
  * (meaning the player has been in the same room as it), this will return true.
  */
 export function hasInvertedPickupBeenSeen(pickup: EntityPickup): boolean {
-  return v.level.seenInverted.has(mod["getPickupIndex"](pickup));
+  return v.level.seenInverted.has(mod.getPickupIndex(pickup));
+}
+
+/**
+ * If the passed pickup index has an inverted version, and the inverted version has been seen once
+ * (meaning the player has been in the same room as it), this will return true.
+ */
+export function hasInvertedPickupIndexBeenSeen(
+  pickupIndex: PickupIndex,
+): boolean {
+  return v.level.seenInverted.has(pickupIndex);
 }
 
 export function _invertedPickupHasBeenSeen(pickup: EntityPickup): void {
-  v.level.seenInverted.set(mod["getPickupIndex"](pickup), true);
+  v.level.seenInverted.set(mod.getPickupIndex(pickup), true);
 }

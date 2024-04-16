@@ -3,12 +3,14 @@ import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
+import { ON_REVIVE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_REVIVE;
 
 /** Triggers when the player dies, reviving them. */
 export class OnReviveAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_REVIVE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnReviveAction class.

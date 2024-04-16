@@ -5,7 +5,6 @@ import { backdropHelperPostNewRoomReordered } from "../features/general/backdrop
 import { floorColorHelperPostNewRoomReordered } from "../features/general/floorColorHelper";
 import { lastRoomVisitedPostNewRoomReordered } from "../features/general/lastRoomVisited";
 import { temporaryItemsPostNewRoomReordered } from "../features/general/temporaryItems";
-import { iLoveYouPostNewRoom as iLoveYouPostNewRoomReordered } from "../features/modes/ILOVEYOU/ILOVEYOU";
 
 export function postNewRoomReorderedInit(mod: ModUpgraded): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED, main);
@@ -16,6 +15,5 @@ function main() {
   backdropHelperPostNewRoomReordered();
   floorColorHelperPostNewRoomReordered();
   temporaryItemsPostNewRoomReordered();
-  iLoveYouPostNewRoomReordered();
   triggerOnRoomActions();
 }

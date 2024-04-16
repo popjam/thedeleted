@@ -5,7 +5,6 @@ import type {
   ItemPoolType,
   ItemType,
 } from "isaac-typescript-definitions";
-import type { PlayerIndex } from "isaacscript-common";
 
 /**
  * Modifiers to describe a subset of all CollectibleTypes.

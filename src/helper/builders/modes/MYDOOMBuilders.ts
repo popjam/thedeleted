@@ -11,9 +11,9 @@ import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actio
 import type { CorruptedCollectibleSprite } from "../../../interfaces/corruption/funny/CorruptedCollectibleSprite";
 import { getRandomCollectibleType } from "../../collectibleHelper";
 import {
-  defaultInvertedActiveActionSetBuilder,
-  defaultInvertedPassiveActionSetBuilder,
-} from "../genericBuilders";
+  generateDefaultInvertedActiveActionSet,
+  generateDefaultInvertedPassiveActionSet,
+} from "../genericActionSetBuilders";
 import { getRandomInteger } from "../../randomHelper";
 
 export function mydoomDefaultBuilder(
@@ -24,8 +24,8 @@ export function mydoomDefaultBuilder(
 
   /** Generate the ActionSet using default properties. */
   actionSet = active
-    ? defaultInvertedActiveActionSetBuilder(inputs)
-    : defaultInvertedPassiveActionSetBuilder(inputs);
+    ? generateDefaultInvertedActiveActionSet(inputs)
+    : generateDefaultInvertedPassiveActionSet(inputs);
 
   /** Set the name and description. */
   actionSet

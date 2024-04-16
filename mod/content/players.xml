@@ -35,8 +35,29 @@
   <!-- REVETON Mode -->
   <player hp="2" armor="2" bombs="1" name="Deleted_REVETON" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_REVETON.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="REVETON" />
 
+  <!-- MYLIFE Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_MYLIFE" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- CODE_RED Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_CODE_RED" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- WANNACRY Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_WANNACRY" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- DOZER Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_DOZER" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- BAGLE Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_BAGLE" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- CASINO Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_CASINO" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
+  <!-- DREAMWORLD Mode -->
+  <player hp="2" armor="2" bombs="1" name="Deleted_DREAMWORLD" nameimage="thedeleted_playername_template.png" portrait="deleted_playerportrait.png" skin="normal/nonInverted/thedeleted_HAPPY99.png" hidden="true" skinColor="0" birthright="Patched" costumeSuffix="HAPPY99" />
+
   <!-- T. SOPHOS Mode -->
-  <player black="6" coins="1" name="Deleted" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />
+  <player black="6" coins="1" name="Deleted" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" hidden="true" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />
 
   <!-- T. BATTLEYE Mode -->
   <player black="6" coins="1" name="Deleted_BATTLEYE" nameimage="thedeleted_playername_template_b.png" portrait="deleted_playerportrait_b.png" skin="tainted/nonInverted/thedeleted_TMTRAINER.png" hidden="true" skinColor="0" birthright="Not to be recycled" bSkinParent="Deleted" />

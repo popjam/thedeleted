@@ -1,8 +1,10 @@
-import type { PickupVariant } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
+import { ON_PICKUP_COLLECT_ACTION_FREQUENCY } from "../../../constants/severityConstants";
+import { getPickupTypeSeverity } from "../../../maps/data/pickups/pickupSeverityMap";
+import type { PickupType } from "../../../enums/general/PickupType";
 
 const ACTION_TYPE = ActionType.ON_PICKUP_COLLECT;
 
@@ -15,37 +17,46 @@ const ACTION_TYPE = ActionType.ON_PICKUP_COLLECT;
  */
 export class OnPickupCollectAction extends Action {
   override actionType = ACTION_TYPE;
-  pk?: PickupVariant;
+  pk?: PickupType;
+  override actFr = ON_PICKUP_COLLECT_ACTION_FREQUENCY;
 
   /**
    * Constructs a new instance of the `OnPickupCollectAction` class.
    *
-   * @param pickup The pickup variant to associate with the action. If `undefined`, it means any
-   *               pickup (provided it works with `ON_PICKUP_COLLECT`).
+   * @param pickup The pickup type to associate with the action. If `undefined`, it means any pickup
+   *               (provided it works with `ON_PICKUP_COLLECT`).
    * @returns The constructed `OnPickupCollectAction` instance.
    */
-  construct(pickup?: PickupVariant): this {
+  construct(pickup?: PickupType): this {
     this.pk = pickup;
     return this;
   }
 
+  override getIdealSeverity(): number {
+    const pickup = this.getPickup();
+    if (pickup === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(getPickupTypeSeverity(pickup));
+  }
+
   /**
-   * Gets the pickup variant associated with the action.
+   * Gets the pickup type associated with the action.
    *
-   * @returns The pickup variant associated with the action, or `undefined` if no pickup is
-   *          associated.
+   * @returns The pickup type associated with the action, or `undefined` if no pickup is associated.
    */
-  getPickup(): PickupVariant | undefined {
+  getPickup(): PickupType | undefined {
     return this.pk;
   }
 
   /**
-   * Sets the pickup variant to associate with the action.
+   * Sets the pickup type to associate with the action.
    *
-   * @param pickup The pickup variant to associate with the action. If `undefined`, it means any
-   *               pickup (provided it works with `ON_PICKUP_COLLECT`).
+   * @param pickup The pickup type to associate with the action. If `undefined`, it means any pickup
+   *               (provided it works with `ON_PICKUP_COLLECT`).
    */
-  setPickup(pickup?: PickupVariant): void {
+  setPickup(pickup?: PickupType): void {
     this.pk = pickup;
   }
 

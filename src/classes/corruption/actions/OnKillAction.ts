@@ -1,3 +1,4 @@
+import { ON_KILL_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -9,6 +10,7 @@ const ACTION_TYPE = ActionType.ON_KILL;
 // TODO: Update for boss only, etc..
 export class OnKillAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_KILL_ACTION_FREQUENCY;
 
   // Override the trigger clause for OnKillAction.
   protected override getTriggerClause(): string {

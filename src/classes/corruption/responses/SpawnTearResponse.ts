@@ -87,7 +87,7 @@ export class SpawnTearResponse
       return `${EntityType.TEAR}.${tear}.0` as EntityID;
     }
 
-    // Random Slot.
+    // Random Tear.
     const tears = getEntityIDSetFromCategory(EntityCategory.TEAR);
     return getRandomSetElement<EntityID>(tears, undefined);
   }

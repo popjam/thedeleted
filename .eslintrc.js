@@ -21,5 +21,7 @@ module.exports = {
     "isaacscript/strict-enums": 0,
     "jsdoc/informative-docs": 0,
     "isaacscript/no-unsafe-plusplus": 0,
+    "isaacscript/require-capital-const-assertions": 0,
+    "isaacscript/require-capital-read-only": 0,
   },
 };

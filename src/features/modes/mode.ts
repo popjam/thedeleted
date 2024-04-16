@@ -37,7 +37,7 @@ import { setPlayerInvertedItemActionSetBuilderReference } from "../corruption/co
 const v = {
   persistent: {
     /** The mode N.Deleted will be upon starting a run. */
-    normalMode: Mode.HAPPY99,
+    normalMode: Mode.HAPPY_99,
 
     /** The mode T.Deleted will be upon starting a run. */
     taintedMode: Mode.SOPHOS,

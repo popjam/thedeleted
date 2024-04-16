@@ -1,5 +1,6 @@
-import { PlayerType } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import type { PlayerType } from "isaac-typescript-definitions";
+import type { ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
 import { postPlayerChangeTypeMode } from "../features/modes/mode";
 
 export function postPlayerChangeTypeInit(mod: ModUpgraded): void {

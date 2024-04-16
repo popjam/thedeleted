@@ -8,7 +8,7 @@ import { addArticle, addTheS } from "../../../helper/stringHelper";
 import { getTrinketName, log, smeltTrinket } from "isaacscript-common";
 import { getEIDTextSetting } from "../../../features/settings/EIDSettings";
 import { EIDObjectDisplaySetting } from "../../../enums/settings/EIDObjectDisplaySetting";
-import { fprint } from "../../../helper/printHelper";
+import { TRINKET_SEVERITY } from "../../../constants/severityConstants";
 
 const DEFAULT_TRINKET = TrinketType.BROKEN_MAGNET;
 const NON_GULP_VERB = "get";
@@ -25,6 +25,10 @@ export class GetTrinketResponse extends Response {
   construct(trinket: TrinketType): this {
     this.t = trinket;
     return this;
+  }
+
+  override getSeverity(): number {
+    return super.getSeverity(TRINKET_SEVERITY);
   }
 
   /**

@@ -4,7 +4,6 @@ import {
   CollectibleType,
   ItemPoolType,
 } from "isaac-typescript-definitions";
-import type { PlayerIndex } from "isaacscript-common";
 import {
   VectorZero,
   arrayRemove,
@@ -15,8 +14,6 @@ import {
   getCollectibleName,
   getCollectibleQuality,
   getCollectibleTags,
-  getEntityID,
-  getPlayerIndex,
   getPlayersWithCollectible,
   getRandomArrayElement,
   getRandomSeed,
@@ -48,13 +45,21 @@ import {
   addTheS,
   joinWith,
   joinWithOr,
-  legibleString,
-  removeUnnecessaryWhiteSpace,
   uncapitalizeFirstLetter,
 } from "./stringHelper";
 import { itemPoolTypeToString } from "../maps/data/name/itemPoolTypeNameMap";
 import { itemConfigChargeTypeToString } from "../maps/data/name/itemConfigChargeTypeNameMap";
 import { itemConfigTagToString } from "../maps/data/name/itemTagNameMap";
+import {
+  HEALTH_UP_SEVERITY_ADDITIVE,
+  OVERPOWERED_ITEM_SEVERITY,
+  QUALITY_0_ITEM_SEVERITY,
+  QUALITY_1_ITEM_SEVERITY,
+  QUALITY_2_ITEM_SEVERITY,
+  QUALITY_3_ITEM_SEVERITY,
+  QUALITY_4_ITEM_SEVERITY,
+} from "../constants/severityConstants";
+import { OVERPOWERED_COLLECTIBLES } from "../constants/collectibleConstants";
 
 const CURRENT_ROOM_POOL_TEXT = "from the current room pool";
 
@@ -359,7 +364,6 @@ export function getRandomCollectibleType(
   let filteredCollectibles = [...collectibleArray];
   const rng = isRNG(seedOrRNG) ? seedOrRNG : newRNG(seedOrRNG);
   let currentCollectible: CollectibleType | undefined;
-  let i = 0;
 
   while (filteredCollectibles.length > 0) {
     currentCollectible = getRandomArrayElement(filteredCollectibles, rng);
@@ -371,7 +375,6 @@ export function getRandomCollectibleType(
       filteredCollectibles,
       currentCollectible,
     );
-    i++;
 
     if (
       doesCollectibleTypeMatchAttributes(
@@ -402,9 +405,9 @@ export function collectibleAttributeToText(
     text +=
       typeof collectibleAttribute.itemType === "number"
         ? `${itemTypeToString(collectibleAttribute.itemType)} `
-        : `${joinWithOr(
+        : joinWithOr(
             collectibleAttribute.itemType.flatMap((q) => itemTypeToString(q)),
-          )}`;
+          );
   }
 
   // Item.
@@ -449,8 +452,8 @@ export function collectibleAttributeToText(
             collectibleAttribute.chargeType,
           )} charge'`
         : `with a ${joinWithOr(
-            collectibleAttribute.chargeType.flatMap(
-              (q) => `${itemConfigChargeTypeToString(q)}`,
+            collectibleAttribute.chargeType.flatMap((q) =>
+              itemConfigChargeTypeToString(q),
             ),
           )} charge`,
     );
@@ -524,4 +527,94 @@ export function collectibleAttributeToText(
   }
 
   return text;
+}
+
+/**
+ * Checks if a collectible adds hearts to the player. This can be red hearts, heart containers, soul
+ * hearts, or black hearts.
+ *
+ * @param collectible The collectible to check.
+ * @returns True if the collectible adds hearts, false otherwise.
+ */
+export function doesCollectibleAddHearts(
+  collectible: CollectibleType,
+): boolean {
+  const collectibleItemConfig =
+    Isaac.GetItemConfig().GetCollectible(collectible);
+  if (collectibleItemConfig === undefined) {
+    error(`Collectible ${collectible} has no item config.`);
+  }
+
+  const doesAddHearts = collectibleItemConfig.AddHearts > 0;
+  const doesAddMaxHearts = collectibleItemConfig.AddMaxHearts > 0;
+  const doesAddSoulHearts = collectibleItemConfig.AddSoulHearts > 0;
+  const doesAddBlackHearts = collectibleItemConfig.AddBlackHearts > 0;
+
+  return (
+    doesAddHearts || doesAddMaxHearts || doesAddSoulHearts || doesAddBlackHearts
+  );
+}
+
+/**
+ * Checks if a collectible is considered overpowered.
+ *
+ * @param collectible The collectible to check.
+ * @returns True if the collectible is overpowered, false otherwise.
+ */
+export function isOverpoweredCollectible(
+  collectible: CollectibleType,
+): boolean {
+  return OVERPOWERED_COLLECTIBLES.includes(collectible);
+}
+
+/**
+ * Calculates the severity of a collectible based on its quality.
+ *
+ * @param collectible The collectible to calculate the severity for.
+ * @returns The severity.
+ */
+export function getCollectibleSeverity(collectible: CollectibleType): number {
+  const quality = isOverpoweredCollectible(collectible)
+    ? 5
+    : getCollectibleQuality(collectible);
+  const givesHearts = doesCollectibleAddHearts(collectible);
+
+  let severity = 0;
+  switch (quality) {
+    case 5: {
+      severity = OVERPOWERED_ITEM_SEVERITY;
+      break;
+    }
+
+    case 4: {
+      severity = QUALITY_4_ITEM_SEVERITY;
+      break;
+    }
+
+    case 3: {
+      severity = QUALITY_3_ITEM_SEVERITY;
+      break;
+    }
+
+    case 2: {
+      severity = QUALITY_2_ITEM_SEVERITY;
+      break;
+    }
+
+    case 1: {
+      severity = QUALITY_1_ITEM_SEVERITY;
+      break;
+    }
+
+    default: {
+      severity = QUALITY_0_ITEM_SEVERITY;
+      break;
+    }
+  }
+
+  if (givesHearts) {
+    severity += HEALTH_UP_SEVERITY_ADDITIVE;
+  }
+
+  return severity;
 }

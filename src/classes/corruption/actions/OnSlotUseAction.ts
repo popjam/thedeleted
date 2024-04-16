@@ -4,6 +4,7 @@ import { triggerPlayerActionsByType } from "../../../features/corruption/effects
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
 import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import { ON_SLOT_USE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_SLOT_USE;
 
@@ -12,6 +13,7 @@ const ACTION_TYPE = ActionType.ON_SLOT_USE;
 export class OnSlotUseAction extends Action {
   override actionType = ACTION_TYPE;
   sID?: EntityID;
+  override actFr = ON_SLOT_USE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnSlotUseAction class.
@@ -22,6 +24,15 @@ export class OnSlotUseAction extends Action {
   construct(slotId?: EntityID): this {
     this.sID = slotId;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const slotID = this.getSlotID();
+    if (slotID === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(ON_SLOT_USE_ACTION_FREQUENCY * 5);
   }
 
   /**

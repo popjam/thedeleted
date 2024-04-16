@@ -1,7 +1,8 @@
+import type { WeightedArray } from "isaacscript-common";
 import { ColorDefault } from "isaacscript-common";
 import { EIDColorShortcut } from "../../enums/compatibility/EID/EIDColor";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
+import type { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 
 // eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const ILOVEYOU_ACTION_SET_COLOR_TRIPLET: [
@@ -24,3 +25,11 @@ export const ILOVEYOUInvertedItemSpriteColor: AdvancedColor = {
     1,
   ],
 };
+
+// eslint-disable-next-line isaacscript/require-capital-read-only, isaacscript/require-capital-const-assertions
+export const ILOVEYOU_NUMBER_OF_EFFECTS: WeightedArray<number> = [
+  [1, 1],
+  [2, 5],
+  [3, 2],
+  [4, 1],
+];

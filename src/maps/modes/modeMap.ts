@@ -18,10 +18,17 @@ import { SOPHOSData } from "../../objects/modes/SOPHOSData";
 import { SPYWIPERData } from "../../objects/modes/SPYWIPERData";
 import { VCSData } from "../../objects/modes/VCSData";
 import { ZIPBOMBERData } from "../../objects/modes/ZIPBOMBERData";
+import { WANNACRYData } from "../../objects/modes/WANNACRYData";
+import { BAGLEData } from "../../objects/modes/BAGLEData";
+import { DOZERData } from "../../objects/modes/DOZERData";
+import { MYLIFEData } from "../../objects/modes/MYLIFEData";
+import { CODEREDData } from "../../objects/modes/CODEREDData";
+import { DREAMWORLDData } from "../../objects/modes/DREAMWORLDData";
+import { CASINOData } from "../../objects/modes/CASINOData";
 
 /** Maps each Mode type to their respective data object. */
 export const MODE_DATA_MAP: ReadonlyMap<Mode, ModeData> = new Map([
-  [Mode.HAPPY99, HAPPY99Data],
+  [Mode.HAPPY_99, HAPPY99Data],
   [Mode.ILOVEYOU, ILOVEYOUData],
   [Mode.MORRIS, MORRISData],
   [Mode.ZIPBOMBER, ZIPBOMBERData],
@@ -36,11 +43,18 @@ export const MODE_DATA_MAP: ReadonlyMap<Mode, ModeData> = new Map([
   [Mode.MEMZ, MEMZData],
   [Mode.MYDOOM, MYDOOMData],
   [Mode.REVETON, REVETONData],
+  [Mode.WANNACRY, WANNACRYData],
+  [Mode.BAGLE, BAGLEData],
+  [Mode.DOZER, DOZERData],
+  [Mode.MYLIFE, MYLIFEData],
+  [Mode.CODE_RED, CODEREDData],
+  [Mode.CASINO, CASINOData],
+  [Mode.DREAMWORLD, DREAMWORLDData],
 ]);
 
 /** Maps each mode to their respective PlayerType. */
 export const MODE_PLAYERTYPE_MAP: ReadonlyMap<Mode, PlayerType> = new Map([
-  [Mode.HAPPY99, PlayerTypeCustom.DELETED_HAPPY99],
+  [Mode.HAPPY_99, PlayerTypeCustom.DELETED_HAPPY99],
   [Mode.ILOVEYOU, PlayerTypeCustom.DELETED_ILOVEYOU],
   [Mode.MORRIS, PlayerTypeCustom.DELETED_MORRIS],
   [Mode.ZIPBOMBER, PlayerTypeCustom.DELETED_ZIPBOMBER],
@@ -52,13 +66,20 @@ export const MODE_PLAYERTYPE_MAP: ReadonlyMap<Mode, PlayerType> = new Map([
   [Mode.VCS, PlayerTypeCustom.DELETED_VCS],
   [Mode.MEMZ, PlayerTypeCustom.DELETED_MEMZ],
   [Mode.REVETON, PlayerTypeCustom.DELETED_REVETON],
+  [Mode.WANNACRY, PlayerTypeCustom.DELETED_WANNACRY],
+  [Mode.BAGLE, PlayerTypeCustom.DELETED_BAGLE],
+  [Mode.DOZER, PlayerTypeCustom.DELETED_DOZER],
+  [Mode.MYLIFE, PlayerTypeCustom.DELETED_MYLIFE],
+  [Mode.CODE_RED, PlayerTypeCustom.DELETED_CODE_RED],
+  [Mode.CASINO, PlayerTypeCustom.DELETED_CASINO],
+  [Mode.DREAMWORLD, PlayerTypeCustom.DELETED_DREAMWORLD],
   [Mode.SOPHOS, PlayerTypeCustom.T_DELETED_SOPHOS],
   [Mode.BATTLEYE, PlayerTypeCustom.T_DELETED_BATTLEYE],
 ]);
 
 /** Maps each PlayerType to their respective Mode. */
 export const PLAYERTYPE_MODE_MAP: ReadonlyMap<PlayerType, Mode> = new Map([
-  [PlayerTypeCustom.DELETED_HAPPY99, Mode.HAPPY99],
+  [PlayerTypeCustom.DELETED_HAPPY99, Mode.HAPPY_99],
   [PlayerTypeCustom.DELETED_ILOVEYOU, Mode.ILOVEYOU],
   [PlayerTypeCustom.DELETED_MORRIS, Mode.MORRIS],
   [PlayerTypeCustom.DELETED_ZIPBOMBER, Mode.ZIPBOMBER],
@@ -70,12 +91,19 @@ export const PLAYERTYPE_MODE_MAP: ReadonlyMap<PlayerType, Mode> = new Map([
   [PlayerTypeCustom.DELETED_MEMZ, Mode.MEMZ],
   [PlayerTypeCustom.DELETED_REVETON, Mode.REVETON],
   [PlayerTypeCustom.DELETED_MYDOOM, Mode.MYDOOM],
+  [PlayerTypeCustom.DELETED_WANNACRY, Mode.WANNACRY],
+  [PlayerTypeCustom.DELETED_BAGLE, Mode.BAGLE],
+  [PlayerTypeCustom.DELETED_DOZER, Mode.DOZER],
+  [PlayerTypeCustom.DELETED_MYLIFE, Mode.MYLIFE],
+  [PlayerTypeCustom.DELETED_CODE_RED, Mode.CODE_RED],
+  [PlayerTypeCustom.DELETED_CASINO, Mode.CASINO],
+  [PlayerTypeCustom.DELETED_DREAMWORLD, Mode.DREAMWORLD],
   [PlayerTypeCustom.T_DELETED_SOPHOS, Mode.SOPHOS],
   [PlayerTypeCustom.T_DELETED_BATTLEYE, Mode.BATTLEYE],
 ]);
 
 export const MODE_VOICEOVER_MAP: ReadonlyMap<Mode, SoundEffect> = new Map([
-  [Mode.HAPPY99, SoundEffectCustom.VO_HAPPY99],
+  [Mode.HAPPY_99, SoundEffectCustom.VO_HAPPY99],
   [Mode.ILOVEYOU, SoundEffectCustom.VO_ILOVEYOU],
   [Mode.MORRIS, SoundEffectCustom.VO_MORRIS],
   [Mode.ZIPBOMBER, SoundEffectCustom.VO_ZIPBOMBER],
@@ -87,6 +115,12 @@ export const MODE_VOICEOVER_MAP: ReadonlyMap<Mode, SoundEffect> = new Map([
   [Mode.VCS, SoundEffectCustom.VO_VCS],
   [Mode.MEMZ, SoundEffectCustom.VO_MEMZ],
   [Mode.REVETON, SoundEffectCustom.VO_REVETON],
+  [Mode.BAGLE, SoundEffectCustom.VO_BAGLE1],
+  [Mode.DOZER, SoundEffectCustom.VO_DOZER],
+  [Mode.MYLIFE, SoundEffectCustom.VO_MYLIFE],
+  [Mode.CODE_RED, SoundEffectCustom.VO_CODERED],
+  [Mode.CASINO, SoundEffectCustom.VO_ANIMAL],
+  [Mode.DREAMWORLD, SoundEffectCustom.VO_DREAMWORLD],
 ]);
 
 /** Retrieve a Mode's ModeData. */

@@ -22,6 +22,11 @@ import {
   getRandomEntityIDFromCategory,
 } from "../../../helper/entityHelper/entityIDHelper";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
+import { RANDOM_PICKUP_SEVERITY } from "../../../constants/severityConstants";
+import {
+  getPickupIDSeverity,
+  getPickupTypeSeverity,
+} from "../../../maps/data/pickups/pickupSeverityMap";
 
 const DEFAULT_PICKUP_ID =
   `${EntityType.PICKUP}.${PickupVariant.POOP}.0` as PickupID;
@@ -69,6 +74,19 @@ export class SpawnPickupResponse
       this.setSoftRandom(softRandom);
     }
     return this;
+  }
+
+  override getSeverity(): number {
+    const pickup = this.getPickup();
+    if (pickup === undefined) {
+      return super.getSeverity(RANDOM_PICKUP_SEVERITY);
+    }
+
+    if (typeof pickup === "number") {
+      return super.getSeverity(getPickupTypeSeverity(pickup));
+    }
+
+    return super.getSeverity(getPickupIDSeverity(pickup));
   }
 
   getPickup(): PickupID | PickupType | undefined {

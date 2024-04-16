@@ -7,6 +7,10 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { levelStageToString } from "../../../maps/data/name/levelStageNameMap";
 import { rangeToString } from "../../../types/general/Range";
 import { Action } from "./Action";
+import {
+  MAX_SEVERITY,
+  ON_FLOOR_ACTION_FREQUENCY,
+} from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_FLOOR;
 
@@ -20,6 +24,7 @@ const DEFAULT_INTERVAL = 1;
 export class OnFloorAction extends Action {
   override actionType = ACTION_TYPE;
   lS?: LevelStage;
+  override actFr = ON_FLOOR_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnFloorAction class.
@@ -30,6 +35,15 @@ export class OnFloorAction extends Action {
   construct(levelStage?: LevelStage | undefined): this {
     this.lS = levelStage;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const levelStage = this.getLevelStage();
+    if (levelStage !== undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(MAX_SEVERITY);
   }
 
   /** If set, will only fire on the specified LevelStage. */

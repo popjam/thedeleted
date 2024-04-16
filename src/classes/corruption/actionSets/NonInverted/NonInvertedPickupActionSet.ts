@@ -26,6 +26,9 @@ export class NonInvertedPickupActionSet extends ActionSet {
   /** Amount extracted by the 'Extract' item. */
   ext?: number;
 
+  /** If negatives have carried over. */
+  ngo?: true;
+
   getColor(): Color | undefined {
     return this.color;
   }

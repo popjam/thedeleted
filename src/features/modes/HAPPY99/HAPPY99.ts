@@ -6,9 +6,8 @@ import { getModeData } from "../../../maps/modes/modeMap";
 import { mod } from "../../../mod";
 
 const v = {};
-const MODE = Mode.HAPPY99;
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const MODE_DATA = getModeData(MODE)!;
+const MODE = Mode.HAPPY_99;
+const MODE_DATA = getModeData(MODE);
 
 export function happy99Init(): void {
   mod.saveDataManager("happy99", v);
@@ -22,7 +21,11 @@ export function happy99ModeSetup(player: EntityPlayer): void {
 /** When the player swaps out from HAPPY99 mode. */
 export function happy99ModeFin(player: EntityPlayer): void {}
 
-/** Death fireworks effect */
+/**
+ * Death fireworks effect.
+ *
+ * TODO: Swap for less resource intensive effect.
+ */
 export function happy99PostPlayerFatalDamage(
   player: EntityPlayer,
 ): boolean | undefined {

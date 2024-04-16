@@ -1,18 +1,12 @@
 import type { SlotVariant } from "isaac-typescript-definitions";
-import {
-  ButtonAction,
-  ModCallback,
-  SoundEffect,
-} from "isaac-typescript-definitions";
+import { ButtonAction, SoundEffect } from "isaac-typescript-definitions";
 import type { PlayerIndex } from "isaacscript-common";
 import {
-  Callback,
   CallbackCustom,
   ModCallbackCustom,
   getPlayerFromIndex,
   getPlayerIndex,
   getSlots,
-  getTSTLClassName,
   gridCoordinatesToWorldPosition,
   sfxManager,
   spawnSlot,
@@ -107,7 +101,7 @@ class PCFacet extends Facet {
   @CallbackCustom(ModCallbackCustom.POST_PLAYER_RENDER_REORDERED)
   postPlayerRenderReordered(player: EntityPlayer): boolean | float | undefined {
     if (!isPlayerPCUser(player)) {
-      return;
+      return undefined;
     }
 
     /** User can't shoot. */
@@ -117,6 +111,11 @@ class PCFacet extends Facet {
     ) {
       fprint("PC: Switching to next mode on carousel.");
       switchToNextModeOnCarousel(player);
+    } else if (
+      Input.IsActionTriggered(ButtonAction.SHOOT_LEFT, player.ControllerIndex)
+    ) {
+      fprint("PC: Switching to previous mode on carousel.");
+      switchToNextModeOnCarousel(player, false);
     }
     return undefined;
   }

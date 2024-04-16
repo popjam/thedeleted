@@ -7,6 +7,10 @@ import {
   getEntityIDFromEntity,
   getEntityNameFromEntityID,
 } from "../../../helper/entityHelper/entityIDHelper";
+import {
+  ON_FLOOR_ACTION_FREQUENCY,
+  ON_SLOT_DESTROY_ACTION_FREQUENCY,
+} from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_SLOT_DESTROY;
 
@@ -14,6 +18,7 @@ const ACTION_TYPE = ActionType.ON_SLOT_DESTROY;
 export class OnSlotDestroyAction extends Action {
   override actionType = ACTION_TYPE;
   sID?: EntityID;
+  override actFr = ON_SLOT_DESTROY_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnSlotDestroyAction class.
@@ -24,6 +29,15 @@ export class OnSlotDestroyAction extends Action {
   construct(slotId?: EntityID): this {
     this.sID = slotId;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const slotID = this.getSlotID();
+    if (slotID === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(ON_FLOOR_ACTION_FREQUENCY);
   }
 
   /**

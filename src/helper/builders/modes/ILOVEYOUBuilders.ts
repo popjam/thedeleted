@@ -1,30 +1,29 @@
-import { getRandomInt, isColor } from "isaacscript-common";
+import { getRandomFromWeightedArray, isColor } from "isaacscript-common";
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
-import { ILOVEYOUInvertedItemSpriteColor } from "../../../constants/modes/ILOVEYOUConstants";
+import {
+  ILOVEYOUInvertedItemSpriteColor,
+  ILOVEYOU_NUMBER_OF_EFFECTS,
+} from "../../../constants/modes/ILOVEYOUConstants";
 import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
-  defaultInvertedActiveActionSetBuilder,
-  defaultInvertedPassiveActionSetBuilder,
+  generateDefaultInvertedItemActionSet,
   generateDefaultCorruptedCollectibleSprite,
-} from "../genericBuilders";
-import { getRandomInteger } from "../../randomHelper";
+} from "../genericActionSetBuilders";
 
 export function iLoveYouDefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = getRandomInteger(0, 1) === 0;
-  let actionSet: InvertedItemActionSet | undefined;
+  inputs ??= {};
+  inputs.numberOfEffects = getRandomFromWeightedArray(
+    ILOVEYOU_NUMBER_OF_EFFECTS,
+    undefined,
+  );
 
-  /** Generate the ActionSet using default properties. */
-  actionSet = active
-    ? defaultInvertedActiveActionSetBuilder(inputs)
-    : defaultInvertedPassiveActionSetBuilder(inputs);
+  const actionSet = generateDefaultInvertedItemActionSet(inputs);
 
   /** Set the name and description. */
-  actionSet
-    .setName(`ILOVEYOU ${active ? "ACTIVE" : "PASSIVE"}`)
-    .setDescription("ILOVEYOU DESCRIPTION");
+  actionSet.setName("ILOVEYOU ITEM").setDescription("ILOVEYOU DESCRIPTION");
 
   /** Set the icon. */
   const sprite = generateDefaultCorruptedCollectibleSprite(actionSet, inputs);

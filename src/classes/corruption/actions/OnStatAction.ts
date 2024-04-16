@@ -3,6 +3,8 @@ import { triggerPlayerActionsByType } from "../../../features/corruption/effects
 import { Action } from "./Action";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { PlayerStat } from "isaacscript-common";
+import { ON_STAT_ACTION_FREQUENCY } from "../../../constants/severityConstants";
+import { PLAYER_TOTAL_STATS } from "../../../constants/gameConstants";
 
 const ACTION_TYPE = ActionType.ON_STAT;
 
@@ -15,10 +17,22 @@ export class OnStatAction extends Action {
   override actionType = ACTION_TYPE;
   stat?: PlayerStat;
   thr?: number;
+  override actFr = ON_STAT_ACTION_FREQUENCY;
 
   construct(stat?: PlayerStat): this {
     this.stat = stat;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const stat = this.getStat();
+    if (stat === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(
+      ON_STAT_ACTION_FREQUENCY * PLAYER_TOTAL_STATS,
+    );
   }
 
   getStat(): PlayerStat | undefined {

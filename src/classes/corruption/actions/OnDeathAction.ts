@@ -1,3 +1,4 @@
+import { ON_DEATH_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -8,6 +9,7 @@ const ACTION_TYPE = ActionType.ON_DEATH;
 /** Triggers every time the player dies. */
 export class OnDeathAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_DEATH_ACTION_FREQUENCY;
 
   protected override getTriggerClause(): string {
     return "you die";

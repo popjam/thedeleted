@@ -6,6 +6,7 @@ import { isSensibleDamage } from "../../../helper/damageHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { damageFlagToString } from "../../../maps/data/name/damageFlagNameMap";
 import { Action } from "./Action";
+import { ON_DAMAGE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_DAMAGE;
 
@@ -13,6 +14,7 @@ const ACTION_TYPE = ActionType.ON_DAMAGE;
 export class OnDamageAction extends Action {
   override actionType = ACTION_TYPE;
   df?: DamageFlag;
+  override actFr = ON_DAMAGE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnDamageAction class.
@@ -25,6 +27,15 @@ export class OnDamageAction extends Action {
       this.setDamageFlag(damageFlag);
     }
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const damageFlag = this.getDamageFlag();
+    if (damageFlag === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    return super.getIdealSeverity(ON_DAMAGE_ACTION_FREQUENCY * 2);
   }
 
   getDamageFlagText(): string {

@@ -4,10 +4,10 @@ import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriple
 import { DeletedColor } from "../../../enums/general/DeletedColor";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
-  defaultInvertedActiveActionSetBuilder,
-  defaultInvertedPassiveActionSetBuilder,
+  generateDefaultInvertedActiveActionSet,
+  generateDefaultInvertedPassiveActionSet,
   generateDefaultCorruptedCollectibleSprite,
-} from "../genericBuilders";
+} from "../genericActionSetBuilders";
 import { getRandomInteger } from "../../randomHelper";
 
 const SPRITE_COLOR_1 = DeletedColor.WINDOWS_BLUE;
@@ -16,13 +16,13 @@ const SPRITE_COLOR_2 = DeletedColor.WINDOWS_WHITE;
 export function hicurdismosDefaultBuilder(
   inputs?: ActionSetBuilderInput,
 ): InvertedItemActionSet {
-  const active = inputs?.forceActiveOrPassive ?? getRandomInteger(0, 1) === 0;
+  const active = inputs?.chanceOfActive ?? getRandomInteger(0, 1) === 0;
   let actionSet: InvertedItemActionSet | undefined;
 
   /** Generate the ActionSet using default properties. */
   actionSet = active
-    ? defaultInvertedActiveActionSetBuilder(inputs)
-    : defaultInvertedPassiveActionSetBuilder(inputs);
+    ? generateDefaultInvertedActiveActionSet(inputs)
+    : generateDefaultInvertedPassiveActionSet(inputs);
 
   /** Set the name and description. */
   actionSet

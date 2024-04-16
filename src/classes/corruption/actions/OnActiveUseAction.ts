@@ -1,17 +1,27 @@
+import { ItemConfigChargeType, ItemType } from "isaac-typescript-definitions";
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Action } from "./Action";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
+import { rollPercentage } from "../../../types/general/Percentage";
+import { getRandomCollectibleType } from "../../../helper/collectibleHelper";
+import {
+  getCollectibleChargeType,
+  getCollectibleMaxCharges,
+} from "isaacscript-common";
+import { ON_ROOM_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_ACTIVE_USE;
+const SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM = 10;
 
 /** Triggers every time the player uses an active item. */
 /** Represents an action that is triggered when an active item is used. */
 export class OnActiveUseAction extends Action {
   override actionType = ACTION_TYPE;
   act?: CollectibleType;
+  override actFr = ON_ROOM_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnActiveUseAction class.
@@ -22,6 +32,33 @@ export class OnActiveUseAction extends Action {
   construct(activeItem?: CollectibleType): this {
     this.act = activeItem;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const activeItem = this.getActiveItem();
+    if (activeItem === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    const chargeType = getCollectibleChargeType(activeItem);
+    if (chargeType === ItemConfigChargeType.NORMAL) {
+      const charges = getCollectibleMaxCharges(activeItem);
+      return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY * charges);
+    }
+
+    return super.getIdealSeverity();
+  }
+
+  override shuffle(): this {
+    if (rollPercentage(SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM)) {
+      const randomActive = getRandomCollectibleType({
+        itemType: ItemType.ACTIVE,
+        chargeType: ItemConfigChargeType.NORMAL,
+      });
+      this.setActiveItem(randomActive);
+    }
+
+    return super.shuffle();
   }
 
   /**
@@ -56,7 +93,11 @@ export class OnActiveUseAction extends Action {
     return getCollectibleNameWithEIDSetting(activeItem);
   }
 
-  /** Triggers the action with the provided trigger data. */
+  /**
+   * Triggers the action with the provided trigger data.
+   *
+   * TODO: Restrict unlimited use Active Items.
+   */
   override trigger(triggerData: TriggerData): void {
     super.trigger({ ...triggerData });
   }

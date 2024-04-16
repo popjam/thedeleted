@@ -1,5 +1,5 @@
 import { CollectibleType } from "isaac-typescript-definitions";
-import { Response } from "../../../classes/corruption/responses/Response";
+import type { Response } from "../../../classes/corruption/responses/Response";
 import { UseActiveItemResponse } from "../../../classes/corruption/responses/UseActiveItemResponse";
 import { Morality } from "../../../enums/corruption/Morality";
 

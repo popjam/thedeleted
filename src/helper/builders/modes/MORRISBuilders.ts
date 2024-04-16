@@ -4,10 +4,10 @@ import { MORRISInvertedItemSpriteColor } from "../../../constants/modes/MORRISCo
 import { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import {
-  defaultInvertedActiveActionSetBuilder,
-  defaultInvertedPassiveActionSetBuilder,
+  generateDefaultInvertedActiveActionSet,
+  generateDefaultInvertedPassiveActionSet,
   generateDefaultCorruptedCollectibleSprite,
-} from "../genericBuilders";
+} from "../genericActionSetBuilders";
 import { getRandomInteger } from "../../randomHelper";
 
 export function morrisDefaultBuilder(
@@ -18,8 +18,8 @@ export function morrisDefaultBuilder(
 
   /** Generate the ActionSet using default properties. */
   actionSet = active
-    ? defaultInvertedActiveActionSetBuilder(inputs)
-    : defaultInvertedPassiveActionSetBuilder(inputs);
+    ? generateDefaultInvertedActiveActionSet(inputs)
+    : generateDefaultInvertedPassiveActionSet(inputs);
 
   /** Set the name and description. */
   actionSet

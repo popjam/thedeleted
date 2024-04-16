@@ -13,7 +13,10 @@ import {
   setCollectibleSprite,
 } from "isaacscript-common";
 import { returnCorruptedCollectibleSpriteToNormal } from "../../../classes/facets/CorruptedCollectibleSpriteFacet";
-import { getNonInvertedPickupActionSet } from "../../../features/corruption/effects/pickupEffects";
+import {
+  getAndSetNonInvertedPickupActionSet,
+  getNonInvertedPickupActionSet,
+} from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
 import { isZazzinatorAny } from "../../../sets/zazzSets";
@@ -23,6 +26,9 @@ import {
 } from "../../compatibility/EID/EIDHelper";
 import { fprint } from "../../printHelper";
 import { getAndSetInvertedPedestalActionSet } from "../effects/pedestalEffects";
+import { Morality } from "../../../enums/corruption/Morality";
+import { doesInvertedItemHaveActionSet } from "../../../features/corruption/effects/itemEffects";
+import { hasInvertedPickupBeenSeen } from "../../../features/corruption/inversion/seenInvertedPickups";
 
 /**
  * Update pedestal is unique from the 'update pickup' function in that it needs to take into account
@@ -61,8 +67,10 @@ export function updatePedestal(
     );
     invertedActionSet.updateAppearance(pedestal);
   } else {
+    // Carry over negatives.
+    carryOverNegatives(pedestal, inputs);
+
     const nonInvertedActionSet = getNonInvertedPickupActionSet(pedestal);
-    // TODO: ...
     if (nonInvertedActionSet === undefined) {
       returnPedestalAppearanceToNormal(pedestal);
     } else {
@@ -119,4 +127,38 @@ export function updatePickup(pickup: EntityPickup): void {
     return;
   }
   nonInvertedActionSet.updateAppearance(pickup);
+}
+
+/** Gets called in the 'updatePedestal' function, when a non-Inverted pedestal is updated. */
+function carryOverNegatives(
+  collectible: EntityPickupCollectible,
+  inputs?: ActionSetBuilderInput,
+) {
+  // Check if the inverted item has an ActionSet, so we don't have to generate one if it doesn't.
+  if (
+    hasInvertedPickupBeenSeen(collectible) &&
+    doesInvertedItemHaveActionSet(collectible.SubType)
+  ) {
+    const invertedActionSet = getAndSetInvertedPedestalActionSet(
+      collectible,
+      inputs,
+    );
+    if (invertedActionSet.getNegativesCarryOver()) {
+      const negativeEffects = invertedActionSet
+        .getEffects()
+        .filter((effect) => effect.getMorality() === Morality.NEGATIVE);
+
+      if (negativeEffects.length > 0) {
+        const nonInvertedActionSet =
+          getAndSetNonInvertedPickupActionSet(collectible);
+
+        // Check if negatives have already carried over.
+        if (nonInvertedActionSet.ngo !== true) {
+          fprint(`Carrying over ${negativeEffects.length} negative effects.`);
+          nonInvertedActionSet.addEffects(...negativeEffects);
+          nonInvertedActionSet.ngo = true;
+        }
+      }
+    }
+  }
 }

@@ -1,22 +1,27 @@
 import { RoomType } from "isaac-typescript-definitions";
-import { game, getRoomType } from "isaacscript-common";
+import { game, getRandomEnumValue, getRoomType } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { addTheS } from "../../../helper/stringHelper";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { roomTypeToString as getRoomNameFromRoomType } from "../../../maps/data/name/roomTypeNameMap";
 import { Action } from "./Action";
+import { rollPercentage } from "../../../types/general/Percentage";
+import { INFREQUENT_ROOMS } from "../../../constants/gameConstants";
+import {
+  ON_FLOOR_ACTION_FREQUENCY,
+  ON_ROOM_ACTION_FREQUENCY,
+} from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_ROOM;
 const SINGULAR_CHEST_CLAUSE = "visits to the Chest";
 const PLURAL_CHEST_CLAUSE = "time you enter the Chest";
-const SINGULAR_NUMBER = 1;
-const PLURAL_NUMBER = 2;
 
 /** Triggers every floor. */
 export class OnRoomAction extends Action {
   override actionType = ACTION_TYPE;
   rT?: RoomType;
+  override actFr = ON_ROOM_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnRoomAction class.
@@ -29,6 +34,34 @@ export class OnRoomAction extends Action {
       this.setRoomType(roomType);
     }
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const roomType = this.getRoomType();
+    if (roomType === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    if (roomType === RoomType.DEFAULT) {
+      return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY);
+    }
+
+    if (INFREQUENT_ROOMS.includes(roomType)) {
+      return super.getIdealSeverity(ON_FLOOR_ACTION_FREQUENCY / 4);
+    }
+
+    return super.getIdealSeverity(ON_FLOOR_ACTION_FREQUENCY);
+  }
+
+  override shuffle(): this {
+    const CHANCE_FOR_ROOM_TYPE = 20;
+
+    if (rollPercentage(CHANCE_FOR_ROOM_TYPE)) {
+      const randomRoomType = getRandomEnumValue(RoomType, undefined);
+      this.setRoomType(randomRoomType);
+    }
+
+    return super.shuffle();
   }
 
   /** If set, will only fire on the specified RoomType. */

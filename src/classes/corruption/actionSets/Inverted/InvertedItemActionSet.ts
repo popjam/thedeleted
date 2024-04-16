@@ -53,6 +53,10 @@ export abstract class InvertedItemActionSet extends ActionSet {
     return this.ngo ?? false;
   }
 
+  /**
+   * If this is true, negative effects will carry over to the non-inverted pedestal the first time
+   * that the pedestal changes from inverted -> non-inverted.
+   */
   setNegativesCarryOver(negativesCarryOver: boolean): this {
     this.ngo = negativesCarryOver;
     return this;

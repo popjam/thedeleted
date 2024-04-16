@@ -1,3 +1,4 @@
+import { ON_BOMB_EXPLODE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -8,6 +9,11 @@ const ACTION_TYPE = ActionType.ON_BOMB_EXPLODE;
 /** Triggers every time a bomb explodes. */
 export class OnBombExplodeAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_BOMB_EXPLODE_ACTION_FREQUENCY;
+
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity();
+  }
 
   protected override getTriggerClause(): string {
     return "a bomb explodes";

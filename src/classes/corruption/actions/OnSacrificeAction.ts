@@ -1,3 +1,4 @@
+import { ON_SACRIFICE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -9,6 +10,7 @@ const ACTION_TYPE = ActionType.ON_SACRIFICE;
 /** Represents an action that is triggered when a sacrifice is made. */
 export class OnSacrificeAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_SACRIFICE_ACTION_FREQUENCY;
 
   protected override getTriggerClause(): string {
     return "you make a sacrifice";

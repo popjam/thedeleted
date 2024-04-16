@@ -3,15 +3,15 @@ import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/ac
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { ModeData } from "../../interfaces/modes/ModeData";
+import type { ModeData } from "../../interfaces/modes/ModeData";
 
-/** Information about MYDOOM. */
+/** Information about CODE RED. */
 // eslint-disable-next-line isaacscript/require-capital-const-assertions
-export const JERUSALEMData: ModeData = {
-  description: "This is MYDOOM's description",
-  birthright: "This is MYDOOM's birthright description",
+export const CODEREDData: ModeData = {
+  description: "This is CODE RED's description",
+  birthright: "This is CODE RED's birthright description",
   characterType: CharacterType.NORMAL,
-  startingPocket: CollectibleTypeCustom.MYDOOM_EYE_STAGE_3,
+  startingPocket: CollectibleTypeCustom.BITFLIP,
   startingBombs: 1,
   startingKeys: 0,
   startingCoins: 0,
@@ -23,18 +23,17 @@ export const JERUSALEMData: ModeData = {
     boneHearts: 0,
     goldenHearts: 0,
     rottenHearts: 0,
-    brokenHearts: 0,
+    brokenHearts: 3, // For testing.
     soulCharges: 0,
     bloodCharges: 0,
-    soulHeartTypes: [HeartSubType.BLACK],
+    soulHeartTypes: [HeartSubType.SOUL],
   },
-  mainColor: DeletedColor.DEATH_BLACK,
-  anm2File: "gfx/001.000_player_MYDOOM.anm2",
-  itemActionSetBuilderReference:
-    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_MYDOOM_DEFAULT,
+  mainColor: DeletedColor.HAPPY_YELLOW,
+  anm2File: "gfx/001.000_player_HAPPY99.anm2",
   characterStats: new Map<CacheFlag, number>([
     [CacheFlag.DAMAGE, 3.4],
     [CacheFlag.SPEED, 0.9],
   ]),
-  startInverted: true,
+  itemActionSetBuilderReference:
+    InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY_DEFAULT,
 };

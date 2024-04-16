@@ -2,6 +2,7 @@
 
 import { getInvertedPlayers } from "../../../features/corruption/inversion/playerInversion";
 import { getModeDataFromPlayer } from "../../../maps/modes/modeMap";
+import { fprint } from "../../printHelper";
 import { getDeletedPlayers } from "../deletedHelper";
 
 /**
@@ -10,9 +11,12 @@ import { getDeletedPlayers } from "../deletedHelper";
  * constantly be the corrupted backdrop.
  */
 export function shouldInvertedWorldHaveCorruptBackdrop(): boolean {
-  return !getDeletedPlayers().some(
-    (player) => getModeDataFromPlayer(player).startInverted,
+  const shouldHave = !getDeletedPlayers().some(
+    (player) => getModeDataFromPlayer(player).startInverted === true,
   );
+
+  fprint(`Should the inverted world have a corrupt backdrop? ${shouldHave}`);
+  return shouldHave;
 }
 
 /**

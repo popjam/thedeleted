@@ -1,0 +1,1 @@
+export const AVERAGE_ROOMS_PER_FLOOR = 20;

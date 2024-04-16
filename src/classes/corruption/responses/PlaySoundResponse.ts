@@ -8,6 +8,7 @@ import {
 } from "../../../helper/soundHelper";
 import { sfxManager } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
+import { NEUTRAL_SEVERITY } from "../../../constants/severityConstants";
 
 const VERB = "play";
 const VERB_PARTICIPLE = "playing";
@@ -26,6 +27,11 @@ export class PlaySoundResponse extends Response {
   override construct(sound: SoundEffect | SoundEffectOptions): this {
     this.s = sound;
     return this;
+  }
+
+  /** Sounds have no consequences. */
+  override getSeverity(): number {
+    return NEUTRAL_SEVERITY;
   }
 
   getSoundEffect(): SoundEffect | SoundEffectOptions | undefined {

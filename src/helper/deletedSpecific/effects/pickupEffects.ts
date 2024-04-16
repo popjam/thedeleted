@@ -11,8 +11,8 @@ import {
 } from "../../../features/corruption/effects/pickupEffects";
 import { isPickupInverted } from "../../../features/corruption/inversion/pickupInversion";
 import { mod } from "../../../mod";
-import { updatePickup } from "../inversion/updateInverted";
 import { getAndSetInvertedPedestalActionSet } from "./pedestalEffects";
+import { updatePickup } from "../inversion/updateInverted";
 
 /**
  * Sets the ActionSet of the non-inverted pickup (which is unique per PickupIndex). Updates the
@@ -47,21 +47,24 @@ export function getAndSetNonInvertedPickupActionSet(
  * Add Actions or Responses to the non-Inverted pickup. If a pickup is inverted, this will still add
  * them to the pickups non-inverted state. If a NonInvertedActionSet does not exist, it will be
  * created. Does not deepCopy!
+ *
+ * @returns The NonInvertedPickupActionSet of the pickup.
  */
 export function addEffectsToNonInvertedPickup(
   pickup: EntityPickup,
   ...effects: ReadonlyArray<Response | Action>
-): void {
+): NonInvertedPickupActionSet {
   const nonInvertedActionSet = getNonInvertedPickupActionSet(pickup);
   if (nonInvertedActionSet === undefined) {
-    setNonInvertedPickupActionSet(
-      pickup,
-      new NonInvertedPickupActionSet().addEffects(...effects),
+    const newNonInvertedActionSet = new NonInvertedPickupActionSet().addEffects(
+      ...effects,
     );
-  } else {
-    nonInvertedActionSet.addEffects(...effects);
-    updatePickup(pickup);
+    setNonInvertedPickupActionSet(pickup, newNonInvertedActionSet);
+    return newNonInvertedActionSet;
   }
+  nonInvertedActionSet.addEffects(...effects);
+  updatePickup(pickup);
+  return nonInvertedActionSet;
 }
 
 /**

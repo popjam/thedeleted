@@ -7,7 +7,6 @@ import type { InvertedActiveActionSet } from "../../../classes/corruption/action
 import type { InvertedItemActionSet } from "../../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import type { NonInvertedPickupActionSet } from "../../../classes/corruption/actionSets/NonInverted/NonInvertedPickupActionSet";
 import type { ActionSetBuilderInput } from "../../../interfaces/corruption/actionSets/ActionSetBuilderInput";
-import { mod } from "../../../mod";
 import { spawnGlitchedCollectible } from "../../collectibleHelper";
 import { setPedestalInversion } from "./pedestalInversion";
 import { setNonInvertedPickupActionSet } from "../effects/pickupEffects";
@@ -62,7 +61,7 @@ export function spawnNewInvertedActiveCollectible(
   inputs?: ActionSetBuilderInput,
 ): EntityPickupCollectible {
   inputs ??= {};
-  inputs.forceActiveOrPassive = true;
+  inputs.chanceOfActive = 100;
   return spawnNewInvertedCollectible(position, invertedActionSet, inputs);
 }
 

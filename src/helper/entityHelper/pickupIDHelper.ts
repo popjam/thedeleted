@@ -289,12 +289,49 @@ export function getPickupTypeFromPickupID(pickupID: PickupID): PickupType {
     default: {
       // Check if name contains 'Chest'.
       const pickupName = getEntityNameFromEntityID(pickupID as EntityID);
-      if (
-        pickupName !== undefined &&
-        pickupName.toLowerCase().includes("chest")
-      ) {
+      if (pickupName === undefined) {
+        return PickupType.MISCELLANEOUS;
+      }
+
+      if (pickupName.toLowerCase().includes("chest")) {
         return PickupType.CHEST;
       }
+
+      // Check if name contains 'Heart'.
+      if (pickupName.toLowerCase().includes("heart")) {
+        return PickupType.HEART;
+      }
+
+      // Check if name contains 'Coin'.
+      if (pickupName.toLowerCase().includes("coin")) {
+        return PickupType.COIN;
+      }
+
+      // Check if name contains 'Penny'.
+      if (pickupName.toLowerCase().includes("penny")) {
+        return PickupType.COIN;
+      }
+
+      // Check if name contains 'Key'.
+      if (pickupName.toLowerCase().includes("key")) {
+        return PickupType.KEY;
+      }
+
+      // Check if name contains 'Bomb'.
+      if (pickupName.toLowerCase().includes("bomb")) {
+        return PickupType.BOMB;
+      }
+
+      // Check if name contains 'Poop'.
+      if (pickupName.toLowerCase().includes("poop")) {
+        return PickupType.POOP;
+      }
+
+      // Check if name contains 'Battery'.
+      if (pickupName.toLowerCase().includes("battery")) {
+        return PickupType.BATTERY;
+      }
+
       return PickupType.MISCELLANEOUS;
     }
   }

@@ -6,7 +6,7 @@ import { Mode } from "../enums/modes/Mode";
  */
 // eslint-disable-next-line isaacscript/require-capital-const-assertions, isaacscript/require-capital-read-only
 export const NormalModeCarousel = [
-  Mode.HAPPY99,
+  Mode.HAPPY_99,
   Mode.ILOVEYOU,
   Mode.MORRIS,
   Mode.ZIPBOMBER,

@@ -11,6 +11,11 @@ import {
 } from "../../../helper/entityHelper/entityIDHelper";
 import { pickupTypeToString } from "../../../maps/data/name/pickupTypeNameMap";
 import type { EntityID } from "isaacscript-common";
+import { ON_PURCHASE_ACTION_FREQUENCY } from "../../../constants/severityConstants";
+import {
+  getPickupIDSeverity,
+  getPickupTypeSeverity,
+} from "../../../maps/data/pickups/pickupSeverityMap";
 
 const ACTION_TYPE = ActionType.ON_PURCHASE;
 
@@ -19,6 +24,7 @@ const ACTION_TYPE = ActionType.ON_PURCHASE;
 export class OnPurchaseAction extends Action {
   override actionType = ACTION_TYPE;
   pk?: PickupID | PickupType;
+  override actFr = ON_PURCHASE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnPurchaseAction class.
@@ -29,6 +35,20 @@ export class OnPurchaseAction extends Action {
   construct(pickup?: PickupID | PickupType): this {
     this.pk = pickup;
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const pickup = this.getPickup();
+    if (pickup === undefined) {
+      return super.getIdealSeverity(ON_PURCHASE_ACTION_FREQUENCY);
+    }
+
+    if (typeof pickup === "string") {
+      return super.getIdealSeverity(getPickupIDSeverity(pickup));
+    }
+
+    // It's a PickupType.
+    return super.getIdealSeverity(getPickupTypeSeverity(pickup));
   }
 
   /**

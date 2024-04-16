@@ -4,7 +4,8 @@ import { getPlayersOfType, setCollectibleGlitched } from "isaacscript-common";
 import { PlayerTypeCustom } from "../../../enums/general/PlayerTypeCustom";
 import { fprint } from "../../../helper/printHelper";
 import { rollPercentage } from "../../../types/general/Percentage";
-import { Range, randomInRange } from "../../../types/general/Range";
+import type { Range } from "../../../types/general/Range";
+import { randomInRange } from "../../../types/general/Range";
 import { getSOPHOSChanceForNormalItemSetting } from "../../settings/SOPHOSSettings";
 
 const PLAYER_TYPE = PlayerTypeCustom.T_DELETED_SOPHOS;

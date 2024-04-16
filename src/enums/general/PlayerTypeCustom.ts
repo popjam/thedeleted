@@ -13,6 +13,13 @@ export const PlayerTypeCustom = {
   DELETED_MYDOOM: Isaac.GetPlayerTypeByName("Deleted_MYDOOM"),
   DELETED_MEMZ: Isaac.GetPlayerTypeByName("Deleted_MEMZ"),
   DELETED_REVETON: Isaac.GetPlayerTypeByName("Deleted_REVETON"),
+  DELETED_WANNACRY: Isaac.GetPlayerTypeByName("Deleted_WANNACRY"),
+  DELETED_BAGLE: Isaac.GetPlayerTypeByName("Deleted_BAGLE"),
+  DELETED_DOZER: Isaac.GetPlayerTypeByName("Deleted_DOZER"),
+  DELETED_MYLIFE: Isaac.GetPlayerTypeByName("Deleted_MYLIFE"),
+  DELETED_CODE_RED: Isaac.GetPlayerTypeByName("Deleted_CODERED"),
+  DELETED_CASINO: Isaac.GetPlayerTypeByName("Deleted_CASINO"),
+  DELETED_DREAMWORLD: Isaac.GetPlayerTypeByName("Deleted_DREAMWORLD"),
   T_DELETED_SOPHOS: Isaac.GetPlayerTypeByName("Deleted", true),
   T_DELETED_BATTLEYE: Isaac.GetPlayerTypeByName("Deleted_BATTLEYE", true),
 } as const;

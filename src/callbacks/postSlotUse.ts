@@ -61,6 +61,4 @@ function main(
   _slot: EntitySlot,
   _currentAnimation: string,
   _slotPtrHash: PtrHash,
-) {
-  player.AnimateHappy();
-}
+) {}

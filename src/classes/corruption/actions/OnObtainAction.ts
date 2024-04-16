@@ -2,6 +2,7 @@ import { getRandomSetElement } from "isaacscript-common";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { FUNNY_ACTION_TEXT_SET } from "../../../sets/funnyActionTexts";
 import { Action } from "./Action";
+import { MAX_SEVERITY } from "../../../constants/severityConstants";
 
 /**
  * Upon the player obtaining the passive or active inverted item, immediately triggers its responses
@@ -10,6 +11,7 @@ import { Action } from "./Action";
  */
 export class OnObtainAction extends Action {
   override actionType = ActionType.ON_OBTAIN;
+  override actFr = MAX_SEVERITY;
 
   /**
    * Constructs an instance of the OnObtainAction class.

@@ -2,7 +2,6 @@ import {
   copyColor,
   deepCopy,
   getPlayerIndex,
-  getPlayers,
   getRoomListIndex,
   isColor,
 } from "isaacscript-common";
@@ -99,7 +98,8 @@ export function removeFloorColor(roomListIndex?: number): void {
 export function _updateCorruptedFloorColorForPlayer(
   player: EntityPlayer,
 ): void {
-  if (!isWorldInverted()) {
+  if (!isWorldInverted() || !shouldInvertedWorldHaveCorruptFloorColor()) {
+    removeAllCorruptedFloorColor();
     return;
   }
 
@@ -148,6 +148,7 @@ function removeAllCorruptedFloorColor() {
     effect[1].Remove();
   }
   v.room.corruptedFloorColorObject.clear();
+  fprint("Removed all corrupted floor color effects.");
 }
 
 // POST_NEW_ROOM_REORDERED
@@ -163,5 +164,7 @@ export function floorColorHelperPostNewRoomReordered(): void {
     v.room.currentFloorColorObject = EntityPtr(newLadderObject);
   }
 
-  // if (isWorldInverted()) { updateCorruptedFloorColorForAllPlayers(); }
+  if (isWorldInverted()) {
+    _updateCorruptedFloorColor();
+  }
 }

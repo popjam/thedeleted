@@ -4,6 +4,7 @@ import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
   collectibleAttributeToText,
+  getCollectibleSeverity,
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
@@ -13,8 +14,7 @@ import type { CollectibleAttribute } from "../../../interfaces/general/Collectib
 import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
-import { fprint } from "../../../helper/printHelper";
-import { addTheS } from "../../../helper/stringHelper";
+import { QUALITY_2_ITEM_SEVERITY } from "../../../constants/severityConstants";
 
 /** Defaults to The Poop if no activeItem is set. */
 const EMPTY_COLLECTIBLE_TEXT = "a random collectible";
@@ -23,6 +23,7 @@ const FIRST_TIME_PICKING_UP = true;
 const VERB = "get";
 const VERB_PARTICIPLE = "getting";
 const DEFAULT_COLLECTIBLE = CollectibleType.POOP;
+const DEFAULT_SEVERITY = QUALITY_2_ITEM_SEVERITY;
 
 /**
  * This Response gives the player collectibles. The collectible can be a specific item, or a random
@@ -57,6 +58,15 @@ export class GetCollectibleResponse extends Response {
       this.aT = collectible;
     }
     return this;
+  }
+
+  override getSeverity(): number {
+    const collectible = this.getCollectible();
+    if (typeof collectible === "number") {
+      return super.getSeverity(getCollectibleSeverity(collectible));
+    }
+
+    return super.getSeverity(DEFAULT_SEVERITY);
   }
 
   /** Get collectibles mentioned. */
@@ -181,12 +191,6 @@ export class GetCollectibleResponse extends Response {
 
     // Standard firing procedure.
     const collectibleToFire = this.calculateCollectible();
-    if (collectibleToFire === undefined) {
-      fprint(
-        "Failed to get a collectible to fire for the GetCollectibleResponse.",
-      );
-      return undefined;
-    }
 
     player.AddCollectible(collectibleToFire, undefined, FIRST_TIME_PICKING_UP);
     return collectibleToFire;

@@ -1,6 +1,6 @@
 import { ColorDefault } from "isaacscript-common";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { AdvancedColor } from "../../interfaces/general/AdvancedColor";
+import type { AdvancedColor } from "../../interfaces/general/AdvancedColor";
 
 // eslint-disable-next-line isaacscript/require-capital-const-assertions
 export const HAPPY99InvertedItemSpriteColor: AdvancedColor = {

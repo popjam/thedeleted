@@ -34,6 +34,7 @@ Misc
 - Corrupted Sound Effects.
 - Conditional functions.
 - Quest functions.
+- Alternate virus names.
 
 Bugs
 - Spawn inverted active and use, restart, spawn again, charge is 0.

@@ -1,13 +1,13 @@
-import { CollectibleType, UseFlag } from "isaac-typescript-definitions";
+import type { CollectibleType, UseFlag } from "isaac-typescript-definitions";
 import { invertPlayer } from "../../helper/deletedSpecific/inversion/playerInversion";
 
 export function bitflipPostUseItem(
-  collectibleType: CollectibleType,
-  rng: RNG,
+  _collectibleType: CollectibleType,
+  _rng: RNG,
   player: EntityPlayer,
-  useFlags: BitFlags<UseFlag>,
-  activeSlot: int,
-  customVarData: int,
+  _useFlags: BitFlags<UseFlag>,
+  _activeSlot: int,
+  _customVarData: int,
 ): boolean {
   return bitFlipUse(player);
 }

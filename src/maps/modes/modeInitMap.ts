@@ -1,4 +1,5 @@
 import { Mode } from "../../enums/modes/Mode";
+import { bagleModeFin, bagleModeSetup } from "../../features/modes/BAGLE/BAGLE";
 import {
   battleyeModeFin,
   battleyeModeSetup,
@@ -54,7 +55,7 @@ import {
 const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
   new Map([
     [
-      Mode.HAPPY99,
+      Mode.HAPPY_99,
       (player: EntityPlayer) => {
         happy99ModeSetup(player);
       },
@@ -138,6 +139,12 @@ const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
       },
     ],
     [
+      Mode.BAGLE,
+      (player: EntityPlayer) => {
+        bagleModeSetup(player);
+      },
+    ],
+    [
       Mode.BATTLEYE,
       (player: EntityPlayer) => {
         battleyeModeSetup(player);
@@ -149,7 +156,7 @@ const MODE_INIT_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> =
 const MODE_FIN_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> = new Map(
   [
     [
-      Mode.HAPPY99,
+      Mode.HAPPY_99,
       (player: EntityPlayer) => {
         happy99ModeFin(player);
       },
@@ -224,6 +231,12 @@ const MODE_FIN_MAP: ReadonlyMap<Mode, (player: EntityPlayer) => void> = new Map(
       Mode.MEMZ,
       (player: EntityPlayer) => {
         memzModeFin(player);
+      },
+    ],
+    [
+      Mode.BAGLE,
+      (player: EntityPlayer) => {
+        bagleModeFin(player);
       },
     ],
     [

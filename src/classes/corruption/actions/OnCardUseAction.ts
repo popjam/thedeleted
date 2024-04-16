@@ -1,16 +1,23 @@
-import type { CardType } from "isaac-typescript-definitions";
+import { CardType } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { Action } from "./Action";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
+import { rollPercentage } from "../../../types/general/Percentage";
+import {
+  ON_CARD_USE_ACTION_FREQUENCY,
+  ON_FLOOR_ACTION_FREQUENCY,
+} from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_CARD_USE;
+const CHANCE_FOR_CARD_TYPE_PARAM = 10;
 
 /** Triggers every time the player uses a card. */
 /** Represents an action that triggers when a card is used. */
 export class OnCardUseAction extends Action {
   override actionType = ACTION_TYPE;
   c?: CardType;
+  override actFr = ON_CARD_USE_ACTION_FREQUENCY;
 
   /**
    * Constructs a new OnCardUseAction.
@@ -21,6 +28,24 @@ export class OnCardUseAction extends Action {
   construct(card?: CardType): this {
     this.setCard(card);
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const cardType = this.getCard();
+    if (cardType === undefined) {
+      return super.getIdealSeverity();
+    }
+
+    // Specific card.
+    return super.getIdealSeverity(ON_FLOOR_ACTION_FREQUENCY);
+  }
+
+  override shuffle(): this {
+    if (rollPercentage(CHANCE_FOR_CARD_TYPE_PARAM)) {
+      this.setCard(CardType.FOOL);
+    }
+
+    return super.shuffle();
   }
 
   /**

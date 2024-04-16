@@ -1,12 +1,12 @@
 import {
-  CollectibleType,
   EntityType,
   GridEntityType,
+  NPCID,
+  RoomType,
 } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
 import {
   getEnumValues,
-  getCollectibleName,
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
@@ -17,36 +17,23 @@ import {
   freezeAllNPCsInRoom,
   unfreezeAllNPCsInRoom,
 } from "../../classes/facets/entityModifiers.ts/NPCModifiers/FreezeNPCFacet";
-import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
-import { getRandomCollectibleType } from "../../helper/collectibleHelper";
 import { fprint } from "../../helper/printHelper";
-import { legibleString } from "../../helper/stringHelper";
 import { mod } from "../../mod";
-import { InvertedActiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedActiveActionSet";
 import {
   getAllEmptyGridIndexes,
   positionToClampedGridIndex,
 } from "../../helper/gridEntityHelper/gridEntityHelper";
-import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
-import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
-import type { NPCAttribute } from "../../interfaces/general/NPCAttribute";
-import {
-  getEntityIDFromEntities2XMLDataEntry,
-  getEntitiesXMLData,
-} from "../../helper/xmlHelper";
-import {
-  getEntityIDSet,
-  getEntityIDSetFromCategory,
-  getPickupIDSetOfPickupType,
-} from "../data/gameSets/gameSets";
+import { getPickupIDSetOfPickupType } from "../data/gameSets/gameSets";
 import { getEntityNameFromEntityID } from "../../helper/entityHelper/entityIDHelper";
-import { EntityCategory } from "../../enums/general/EntityCategory";
 import { PickupType } from "../../enums/general/PickupType";
+import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
+import { addTemporaryActionToPlayer } from "../corruption/effects/playerEffects";
+import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
-const player2 = () => Isaac.GetPlayer(1);
 
 /** Add all the testing commands. */
 export function addTestingCommands(): void {
@@ -76,22 +63,35 @@ export function addTestingCommands(): void {
   });
 }
 
-const responseToAdd = new SpawnHybridNPCResponse().construct({
-  boss: false,
-  flying: true,
-} as NPCAttribute);
-const actionToAdd = new OnRoomAction().setResponse(responseToAdd);
-
-const actionSetToAdd = new InvertedActiveActionSet().addEffects(responseToAdd);
-
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const allEntities = getPickupIDSetOfPickupType(PickupType.COLLECTIBLE);
+  const newResponse = new GetCollectibleResponse();
 
-  // Print them all.
-  for (const entity of allEntities) {
-    fprint(getEntityNameFromEntityID(entity as EntityID));
+  const newAction = new OnRoomAction().setInterval(3);
+
+  const responseSeverity = newResponse.getSeverity();
+  const actionSeverity = newAction.getIdealSeverity();
+
+  // We will now multiply the absolute response severity to match the ideal action severity.
+  const severityMultiplier = actionSeverity / Math.abs(responseSeverity);
+
+  // Round to 0 decimal places.
+  const severityMultiplierRounded = Math.round(severityMultiplier);
+  const amountOfActivations = newResponse.getAmountOfActivations();
+  if (typeof amountOfActivations !== "number") {
+    return;
   }
+
+  newResponse.setAmountOfActivations(
+    amountOfActivations * severityMultiplierRounded,
+  );
+
+  newAction.setResponse(newResponse);
+  addTemporaryActionToPlayer(player(), newAction);
+
+  fprint(
+    `Response severity: ${newResponse.getSeverity()}, Action ideal severity: ${newAction.getIdealSeverity()}, Action: ${newAction.getText()}`,
+  );
 }
 
 /** Test stuff as the developer with command 'eted'. */
@@ -130,21 +130,8 @@ export function testingFunction3(): void {
 }
 
 /** Test stuff as the developer with command 'eted'. */
-export function testingFunction4(): void {
-  const item1 = getRandomCollectibleType() ?? CollectibleTypeCustom.BITFLIP;
-  const item2 = getRandomCollectibleType() ?? CollectibleType.ABADDON;
-  fprint(
-    `Combining ${getCollectibleName(item1)} and ${getCollectibleName(item2)}:`,
-  );
-  fprint(
-    `-----> ${legibleString(
-      combineWords(
-        getCollectibleName(item1),
-        getCollectibleName(item2),
-      ).toLowerCase(),
-    )}`,
-  );
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export function testingFunction4(): void {}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction5(): void {
@@ -161,92 +148,8 @@ function getClosestPickupIndex(): number | undefined {
   );
   if (closestEntity === undefined) {
     fprint("No entity found");
-    return;
+    return undefined;
   }
   const pickupIndex = mod.getPickupIndex(closestEntity as EntityPickup);
   return pickupIndex;
-}
-
-function combineWords(word1: string, word2: string): string {
-  // Split words into arrays of characters
-  const chars1 = word1.split("");
-  const chars2 = word2.split("");
-
-  // Find vowel and consonant indices in each word
-  const vowels1 = chars1.reduce<number[]>((indices, char, index) => {
-    if ("aeiouAEIOU".includes(char)) {
-      indices.push(index);
-    }
-    return indices;
-  }, []);
-  const consonants1 = chars1.reduce<number[]>((indices, char, index) => {
-    if (!"aeiouAEIOU".includes(char)) {
-      indices.push(index);
-    }
-    return indices;
-  }, []);
-  const vowels2 = chars2.reduce<number[]>((indices, char, index) => {
-    if ("aeiouAEIOU".includes(char)) {
-      indices.push(index);
-    }
-    return indices;
-  }, []);
-  const consonants2 = chars2.reduce<number[]>((indices, char, index) => {
-    if (!"aeiouAEIOU".includes(char)) {
-      indices.push(index);
-    }
-    return indices;
-  }, []);
-
-  // Choose random indices to split the words.
-  let splitIndex1 = Math.floor(Math.random() * chars1.length);
-  let splitIndex2 = Math.floor(Math.random() * chars2.length);
-  let joinedChar1 = chars1[splitIndex1];
-  let joinedChar2 = chars2[splitIndex2];
-
-  // Ensure that the resulting word doesn't have more than three consonants in a row.
-  let combinedWord: string | undefined;
-
-  let iterations = 0;
-  while (
-    combinedWord === undefined ||
-    consonantsInARow(combinedWord) > 2 ||
-    combinedWord.length < Math.ceil((chars1.length + chars2.length) / 2)
-  ) {
-    iterations++;
-    if (iterations > 100_000 && combinedWord !== undefined) {
-      break;
-    }
-
-    splitIndex1 = Math.floor(Math.random() * chars1.length);
-    joinedChar1 = chars1[splitIndex1];
-    splitIndex2 = Math.floor(Math.random() * chars2.length);
-    joinedChar2 = chars2[splitIndex2];
-
-    // Combine words at chosen indices.
-    combinedWord =
-      word1.slice(0, Math.max(0, splitIndex1)) +
-      word2.slice(Math.max(0, splitIndex2));
-  }
-
-  return combinedWord;
-}
-
-// Helper function to count the number of consonants in a row in a given string.
-function consonantsInARow(str: string): number {
-  let maxConsonantsInARow = 0;
-  let currentConsonantsInARow = 0;
-
-  for (const element of str) {
-    if ("aeiouAEIOU".includes(element)) {
-      currentConsonantsInARow = 0;
-    } else {
-      currentConsonantsInARow++;
-      maxConsonantsInARow = Math.max(
-        maxConsonantsInARow,
-        currentConsonantsInARow,
-      );
-    }
-  }
-  return maxConsonantsInARow;
 }

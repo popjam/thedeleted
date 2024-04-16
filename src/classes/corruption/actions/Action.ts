@@ -15,6 +15,7 @@ import {
 
 import type { Response } from "../responses/Response";
 import { arrayEquals } from "isaacscript-common";
+import { rollPercentage } from "../../../types/general/Percentage";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
 const TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER = 0;
@@ -38,6 +39,9 @@ export abstract class Action {
   o?: ActionOriginType;
   p?: boolean;
   oc?: EIDColorShortcut;
+
+  /** How frequently the Action occurs. */
+  abstract readonly actFr: number;
 
   /**
    * When using getMorality() on the Action, this value will return instead of looking at the
@@ -76,6 +80,28 @@ export abstract class Action {
    *          removing actions with this tag from the player.
    */
   ffR?: boolean;
+
+  /**
+   * Gets the severity of the Action. This will be the ideal severity of the Action's Responses. The
+   * higher the severity, the less frequent the Action 1
+   *
+   * @returns The severity of the action.
+   */
+  getIdealSeverity(frequency?: number): number {
+    frequency ??= this.actFr;
+
+    const distance = this.getInterval();
+    if (distance === undefined) {
+      return frequency;
+    }
+
+    if (typeof distance === "number") {
+      return distance * frequency;
+    }
+
+    const median = (distance[0] + distance[1]) / 2;
+    return median * frequency;
+  }
 
   /**
    * Get the assigned EID Color used to represent the Action. This can either be derived from the
@@ -356,6 +382,32 @@ export abstract class Action {
 
   getText(): string {
     return `${this.getActionText()} ${this.getResponseText()}`;
+  }
+
+  /**
+   * Shuffles the Action's parameters. This is useful in corrupted item generation.
+   *
+   * For example, for 'OnRoomAction', this would shuffle the RoomType, with a chance of removing the
+   * RoomType entirely.
+   */
+  shuffle(): this {
+    const CHANCE_FOR_FIRE_AFTER_THEN_REMOVE = 1;
+    const CHANCE_FOR_INTERVAL = 20;
+
+    if (rollPercentage(CHANCE_FOR_FIRE_AFTER_THEN_REMOVE)) {
+      this.setFireAfterThenRemove(randomInRange([1, 3]));
+    }
+
+    if (rollPercentage(CHANCE_FOR_INTERVAL)) {
+      const CHANCE_FOR_RANGE = 50;
+      if (rollPercentage(CHANCE_FOR_RANGE)) {
+        this.setInterval([1, 3]);
+      } else {
+        this.setInterval(randomInRange([1, 3]));
+      }
+    }
+
+    return this;
   }
 
   /**

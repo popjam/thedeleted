@@ -2,13 +2,16 @@ import type {
   PillEffect,
   PillColor,
   UseFlag,
-  BombVariant,
 } from "isaac-typescript-definitions";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayerActionsByType } from "../../../features/corruption/effects/playerEffects";
 import { Action } from "./Action";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { getPillColorFromEffect } from "isaacscript-common";
+import {
+  ON_FLOOR_BASE_SEVERITY,
+  ON_PILL_USE_ACTION_FREQUENCY,
+} from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_PILL_USE;
 
@@ -18,6 +21,7 @@ export class OnPillUseAction extends Action {
   override actionType = ACTION_TYPE;
   pe?: PillEffect;
   pc?: PillColor;
+  override actFr = ON_PILL_USE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnPillUseAction class.
@@ -34,6 +38,20 @@ export class OnPillUseAction extends Action {
       this.setPillColor(pillColor);
     }
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    const pillEffect = this.getPillEffect();
+    if (pillEffect !== undefined) {
+      return super.getIdealSeverity(ON_FLOOR_BASE_SEVERITY);
+    }
+
+    const pillColor = this.getPillColor();
+    if (pillColor !== undefined) {
+      return super.getIdealSeverity(ON_FLOOR_BASE_SEVERITY);
+    }
+
+    return super.getIdealSeverity();
   }
 
   protected override getTriggerClause(): string {

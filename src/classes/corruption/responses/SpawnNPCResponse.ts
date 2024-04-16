@@ -15,6 +15,7 @@ import type { NPCFlag } from "../../../enums/general/NPCFlag";
 import { addNPCFlags } from "../../../helper/entityHelper/npcFlagHelper";
 import {
   getRandomNPC,
+  isNPCIDBoss,
   npcAttributesToText,
   spawnNPCID,
 } from "../../../helper/entityHelper/npcHelper";
@@ -28,6 +29,10 @@ import {
 } from "../../../helper/positionHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
 import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import {
+  BOSS_NPC_SEVERITY,
+  NON_BOSS_NPC_SEVERITY,
+} from "../../../constants/severityConstants";
 
 const DEFAULT_NPC = NPCID.GAPER;
 const UNKNOWN_NPC_NAME_TEXT = "unknown npc";
@@ -92,6 +97,17 @@ export class SpawnNPCResponse
       this.setChampionColor(championColor);
     }
     return this;
+  }
+
+  override getSeverity(): number {
+    const npc = this.getNPC();
+    if (typeof npc === "string") {
+      const isBoss = isNPCIDBoss(npc as NPCID) ?? false;
+      return super.getSeverity(
+        isBoss ? BOSS_NPC_SEVERITY : NON_BOSS_NPC_SEVERITY,
+      );
+    }
+    return super.getSeverity(NON_BOSS_NPC_SEVERITY);
   }
 
   getNPCFlags(): readonly NPCFlag[] | undefined {

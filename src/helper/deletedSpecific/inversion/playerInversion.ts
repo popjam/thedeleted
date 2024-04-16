@@ -59,7 +59,7 @@ function updateInvertedWorldToNormal(silent = false) {
 /**
  * Inverts the player if they are not the specified inversion.
  *
- * @param player
+ * @param player The player to invert.
  * @param inversion If true, will invert the player. If false, will un-invert the player.
  * @param silent If true, will discreetly invert the world without flipping already seen pedestals,
  *               shaking the screen, or playing the sound effect. Will still set the backdrop and
@@ -81,7 +81,7 @@ export function invertPlayerToInversion(
 /**
  * General function to change the players' inversion status, will update pedestals + backdrop.
  *
- * @param player
+ * @param player The player to invert.
  * @param silent If true, will discreetly invert the world without flipping already seen pedestals,
  *               shaking the screen, or playing the sound effect. Will still set the backdrop and
  *               floor color.
@@ -143,7 +143,7 @@ export function updateWorldInversion(silent = false): void {
  * unable to bitflip.
  */
 export function playerInversionPostPlayerFatalDamage(
-  player: EntityPlayer,
+  _player: EntityPlayer,
 ): boolean | undefined {
   // const mode = getCurrentPlayerMode(player); invertPlayerToInversion( player, mode !== undefined
   // ? getModeData(mode).startInverted ?? false : false, true, );

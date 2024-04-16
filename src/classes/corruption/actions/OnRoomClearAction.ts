@@ -1,3 +1,4 @@
+import { ON_ROOM_CLEAR_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { ActionType } from "../../../enums/corruption/actions/ActionType";
 import { triggerPlayersActionsByType } from "../../../features/corruption/effects/playerEffects";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
@@ -9,6 +10,7 @@ const ACTION_TYPE = ActionType.ON_ROOM_CLEAR;
 /** Represents an action that is triggered when a room is cleared. */
 export class OnRoomClearAction extends Action {
   override actionType = ACTION_TYPE;
+  override actFr = ON_ROOM_CLEAR_ACTION_FREQUENCY;
 
   protected override getTriggerClause(): string {
     return "you clear a room";

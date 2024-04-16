@@ -1,6 +1,6 @@
-import { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
+import type { InvertedItemActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedItemActionSet";
 import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/actionSets/ActionSetBuilders";
-import { defaultInvertedItemActionSetBuilder } from "../../helper/builders/genericBuilders";
+import { generateDefaultInvertedItemActionSet } from "../../helper/builders/genericActionSetBuilders";
 import { happy99DefaultBuilder } from "../../helper/builders/modes/HAPPY99Builders";
 import { hicurdismosDefaultBuilder } from "../../helper/builders/modes/HICURDISMOSBuilders";
 import { iLoveYouDefaultBuilder } from "../../helper/builders/modes/ILOVEYOUBuilders";
@@ -20,7 +20,7 @@ const INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE_MAP: ReadonlyMap<
   [
     InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT,
     (inputs: ActionSetBuilderInput) =>
-      defaultInvertedItemActionSetBuilder(inputs),
+      generateDefaultInvertedItemActionSet(inputs),
   ],
   [
     InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_HAPPY_DEFAULT,
