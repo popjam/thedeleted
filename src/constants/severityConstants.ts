@@ -1,6 +1,8 @@
 import { AVERAGE_ROOMS_PER_FLOOR } from "./floorConstants";
 import { AVERAGE_NPCS_PER_ROOM } from "./gameConstants";
 
+export const DEFAULT_BUFFER = 10;
+
 // If a Response were to happen each room, this is the standard severity it should have.
 export const ON_ROOM_BASE_SEVERITY = 5;
 export const ON_FLOOR_BASE_SEVERITY =

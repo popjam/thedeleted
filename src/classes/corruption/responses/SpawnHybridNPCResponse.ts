@@ -19,9 +19,13 @@ import {
   HYBRID_NPC_DEFAULT_NPC_AMOUNT,
   HYBRID_NPC_MINIMUM_NPC_AMOUNT,
 } from "../../../constants/corruptionConstants";
+import { getHybridNPCName } from "../../../helper/deletedSpecific/funnyNames";
+import { addArticle } from "../../../helper/stringHelper";
 
 const DEFAULT_SPAWN_VELOCITY = VectorZero;
 const DEFAULT_NPC_MIX = [NPCID.SPIDER, NPCID.DIP] as const;
+const VERB = "spawn";
+const VERB_PARTICIPLE = "spawning";
 
 export class SpawnHybridNPCResponse extends Response {
   override responseType: ResponseType = ResponseType.SPAWN_HYBRID_NPC;
@@ -130,16 +134,30 @@ export class SpawnHybridNPCResponse extends Response {
     return npcs as readonly NPCID[];
   }
 
-  override getVerb(_participle: boolean): string {
-    return "";
+  override getVerb(participle: boolean): string {
+    return participle ? VERB_PARTICIPLE : VERB;
   }
 
+  /** The verb will be an amalgamation of the NPC's names. */
   override getNoun(_eid: boolean): string {
-    return "";
+    const npcs = this.getNPCs();
+    if (npcs === undefined) {
+      return "a hybrid NPC";
+    }
+
+    // TODO.
+    if (!isArray(npcs)) {
+      return "a hybrid NPC";
+    }
+
+    return addArticle(getHybridNPCName(npcs as readonly NPCID[]));
   }
 
-  override getText(_eid: boolean, _participle: boolean): string {
-    return "";
+  override getText(eid: boolean, participle: boolean): string {
+    const verb = this.getVerb(participle);
+    const noun = this.getNoun(eid);
+
+    return `${verb} ${noun}`;
   }
 
   override fire(triggerData: TriggerData): EntityNPC {

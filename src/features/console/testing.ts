@@ -1,17 +1,18 @@
-import {
-  EntityType,
-  GridEntityType,
-  NPCID,
-  RoomType,
-} from "isaac-typescript-definitions";
-import type { EntityID } from "isaacscript-common";
+import type { NPCID } from "isaac-typescript-definitions";
+import { DoorSlot, EntityType } from "isaac-typescript-definitions";
 import {
   getEnumValues,
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
-  removeGridEntities,
-  spawnGridEntity,
+  getRandomSetElement,
+  getRoomListIndex,
+  getRooms,
+  getRoomData,
+  getRoomDescriptor,
+  game,
+  getRoomGridIndex,
+  getRoomAdjacentGridIndexes,
 } from "isaacscript-common";
 import {
   freezeAllNPCsInRoom,
@@ -20,17 +21,17 @@ import {
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { fprint } from "../../helper/printHelper";
 import { mod } from "../../mod";
-import {
-  getAllEmptyGridIndexes,
-  positionToClampedGridIndex,
-} from "../../helper/gridEntityHelper/gridEntityHelper";
-import { getPickupIDSetOfPickupType } from "../data/gameSets/gameSets";
-import { getEntityNameFromEntityID } from "../../helper/entityHelper/entityIDHelper";
-import { PickupType } from "../../enums/general/PickupType";
-import { SpawnNPCResponse } from "../../classes/corruption/responses/SpawnNPCResponse";
+import { getEntityIDSetFromCategory } from "../data/gameSets/gameSets";
 import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
 import { addTemporaryActionToPlayer } from "../corruption/effects/playerEffects";
 import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
+import { EntityCategory } from "../../enums/general/EntityCategory";
+import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { getQuickAccessiblePosition } from "../../helper/positionHelper";
+import { SpawnEffectResponse } from "../../classes/corruption/responses/SpawnEffectResponse";
+import { EffectID } from "../../enums/data/ID/EffectID";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -96,37 +97,44 @@ export function testingFunction1(): void {
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  const emptyGridIndices = getAllEmptyGridIndexes();
-  const randomEmptyGridIndex = getRandomArrayElement(
-    emptyGridIndices,
-    undefined,
-  );
-
-  // Spawn rock at random empty grid index.
-  const gridEntity = spawnGridEntity(GridEntityType.ROCK, randomEmptyGridIndex);
-
-  if (gridEntity === undefined) {
-    return;
-  }
-
-  // Remove rock.
-  removeGridEntities([gridEntity], false);
-
-  // Function.
-  const func = () =>
-    spawnGridEntity(
-      GridEntityType.LOCK,
-      positionToClampedGridIndex(gridEntity.Position),
-      false,
-    );
-
-  // Spawn a lock at same position.
-  mod.runInNGameFrames(func, 1);
+  const roomData = getRoomData();
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction3(): void {
-  mod.runInNGameFrames(testingFunction2, 30);
+  const roomGridIndex = getRoomGridIndex();
+  const redRoomCreated = game
+    .GetLevel()
+    .MakeRedRoomDoor(roomGridIndex, DoorSlot.DOWN_0);
+  fprint(`Red room created: ${redRoomCreated}`);
+  if (redRoomCreated) {
+    const adjacentGridIndexes = getRoomAdjacentGridIndexes(roomGridIndex);
+    let redRoomGridIndex: number | undefined;
+    for (const [doorSlot, gridIndex] of adjacentGridIndexes) {
+      if (doorSlot === DoorSlot.DOWN_0) {
+        redRoomGridIndex = gridIndex;
+        break;
+      }
+    }
+
+    if (redRoomGridIndex === undefined) {
+      return;
+    }
+
+    const roomDescriptor = getRoomDescriptor(redRoomGridIndex);
+    const roomConfigRoom = roomDescriptor.Data;
+
+    if (roomConfigRoom === undefined) {
+      return;
+    }
+
+    const newData = game.GetLevel().GetRoomByIdx(-3).Data;
+    if (newData === undefined) {
+      return;
+    }
+
+    roomDescriptor.Data = newData;
+  }
 }
 
 /** Test stuff as the developer with command 'eted'. */

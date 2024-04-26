@@ -73,12 +73,14 @@ export class WaitThenTriggerResponse extends Response {
       : randomInRangeWithDecimalPrecision(secondsWait, 1);
   }
 
-  /** This response should not have more than one AmountOfActivations. */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** Setting the amount of activations will set the amount of activations for the Response. */
   override setAmountOfActivations(amount: number | Range): this {
-    error(
-      "WaitThenTriggerResponse should not have more than one AmountOfActivations.",
-    );
+    const response = this.getResponse();
+    if (response !== undefined) {
+      response.setAmountOfActivations(amount);
+    }
+
+    return this;
   }
 
   getVerb(participle: boolean): string {

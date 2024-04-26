@@ -12,6 +12,7 @@ import {
   getModdedEntityIDSetFromCategory,
   getNonModdedEntityIDSetFromCategory,
 } from "../../features/data/gameSets/gameSets";
+import type { ModName } from "../../types/compatibility/ModName";
 
 /** Determine if a variable is an EntityID (e.g '123.0.0'). */
 export function isEntityID(variable: unknown): variable is EntityID {
@@ -231,4 +232,22 @@ export function getRandomEntityIDFromCategory(
   }
 
   return getRandomSetElement(entities, seedOrRNG);
+}
+
+/**
+ * Retrieves the mod name from the given entity ID.
+ *
+ * @param entityID The entity ID to retrieve the mod name from.
+ * @returns The mod name associated with the entity ID, or undefined if not found.
+ */
+export function getModNameFromEntityID(
+  entityID: EntityID,
+): ModName | undefined {
+  const [entityType, variant, subType] = getConstituentsFromEntityID(entityID);
+  const entityConfigEntry = EntityConfig.GetEntity(
+    entityType,
+    variant,
+    subType,
+  );
+  return entityConfigEntry?.GetModName() as ModName | undefined;
 }

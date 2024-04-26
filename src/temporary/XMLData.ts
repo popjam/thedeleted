@@ -183,4 +183,13 @@ declare global {
     version?: string;
     visibility?: string;
   }
+
+  /**
+   * This class is for REPENTOGON, an exe-hack which expands the modding API.
+   *
+   * @see https://repentogon.com/index.html
+   */
+  export interface SoundsXMLData {
+    name: string;
+  }
 }

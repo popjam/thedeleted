@@ -1,4 +1,7 @@
-import { capitalizeFirstLetter, getRandomInt } from "isaacscript-common";
+import {
+  capitalizeFirstLetter,
+  getRandomArrayElement,
+} from "isaacscript-common";
 import { patternToPlainString } from "./patternHelper";
 import { getRandomInteger } from "./randomHelper";
 
@@ -26,6 +29,51 @@ export function getNumberOfStringInString(s: string, pattern: string): number {
 /** Does the string start with a digit (0-9). */
 export function stringStartsWithDigit(s: string): boolean {
   return string.find(s, "^%d")[0] !== undefined;
+}
+
+export function capitalizeFirstLetterOfEachWord(s: string): string {
+  // Split the string into words.
+  const words = s.split(" ");
+
+  // Capitalize the first letter of each word.
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    if (word === undefined) {
+      continue;
+    }
+
+    const firstLetter = word.charAt(0);
+    const rest = word.slice(1);
+    const capitalized = firstLetter.toUpperCase() + rest;
+    words[i] = capitalized;
+  }
+
+  // Join the words back together.
+  return words.join(" ");
+}
+
+/**
+ * Use this function to convert 'STRINGS_LIKE_THIS' to 'strings like this'. It will also turn
+ * strings 'thatAreLikeThis' to 'that are like this'.
+ */
+
+export function constantToNormalString(s: string): string {
+  // First, replace the underscores with spaces.
+  let normalString = string.gsub(s, "_", " ")[0];
+
+  // Then, separate words that are likeThis.
+  normalString = string.gsub(normalString, "(%l)(%u)", "%1 %2")[0];
+
+  // Separate words and numbers.
+  normalString = string.gsub(normalString, "(%l)(%d)", "%1 %2")[0];
+
+  // Finally, lowercase the string.
+  normalString = string.lower(normalString);
+
+  // Then, capitalize the first letter of each word.
+  normalString = capitalizeFirstLetterOfEachWord(normalString);
+
+  return normalString;
 }
 
 /**
@@ -175,4 +223,76 @@ export function addArticle(s: string): string {
 /** Returns a string with the first letter un-capitalized. */
 export function uncapitalizeFirstLetter(s: string): string {
   return string.lower(string.sub(s, 1, 1)) + string.sub(s, 2);
+}
+
+/**
+ * Combines two words by appending a prefix from the first word to a suffix from the second word.
+ * The prefix is determined by finding a random split point in the first word, and the suffix is
+ * determined by finding a random split point in the second word that starts with a vowel if the
+ * prefix ends with a vowel, and vice versa.
+ *
+ * @param word1 The first word.
+ * @param word2 The second word.
+ * @returns The combined word.
+ */
+export function combineWords(word1: string, word2: string): string {
+  // Randomize the order of the words.
+  if (math.random() < 0.5) {
+    const temp = word1;
+    word1 = word2;
+    word2 = temp;
+  }
+
+  // Find a prefix from word1 to append to word2.
+  const splitIndexWord1 = getRandomInteger(1, word1.length - 1, undefined);
+  const splitWord1 = string.sub(word1, 1, splitIndexWord1);
+
+  // Determine if the last letter of the prefix is a vowel.
+  const lastLetter = string.sub(splitWord1, -1);
+  const isVowel = vowels.has(lastLetter.toLowerCase());
+
+  // Find a random suffix from word2 which starts with a vowel if the prefix ends with a vowel, and
+  // vice versa. We do this by finding all eligible split points and choosing one at random.
+  const splitPoints = [] as number[];
+  for (let i = 1; i < word2.length; i++) {
+    const letter = string.sub(word2, i, i);
+    if (isVowel !== vowels.has(letter.toLowerCase())) {
+      splitPoints.push(i);
+    }
+  }
+
+  // If there are no eligible split points, just choose a random one.
+  const splitIndexWord2 =
+    splitPoints.length === 0
+      ? getRandomInteger(1, word2.length - 1, undefined)
+      : getRandomArrayElement(splitPoints, undefined);
+  const splitWord2 = string.sub(word2, splitIndexWord2, word2.length);
+
+  const hybridWord = `${splitWord1}${splitWord2}`;
+  return capitalizeFirstLetterOfEachWord(hybridWord.toLowerCase());
+}
+
+/**
+ * Combines multiple words into a single string.
+ *
+ * @param words The words to be combined.
+ * @returns The combined string.
+ */
+export function combineManyWords(...words: readonly string[]): string {
+  if (words.length === 0) {
+    return "";
+  }
+
+  if (words.length === 1) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return words[0]!;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let combined = words[0]!;
+  for (let i = 1; i < words.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    combined = combineWords(combined, words[i]!);
+  }
+  return combined;
 }

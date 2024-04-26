@@ -127,7 +127,7 @@ export function renderSprite(
   }
 }
 
-export function getPixelColorMap(sprite: Sprite): Map<Vector, KColor> {
+export function getPixelColorMap(sprite: Sprite): ReadonlyMap<Vector, KColor> {
   const xMaxIterations = 600;
   const yMaxIterations = 600;
   const pixelColorMap = new Map<Vector, KColor>();

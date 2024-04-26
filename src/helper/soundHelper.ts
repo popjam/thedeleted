@@ -1,7 +1,8 @@
-import { SoundEffect } from "isaac-typescript-definitions";
-import { getRandomEnumValue, sfxManager } from "isaacscript-common";
+import type { SoundEffect } from "isaac-typescript-definitions";
+import { getRandomSetElement, sfxManager } from "isaacscript-common";
 import { PICKUP_SOUNDS } from "../constants/soundConstants";
 import type { SoundEffectOptions } from "../interfaces/general/SoundEffectOptions";
+import { getSoundEffectIDSet } from "../features/data/gameSets/gameSets";
 
 /**
  * Stops the sounds that run after picking up any sort of item. You may need to run this in the next
@@ -13,8 +14,13 @@ export function stopPickupSounds(): void {
   }
 }
 
+/**
+ * Returns a random sound effect. Includes modded sound effects.
+ *
+ * @returns {SoundEffect} A random sound effect.
+ */
 export function getRandomSoundEffect(): SoundEffect {
-  return getRandomEnumValue(SoundEffect, undefined);
+  return getRandomSetElement(getSoundEffectIDSet(), undefined);
 }
 
 /** Play a sound effect using a SoundEffectOptions object. */

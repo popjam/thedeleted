@@ -6,8 +6,10 @@ import {
   ModCallbackCustom,
   getPlayerFromIndex,
   getPlayerIndex,
+  getScreenTopLeftPos,
   getSlots,
   gridCoordinatesToWorldPosition,
+  newSprite,
   sfxManager,
   spawnSlot,
 } from "isaacscript-common";
@@ -18,6 +20,7 @@ import { switchToNextModeOnCarousel } from "../../../helper/deletedSpecific/mode
 import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
+import { HUDPositionToRenderPosition } from "../../../helper/HUDHelper";
 
 /**
  * Handles everything to do with the physical spawn PC. PC only spawns when the first Deleted spawns
@@ -103,6 +106,12 @@ class PCFacet extends Facet {
     if (!isPlayerPCUser(player)) {
       return undefined;
     }
+
+    const mainMenuSprite = newSprite("gfx/ui/main menu/titlemenu.anm2");
+    mainMenuSprite.Scale = Vector(0.05, 0.05);
+    mainMenuSprite.Render(
+      HUDPositionToRenderPosition(getScreenTopLeftPos().add(Vector(42, 10))),
+    );
 
     /** User can't shoot. */
     player.SetShootingCooldown(1);

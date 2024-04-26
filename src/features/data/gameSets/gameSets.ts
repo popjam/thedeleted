@@ -6,6 +6,7 @@ import type { PickupID } from "../../../enums/data/ID/PickupID";
 import type { EntityIDTypeUnion } from "../../../types/data/IDTypes";
 import type { PickupType } from "../../../enums/general/PickupType";
 import type { ModName } from "../../../types/compatibility/ModName";
+import type { SoundEffect } from "isaac-typescript-definitions";
 
 /**
  * This feature is responsible for generating sets filled with EntityIDs for easy access (e.g for
@@ -50,11 +51,26 @@ const v = {
     moddedPickupIDOfPickupTypeMap: new DefaultMap<PickupType, Set<PickupID>>(
       () => new Set<PickupID>(),
     ),
+
+    // Sounds.
+    soundIDSet: new Set<SoundEffect>(),
+    soundIDToNameMap: new DefaultMap<SoundEffect, string>(
+      "generic sound effect",
+    ),
   },
 };
 
 export function gameEntitySetBuilderInit(): void {
   mod.saveDataManager("gameEntitySetBuilder", v);
+}
+
+export function getModSet(): ReadonlySet<ModName> {
+  return v.run.mods;
+}
+
+// eslint-disable-next-line isaacscript/no-mutable-return
+export function _getModSetEditable(): Set<ModName> {
+  return v.run.mods;
 }
 
 /** Returns a set of non-modded EntityID's. */
@@ -219,4 +235,30 @@ export function _getModdedPickupIDSetEditableOfPickupType(
   pickupType: PickupType,
 ): Set<PickupID> {
   return v.run.moddedPickupIDOfPickupTypeMap.getAndSetDefault(pickupType);
+}
+
+export function getSoundEffectIDSet(): ReadonlySet<SoundEffect> {
+  return v.run.soundIDSet;
+}
+
+// eslint-disable-next-line isaacscript/no-mutable-return
+export function _getSoundEffectIDSetEditable(): Set<SoundEffect> {
+  return v.run.soundIDSet;
+}
+
+/**
+ * Retrieves the sound name associated with the given soundEffect ID.
+ *
+ * @param soundID The soundEffect ID to retrieve the name for.
+ * @returns The name of the sound.
+ */
+export function getSoundNameFromSoundEffectID(soundID: SoundEffect): string {
+  return v.run.soundIDToNameMap.getAndSetDefault(soundID);
+}
+
+export function _getSoundEffectIDToNameMapEditable(): DefaultMap<
+  SoundEffect,
+  string
+> {
+  return v.run.soundIDToNameMap;
 }

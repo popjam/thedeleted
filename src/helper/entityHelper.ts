@@ -333,3 +333,26 @@ export function isPersistentEntityBeingUnloadedDueToGameExit(
 ): boolean {
   return entity.HasEntityFlags(EntityFlag.PERSISTENT) && isLeavingGame();
 }
+
+/**
+ * Checks if an entity has been modified.
+ *
+ * @param entity The entity to check.
+ * @returns Returns true if the entity has been modified, false otherwise.
+ */
+export function isEntityModded(entity: Entity): boolean {
+  const [entityType, variant, subType] = [
+    entity.Type,
+    entity.Variant,
+    entity.SubType,
+  ];
+  const entityConfigEntry = EntityConfig.GetEntity(
+    entityType,
+    variant,
+    subType,
+  );
+  if (entityConfigEntry === undefined) {
+    return true;
+  }
+  return entityConfigEntry.GetModName() !== undefined;
+}

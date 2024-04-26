@@ -39,6 +39,7 @@ export enum ResponseType {
   SPAWN_GRID, // done (wtg for repentogon).
   SPAWN_ENTITY, // done.
   SPAWN_LIVE_BOMB, // done.
+  SPAWN_ROOM,
   PLAY_SOUND, // done (fix random sound).
   PLAY_MUSIC,
   GIVE_COSTUME,

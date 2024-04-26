@@ -3,13 +3,14 @@ import { InvertedItemActionSetBuilderReference } from "../../enums/corruption/ac
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { ModeData } from "../../interfaces/modes/ModeData";
+import type { ModeData } from "../../interfaces/modes/ModeData";
 
 /** Information about MORRIS. */
-// eslint-disable-next-line isaacscript/require-capital-const-assertions
+
 export const MORRISData: ModeData = {
-  description: "This is ILOVEYOU's description",
-  birthright: "This is ILOVEYOU's birthright description",
+  description:
+    "MORRIS starts with the D-14, a 6 room charge active that corrupts all items in the room.",
+  birthright: "",
   characterType: CharacterType.NORMAL,
   startingPocket: CollectibleTypeCustom.D14,
   startingBombs: 1,

@@ -16,6 +16,7 @@ import {
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
+import { DEFAULT_BUFFER } from "../../../constants/severityConstants";
 
 const DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE = 100;
 const DEFAULT_AMOUNT_OF_ACTIVATIONS = 1;
@@ -75,6 +76,55 @@ export abstract class Response {
   }
 
   /**
+   * Adjust the severity of the Response by changing its amount of activations or chance to
+   * activate. If the ideal severity is higher than the current severity, the Response will have its
+   * amount of activations increased. If the ideal severity is lower than the current severity, the
+   * Response will have its chance to activate increased.
+   *
+   * @param severity The severity you want to adjust the Response to.
+   * @param buffer The buffer to use when determining if the severity is close enough to the ideal
+   *               severity to not adjust it.
+   * @returns The mismatch between the ideal severity and the current severity (after adjustments).
+   *          For example, if the ideal severity is 10 and the current severity is 5, the mismatch
+   *          will be 5. If the ideal severity is 5 and the current severity is 10, the mismatch
+   *          will be -5. In general, you want a positive mismatch over a negative one, as a
+   *          negative mismatch means the Response is too severe (positively or negatively).
+   */
+  adjustSeverity(idealSeverity: number, buffer = DEFAULT_BUFFER): number {
+    const currentSeverity = this.getSeverity();
+    const currentAmountOfActivations = this.getAmountOfActivationsAverage();
+    const currentChanceToActivate = this.getChanceToActivate();
+
+    // If the severity is within the buffer, don't adjust it.
+    if (Math.abs(idealSeverity - currentSeverity) <= buffer) {
+      return this.getSeverityMismatch(idealSeverity);
+    }
+
+    // If the ideal severity is higher than the current severity, increase the amount of
+    // activations.
+    if (idealSeverity > currentSeverity) {
+      const newAmountOfActivations = Math.floor(
+        (idealSeverity / currentSeverity) * currentAmountOfActivations,
+      );
+      this.setAmountOfActivations(newAmountOfActivations);
+      return this.getSeverityMismatch(idealSeverity);
+    }
+
+    // If the ideal severity is lower than the current severity, increase the chance to activate.DD
+  }
+
+  /**
+   * Get the mismatch between the ideal severity and the current severity (after adjustments). For
+   * example, if the ideal severity is 10 and the current severity is 5, the mismatch will be 5. If
+   * the ideal severity is 5 and the current severity is 10, the mismatch will be -5. In general,
+   * you want a positive mismatch over a negative one, as a negative mismatch means the Response is
+   * too severe (positively or negatively).
+   */
+  getSeverityMismatch(idealSeverity: number): number {
+    return idealSeverity - this.getSeverity();
+  }
+
+  /**
    * Get the assigned EID Color Shortcut used to represent the Response. This can either be derived
    * from the Morality or overridden with overrideTextColor(). Note if this Response is wrapped in
    * an Action, it will use the Actions textColor instead.
@@ -123,6 +173,20 @@ export abstract class Response {
   // Use calculateAmountOfActivations() instead!
   getAmountOfActivations(): number | Range {
     return this.aoa ?? DEFAULT_AMOUNT_OF_ACTIVATIONS;
+  }
+
+  /**
+   * Calculates the average amount of activations. If the result of `getAmountOfActivations` is a
+   * number, it returns that number. Otherwise, it returns the average of the Range.
+   *
+   * @returns The average amount of activations.
+   */
+  getAmountOfActivationsAverage(): number {
+    const aoa = this.getAmountOfActivations();
+    if (typeof aoa === "number") {
+      return aoa;
+    }
+    return (aoa[0] + aoa[1]) / 2;
   }
 
   getAmountOfActivationsText(): string | undefined {
@@ -200,6 +264,15 @@ export abstract class Response {
       return NO_CHANCE_TO_ACTIVATE_TEXT;
     }
     return `${chanceToActivate}${CHANCE_TO_ACTIVATE_POST_TEXT}`;
+  }
+
+  /**
+   * Shuffle the parameters of the Response. This is used to randomize the Response's behavior. Note
+   * that this will NOT shuffle the Response's chance to activate or amount of activations, as they
+   * are used to adjust the severity of the Response.
+   */
+  shuffle(): this {
+    return this;
   }
 
   abstract getVerb(participle: boolean): string;

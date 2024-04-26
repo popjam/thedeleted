@@ -84,6 +84,13 @@ export function generateDefaultInvertedItemActionSet(
 /**
  * Generates a default actionSet for an inverted active item. Will not add name, description and
  * icon properties, these can be added afterwards or left blank to be auto-generated.
+ *
+ * 1. Will determine the amount of effects the item will have.
+ * 2. For each effect, will determine if it is positive or negative.
+ * 3. For each effect, will determine the action (based on weightings).
+ * 4. Once the action is determined, will determine the response based on either the negative or
+ *    positive response weightings.
+ * 5. Will modify the severity of the response based on the action's ideal severity.
  */
 export function generateDefaultInvertedActiveActionSet(
   inputs: ActionSetBuilderInput = {},
@@ -94,6 +101,27 @@ export function generateDefaultInvertedActiveActionSet(
       DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
       undefined,
     );
+
+  for (let i = 0; i < amountOfEffects; i++) {
+    const actionWeightings = inputs.actionWeightings ?? DEFAULT_ACTION_WEIGHTS;
+
+    const action = generateActionFromActionType(
+      getRandomFromWeightedArray(actionWeightings, undefined),
+    );
+    action.shuffle();
+
+    const response = generateResponseFromResponseType(
+      getRandomFromWeightedArray(DEFAULT_RESPONSE_WEIGHTS, undefined),
+    );
+    response.shuffle();
+
+    const idealSeverity = action.getIdealSeverity();
+    const severity = response.getSeverity();
+
+    // Work out how much we need to adjust the responses' severity by. This should be the absolute
+    // value.
+    const severityDifference = idealSeverity - Math.abs(severity);
+  }
 
   return new InvertedActiveActionSet();
 }
