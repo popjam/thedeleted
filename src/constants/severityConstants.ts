@@ -1,7 +1,33 @@
 import { AVERAGE_ROOMS_PER_FLOOR } from "./floorConstants";
 import { AVERAGE_NPCS_PER_ROOM } from "./gameConstants";
 
-export const DEFAULT_BUFFER = 10;
+/**
+ * The amount the ideal severity can overflow the response's severity. For example, if the ideal
+ * severity is 20, and the response's severity is 10, and the buffer is 10, then the response does
+ * not need to be adjusted.
+ *
+ * If there is a positive mismatch for a positive response, it means the response is underpowered.
+ * This is mainly a good thing to prevent overpowered responses.
+ *
+ * If there is a positive mismatch for a negative response, it means the negative response is
+ * underpowered. This is also a good thing, as it means the negative response is not as bad as it
+ * could be.
+ */
+export const DEFAULT_POSITIVE_MISMATCH_BUFFER = 10_000;
+
+/**
+ * The amount the ideal severity can underflow the response's severity. For example, if the ideal
+ * severity is 20, and the response's severity is 30, and the buffer is 10, then the response does
+ * not need to be adjusted.
+ *
+ * If there is a negative mismatch for a positive response, it means the response is overpowered.
+ * This may cause issues by making the response too powerful.
+ *
+ * If there is a negative mismatch for a negative response, it means the negative response is too
+ * powerful. This is less bad because overpowered negative responses can be avoided, while
+ * overpowered positive responses would be more difficult to avoid.
+ */
+export const DEFAULT_NEGATIVE_MISMATCH_BUFFER = 0;
 
 // If a Response were to happen each room, this is the standard severity it should have.
 export const ON_ROOM_BASE_SEVERITY = 5;
@@ -45,7 +71,7 @@ export const OVERPOWERED_ITEM_SEVERITY = ON_ROOM_BASE_SEVERITY * 20;
 export const SHOP_ITEM_QUALITY = QUALITY_2_ITEM_SEVERITY;
 
 // NPC Severities.
-export const NON_BOSS_NPC_SEVERITY = ON_ROOM_BASE_SEVERITY * -0.2;
+export const NON_BOSS_NPC_SEVERITY = ON_ROOM_BASE_SEVERITY * -1;
 export const BOSS_NPC_SEVERITY = NON_BOSS_NPC_SEVERITY * 10;
 export const STORY_BOSS_NPC_SEVERITY = BOSS_NPC_SEVERITY * 2;
 

@@ -10,14 +10,14 @@ const ACTION_TYPE = ActionType.ON_KILL;
 // TODO: Update for boss only, etc..
 export class OnKillAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_KILL_ACTION_FREQUENCY;
+
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_KILL_ACTION_FREQUENCY);
+  }
 
   // Override the trigger clause for OnKillAction.
-  protected override getTriggerClause(): string {
-    const intervalText = this.getIntervalText();
-    return intervalText === ""
-      ? "you kill an enemy"
-      : `you kill ${intervalText} enemies`;
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    return plural ? "kills" : "kill";
   }
 
   override trigger(triggerData: TriggerData): void {

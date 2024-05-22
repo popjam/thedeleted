@@ -12,18 +12,19 @@
   "license": "GPL-3.0",
   "type": "commonjs",
   "dependencies": {
-    "@types/node": "^20.11.30",
-    "isaac-typescript-definitions": "^41.1.0",
-    "isaacscript-common": "^87.3.0",
+    "@types/node": "^20.12.12",
+    "isaac-typescript-definitions": "^42.1.0",
+    "isaac-typescript-definitions-repentogon": "^1.1.1",
+    "isaacscript-common": "^87.4.0",
     "isaacscript-lint": "^6.20.0",
-    "isaacscript-spell": "^1.14.0",
+    "isaacscript-spell": "^1.15.0",
     "isaacscript-tsconfig": "^5.0.0",
     "number-to-words": "^1.2.4",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "dependency-cruiser": "^16.2.4",
-    "isaacscript": "^4.4.1",
+    "dependency-cruiser": "^16.3.2",
+    "isaacscript": "^4.4.3",
     "typescript": "^5.4.2",
     "typescript-to-lua": "^1.25.1"
   }

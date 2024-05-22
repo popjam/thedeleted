@@ -10,10 +10,13 @@ const ACTION_TYPE = ActionType.ON_SACRIFICE;
 /** Represents an action that is triggered when a sacrifice is made. */
 export class OnSacrificeAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_SACRIFICE_ACTION_FREQUENCY;
 
-  protected override getTriggerClause(): string {
-    return "you make a sacrifice";
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_SACRIFICE_ACTION_FREQUENCY);
+  }
+
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    return plural ? "sacrifices" : "sacrifice";
   }
 
   /** Triggers the action with the provided trigger data. */

@@ -61,6 +61,7 @@ export class TriggerInSequenceResponse extends Response {
   getText(eid: boolean, participle: boolean): string {
     let text = "";
     let iterations = this.r.length;
+    const chanceToActivate = this.getChanceToActivateText(participle);
     for (const response of this.r) {
       text += ` ${response.getText(eid, participle)} `;
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
@@ -68,7 +69,7 @@ export class TriggerInSequenceResponse extends Response {
         text += BETWEEN_RESPONSES_TEXT;
       }
     }
-    return text;
+    return `${chanceToActivate} ${text}`;
   }
 
   override shouldFlattenResults(): boolean {

@@ -276,8 +276,9 @@ export class TransformResponse extends Response {
     const verb = this.getVerb(participle);
     const removeText = this.getRemoveText(eid);
     const spawnText = this.getSpawnText(eid);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${removeText} into ${spawnText}`;
+    return `${chanceToActivate} ${verb} ${removeText} into ${spawnText}`;
   }
 
   override shouldFlattenResults(): boolean {

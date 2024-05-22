@@ -23,7 +23,7 @@ export class IfThenElseResponse extends Response {
   construct(
     conditionsMetResponse: Response,
     conditionsNotMetResponse: Response,
-    // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
+
     ...conditions: Array<[Conditional, number]>
   ): this {
     this.con = conditions;
@@ -141,7 +141,9 @@ export class IfThenElseResponse extends Response {
 
   override getText(eid: boolean, participle: boolean): string {
     if (participle) {
-      return `${this.getConditionsMetResponseText(
+      return `${this.getChanceToActivateText(
+        participle,
+      )} ${this.getConditionsMetResponseText(
         eid,
         participle,
       )} ${this.getConditionsText()}, otherwise ${this.getConditionsNotMetResponseText(
@@ -150,7 +152,9 @@ export class IfThenElseResponse extends Response {
       )}`;
     }
 
-    return `${this.getConditionsText()}, ${this.getConditionsMetResponseText(
+    return `${this.getChanceToActivateText(
+      participle,
+    )} ${this.getConditionsText()}, ${this.getConditionsMetResponseText(
       eid,
       participle,
     )}, otherwise ${this.getConditionsNotMetResponseText(eid, participle)}`;

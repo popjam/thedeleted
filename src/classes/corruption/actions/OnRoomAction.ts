@@ -14,14 +14,13 @@ import {
 } from "../../../constants/severityConstants";
 
 const ACTION_TYPE = ActionType.ON_ROOM;
-const SINGULAR_CHEST_CLAUSE = "visits to the Chest";
-const PLURAL_CHEST_CLAUSE = "time you enter the Chest";
+const THE_CHEST_TEXT_SINGULAR = "visit to the Chest";
+const THE_CHEST_TEXT_PLURAL = "visits to the Chest";
 
 /** Triggers every floor. */
 export class OnRoomAction extends Action {
   override actionType = ACTION_TYPE;
   rT?: RoomType;
-  override actFr = ON_ROOM_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnRoomAction class.
@@ -39,7 +38,7 @@ export class OnRoomAction extends Action {
   override getIdealSeverity(): number {
     const roomType = this.getRoomType();
     if (roomType === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY);
     }
 
     if (roomType === RoomType.DEFAULT) {
@@ -75,32 +74,25 @@ export class OnRoomAction extends Action {
     return this;
   }
 
-  getRoomTypeText(amount: number): string | undefined {
+  getRoomTypeText(plural = false): string | undefined {
     const { rT: roomType } = this;
     if (roomType !== undefined) {
       if (roomType === RoomType.VAULT) {
-        if (amount !== 1) {
-          return SINGULAR_CHEST_CLAUSE;
-        }
-        return PLURAL_CHEST_CLAUSE;
+        return plural ? THE_CHEST_TEXT_PLURAL : THE_CHEST_TEXT_SINGULAR;
       }
       const name = getRoomNameFromRoomType(roomType).toLowerCase();
-      return addTheS(name, amount);
+      return addTheS(name, plural);
     }
     return undefined;
   }
 
-  // Override the trigger clause for OnRoomAction.
-  protected override getTriggerClause(): string {
-    const amount = this.getInterval() ?? 1;
-    let intervalNoRange = amount;
-    if (typeof intervalNoRange !== "number") {
-      intervalNoRange = intervalNoRange[1];
-    }
-    return `you enter ${
-      this.getRoomTypeText(intervalNoRange) ??
-      addTheS("a room", intervalNoRange)
-    }`;
+  /**
+   * Example: "angel room".
+   *
+   * @returns The trigger clause for the OnRoomAction.
+   */
+  protected override getTriggerClause(plural = false): string {
+    return this.getRoomTypeText(plural) ?? addTheS("room", plural);
   }
 
   override trigger(triggerData: TriggerData): void {

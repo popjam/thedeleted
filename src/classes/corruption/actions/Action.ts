@@ -16,6 +16,15 @@ import {
 import type { Response } from "../responses/Response";
 import { arrayEquals } from "isaacscript-common";
 import { rollPercentage } from "../../../types/general/Percentage";
+import {
+  DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+  DEFAULT_POSITIVE_MISMATCH_BUFFER,
+} from "../../../constants/severityConstants";
+import {
+  SHUFFLE_ACTION_CHANCE_FOR_FIRE_AFTER_THEN_REMOVE,
+  SHUFFLE_ACTION_CHANCE_FOR_INTERVAL,
+  SHUFFLE_ACTION_INTERVAL_CHANCE_FOR_RANGE,
+} from "../../../constants/corruptionConstants";
 
 const EMPTY_ACTION_MORALITY = Morality.NEUTRAL;
 const TRIGGER_AFTER_THEN_REMOVE_ACTIVATION_NUMBER = 0;
@@ -39,9 +48,6 @@ export abstract class Action {
   o?: ActionOriginType;
   p?: boolean;
   oc?: EIDColorShortcut;
-
-  /** How frequently the Action occurs. */
-  abstract readonly actFr: number;
 
   /**
    * When using getMorality() on the Action, this value will return instead of looking at the
@@ -83,13 +89,11 @@ export abstract class Action {
 
   /**
    * Gets the severity of the Action. This will be the ideal severity of the Action's Responses. The
-   * higher the severity, the less frequent the Action 1
+   * higher the ideal severity, the less frequent the Action.
    *
    * @returns The severity of the action.
    */
-  getIdealSeverity(frequency?: number): number {
-    frequency ??= this.actFr;
-
+  getIdealSeverity(frequency = 0): number {
     const distance = this.getInterval();
     if (distance === undefined) {
       return frequency;
@@ -101,6 +105,36 @@ export abstract class Action {
 
     const median = (distance[0] + distance[1]) / 2;
     return median * frequency;
+  }
+
+  /**
+   * Adjusts the severity of the action's response to match the action's ideal severity, by
+   * modifying the response's chance to activate or amount of activations. Can supply positive and
+   * negative buffer mismatch values to adjust the 'range' that the response can be mismatched to
+   * the ideal severity.
+   *
+   * @param positiveBufferMismatch The positive buffer mismatch value. Defaults to
+   *                               DEFAULT_POSITIVE_MISMATCH_BUFFER. The greater this is, the weaker
+   *                               the effect will be.
+   * @param negativeBufferMismatch The negative buffer mismatch value. Defaults to
+   *                               DEFAULT_NEGATIVE_MISMATCH_BUFFER. The greater this is, the
+   *                               stronger the effect will be.
+   * @returns The severity mismatch.
+   */
+  adjustResponse(
+    positiveBufferMismatch = DEFAULT_POSITIVE_MISMATCH_BUFFER,
+    negativeBufferMismatch = DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+  ): number {
+    const response = this.getResponse();
+    if (response === undefined) {
+      return 0;
+    }
+
+    return response.adjustSeverity(
+      this.getIdealSeverity(),
+      positiveBufferMismatch,
+      negativeBufferMismatch,
+    );
   }
 
   /**
@@ -308,27 +342,26 @@ export abstract class Action {
   }
 
   /**
-   * Returns the interval text based on the interval value. If the interval is undefined, an empty
-   * string is returned. If the interval is a number and equals the default interval, an empty
-   * string is returned. Otherwise, the interval value is converted to a string and appended with "
-   * times".
+   * Returns the interval text based on the interval value. If the interval is undefined, undefined
+   * is returned. Otherwise, the interval value is converted to a string.
    *
-   * @returns The interval text.
+   * @returns The interval text, or undefined if the interval is 1.
    *
-   * @example 1-3 -> "1-3 times"
+   * @example 1-3 -> "1-3"
+   * @example 1 -> undefined
    */
-  getIntervalText(): string {
+  getIntervalText(): string | undefined {
     const interval = this.getInterval();
     if (interval === undefined) {
-      return "";
+      return undefined;
     }
     if (typeof interval === "number") {
       if (interval === DEFAULT_INTERVAL) {
-        return "";
+        return undefined;
       }
-      return `${interval.toString()} times`;
+      return interval.toString();
     }
-    return `${rangeToString(interval)} times`;
+    return rangeToString(interval);
   }
 
   /** Will validify ranges. */
@@ -338,35 +371,54 @@ export abstract class Action {
     return this;
   }
 
-  // Function to get the "trigger" part of the action text.
-  protected getTriggerText(intervalText: string): string {
+  /**
+   * Get the trigger text for the action.
+   *
+   * @returns The trigger text.
+   */
+  protected getTriggerText(eid: boolean): string {
     const fireAfterThenRemove = this.getFireAfterThenRemove();
+    const intervalText = this.getIntervalText();
+
+    // Fire after then remove and interval are both set.
+    if (fireAfterThenRemove !== undefined && intervalText !== undefined) {
+      if (fireAfterThenRemove === 1) {
+        return `after ${intervalText} ${this.getTriggerClause(true, eid)}`;
+      }
+
+      return `every ${intervalText} ${this.getTriggerClause(
+        true,
+        eid,
+      )}, up to ${fireAfterThenRemove} times`;
+    }
+
+    // Only fire after then remove is set.
     if (fireAfterThenRemove !== undefined) {
       return fireAfterThenRemove === 1
-        ? `the next time ${this.getTriggerClause()}`
-        : `for the next ${fireAfterThenRemove} times ${this.getTriggerClause()}`;
+        ? `the next ${this.getTriggerClause(false, eid)}`
+        : `the next ${fireAfterThenRemove} ${this.getTriggerClause(true, eid)}`;
     }
-    if (intervalText !== "") {
-      return `every ${intervalText} times ${this.getTriggerClause()}`;
+
+    // Only interval is set.
+    if (intervalText !== undefined) {
+      return `every ${intervalText} ${this.getTriggerClause(true, eid)}`;
     }
-    return `every time ${this.getTriggerClause()}`;
+
+    // Neither are set.
+    return `every ${this.getTriggerClause(false, eid)}`;
   }
 
   // Function to get the specific trigger clause for the action type.
-  protected abstract getTriggerClause(): string;
+  protected abstract getTriggerClause(plural: boolean, eid: boolean): string;
 
   // Get the action text.
-  getActionText(): string {
+  getActionText(eid: boolean): string {
     // If overridden, use the overridden text.
     if (this.oat !== undefined) {
       return this.oat;
     }
 
-    // Get interval text.
-    const intervalText = this.getIntervalText();
-
-    // Combine trigger text and interval text.
-    let text = this.getTriggerText(intervalText);
+    let text = this.getTriggerText(eid);
 
     text += ", "; // Add comma and space for consistency.
     return text;
@@ -380,8 +432,8 @@ export abstract class Action {
       : response.getText(eid, false);
   }
 
-  getText(): string {
-    return `${this.getActionText()} ${this.getResponseText()}`;
+  getText(eid: boolean): string {
+    return `${this.getActionText(eid)} ${this.getResponseText(eid)}`;
   }
 
   /**
@@ -391,16 +443,12 @@ export abstract class Action {
    * RoomType entirely.
    */
   shuffle(): this {
-    const CHANCE_FOR_FIRE_AFTER_THEN_REMOVE = 1;
-    const CHANCE_FOR_INTERVAL = 20;
-
-    if (rollPercentage(CHANCE_FOR_FIRE_AFTER_THEN_REMOVE)) {
+    if (rollPercentage(SHUFFLE_ACTION_CHANCE_FOR_FIRE_AFTER_THEN_REMOVE)) {
       this.setFireAfterThenRemove(randomInRange([1, 3]));
     }
 
-    if (rollPercentage(CHANCE_FOR_INTERVAL)) {
-      const CHANCE_FOR_RANGE = 50;
-      if (rollPercentage(CHANCE_FOR_RANGE)) {
+    if (rollPercentage(SHUFFLE_ACTION_CHANCE_FOR_INTERVAL)) {
+      if (rollPercentage(SHUFFLE_ACTION_INTERVAL_CHANCE_FOR_RANGE)) {
         this.setInterval([1, 3]);
       } else {
         this.setInterval(randomInRange([1, 3]));

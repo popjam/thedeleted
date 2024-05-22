@@ -16,7 +16,10 @@ import {
   rangeToString,
   validifyRange,
 } from "../../../types/general/Range";
-import { DEFAULT_BUFFER } from "../../../constants/severityConstants";
+import {
+  DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+  DEFAULT_POSITIVE_MISMATCH_BUFFER,
+} from "../../../constants/severityConstants";
 
 const DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE = 100;
 const DEFAULT_AMOUNT_OF_ACTIVATIONS = 1;
@@ -75,29 +78,51 @@ export abstract class Response {
     return responseSeverity;
   }
 
+  getAbsoluteSeverity(): number {
+    return Math.abs(this.getSeverity());
+  }
+
   /**
    * Adjust the severity of the Response by changing its amount of activations or chance to
    * activate. If the ideal severity is higher than the current severity, the Response will have its
    * amount of activations increased. If the ideal severity is lower than the current severity, the
    * Response will have its chance to activate increased.
    *
-   * @param severity The severity you want to adjust the Response to.
-   * @param buffer The buffer to use when determining if the severity is close enough to the ideal
-   *               severity to not adjust it.
+   * @param idealSeverity The severity you want to adjust the Response to.
+   * @param positiveMismatchBuffer The buffer for a positive mismatch, in which the ideal severity
+   *                               is higher than the current severity. The default is 5.
+   * @param negativeMismatchBuffer The buffer for a negative mismatch, in which the ideal severity
+   *                               is lower than the current severity. The default is 5.
    * @returns The mismatch between the ideal severity and the current severity (after adjustments).
    *          For example, if the ideal severity is 10 and the current severity is 5, the mismatch
    *          will be 5. If the ideal severity is 5 and the current severity is 10, the mismatch
    *          will be -5. In general, you want a positive mismatch over a negative one, as a
    *          negative mismatch means the Response is too severe (positively or negatively).
+   *
+   * If ideal severity > current severity, then the ideal severity can be any value from actual
+   * ideal severity to current severity. If ideal severity < current severity. For example, if the
+   * ideal severity is ON_FLOOR (100) and the current severity is ON_ROOM (5), the ideal severity
+   * can be any value from 5 to 100, meaning the Response amount of activations will be anywhere
+   * from 1 to 20.
    */
-  adjustSeverity(idealSeverity: number, buffer = DEFAULT_BUFFER): number {
-    const currentSeverity = this.getSeverity();
+  adjustSeverity(
+    idealSeverity: number,
+    positiveMismatchBuffer = DEFAULT_POSITIVE_MISMATCH_BUFFER,
+    negativeMismatchBuffer = DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+  ): number {
+    const currentSeverity = this.getAbsoluteSeverity();
     const currentAmountOfActivations = this.getAmountOfActivationsAverage();
     const currentChanceToActivate = this.getChanceToActivate();
+    const currentMismatch = idealSeverity - currentSeverity;
 
     // If the severity is within the buffer, don't adjust it.
-    if (Math.abs(idealSeverity - currentSeverity) <= buffer) {
-      return this.getSeverityMismatch(idealSeverity);
+    if (
+      (currentMismatch <= positiveMismatchBuffer &&
+        currentMismatch >= -negativeMismatchBuffer) ||
+      currentSeverity === 0 ||
+      idealSeverity === 0
+    ) {
+      return currentMismatch;
     }
 
     // If the ideal severity is higher than the current severity, increase the amount of
@@ -110,7 +135,14 @@ export abstract class Response {
       return this.getSeverityMismatch(idealSeverity);
     }
 
-    // If the ideal severity is lower than the current severity, increase the chance to activate.DD
+    // If the ideal severity is lower than the current severity, increase the chance to activate.
+    // For example, if the ideal severity is 5 and the current severity is 10, the chance to
+    // activate will be 50%.
+    const newChanceToActivate = Math.floor(
+      (idealSeverity / currentSeverity) * currentChanceToActivate,
+    );
+    this.setChanceToActivate(newChanceToActivate);
+    return this.getSeverityMismatch(idealSeverity);
   }
 
   /**
@@ -255,7 +287,16 @@ export abstract class Response {
     return this.cta ?? DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE;
   }
 
-  getChanceToActivateText(): string {
+  /**
+   * Retrieves the chance to activate text based on the chance to activate value.
+   *
+   * @returns The chance to activate text.
+   * @example
+   * const response = new Response();
+   * const chanceToActivateText = response.getChanceToActivateText();
+   * console.log(chanceToActivateText); // "50% chance to"
+   */
+  getChanceToActivateText(_participle = false): string {
     const chanceToActivate = this.getChanceToActivate();
     if (chanceToActivate === 100) {
       return "";

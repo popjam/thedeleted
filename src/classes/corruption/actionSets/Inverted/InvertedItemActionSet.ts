@@ -9,7 +9,10 @@ import {
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
 import { _invertedPickupHasBeenSeen } from "../../../../features/corruption/inversion/seenInvertedPickups";
 import { getAdvancedInvertedItemIconSetting } from "../../../../features/settings/GeneralSettings";
-import { setSpecificEntityEIDDescriptionObject } from "../../../../helper/compatibility/EID/EIDHelper";
+import {
+  isEIDActive,
+  setSpecificEntityEIDDescriptionObject,
+} from "../../../../helper/compatibility/EID/EIDHelper";
 import {
   generateCorruptedSound,
   playCorruptedSound,
@@ -164,7 +167,7 @@ export abstract class InvertedItemActionSet extends ActionSet {
 
   getDescObject(): EIDDescObject {
     return {
-      Description: legibleString(this.getText()),
+      Description: legibleString(this.getText(isEIDActive())),
       Name: this.getName(),
       ModName: MOD_NAME,
       Quality: this.getQuality(),

@@ -172,8 +172,9 @@ export class SpawnLiveBombResponse
   override getText(_eid: boolean, participle: boolean): string {
     const verb = this.getVerb(participle);
     const noun = this.getNoun();
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   override trigger(triggerData?: TriggerData): EntityBomb[] {

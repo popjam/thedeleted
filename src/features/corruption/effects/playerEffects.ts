@@ -296,7 +296,7 @@ export function triggerPlayerActionsByType(
   const playerActionsOfType = getAndSetActionArray(player, actionType);
   const returnValues: unknown[] = [];
   for (const action of playerActionsOfType) {
-    fprint(`Triggering: ${action.getText()}`);
+    fprint(`Triggering: ${action.getText(false)}`);
     triggerData.action = action;
     const returnValue = action.trigger({ ...triggerData });
     returnValues.push(returnValue);

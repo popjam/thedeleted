@@ -91,7 +91,7 @@ function preGetPedestalNormal(
       `   Inverted Active: ${
         itemActionSet.actionSetType === ActionSetType.INVERTED_ACTIVE_ITEM
       }
-      ActionSet: ${itemActionSet.getText()}`,
+      ActionSet: ${itemActionSet.getText(false)}`,
     );
     return itemActionSet.preGetPedestal(player, pickup);
   }
@@ -101,7 +101,7 @@ function preGetPedestalNormal(
   const itemActionSet = getNonInvertedPickupActionSet(pickup);
   if (itemActionSet !== undefined) {
     setLastPickedUpNonInvertedCollectibleActionSet(player, itemActionSet);
-    fprint(`NonInverted ActionSet: ${itemActionSet.getText()}`);
+    fprint(`NonInverted ActionSet: ${itemActionSet.getText(false)}`);
     return undefined;
   }
   return undefined;

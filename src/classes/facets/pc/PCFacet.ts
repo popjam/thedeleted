@@ -21,6 +21,7 @@ import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
 import { HUDPositionToRenderPosition } from "../../../helper/HUDHelper";
+import { MainMenuType } from "isaac-typescript-definitions-repentogon";
 
 /**
  * Handles everything to do with the physical spawn PC. PC only spawns when the first Deleted spawns

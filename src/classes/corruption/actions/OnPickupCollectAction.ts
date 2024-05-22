@@ -5,8 +5,13 @@ import { Action } from "./Action";
 import { ON_PICKUP_COLLECT_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { getPickupTypeSeverity } from "../../../maps/data/pickups/pickupSeverityMap";
 import type { PickupType } from "../../../enums/general/PickupType";
+import type { PickupID } from "../../../enums/data/ID/PickupID";
+import { getEntityNameFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
+import type { EntityID } from "isaacscript-common";
+import { pickupTypeToString } from "../../../maps/data/name/pickupTypeNameMap";
 
 const ACTION_TYPE = ActionType.ON_PICKUP_COLLECT;
+const UNKNOWN_PICKUP_NAME = "unknown pickup";
 
 /** Triggers every time the player collects a pickup. */
 /**
@@ -17,14 +22,13 @@ const ACTION_TYPE = ActionType.ON_PICKUP_COLLECT;
  */
 export class OnPickupCollectAction extends Action {
   override actionType = ACTION_TYPE;
-  pk?: PickupType;
-  override actFr = ON_PICKUP_COLLECT_ACTION_FREQUENCY;
+  pk?: PickupType | PickupID;
 
   /**
    * Constructs a new instance of the `OnPickupCollectAction` class.
    *
-   * @param pickup The pickup type to associate with the action. If `undefined`, it means any pickup
-   *               (provided it works with `ON_PICKUP_COLLECT`).
+   * @param pickup The pickup type or PickupID to associate with the action. If `undefined`, it
+   *               means any pickup (provided it works with `ON_PICKUP_COLLECT`).
    * @returns The constructed `OnPickupCollectAction` instance.
    */
   construct(pickup?: PickupType): this {
@@ -35,7 +39,12 @@ export class OnPickupCollectAction extends Action {
   override getIdealSeverity(): number {
     const pickup = this.getPickup();
     if (pickup === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_PICKUP_COLLECT_ACTION_FREQUENCY);
+    }
+
+    if (typeof pickup === "string") {
+      // TODO.
+      return 0;
     }
 
     return super.getIdealSeverity(getPickupTypeSeverity(pickup));
@@ -46,7 +55,7 @@ export class OnPickupCollectAction extends Action {
    *
    * @returns The pickup type associated with the action, or `undefined` if no pickup is associated.
    */
-  getPickup(): PickupType | undefined {
+  getPickup(): PickupType | PickupID | undefined {
     return this.pk;
   }
 
@@ -56,8 +65,23 @@ export class OnPickupCollectAction extends Action {
    * @param pickup The pickup type to associate with the action. If `undefined`, it means any pickup
    *               (provided it works with `ON_PICKUP_COLLECT`).
    */
-  setPickup(pickup?: PickupType): void {
+  setPickup(pickup?: PickupType | PickupID | undefined): void {
     this.pk = pickup;
+  }
+
+  getPickupText(): string {
+    const pickup = this.getPickup();
+    if (pickup === undefined) {
+      return "pickup";
+    }
+
+    if (typeof pickup === "string") {
+      const pickupName = getEntityNameFromEntityID(pickup as EntityID);
+      return pickupName ?? UNKNOWN_PICKUP_NAME;
+    }
+
+    const pickupTypeName = pickupTypeToString(pickup);
+    return pickupTypeName;
   }
 
   /**
@@ -65,8 +89,9 @@ export class OnPickupCollectAction extends Action {
    *
    * @returns The trigger clause for the action.
    */
-  protected override getTriggerClause(): string {
-    return "you collect a pickup";
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    // Todo.
+    return plural ? "times you collect a pickup" : "time you collect a pickup";
   }
 
   /**

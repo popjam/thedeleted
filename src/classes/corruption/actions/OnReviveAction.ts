@@ -10,7 +10,6 @@ const ACTION_TYPE = ActionType.ON_REVIVE;
 /** Triggers when the player dies, reviving them. */
 export class OnReviveAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_REVIVE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnReviveAction class.
@@ -21,8 +20,12 @@ export class OnReviveAction extends Action {
     return this;
   }
 
-  protected override getTriggerClause(): string {
-    return "you revive";
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_REVIVE_ACTION_FREQUENCY);
+  }
+
+  protected override getTriggerClause(plural: boolean): string {
+    return plural ? "revives" : "revive";
   }
 
   override trigger(triggerData: TriggerData): void {

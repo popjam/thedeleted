@@ -11,7 +11,6 @@ import { MAX_SEVERITY } from "../../../constants/severityConstants";
  */
 export class OnObtainAction extends Action {
   override actionType = ActionType.ON_OBTAIN;
-  override actFr = MAX_SEVERITY;
 
   /**
    * Constructs an instance of the OnObtainAction class.
@@ -20,6 +19,10 @@ export class OnObtainAction extends Action {
    */
   construct(): this {
     return this;
+  }
+
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(MAX_SEVERITY);
   }
 
   /**

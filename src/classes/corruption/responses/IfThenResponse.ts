@@ -21,7 +21,7 @@ export class IfThenResponse extends Response {
 
   construct(
     response: Response,
-    // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
+
     ...conditions: Array<[Conditional, number]>
   ): this {
     this.con = conditions;
@@ -129,16 +129,14 @@ export class IfThenResponse extends Response {
 
   override getText(eid: boolean, participle: boolean): string {
     if (participle) {
-      return `${this.getResponseText(
-        eid,
+      return `${this.getChanceToActivateText(
         participle,
-      )} ${this.getConditionsText()}`;
+      )} ${this.getResponseText(eid, participle)} ${this.getConditionsText()}`;
     }
 
-    return `${this.getConditionsText()}, ${this.getResponseText(
-      eid,
+    return `${this.getChanceToActivateText(
       participle,
-    )}`;
+    )} ${this.getConditionsText()}, ${this.getResponseText(eid, participle)}`;
   }
 
   override trigger(triggerData?: TriggerData): unknown[] {

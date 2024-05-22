@@ -90,8 +90,9 @@ export class PlaySoundResponse extends Response {
   override getText(eid: boolean, participle: boolean): string {
     const verb = this.getVerb(participle);
     const noun = this.getNoun(eid);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   override trigger(triggerData?: TriggerData): SoundEffect[] {

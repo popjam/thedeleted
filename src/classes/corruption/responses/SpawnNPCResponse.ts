@@ -3,6 +3,7 @@ import {
   DISTANCE_OF_GRID_TILE,
   VectorZero,
   game,
+  getRandomEnumValue,
   getRandomSeed,
 } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -11,7 +12,7 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { Response } from "./Response";
 import type { Range } from "../../../types/general/Range";
 import type { NPCAttribute } from "../../../interfaces/general/NPCAttribute";
-import type { NPCFlag } from "../../../enums/general/NPCFlag";
+import { NPCFlag } from "../../../enums/general/NPCFlag";
 import { addNPCFlags } from "../../../helper/entityHelper/npcFlagHelper";
 import {
   getRandomNPC,
@@ -19,8 +20,7 @@ import {
   npcAttributesToText,
   spawnNPCID,
 } from "../../../helper/entityHelper/npcHelper";
-import type { ChampionColor } from "isaac-typescript-definitions";
-import { NPCID } from "isaac-typescript-definitions";
+import { ChampionColor, NPCID } from "isaac-typescript-definitions";
 import { championColorToString } from "../../../maps/data/name/championColorNameMap";
 import { npcFlagToString } from "../../../maps/data/name/npcFlagNameMap";
 import {
@@ -33,11 +33,21 @@ import {
   BOSS_NPC_SEVERITY,
   NON_BOSS_NPC_SEVERITY,
 } from "../../../constants/severityConstants";
+import { rollPercentage } from "../../../types/general/Percentage";
+import {
+  SPAWN_NPC_CHANCE_FOR_CHAMPION,
+  SPAWN_NPC_CHANCE_FOR_NPC_FLAG,
+  SPAWN_NPC_CHANCE_FOR_SPECIFIC_NPC,
+} from "../../../constants/corruptionConstants";
+import { makeNPCNonMandatory } from "../../facets/entityModifiers.ts/NPCModifiers/NonMandatoryNPCFacet";
+import { EIDMarkup } from "../../../enums/compatibility/EID/EIDMarkup";
+import { getEIDColorShortcutFromChampionColor } from "../../../maps/compatibility/ChampionColorToEIDColorShortcutMap";
 
 const DEFAULT_NPC = NPCID.GAPER;
 const UNKNOWN_NPC_NAME_TEXT = "unknown npc";
 const VERB = "spawn";
 const DEFAULT_SPAWN_VELOCITY = VectorZero;
+const DEFAULT_CHAMPION_EID_COLOR = EIDMarkup.COLOR_PURPLE;
 
 /**
  * Response to spawn an NPC.
@@ -53,7 +63,7 @@ export class SpawnNPCResponse
   implements SpawnEntityResponseInterface<SpawnNPCResponse>
 {
   override responseType: ResponseType = ResponseType.SPAWN_NPC;
-  e?: NPCID | NPCAttribute;
+  e?: NPCID | NPCAttribute | undefined;
   sp?: Vector;
   v?: Vector;
   flg?: readonly NPCFlag[];
@@ -73,7 +83,7 @@ export class SpawnNPCResponse
    * @param championColor The champion color to make the NPC/s.
    */
   construct(
-    entityNPC: NPCID | NPCAttribute,
+    entityNPC: NPCID | NPCAttribute | undefined,
     overridePos?: Vector,
     overrideVel?: Vector,
     amount?: number | Range,
@@ -97,6 +107,25 @@ export class SpawnNPCResponse
       this.setChampionColor(championColor);
     }
     return this;
+  }
+
+  override shuffle(): this {
+    if (rollPercentage(SPAWN_NPC_CHANCE_FOR_SPECIFIC_NPC)) {
+      this.setNPC(getRandomNPC());
+    }
+
+    if (rollPercentage(SPAWN_NPC_CHANCE_FOR_CHAMPION)) {
+      const randomChampionColor = getRandomEnumValue(ChampionColor, undefined);
+      this.setChampionColor(randomChampionColor);
+    }
+
+    // Currently only gives one flag.
+    if (rollPercentage(SPAWN_NPC_CHANCE_FOR_NPC_FLAG)) {
+      const randomFlag = getRandomEnumValue(NPCFlag, undefined);
+      this.setNPCFlags([randomFlag]);
+    }
+
+    return super.shuffle();
   }
 
   override getSeverity(): number {
@@ -130,8 +159,9 @@ export class SpawnNPCResponse
     const npc = this.getNPC();
     const plural = this.isMultiple();
     if (typeof npc === "string") {
-      let npcNameClause =
-        getEntityNameFromEntityID(npc as EntityID) ?? UNKNOWN_NPC_NAME_TEXT;
+      let npcNameClause = (
+        getEntityNameFromEntityID(npc as EntityID) ?? UNKNOWN_NPC_NAME_TEXT
+      ).toLowerCase();
       if (plural) {
         // Add the plural 's' to the end of the name.
         npcNameClause = addTheS(npcNameClause, true);
@@ -145,14 +175,22 @@ export class SpawnNPCResponse
 
       return npcNameClause;
     }
+
+    if (npc === undefined) {
+      // Random npc.
+      return plural
+        ? `random ${adjectives} enemies`
+        : `a random ${adjectives} enemy`;
+    }
+
     return npcAttributesToText(npc, plural, adjectives);
   }
 
-  getNPC(): NPCID | NPCAttribute {
-    return this.e ?? DEFAULT_NPC;
+  getNPC(): NPCID | NPCAttribute | undefined {
+    return this.e;
   }
 
-  setNPC(npc: NPCID | NPCAttribute): this {
+  setNPC(npc: NPCID | NPCAttribute | undefined): this {
     this.e = npc;
     return this;
   }
@@ -175,6 +213,8 @@ export class SpawnNPCResponse
     if (flags !== undefined) {
       addNPCFlags(spawnedNPC, ...flags);
     }
+
+    makeNPCNonMandatory(spawnedNPC);
     return spawnedNPC;
   }
 
@@ -242,29 +282,46 @@ export class SpawnNPCResponse
     return participle ? VERB : VERB;
   }
 
-  getNPCFlagText(): string {
+  getNPCFlagText(eid: boolean): string {
     const flags = this.getNPCFlags();
     if (flags === undefined) {
       return "";
     }
-    return flags.map((flag) => npcFlagToString(flag)).join(", ");
+    const flagText = flags
+      .map((flag) => npcFlagToString(flag))
+      .join(", ")
+      .toLowerCase();
+
+    if (eid) {
+      return `{{ColorGreen}}${flagText}{{CR}}`;
+    }
+
+    return flagText;
   }
 
-  getChampionColorText(): string {
+  getChampionColorText(eid: boolean): string {
     const championColor = this.getChampionColor();
     if (championColor === undefined) {
       return "";
     }
-    return `${championColorToString(championColor)}-Champion`;
+    const championColorText =
+      championColorToString(championColor).toLowerCase();
+    if (eid) {
+      const colorShortcut =
+        getEIDColorShortcutFromChampionColor(championColor) ??
+        DEFAULT_CHAMPION_EID_COLOR;
+      return `${colorShortcut}${championColorText}${EIDMarkup.COLOR_RESET}`;
+    }
+    return championColorText;
   }
 
   // Get NPC modifiers (e.g. 'charmed', 'blue-champion') as text. This does not include
   // NPCAttributes for random NPCs.
-  getAdjectivesText(): string {
+  getAdjectivesText(eid: boolean): string {
     let text = "";
-    text += this.getNPCFlagText();
+    text += this.getNPCFlagText(eid);
     text += " ";
-    text += this.getChampionColorText();
+    text += this.getChampionColorText(eid);
     return text;
   }
 
@@ -275,19 +332,20 @@ export class SpawnNPCResponse
    * @example "a random flying boss"
    * @example "12 blue-champion enemies"
    */
-  override getNoun(): string {
+  override getNoun(eid: boolean): string {
     const amountOfActivationsText = this.getAmountOfActivationsText() ?? "";
-    const adjectives = this.getAdjectivesText();
+    const adjectives = this.getAdjectivesText(eid);
     const npcNameClause = this.getNPCNameClause(adjectives);
 
     return `${amountOfActivationsText} ${npcNameClause}`;
   }
 
-  getText(_eid: boolean, participle: boolean): string {
+  getText(eid: boolean, participle: boolean): string {
     const verb = this.getVerb(participle);
-    const noun = this.getNoun();
+    const noun = this.getNoun(eid);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   override trigger(triggerData?: TriggerData): EntityNPC[] {

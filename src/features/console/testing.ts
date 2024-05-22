@@ -1,18 +1,14 @@
-import type { NPCID } from "isaac-typescript-definitions";
 import { DoorSlot, EntityType } from "isaac-typescript-definitions";
 import {
   getEnumValues,
   getRandomArrayElement,
   getClosestEntityTo,
   getEntities,
-  getRandomSetElement,
-  getRoomListIndex,
-  getRooms,
-  getRoomData,
   getRoomDescriptor,
   game,
   getRoomGridIndex,
   getRoomAdjacentGridIndexes,
+  getNPCs,
 } from "isaacscript-common";
 import {
   freezeAllNPCsInRoom,
@@ -21,17 +17,17 @@ import {
 import { PlayerTypeCustom } from "../../enums/general/PlayerTypeCustom";
 import { fprint } from "../../helper/printHelper";
 import { mod } from "../../mod";
-import { getEntityIDSetFromCategory } from "../data/gameSets/gameSets";
-import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
-import { addTemporaryActionToPlayer } from "../corruption/effects/playerEffects";
-import { GetCollectibleResponse } from "../../classes/corruption/responses/GetCollectibleResponse";
-import { EntityCategory } from "../../enums/general/EntityCategory";
-import { SpawnHybridNPCResponse } from "../../classes/corruption/responses/SpawnHybridNPCResponse";
-import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
-import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { getRandomNPC, spawnNPCID } from "../../helper/entityHelper/npcHelper";
 import { getQuickAccessiblePosition } from "../../helper/positionHelper";
-import { SpawnEffectResponse } from "../../classes/corruption/responses/SpawnEffectResponse";
-import { EffectID } from "../../enums/data/ID/EffectID";
+import { addNPCFlags } from "../../helper/entityHelper/npcFlagHelper";
+import { NPCFlag } from "../../enums/general/NPCFlag";
+import { spawnNewInvertedCollectible } from "../../helper/deletedSpecific/inversion/spawnInverted";
+import { InvertedPassiveActionSet } from "../../classes/corruption/actionSets/Inverted/InvertedPassiveActionSet";
+import { OnRoomAction } from "../../classes/corruption/actions/OnRoomAction";
+import { OnCardUseAction } from "../../classes/corruption/actions/OnCardUseAction";
+import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
+import { OnActiveUseAction } from "../../classes/corruption/actions/OnActiveUseAction";
+import { OnBombExplodeAction } from "../../classes/corruption/actions/OnBombExplodeAction";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -66,38 +62,28 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const newResponse = new GetCollectibleResponse();
-
-  const newAction = new OnRoomAction().setInterval(3);
-
-  const responseSeverity = newResponse.getSeverity();
-  const actionSeverity = newAction.getIdealSeverity();
-
-  // We will now multiply the absolute response severity to match the ideal action severity.
-  const severityMultiplier = actionSeverity / Math.abs(responseSeverity);
-
-  // Round to 0 decimal places.
-  const severityMultiplierRounded = Math.round(severityMultiplier);
-  const amountOfActivations = newResponse.getAmountOfActivations();
-  if (typeof amountOfActivations !== "number") {
+  const npc = getRandomNPC();
+  if (npc === undefined) {
     return;
   }
 
-  newResponse.setAmountOfActivations(
-    amountOfActivations * severityMultiplierRounded,
-  );
-
-  newAction.setResponse(newResponse);
-  addTemporaryActionToPlayer(player(), newAction);
-
-  fprint(
-    `Response severity: ${newResponse.getSeverity()}, Action ideal severity: ${newAction.getIdealSeverity()}, Action: ${newAction.getText()}`,
-  );
+  const spawnedNPC = spawnNPCID(npc, getQuickAccessiblePosition());
+  addNPCFlags(spawnedNPC, NPCFlag.BOLSTERED, NPCFlag.FRIENDLY);
 }
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction2(): void {
-  const roomData = getRoomData();
+  const closestNPC = getClosestEntityTo(player(), getNPCs());
+  if (closestNPC === undefined) {
+    return;
+  }
+
+  const ptrHash = GetPtrHash(closestNPC);
+  const initSeed = closestNPC.InitSeed;
+  const index = closestNPC.Index;
+  fprint(
+    `Closest NPC: ptrHash - ${ptrHash}, initSeed - ${initSeed}, index - ${index}`,
+  );
 }
 
 /** Test stuff as the developer with command 'eted'. */
@@ -138,8 +124,17 @@ export function testingFunction3(): void {
 }
 
 /** Test stuff as the developer with command 'eted'. */
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export function testingFunction4(): void {}
+
+export function testingFunction4(): void {
+  spawnNewInvertedCollectible(
+    getQuickAccessiblePosition(),
+    new InvertedPassiveActionSet().addEffects(
+      new OnBombExplodeAction()
+        .setResponse(new UseActiveItemResponse().setAmountOfActivations(3))
+        .setFireAfterThenRemove(1),
+    ),
+  );
+}
 
 /** Test stuff as the developer with command 'eted'. */
 export function testingFunction5(): void {

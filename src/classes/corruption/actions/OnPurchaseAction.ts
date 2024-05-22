@@ -24,7 +24,6 @@ const ACTION_TYPE = ActionType.ON_PURCHASE;
 export class OnPurchaseAction extends Action {
   override actionType = ACTION_TYPE;
   pk?: PickupID | PickupType;
-  override actFr = ON_PURCHASE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnPurchaseAction class.
@@ -83,15 +82,17 @@ export class OnPurchaseAction extends Action {
     return getPickupTypeFromPickupID(pickup) === pk;
   }
 
-  protected override getTriggerClause(): string {
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
     const pickup = this.getPickup();
-    return pickup === undefined
-      ? "you purchase an item"
-      : `you purchase ${
-          typeof pickup === "string"
-            ? getEntityNameFromEntityID(pickup as EntityID) ?? "an item"
-            : pickupTypeToString(pickup)
-        }`;
+    if (pickup === undefined) {
+      return plural ? "purchases" : "purchase";
+    }
+
+    return `${
+      typeof pickup === "string"
+        ? getEntityNameFromEntityID(pickup as EntityID) ?? "pickup"
+        : pickupTypeToString(pickup)
+    } ${plural ? "purchases" : "purchase"}`;
   }
 
   /** Triggers the action with the provided trigger data. */

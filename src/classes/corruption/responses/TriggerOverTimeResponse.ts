@@ -113,10 +113,10 @@ export class TriggerOverTimeResponse extends Response {
   }
 
   getText(eid: boolean, participle: boolean): string {
-    return ` ${this.getVerb(participle)} ${this.getTriggeringResponseText(
-      eid,
+    const chanceToActivate = this.getChanceToActivateText(participle);
+    return ` ${chanceToActivate} ${this.getVerb(
       participle,
-    )}`;
+    )} ${this.getTriggeringResponseText(eid, participle)}`;
   }
 
   override getMorality(): Morality {

@@ -81,6 +81,7 @@ export class TriggerRandomResponse extends Response {
     const r = this.getResponses();
     let text = "";
     let iterations = r.length;
+    const chanceToActivate = this.getChanceToActivateText(participle);
     for (const response of r) {
       text += response.getText(eid, participle);
       // eslint-disable-next-line isaacscript/prefer-postfix-plusplus
@@ -89,7 +90,7 @@ export class TriggerRandomResponse extends Response {
       }
     }
 
-    return text;
+    return `${chanceToActivate} ${text}`;
   }
 
   override getText(eid: boolean, participle: boolean): string {

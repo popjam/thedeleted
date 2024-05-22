@@ -10,10 +10,13 @@ const ACTION_TYPE = ActionType.ON_ROOM_CLEAR;
 /** Represents an action that is triggered when a room is cleared. */
 export class OnRoomClearAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_ROOM_CLEAR_ACTION_FREQUENCY;
 
-  protected override getTriggerClause(): string {
-    return "you clear a room";
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_ROOM_CLEAR_ACTION_FREQUENCY);
+  }
+
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    return plural ? "room clears" : "room clear";
   }
 
   /** Triggers the action with the provided trigger data. */

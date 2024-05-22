@@ -1,11 +1,5 @@
 import type { ModUpgraded } from "isaacscript-common";
-import {
-  CallbackPriority,
-  EntityType,
-  ModCallback,
-} from "isaac-typescript-definitions";
-import { fprint } from "../helper/printHelper";
-import { getEntityIDFromEntity } from "../helper/entityHelper/entityIDHelper";
+import { CallbackPriority, ModCallback } from "isaac-typescript-definitions";
 import { lateSavePostEntityRemoveLate } from "../features/general/lateSave";
 
 export function postEntityRemoveInit(mod: ModUpgraded): void {

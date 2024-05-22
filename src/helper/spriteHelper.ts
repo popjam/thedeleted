@@ -1,6 +1,6 @@
 import type { EntityType, NPCID } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
-import { VectorZero, copyColor, spawnEntityID } from "isaacscript-common";
+import { copyColor, spawnEntityID } from "isaacscript-common";
 import { renderToWorldPosition, worldToRenderPosition } from "./renderHelper";
 
 /**
@@ -125,6 +125,39 @@ export function renderSprite(
       topLeftClamp,
     );
   }
+}
+
+/**
+ * Get the X and Y dimensions of a Sprite at it's current render frame. If the Sprite has multiple
+ * layers, the largest dimensions will be returned.
+ *
+ * @param sprite The Sprite to get the dimensions of.
+ * @returns The X and Y dimensions of the Sprite (Vector X is width, Y is height).
+ */
+export function getSpriteSize(sprite: Sprite): Vector {
+  const currentFrame = sprite.GetFrame();
+  const currentAnimation = sprite.GetCurrentAnimationData();
+  const animationLayers = currentAnimation.GetAllLayers();
+
+  let width = 0;
+  let height = 0;
+  for (const layer of animationLayers) {
+    const currentFrameData = layer.GetFrame(currentFrame);
+    if (currentFrameData === undefined) {
+      continue;
+    }
+
+    const frameWidth = currentFrameData.GetWidth();
+    const frameHeight = currentFrameData.GetHeight();
+    if (frameWidth > width) {
+      width = frameWidth;
+    }
+    if (frameHeight > height) {
+      height = frameHeight;
+    }
+  }
+
+  return Vector(width, height);
 }
 
 export function getPixelColorMap(sprite: Sprite): ReadonlyMap<Vector, KColor> {

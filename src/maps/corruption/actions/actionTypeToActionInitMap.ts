@@ -52,7 +52,9 @@ const ACTION_TYPE_TO_ACTION_INITIALIZATION_MAP: ReadonlyMap<
 export function generateActionFromActionType(actionType: ActionType): Action {
   const actionInit = ACTION_TYPE_TO_ACTION_INITIALIZATION_MAP.get(actionType);
   if (actionInit === undefined) {
-    error(`No action initialization found for action type: ${actionType}`);
+    // TODO: Delete this.
+    return new OnRoomAction();
+    // error(`No action initialization found for action type: ${actionType}`);
   }
   return actionInit();
 }

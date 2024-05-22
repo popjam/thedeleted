@@ -53,4 +53,5 @@ export enum EIDMarkup {
   // Colors.
   COLOR_LIME = "{{ColorLime}}",
   COLOR_RESET = "{{ColorReset}}",
+  COLOR_PURPLE = "{{ColorPurple}}",
 }

@@ -10,6 +10,7 @@ import { OnFloorAction } from "./classes/corruption/actions/OnFloorAction";
 import { OnGreedWaveClearAction } from "./classes/corruption/actions/OnGreedWaveClearAction";
 import { OnKillAction } from "./classes/corruption/actions/OnKillAction";
 import { OnObtainAction } from "./classes/corruption/actions/OnObtainAction";
+import { OnPickupCollectAction } from "./classes/corruption/actions/OnPickupCollectAction";
 import { OnPillUseAction } from "./classes/corruption/actions/OnPillUseAction";
 import { OnPurchaseAction } from "./classes/corruption/actions/OnPurchaseAction";
 import { OnReviveAction } from "./classes/corruption/actions/OnReviveAction";
@@ -97,5 +98,6 @@ export function initClasses(): void {
     OnSacrificeAction,
     OnSlotUseAction,
     OnSlotDestroyAction,
+    OnPickupCollectAction,
   );
 }

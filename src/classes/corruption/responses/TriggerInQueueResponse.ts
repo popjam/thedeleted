@@ -71,7 +71,8 @@ export class TriggerInQueueResponse extends Response {
     const responsesText = this.r
       .map((response) => response.getText(eid, true))
       .join(BETWEEN_RESPONSES_TEXT);
-    return `${verb} ${responsesText}`;
+    const chanceToActivate = this.getChanceToActivateText(participle);
+    return `${chanceToActivate} ${verb} ${responsesText}`;
   }
 
   override shouldFlattenResults(): boolean {

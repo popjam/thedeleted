@@ -5,6 +5,7 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { PlayerStat } from "isaacscript-common";
 import { ON_STAT_ACTION_FREQUENCY } from "../../../constants/severityConstants";
 import { PLAYER_TOTAL_STATS } from "../../../constants/gameConstants";
+import { addTheS } from "../../../helper/stringHelper";
 
 const ACTION_TYPE = ActionType.ON_STAT;
 
@@ -17,7 +18,6 @@ export class OnStatAction extends Action {
   override actionType = ACTION_TYPE;
   stat?: PlayerStat;
   thr?: number;
-  override actFr = ON_STAT_ACTION_FREQUENCY;
 
   construct(stat?: PlayerStat): this {
     this.stat = stat;
@@ -27,7 +27,7 @@ export class OnStatAction extends Action {
   override getIdealSeverity(): number {
     const stat = this.getStat();
     if (stat === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_STAT_ACTION_FREQUENCY);
     }
 
     return super.getIdealSeverity(
@@ -55,28 +55,29 @@ export class OnStatAction extends Action {
     return this.thr;
   }
 
-  protected override getTriggerClause(): string {
+  protected override getTriggerClause(plural: boolean): string {
     const stat = this.getStat();
     const threshold = this.getThreshold();
+    const changeWord = addTheS("change", plural, false);
 
     if (stat === undefined) {
-      return "your stats change"; // Generic clause for undefined stat.
+      return `stat ${changeWord}`; // Generic clause for undefined stat.
     }
     switch (stat) {
       case PlayerStat.TEAR_FLAG: {
-        return "your tear flags change";
+        return `tear flag ${changeWord}`;
       }
 
       case PlayerStat.TEAR_COLOR: {
-        return "your tear color changes";
+        return `tear color ${changeWord}`;
       }
 
       case PlayerStat.FLYING: {
-        return "you gain or lose flight";
+        return `flight status ${changeWord}`;
       }
 
       case PlayerStat.SIZE: {
-        return "you change size";
+        return `size ${changeWord}`;
       }
 
       default: {

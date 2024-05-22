@@ -9,10 +9,13 @@ const ACTION_TYPE = ActionType.ON_GREED_WAVE_CLEAR;
 /** Triggers every time a greed wave is cleared. */
 export class OnGreedWaveClearAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_GREED_WAVE_CLEAR_ACTION_FREQUENCY;
 
-  protected override getTriggerClause(): string {
-    return "a Greed wave is cleared";
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_GREED_WAVE_CLEAR_ACTION_FREQUENCY);
+  }
+
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    return plural ? "greed waves" : "greed wave";
   }
 
   override trigger(triggerData: TriggerData): void {

@@ -8,6 +8,7 @@ import {
   ON_CARD_USE_ACTION_FREQUENCY,
   ON_FLOOR_ACTION_FREQUENCY,
 } from "../../../constants/severityConstants";
+import { getCardNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 
 const ACTION_TYPE = ActionType.ON_CARD_USE;
 const CHANCE_FOR_CARD_TYPE_PARAM = 10;
@@ -17,7 +18,6 @@ const CHANCE_FOR_CARD_TYPE_PARAM = 10;
 export class OnCardUseAction extends Action {
   override actionType = ACTION_TYPE;
   c?: CardType;
-  override actFr = ON_CARD_USE_ACTION_FREQUENCY;
 
   /**
    * Constructs a new OnCardUseAction.
@@ -33,7 +33,7 @@ export class OnCardUseAction extends Action {
   override getIdealSeverity(): number {
     const cardType = this.getCard();
     if (cardType === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_CARD_USE_ACTION_FREQUENCY);
     }
 
     // Specific card.
@@ -69,9 +69,21 @@ export class OnCardUseAction extends Action {
     return this;
   }
 
-  protected override getTriggerClause(): string {
+  getCardText(eid: boolean, plural: boolean): string | undefined {
     const card = this.getCard();
-    return card === undefined ? "you use a card" : `you use ${card}`;
+    if (card === undefined) {
+      return undefined;
+    }
+
+    return getCardNameWithEIDSetting(card, plural, eid);
+  }
+
+  protected override getTriggerClause(plural: boolean, eid = true): string {
+    const card = this.getCardText(eid, plural);
+
+    return plural
+      ? `uses of ${card ?? "a card"}`
+      : `use of ${card ?? "a card"}`;
   }
 
   override trigger(triggerData: TriggerData): void {

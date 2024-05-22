@@ -3,7 +3,10 @@ import { getRandomSetElement, spawnEntityID } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
-import { getEntityIDSetFromCategory } from "../../../features/data/gameSets/gameSets";
+import {
+  getEntityIDSetFromCategory,
+  getNonModdedEntityIDSetFromCategory,
+} from "../../../features/data/gameSets/gameSets";
 import { EntityCategory } from "../../../enums/general/EntityCategory";
 import type { SlotVariant } from "isaac-typescript-definitions";
 import { EntityType } from "isaac-typescript-definitions";
@@ -14,6 +17,9 @@ import {
   getEntityNameFromEntityID,
 } from "../../../helper/entityHelper/entityIDHelper";
 import type { SpawnEntityResponseInterface } from "../../../interfaces/corruption/responses/SpawnEntityResponseInterface";
+import { SPAWN_SLOT_CHANCE_FOR_SPECIFIC_SLOT } from "../../../constants/corruptionConstants";
+import { rollPercentage } from "../../../types/general/Percentage";
+import { getIncludeModdedPickupsInGenerationSetting } from "../../../features/settings/ModdedPickupSettings";
 
 const VERB = "spawn";
 const VERB_PARTICIPLE = "spawning";
@@ -57,6 +63,18 @@ export class SpawnSlotResponse
       this.setVelocity(overrideVel);
     }
     return this;
+  }
+
+  override shuffle(): this {
+    if (rollPercentage(SPAWN_SLOT_CHANCE_FOR_SPECIFIC_SLOT)) {
+      const slots = getIncludeModdedPickupsInGenerationSetting()
+        ? getEntityIDSetFromCategory(EntityCategory.SLOT)
+        : getNonModdedEntityIDSetFromCategory(EntityCategory.SLOT);
+
+      this.e = getRandomSetElement<EntityID>(slots, undefined);
+    }
+
+    return super.shuffle();
   }
 
   getSlot(): EntityID | undefined {
@@ -161,8 +179,9 @@ export class SpawnSlotResponse
   getText(_eid: boolean, participle: boolean): string {
     const verb = this.getVerb(participle);
     const noun = this.getNoun();
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   override trigger(triggerData?: TriggerData): EntitySlot[] {

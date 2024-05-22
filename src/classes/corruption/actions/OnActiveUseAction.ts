@@ -12,16 +12,15 @@ import {
   getCollectibleMaxCharges,
 } from "isaacscript-common";
 import { ON_ROOM_ACTION_FREQUENCY } from "../../../constants/severityConstants";
+import { ON_ACTIVE_USE_SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM } from "../../../constants/corruptionConstants";
 
 const ACTION_TYPE = ActionType.ON_ACTIVE_USE;
-const SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM = 10;
 
 /** Triggers every time the player uses an active item. */
 /** Represents an action that is triggered when an active item is used. */
 export class OnActiveUseAction extends Action {
   override actionType = ACTION_TYPE;
   act?: CollectibleType;
-  override actFr = ON_ROOM_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnActiveUseAction class.
@@ -37,7 +36,7 @@ export class OnActiveUseAction extends Action {
   override getIdealSeverity(): number {
     const activeItem = this.getActiveItem();
     if (activeItem === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY);
     }
 
     const chargeType = getCollectibleChargeType(activeItem);
@@ -46,11 +45,11 @@ export class OnActiveUseAction extends Action {
       return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY * charges);
     }
 
-    return super.getIdealSeverity();
+    return super.getIdealSeverity(ON_ROOM_ACTION_FREQUENCY);
   }
 
   override shuffle(): this {
-    if (rollPercentage(SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM)) {
+    if (rollPercentage(ON_ACTIVE_USE_SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM)) {
       const randomActive = getRandomCollectibleType({
         itemType: ItemType.ACTIVE,
         chargeType: ItemConfigChargeType.NORMAL,
@@ -80,15 +79,21 @@ export class OnActiveUseAction extends Action {
   }
 
   // Override the trigger clause for OnActiveUseAction.
-  protected override getTriggerClause(): string {
-    return `you use ${this.getActiveItemText() ?? "an active item"}`;
+  protected override getTriggerClause(plural = false, _eid = true): string {
+    const activeItemText = this.getActiveItemText();
+
+    if (plural) {
+      return `uses of ${activeItemText}`;
+    }
+
+    return `use of ${activeItemText}`;
   }
 
   // Helper function to get the active item text.
-  private getActiveItemText(): string | undefined {
+  private getActiveItemText(): string {
     const activeItem = this.getActiveItem();
     if (activeItem === undefined) {
-      return undefined;
+      return "an active item";
     }
     return getCollectibleNameWithEIDSetting(activeItem);
   }

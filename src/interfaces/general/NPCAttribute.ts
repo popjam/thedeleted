@@ -1,7 +1,7 @@
 import type { LevelStage, NPCID } from "isaac-typescript-definitions";
 import type { Range } from "../../types/general/Range";
 import type { COLORS } from "isaacscript-common";
-import type { ModName } from "../../types/compatibility/ModName";
+import type { ModID } from "../../types/compatibility/ModName";
 
 /**
  * Modifiers to describe a subset of all NPCs.
@@ -13,7 +13,7 @@ export interface NPCAttribute {
    * If the NPC should be modded (true), not modded (false), or either (undefined). Alternatively,
    * specify a Mod it should be from.
    */
-  modded?: boolean | ModName;
+  modded?: boolean | ModID;
 
   /** General Color of the NPC. */
   color?: keyof typeof COLORS;

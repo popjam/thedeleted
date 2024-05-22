@@ -14,7 +14,6 @@ const ACTION_TYPE = ActionType.ON_DAMAGE;
 export class OnDamageAction extends Action {
   override actionType = ACTION_TYPE;
   df?: DamageFlag;
-  override actFr = ON_DAMAGE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnDamageAction class.
@@ -32,7 +31,7 @@ export class OnDamageAction extends Action {
   override getIdealSeverity(): number {
     const damageFlag = this.getDamageFlag();
     if (damageFlag === undefined) {
-      return super.getIdealSeverity();
+      return super.getIdealSeverity(ON_DAMAGE_ACTION_FREQUENCY);
     }
 
     return super.getIdealSeverity(ON_DAMAGE_ACTION_FREQUENCY * 2);
@@ -47,8 +46,12 @@ export class OnDamageAction extends Action {
   }
 
   // Override the trigger clause for OnDamageAction.
-  protected override getTriggerClause(): string {
-    return `you take damage${this.getDamageFlagText()}`;
+  protected override getTriggerClause(plural: boolean, _eid = true): string {
+    const damageFlagText = this.getDamageFlagText();
+
+    return plural
+      ? `times taking damage${damageFlagText}`
+      : `time taking damage${damageFlagText}`;
   }
 
   /** Only fires on this damage flag. */

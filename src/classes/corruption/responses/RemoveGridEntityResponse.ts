@@ -236,8 +236,9 @@ export class RemoveGridEntityResponse extends Response {
   override getText(_eid: boolean, participle: boolean): string {
     const noun = this.getNoun();
     const verb = this.getVerb(participle);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   override shouldFlattenResults(): boolean {

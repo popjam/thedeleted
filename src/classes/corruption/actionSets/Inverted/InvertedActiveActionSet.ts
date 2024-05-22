@@ -10,9 +10,11 @@ import { getZazzActiveFromCharge } from "../../../../maps/activeChargeToZazzActi
 import { _addInvertedActiveToPlayer } from "../../../facets/CustomActiveFacet";
 import { playPickupAnimationWithCustomSprite } from "../../../facets/RenderOverHeadFacet";
 import type { Action } from "../../actions/Action";
-import type { Response } from "../../responses/Response";
 import { InvertedItemActionSet } from "./InvertedItemActionSet";
-import { getEIDMarkupFromShortcut } from "../../../../helper/compatibility/EID/EIDHelper";
+import {
+  getEIDMarkupFromShortcut,
+  simplifyEIDColorTags,
+} from "../../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
 import {
   INVERTED_ACTIVE_EID_ICON,
@@ -21,7 +23,6 @@ import {
 import { sortEffectsByMorality } from "../../../../helper/deletedSpecific/effects/moralityHelper";
 import type { EIDDescObject } from "../../../../interfaces/compatibility/EIDDescObject";
 import { MOD_NAME } from "../../../../constants/mod/modConstants";
-import type { CustomActiveData } from "../../../../interfaces/corruption/actionSets/CustomActiveData";
 import { getTotalCharge, repeat } from "isaacscript-common";
 import type { IfThenResponse } from "../../responses/IfThenResponse";
 
@@ -117,17 +118,23 @@ export class InvertedActiveActionSet extends InvertedItemActionSet {
       text += i === 0 ? RESPONSE_EID_TEXT : ACTION_EID_TEXT;
       for (const actionOrResponse of i === 0 ? responses : actions) {
         text += "#";
+        let actionOrResponseText = "";
         if (eid) {
           // Set color of action / response.
-          text += getEIDMarkupFromShortcut(
+          actionOrResponseText += getEIDMarkupFromShortcut(
             actionOrResponse.getTextColor() ??
               this.getActionOrResponseColor(actionOrResponse),
           );
         }
-        text += legibleString(actionOrResponse.getText(eid, false));
+        actionOrResponseText += legibleString(
+          actionOrResponse.getText(eid, false),
+        );
         if (eid) {
-          text += "{{CR}}";
+          actionOrResponseText += "{{CR}}";
+          actionOrResponseText = simplifyEIDColorTags(actionOrResponseText);
         }
+
+        text += actionOrResponseText;
       }
     }
     if (text === "") {

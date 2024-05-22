@@ -27,7 +27,6 @@ const ChampionColorNameMap: ReadonlyMap<ChampionColor, string> = new Map([
   [ChampionColor.GIANT, "Giant"],
   [ChampionColor.TINY, "Tiny"],
   [ChampionColor.FLY_PROTECTED, "Fly Protected"],
-  [ChampionColor.DARK_RED, "Dark Red"],
 ]);
 
 /**

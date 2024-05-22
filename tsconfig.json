@@ -11,6 +11,7 @@
   "compilerOptions": {
     // Specifies the root folder within your source files.
     "rootDir": "./src",
+    "types": ["isaac-typescript-definitions-repentogon"],
   },
 
   // I did this.

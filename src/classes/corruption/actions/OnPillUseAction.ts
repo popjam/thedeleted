@@ -12,6 +12,7 @@ import {
   ON_FLOOR_BASE_SEVERITY,
   ON_PILL_USE_ACTION_FREQUENCY,
 } from "../../../constants/severityConstants";
+import { addTheS } from "../../../helper/stringHelper";
 
 const ACTION_TYPE = ActionType.ON_PILL_USE;
 
@@ -21,7 +22,6 @@ export class OnPillUseAction extends Action {
   override actionType = ACTION_TYPE;
   pe?: PillEffect;
   pc?: PillColor;
-  override actFr = ON_PILL_USE_ACTION_FREQUENCY;
 
   /**
    * Constructs an instance of the OnPillUseAction class.
@@ -51,23 +51,27 @@ export class OnPillUseAction extends Action {
       return super.getIdealSeverity(ON_FLOOR_BASE_SEVERITY);
     }
 
-    return super.getIdealSeverity();
+    return super.getIdealSeverity(ON_PILL_USE_ACTION_FREQUENCY);
   }
 
-  protected override getTriggerClause(): string {
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
     const pillColor = this.getPillColor();
     const pillEffect = this.getPillEffect();
 
     if (pillColor !== undefined && pillEffect !== undefined) {
-      return `you use a ${pillColor} pill with the ${pillEffect} effect`;
+      return `${pillColor} ${addTheS(
+        "pill",
+        plural,
+        false,
+      )} with the ${pillEffect} effect`;
     }
     if (pillColor !== undefined) {
-      return `you use a ${pillColor} pill`;
+      return `${pillColor} ${addTheS("pill", plural, false)}`;
     }
     if (pillEffect !== undefined) {
-      return `you use a pill with the ${pillEffect} effect`;
+      return `${pillEffect} ${addTheS("pill", plural, false)}`;
     }
-    return "you use a pill";
+    return addTheS("pill", plural, false);
   }
 
   /**

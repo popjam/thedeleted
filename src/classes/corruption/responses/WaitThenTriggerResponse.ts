@@ -108,10 +108,10 @@ export class WaitThenTriggerResponse extends Response {
   }
 
   getText(eid: boolean, participle: boolean): string {
-    return ` ${this.getWaitText(participle)} ${this.getResponseText(
-      eid,
+    const chanceToActivate = this.getChanceToActivateText(participle);
+    return ` ${chanceToActivate} ${this.getWaitText(
       participle,
-    )}`;
+    )} ${this.getResponseText(eid, participle)}`;
   }
 
   /**

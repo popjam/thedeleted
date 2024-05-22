@@ -1,10 +1,12 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import type { EIDColorShortcut } from "../../../enums/compatibility/EID/EIDColor";
 import type { EIDColorTriplet } from "../../../enums/compatibility/EID/EIDColorTriplet";
-import { Morality } from "../../../enums/corruption/Morality";
 import type { ActionSetType } from "../../../enums/corruption/actionSets/ActionSetType";
 import { getActionSetThemeSetting } from "../../../features/settings/ActionSetThemeSetting";
-import { getEIDMarkupFromShortcut } from "../../../helper/compatibility/EID/EIDHelper";
+import {
+  getEIDMarkupFromShortcut,
+  simplifyEIDColorTags,
+} from "../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../helper/stringHelper";
 import {
   getEIDColorShortcutFromMorality,
@@ -16,6 +18,7 @@ import type { Response } from "../responses/Response";
 import { isResponse } from "../responses/Response";
 import { NO_EFFECTS_DEFAULT_TEXT } from "../../../constants/actionSetConstants";
 import { sortEffectsByMorality } from "../../../helper/deletedSpecific/effects/moralityHelper";
+import { fprint } from "../../../helper/printHelper";
 
 /** ActionSet class. */
 export abstract class ActionSet {
@@ -109,28 +112,36 @@ export abstract class ActionSet {
    * multiple actions or responses or an array of actions or responses. Probably need to update the
    * pickup after calling this function. Does not deepCopy!
    */
-  addEffects(...effects: Array<Action | Response>): this {
+  addEffects(...effects: ReadonlyArray<Action | Response>): this {
     this.effects = [...this.effects, ...effects];
     return this;
   }
 
   /** Get the text describing the ActionSet. */
-  getText(eid = true): string {
+  getText(eid: boolean): string {
     let text = "";
     const sortedEffects = this.getSortedEffects();
     for (const actionOrResponse of sortedEffects) {
       text += "#";
+      let actionOrResponseText = "";
       if (eid) {
         // Set color of action / response.
-        text += getEIDMarkupFromShortcut(
+        actionOrResponseText += getEIDMarkupFromShortcut(
           actionOrResponse.getTextColor() ??
             this.getActionOrResponseColor(actionOrResponse),
         );
       }
-      text += legibleString(actionOrResponse.getText(eid, false));
+      actionOrResponseText += legibleString(
+        actionOrResponse.getText(eid, false),
+      );
       if (eid) {
-        text += "{{CR}}";
+        actionOrResponseText += "{{CR}}";
+        fprint(actionOrResponseText);
+        actionOrResponseText = simplifyEIDColorTags(actionOrResponseText);
+        fprint(actionOrResponseText);
       }
+
+      text += actionOrResponseText;
     }
     if (text === "") {
       return NO_EFFECTS_DEFAULT_TEXT;

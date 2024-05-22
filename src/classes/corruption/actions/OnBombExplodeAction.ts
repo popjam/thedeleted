@@ -5,18 +5,23 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import { Action } from "./Action";
 
 const ACTION_TYPE = ActionType.ON_BOMB_EXPLODE;
+const SINGULAR_TRIGGER_CLAUSE = "bomb use";
+const PLURAL_TRIGGER_CLAUSE = "bomb uses";
 
 /** Triggers every time a bomb explodes. */
 export class OnBombExplodeAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_BOMB_EXPLODE_ACTION_FREQUENCY;
 
   override getIdealSeverity(): number {
-    return super.getIdealSeverity();
+    return super.getIdealSeverity(ON_BOMB_EXPLODE_ACTION_FREQUENCY);
   }
 
-  protected override getTriggerClause(): string {
-    return "a bomb explodes";
+  protected override getTriggerClause(plural: boolean, _eid = true): string {
+    if (plural) {
+      return PLURAL_TRIGGER_CLAUSE;
+    }
+
+    return SINGULAR_TRIGGER_CLAUSE;
   }
 
   override trigger(triggerData: TriggerData): void {
@@ -30,7 +35,7 @@ export class OnBombExplodeAction extends Action {
  * POST_BOMB_EXPLOSION callback.
  */
 export function triggerOnBombExplodeActions(bomb: EntityBomb): void {
-  const entity = bomb.Parent;
+  const entity = bomb.SpawnerEntity;
   // Check if the bomb is from a player.
   if (entity === undefined) {
     return;

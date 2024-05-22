@@ -11,6 +11,10 @@ export function deepPrint(arg: unknown): void {
 }
 
 function buildString(arg: unknown, indent = ""): string {
+  // If it's a string, return it as is.
+  if (typeof arg === "string") {
+    return `${indent}${arg}`;
+  }
   if (arg instanceof Map) {
     let result = `${indent}Map:\n`;
     for (const [key, value] of arg) {

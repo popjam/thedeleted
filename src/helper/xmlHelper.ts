@@ -1,8 +1,7 @@
 /** Functions related to Repentogon's XMLData class. */
 
 import type { EntityID } from "isaacscript-common";
-import { XMLNode } from "../temporary/XMLNode";
-import type { EntityType } from "isaac-typescript-definitions";
+import { XMLNode } from "isaac-typescript-definitions-repentogon";
 
 export function getEntityIDFromEntities2XMLDataEntry(
   entry: Entities2XMLData,

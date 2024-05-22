@@ -2,10 +2,9 @@ import { CacheFlag, HeartSubType } from "isaac-typescript-definitions";
 import { CharacterType } from "../../enums/general/CharacterType";
 import { CollectibleTypeCustom } from "../../enums/general/CollectibleTypeCustom";
 import { DeletedColor } from "../../enums/general/DeletedColor";
-import { ModeData } from "../../interfaces/modes/ModeData";
+import type { ModeData } from "../../interfaces/modes/ModeData";
 
-/** Information about MORRIS. */
-// eslint-disable-next-line isaacscript/require-capital-const-assertions
+/** Information about ZIP BOMBER. */
 export const ZIPBOMBERData: ModeData = {
   description: "This is ZIP BOMBER's description",
   birthright: "This is ZIP BOMBER's birthright description",

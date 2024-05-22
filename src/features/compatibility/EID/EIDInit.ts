@@ -29,12 +29,15 @@ function initEIDItems(EID: EIDInterface) {
 }
 
 function initEIDColors(EID: EIDInterface) {
-  getEnumValues(EIDColorShortcut).forEach((shortcut) => {
+  for (const shortcut of getEnumValues(EIDColorShortcut)) {
     const KColor = getKColorFromEIDColorShortcut(shortcut);
+    if (KColor === undefined) {
+      continue;
+    }
     if (typeof KColor === "function") {
       EID.addColor(shortcut, KColorDefault, KColor);
     } else {
       EID.addColor(shortcut, KColor);
     }
-  });
+  }
 }

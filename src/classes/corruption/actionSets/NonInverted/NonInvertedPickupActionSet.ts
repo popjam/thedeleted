@@ -4,6 +4,7 @@ import { ActionSetType } from "../../../../enums/corruption/actionSets/ActionSet
 import { _addActionsToTracker } from "../../../../features/corruption/effects/playerEffects";
 import {
   getGenericEntityEIDDescriptionObject,
+  isEIDActive,
   setSpecificEntityEIDDescriptionObject,
 } from "../../../../helper/compatibility/EID/EIDHelper";
 import { legibleString } from "../../../../helper/stringHelper";
@@ -58,7 +59,7 @@ export class NonInvertedPickupActionSet extends ActionSet {
     // Update the Description and Name.
     const genericDesc =
       getGenericEntityEIDDescriptionObject(pickup)?.Description ?? "";
-    const desc = legibleString(this.getText());
+    const desc = legibleString(this.getText(isEIDActive()));
     const newDesc = `${genericDesc} ${desc}`;
     const genericName = getGenericEntityEIDDescriptionObject(pickup)?.Name;
 

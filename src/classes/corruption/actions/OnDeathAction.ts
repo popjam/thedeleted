@@ -9,10 +9,13 @@ const ACTION_TYPE = ActionType.ON_DEATH;
 /** Triggers every time the player dies. */
 export class OnDeathAction extends Action {
   override actionType = ACTION_TYPE;
-  override actFr = ON_DEATH_ACTION_FREQUENCY;
 
-  protected override getTriggerClause(): string {
-    return "you die";
+  override getIdealSeverity(): number {
+    return super.getIdealSeverity(ON_DEATH_ACTION_FREQUENCY);
+  }
+
+  protected override getTriggerClause(plural: boolean, _eid: boolean): string {
+    return plural ? "deaths" : "death";
   }
 
   override trigger(triggerData: TriggerData): void {

@@ -11,6 +11,8 @@ import {
   DEFAULT_ACTION_WEIGHTS,
   DEFAULT_INVERTED_ACTIVE_GENERATION_PERCENTAGE,
   DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
+  DEFAULT_INVERTED_ITEM_CHANCE_FOR_ONLY_RESPONSE,
+  DEFAULT_INVERTED_ITEM_CHANCE_FOR_POSITIVE_EFFECTS,
   DEFAULT_RESPONSE_WEIGHTS,
   INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD,
 } from "../../constants/corruptionConstants";
@@ -22,6 +24,12 @@ import { fprint } from "../printHelper";
 import { getRandomInteger } from "../randomHelper";
 import { generateActionFromActionType } from "../../maps/corruption/actions/actionTypeToActionInitMap";
 import { generateResponseFromResponseType } from "../../maps/corruption/responses/responseTypeToResponseInitMap";
+import {
+  DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+  DEFAULT_POSITIVE_MISMATCH_BUFFER,
+} from "../../constants/severityConstants";
+import type { Action } from "../../classes/corruption/actions/Action";
+import type { Response } from "../../classes/corruption/responses/Response";
 
 /**
  * Generates a CustomCollectibleSprite from the provided ActionSet. If 'Advanced Icons' setting is
@@ -78,6 +86,12 @@ export function generateDefaultInvertedItemActionSet(
     .setName(`GENERIC ${active ? "ACTIVE" : "PASSIVE"}`)
     .setDescription("GENERIC DESCRIPTION");
 
+  fprint(
+    `Generated ${active ? "Active" : "Passive"} ActionSet with ${
+      actionSet.getEffects().length
+    } effects.`,
+  );
+
   return actionSet;
 }
 
@@ -101,29 +115,15 @@ export function generateDefaultInvertedActiveActionSet(
       DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
       undefined,
     );
+  const actionSet = new InvertedActiveActionSet();
 
+  // Add effects.
   for (let i = 0; i < amountOfEffects; i++) {
-    const actionWeightings = inputs.actionWeightings ?? DEFAULT_ACTION_WEIGHTS;
-
-    const action = generateActionFromActionType(
-      getRandomFromWeightedArray(actionWeightings, undefined),
-    );
-    action.shuffle();
-
-    const response = generateResponseFromResponseType(
-      getRandomFromWeightedArray(DEFAULT_RESPONSE_WEIGHTS, undefined),
-    );
-    response.shuffle();
-
-    const idealSeverity = action.getIdealSeverity();
-    const severity = response.getSeverity();
-
-    // Work out how much we need to adjust the responses' severity by. This should be the absolute
-    // value.
-    const severityDifference = idealSeverity - Math.abs(severity);
+    const action = generateDefaultEffect(inputs);
+    actionSet.addEffects(action);
   }
 
-  return new InvertedActiveActionSet();
+  return actionSet;
 }
 
 /**
@@ -133,8 +133,6 @@ export function generateDefaultInvertedActiveActionSet(
 export function generateDefaultInvertedPassiveActionSet(
   inputs: ActionSetBuilderInput = {},
 ): InvertedPassiveActionSet {
-  fprint(`defaultInvertedPassiveActionSetBuilder. inputs: (${inputs})`);
-
   /** Generation variables. */
   const amountOfEffects =
     inputs.numberOfEffects ??
@@ -143,20 +141,59 @@ export function generateDefaultInvertedPassiveActionSet(
       undefined,
     );
 
-  /** Get Action/Response pair. */
-  const action = generateActionFromActionType(
-    getRandomFromWeightedArray(DEFAULT_ACTION_WEIGHTS, undefined),
+  const actionSet = new InvertedPassiveActionSet();
+
+  // Add effects.
+  for (let i = 0; i < amountOfEffects; i++) {
+    const action = generateDefaultEffect(inputs);
+    actionSet.addEffects(action);
+  }
+
+  return actionSet;
+}
+
+/** Generates a default adjusted Action (with Response) or Response. */
+export function generateDefaultEffect(
+  inputs: ActionSetBuilderInput = {},
+): Action | Response {
+  const isPositive = rollPercentage(
+    inputs.chanceOfPositiveEffect ??
+      DEFAULT_INVERTED_ITEM_CHANCE_FOR_POSITIVE_EFFECTS,
   );
+  const actionWeightings = inputs.actionWeightings ?? DEFAULT_ACTION_WEIGHTS;
+  const responseWeightings = isPositive
+    ? inputs.positiveResponseWeightings ?? DEFAULT_RESPONSE_WEIGHTS
+    : inputs.negativeResponseWeightings ?? DEFAULT_RESPONSE_WEIGHTS;
+  const positiveMismatchBuffer =
+    inputs.positiveMismatchBuffer ?? DEFAULT_POSITIVE_MISMATCH_BUFFER;
+  const negativeMismatchBuffer =
+    inputs.negativeMismatchBuffer ?? DEFAULT_NEGATIVE_MISMATCH_BUFFER;
+  const isOnlyResponse = rollPercentage(
+    inputs.chanceForResponse ?? DEFAULT_INVERTED_ITEM_CHANCE_FOR_ONLY_RESPONSE,
+  );
+  const shouldAdjustSeverity = inputs.shouldAdjustSeverity ?? true;
+
   const response = generateResponseFromResponseType(
-    getRandomFromWeightedArray(DEFAULT_RESPONSE_WEIGHTS, undefined),
+    getRandomFromWeightedArray(responseWeightings, undefined),
   );
+  response.shuffle();
 
-  const idealSeverity = action.getIdealSeverity();
-  const severity = response.getSeverity();
+  if (!isOnlyResponse) {
+    const action = generateActionFromActionType(
+      getRandomFromWeightedArray(actionWeightings, undefined),
+    );
+    action.shuffle();
 
-  // Work out how much we need to adjust the responses' severity by. This should be the absolute
-  // value.
-  const severityDifference = idealSeverity - Math.abs(severity);
+    // Add the response to the action.
+    action.setResponse(response);
 
-  return new InvertedPassiveActionSet();
+    // Adjust the severity of the response.
+    if (shouldAdjustSeverity) {
+      action.adjustResponse(positiveMismatchBuffer, negativeMismatchBuffer);
+    }
+
+    return action;
+  }
+
+  return response;
 }

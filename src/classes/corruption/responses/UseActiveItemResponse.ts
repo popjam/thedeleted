@@ -1,5 +1,5 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
-import { arrayToBitFlags, getCollectibleName } from "isaacscript-common";
+import { arrayToBitFlags } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
@@ -15,18 +15,19 @@ import { fprint } from "../../../helper/printHelper";
 import { USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY } from "../../../constants/corruptionConstants";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 
-const EMPTY_COLLECTIBLE_TEXT = "nothing";
+const EMPTY_COLLECTIBLE_TEXT = "a random active item";
 const VERB = "use";
 const VERB_PARTICIPLE = "using";
 
 /**
  * Response which uses Active items. The 'activeItem' field can either be a CollectibleType of the
- * active item, or a 'ActiveCollectibleAttribute' object. Every time the Response triggers, if using
- * the object, a random active item following the properties described in the
- * 'ActiveCollectibleAttribute' object will be used.
+ * active item, a 'ActiveCollectibleAttribute' object, or undefined for any Active. Every time the
+ * Response triggers, if using the object, a random active item following the properties described
+ * in the 'ActiveCollectibleAttribute' object will be used.
  *
  * @example Use The Poop.
  * @example Use a quality 4 active item.
+ * @example Use a random active item.
  */
 export class UseActiveItemResponse extends Response {
   override responseType: ResponseType = ResponseType.USE_ACTIVE_ITEM;
@@ -63,11 +64,12 @@ export class UseActiveItemResponse extends Response {
 
   /**
    * Calculates the ActiveItem to use upon triggering the Response, taking into account the
-   * different types of 'activeItem'.
+   * different types of 'activeItem'. Will return undefined if it can not find an Active for the
+   * given ActiveCollectibleAttribute.
    */
   calculateActiveItem(): CollectibleType | undefined {
     const activeItem = this.getActiveItem();
-    if (typeof activeItem === "object") {
+    if (typeof activeItem === "object" || activeItem === undefined) {
       return getRandomCollectibleType(activeItem);
     }
     return activeItem;
@@ -75,7 +77,7 @@ export class UseActiveItemResponse extends Response {
 
   /**
    * The active item to use. Can be a specific active item or randomly from a group of active items
-   * (defined by ActiveCollectibleAttribute).
+   * (defined by ActiveCollectibleAttribute), or undefined (a random active).
    */
   getActiveItem(): CollectibleType | ActiveCollectibleAttribute | undefined {
     return this.aT;
@@ -85,7 +87,9 @@ export class UseActiveItemResponse extends Response {
    * The active item to use. Can be a specific active item or randomly from a group of active items
    * (defined by ActiveCollectibleAttribute).
    */
-  setActiveItem(activeItem: CollectibleType): this {
+  setActiveItem(
+    activeItem: CollectibleType | ActiveCollectibleAttribute | undefined,
+  ): this {
     this.aT = activeItem;
     return this;
   }
@@ -126,7 +130,8 @@ export class UseActiveItemResponse extends Response {
    * @example "use a random 3 charge active item 4 times"
    */
   override getNoun(eid: boolean): string {
-    const activeItemText = this.getActiveItemText(eid);
+    const plural = this.isMultiple();
+    const activeItemText = this.getActiveItemText(eid, plural);
     const amountText = this.getAmountOfActivationsText();
 
     return `${activeItemText} ${amountText}`;
@@ -142,24 +147,23 @@ export class UseActiveItemResponse extends Response {
     return triggerData.spawnPosition;
   }
 
-  getActiveItemText(eid: boolean): string {
+  getActiveItemText(eid: boolean, plural: boolean): string {
     const activeItem = this.getActiveItem();
     if (typeof activeItem === "object") {
-      return collectibleAttributeToText(activeItem);
+      return collectibleAttributeToText(activeItem, plural);
     }
     if (activeItem === undefined) {
       return EMPTY_COLLECTIBLE_TEXT;
     }
-    return eid
-      ? getCollectibleNameWithEIDSetting(activeItem)
-      : getCollectibleName(activeItem);
+    return getCollectibleNameWithEIDSetting(activeItem, false, eid);
   }
 
   override getText(eid: boolean, participle: boolean): string {
     const noun = this.getNoun(eid);
     const verb = this.getVerb(participle);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   /** Array may be empty. */

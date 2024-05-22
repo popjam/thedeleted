@@ -175,8 +175,9 @@ export class RemoveEntityResponse extends Response {
   getText(eid: boolean, participle: boolean): string {
     const noun = this.getNoun(eid);
     const verb = this.getVerb(participle);
+    const chanceToActivate = this.getChanceToActivateText(participle);
 
-    return `${verb} ${noun}`;
+    return `${chanceToActivate} ${verb} ${noun}`;
   }
 
   getEntitiesToRemove(): Entity[] {

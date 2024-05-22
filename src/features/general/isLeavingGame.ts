@@ -3,6 +3,7 @@ import { mod } from "../../mod";
 const v = {
   room: {
     isLeaving: false,
+    shouldSave: false,
   },
 };
 
@@ -20,6 +21,15 @@ export function isLeavingGame(): boolean {
   return v.room.isLeaving;
 }
 
-export function isLeavingGamePreGameExitEarly(_shouldSave: boolean): void {
+/**
+ * Returns true if the player is in the process of leaving the game (after PRE_GAME_EXIT) and the
+ * game should be saved.
+ */
+export function isTemporarilyLeavingGame(): boolean {
+  return v.room.isLeaving && v.room.shouldSave;
+}
+
+export function isLeavingGamePreGameExitEarly(shouldSave: boolean): void {
   v.room.isLeaving = true;
+  v.room.shouldSave = shouldSave;
 }

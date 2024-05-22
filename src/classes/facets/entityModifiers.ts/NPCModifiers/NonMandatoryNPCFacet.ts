@@ -1,20 +1,16 @@
 import { ModCallback } from "isaac-typescript-definitions";
-import {
-  Callback,
-  CallbackCustom,
-  ModCallbackCustom,
-  game,
-  getNPCs,
-  getTSTLClassName,
-} from "isaacscript-common";
+import { Callback, getNPCs } from "isaacscript-common";
 import {
   getNPCFamily,
-  getNPCLineage,
   isEntityNPC,
 } from "../../../../helper/entityHelper/npcHelper";
 import { fprint } from "../../../../helper/printHelper";
 import { clearRoom } from "../../../../helper/roomHelper";
 import { Facet, initGenericFacet } from "../../../Facet";
+import {
+  getEntityIDFromEntity,
+  getEntityNameFromEntityID,
+} from "../../../../helper/entityHelper/entityIDHelper";
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
@@ -28,26 +24,8 @@ class NonMandatoryNPCFacet extends Facet {
   // TODO: Does this still always run?
   @Callback(ModCallback.POST_UPDATE)
   postNPCUpdate() {
-    if (game.GetRoom().IsClear()) {
-      return;
-    }
-
-    // Room is not clear, check if any mandatory NPCs are still alive.
-    const thereAreMandatoryNPCs = getNPCs().some((npc) => {
-      if (v.level.nonMandatoryNPC.has(GetPtrHash(npc))) {
-        return false;
-      }
-
-      // We found a mandatory NPC.
-      return true;
-    });
-
-    if (thereAreMandatoryNPCs) {
-      return;
-    }
-
-    // There are no mandatory NPCs, so we can open the doors and clear room.
-    clearRoom();
+    fprint("NonMandatoryNPCFacet postNPCUpdate");
+    clearRoomIfNoMandatoryNPCs();
   }
 
   @Callback(ModCallback.POST_ENTITY_REMOVE)
@@ -129,4 +107,25 @@ export function isNPCNonMandatory(npc: EntityNPC): boolean {
 
 export function getNonMandatoryNPCFacetSubscriberCount(): number {
   return FACET?.getSubscriberCount() ?? -1;
+}
+
+function clearRoomIfNoMandatoryNPCs() {
+  const thereAreMandatoryNPCs = getNPCs().some((npc) => {
+    if (v.level.nonMandatoryNPC.has(GetPtrHash(npc))) {
+      return false;
+    }
+
+    // We found a mandatory NPC.
+    const npcID = getEntityIDFromEntity(npc);
+    fprint(`Found mandatory NPC: ${getEntityNameFromEntityID(npcID)}`);
+    return true;
+  });
+
+  if (thereAreMandatoryNPCs) {
+    return;
+  }
+
+  // There are no mandatory NPCs, so we can open the doors and clear room.
+  fprint("No mandatory NPCs found, clearing room.");
+  clearRoom();
 }

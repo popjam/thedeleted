@@ -311,10 +311,6 @@ export function getAllEntitiesWithCategory(
     case EntityCategory.TEAR: {
       return getTears();
     }
-
-    default: {
-      return [];
-    }
   }
 }
 
