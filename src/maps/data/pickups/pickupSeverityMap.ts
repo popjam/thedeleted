@@ -78,6 +78,11 @@ const PICKUP_TYPE_SEVERITY_MAP = new ReadonlyMap<PickupType, number>([
   [PickupType.SOUL, SOUL_SEVERITY],
   [PickupType.TRINKET, TRINKET_SEVERITY],
   [PickupType.MISCELLANEOUS, MISCELLANEOUS_PICKUP_SEVERITY],
+  [PickupType.BATTERY, BATTERY_SEVERITY],
+  [PickupType.SACK, CHEST_SEVERITY],
+  [PickupType.RUNE, CARD_SEVERITY],
+  [PickupType.COLLECTIBLE, QUALITY_2_ITEM_SEVERITY],
+  [PickupType.SHOP_ITEM, SHOP_ITEM_QUALITY],
 ]);
 
 const PILL_EFFECT_SEVERITY_MAP = new ReadonlyMap<PillEffect, number>([

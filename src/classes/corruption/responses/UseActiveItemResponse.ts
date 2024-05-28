@@ -1,9 +1,12 @@
+import { ItemType } from "isaac-typescript-definitions";
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { arrayToBitFlags } from "isaacscript-common";
 import { Morality } from "../../../enums/corruption/Morality";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import {
   collectibleAttributeToText,
+  generateRandomActiveCollectibleAttribute,
+  getCollectibleSeverity,
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
@@ -12,8 +15,14 @@ import type { TriggerData } from "../../../interfaces/corruption/actions/Trigger
 import type { ActiveCollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
 import { Response } from "./Response";
 import { fprint } from "../../../helper/printHelper";
-import { USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY } from "../../../constants/corruptionConstants";
+import {
+  USE_ACTIVE_CHANCE_FOR_ATTRIBUTE_ACTIVE,
+  USE_ACTIVE_CHANCE_FOR_SPECIFIC_OR_ATTRIBUTE_ACTIVE,
+  USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY,
+} from "../../../constants/corruptionConstants";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
+import { rollPercentage } from "../../../types/general/Percentage";
+import { QUALITY_2_ITEM_SEVERITY } from "../../../constants/severityConstants";
 
 const EMPTY_COLLECTIBLE_TEXT = "a random active item";
 const VERB = "use";
@@ -48,6 +57,40 @@ export class UseActiveItemResponse extends Response {
     }
     this.aT = activeItem;
     return this;
+  }
+
+  override shuffle(): this {
+    if (rollPercentage(USE_ACTIVE_CHANCE_FOR_SPECIFIC_OR_ATTRIBUTE_ACTIVE)) {
+      if (rollPercentage(USE_ACTIVE_CHANCE_FOR_ATTRIBUTE_ACTIVE)) {
+        const randomActiveAttribute =
+          generateRandomActiveCollectibleAttribute();
+        this.setActiveItem(randomActiveAttribute);
+      } else {
+        const randomActive = getRandomCollectibleType({
+          itemType: ItemType.ACTIVE,
+        });
+        this.setActiveItem(randomActive);
+      }
+    }
+
+    return super.shuffle();
+  }
+
+  override getSeverity(): number {
+    const activeItem = this.getActiveItem();
+
+    // If it's a specific active item, return the severity of the item's quality.
+    if (typeof activeItem === "number") {
+      const severity = getCollectibleSeverity(activeItem);
+      return super.getSeverity(severity);
+    }
+
+    // If it's an ActiveCollectibleAttribute, return the severity of the attribute.
+    if (typeof activeItem === "object") {
+      return super.getSeverity(QUALITY_2_ITEM_SEVERITY);
+    }
+
+    return super.getSeverity(QUALITY_2_ITEM_SEVERITY);
   }
 
   /** Get collectibles mentioned. */

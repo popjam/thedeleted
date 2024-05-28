@@ -1,4 +1,7 @@
-import { CollectibleType } from "isaac-typescript-definitions";
+import {
+  CollectibleType,
+  ItemConfigChargeType,
+} from "isaac-typescript-definitions";
 import {
   getRandomFromWeightedArray,
   getRandomSeed,
@@ -13,7 +16,7 @@ import {
   DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
   DEFAULT_INVERTED_ITEM_CHANCE_FOR_ONLY_RESPONSE,
   DEFAULT_INVERTED_ITEM_CHANCE_FOR_POSITIVE_EFFECTS,
-  DEFAULT_RESPONSE_WEIGHTS,
+  DEFAULT_POSITIVE_RESPONSE_WEIGHTS,
   INVERTED_COLLECTIBLE_CUSTOM_SPRITE_SEGMENT_AMOUNT_SPREAD,
 } from "../../constants/corruptionConstants";
 import type { ActionSetBuilderInput } from "../../interfaces/corruption/actionSets/ActionSetBuilderInput";
@@ -24,12 +27,12 @@ import { fprint } from "../printHelper";
 import { getRandomInteger } from "../randomHelper";
 import { generateActionFromActionType } from "../../maps/corruption/actions/actionTypeToActionInitMap";
 import { generateResponseFromResponseType } from "../../maps/corruption/responses/responseTypeToResponseInitMap";
-import {
-  DEFAULT_NEGATIVE_MISMATCH_BUFFER,
-  DEFAULT_POSITIVE_MISMATCH_BUFFER,
-} from "../../constants/severityConstants";
 import type { Action } from "../../classes/corruption/actions/Action";
 import type { Response } from "../../classes/corruption/responses/Response";
+import {
+  ON_ROOM_BASE_SEVERITY,
+  QUALITY_2_ITEM_SEVERITY,
+} from "../../constants/severityConstants";
 
 /**
  * Generates a CustomCollectibleSprite from the provided ActionSet. If 'Advanced Icons' setting is
@@ -116,6 +119,11 @@ export function generateDefaultInvertedActiveActionSet(
       undefined,
     );
   const actionSet = new InvertedActiveActionSet();
+  inputs.isActive = true;
+  inputs.chargeType ??= ItemConfigChargeType.NORMAL;
+  inputs.numberOfCharges ??= getRandomInteger(1, 12);
+
+  // Set the charges.
 
   // Add effects.
   for (let i = 0; i < amountOfEffects; i++) {
@@ -134,17 +142,16 @@ export function generateDefaultInvertedPassiveActionSet(
   inputs: ActionSetBuilderInput = {},
 ): InvertedPassiveActionSet {
   /** Generation variables. */
-  const amountOfEffects =
-    inputs.numberOfEffects ??
-    getRandomFromWeightedArray(
-      DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
-      undefined,
-    );
+  inputs.numberOfEffects ??= getRandomFromWeightedArray(
+    DEFAULT_INVERTED_ITEM_AMOUNT_OF_EFFECTS_WEIGHTS,
+    undefined,
+  );
 
   const actionSet = new InvertedPassiveActionSet();
+  inputs.isActive = false;
 
   // Add effects.
-  for (let i = 0; i < amountOfEffects; i++) {
+  for (let i = 0; i < inputs.numberOfEffects; i++) {
     const action = generateDefaultEffect(inputs);
     actionSet.addEffects(action);
   }
@@ -162,16 +169,13 @@ export function generateDefaultEffect(
   );
   const actionWeightings = inputs.actionWeightings ?? DEFAULT_ACTION_WEIGHTS;
   const responseWeightings = isPositive
-    ? inputs.positiveResponseWeightings ?? DEFAULT_RESPONSE_WEIGHTS
-    : inputs.negativeResponseWeightings ?? DEFAULT_RESPONSE_WEIGHTS;
-  const positiveMismatchBuffer =
-    inputs.positiveMismatchBuffer ?? DEFAULT_POSITIVE_MISMATCH_BUFFER;
-  const negativeMismatchBuffer =
-    inputs.negativeMismatchBuffer ?? DEFAULT_NEGATIVE_MISMATCH_BUFFER;
+    ? inputs.positiveResponseWeightings ?? DEFAULT_POSITIVE_RESPONSE_WEIGHTS
+    : inputs.negativeResponseWeightings ?? DEFAULT_POSITIVE_RESPONSE_WEIGHTS;
   const isOnlyResponse = rollPercentage(
     inputs.chanceForResponse ?? DEFAULT_INVERTED_ITEM_CHANCE_FOR_ONLY_RESPONSE,
   );
   const shouldAdjustSeverity = inputs.shouldAdjustSeverity ?? true;
+  const isActive = inputs.isActive ?? false;
 
   const response = generateResponseFromResponseType(
     getRandomFromWeightedArray(responseWeightings, undefined),
@@ -189,10 +193,19 @@ export function generateDefaultEffect(
 
     // Adjust the severity of the response.
     if (shouldAdjustSeverity) {
-      action.adjustResponse(positiveMismatchBuffer, negativeMismatchBuffer);
+      action.adjustResponse();
     }
 
     return action;
+  }
+
+  // Adjust the severity of the response.
+  if (shouldAdjustSeverity) {
+    const idealSeverity = isActive
+      ? (ON_ROOM_BASE_SEVERITY * (inputs.numberOfCharges ?? 4)) /
+        (inputs.numberOfEffects ?? 4)
+      : QUALITY_2_ITEM_SEVERITY / (inputs.numberOfEffects ?? 4);
+    response.adjustSeverity(idealSeverity);
   }
 
   return response;

@@ -17,10 +17,6 @@ import type { Response } from "../responses/Response";
 import { arrayEquals } from "isaacscript-common";
 import { rollPercentage } from "../../../types/general/Percentage";
 import {
-  DEFAULT_NEGATIVE_MISMATCH_BUFFER,
-  DEFAULT_POSITIVE_MISMATCH_BUFFER,
-} from "../../../constants/severityConstants";
-import {
   SHUFFLE_ACTION_CHANCE_FOR_FIRE_AFTER_THEN_REMOVE,
   SHUFFLE_ACTION_CHANCE_FOR_INTERVAL,
   SHUFFLE_ACTION_INTERVAL_CHANCE_FOR_RANGE,
@@ -113,28 +109,15 @@ export abstract class Action {
    * negative buffer mismatch values to adjust the 'range' that the response can be mismatched to
    * the ideal severity.
    *
-   * @param positiveBufferMismatch The positive buffer mismatch value. Defaults to
-   *                               DEFAULT_POSITIVE_MISMATCH_BUFFER. The greater this is, the weaker
-   *                               the effect will be.
-   * @param negativeBufferMismatch The negative buffer mismatch value. Defaults to
-   *                               DEFAULT_NEGATIVE_MISMATCH_BUFFER. The greater this is, the
-   *                               stronger the effect will be.
    * @returns The severity mismatch.
    */
-  adjustResponse(
-    positiveBufferMismatch = DEFAULT_POSITIVE_MISMATCH_BUFFER,
-    negativeBufferMismatch = DEFAULT_NEGATIVE_MISMATCH_BUFFER,
-  ): number {
+  adjustResponse(): number {
     const response = this.getResponse();
     if (response === undefined) {
       return 0;
     }
 
-    return response.adjustSeverity(
-      this.getIdealSeverity(),
-      positiveBufferMismatch,
-      negativeBufferMismatch,
-    );
+    return response.adjustSeverity(this.getIdealSeverity());
   }
 
   /**

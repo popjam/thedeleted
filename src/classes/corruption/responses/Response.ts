@@ -19,7 +19,12 @@ import {
 import {
   DEFAULT_NEGATIVE_MISMATCH_BUFFER,
   DEFAULT_POSITIVE_MISMATCH_BUFFER,
+  QUALITY_2_ITEM_SEVERITY,
 } from "../../../constants/severityConstants";
+import {
+  SHUFFLE_RESPONSE_CHANCE_FOR_CHANCE_TO_FIRE,
+  SHUFFLE_RESPONSE_CHANCE_FOR_MULTIPLE_ACTIVATIONS,
+} from "../../../constants/corruptionConstants";
 
 const DEFAULT_PERCENTAGE_CHANCE_TO_ACTIVATE = 100;
 const DEFAULT_AMOUNT_OF_ACTIVATIONS = 1;
@@ -89,45 +94,39 @@ export abstract class Response {
    * Response will have its chance to activate increased.
    *
    * @param idealSeverity The severity you want to adjust the Response to.
-   * @param positiveMismatchBuffer The buffer for a positive mismatch, in which the ideal severity
-   *                               is higher than the current severity. The default is 5.
-   * @param negativeMismatchBuffer The buffer for a negative mismatch, in which the ideal severity
-   *                               is lower than the current severity. The default is 5.
+   * @param randomize If ideal severity > current severity, then the ideal severity can be any value
+   *                  from actual ideal severity to current severity. If ideal severity < current
+   *                  severity. For example, if the ideal severity is ON_FLOOR (100) and the current
+   *                  severity is ON_ROOM (5), the ideal severity can be any value from 5 to 100,
+   *                  meaning the Response amount of activations will be anywhere from 1 to 20.
    * @returns The mismatch between the ideal severity and the current severity (after adjustments).
    *          For example, if the ideal severity is 10 and the current severity is 5, the mismatch
    *          will be 5. If the ideal severity is 5 and the current severity is 10, the mismatch
    *          will be -5. In general, you want a positive mismatch over a negative one, as a
    *          negative mismatch means the Response is too severe (positively or negatively).
-   *
-   * If ideal severity > current severity, then the ideal severity can be any value from actual
-   * ideal severity to current severity. If ideal severity < current severity. For example, if the
-   * ideal severity is ON_FLOOR (100) and the current severity is ON_ROOM (5), the ideal severity
-   * can be any value from 5 to 100, meaning the Response amount of activations will be anywhere
-   * from 1 to 20.
    */
   adjustSeverity(
-    idealSeverity: number,
-    positiveMismatchBuffer = DEFAULT_POSITIVE_MISMATCH_BUFFER,
-    negativeMismatchBuffer = DEFAULT_NEGATIVE_MISMATCH_BUFFER,
+    idealSeverity = QUALITY_2_ITEM_SEVERITY * 4,
+    randomize = true,
   ): number {
     const currentSeverity = this.getAbsoluteSeverity();
     const currentAmountOfActivations = this.getAmountOfActivationsAverage();
     const currentChanceToActivate = this.getChanceToActivate();
     const currentMismatch = idealSeverity - currentSeverity;
 
-    // If the severity is within the buffer, don't adjust it.
-    if (
-      (currentMismatch <= positiveMismatchBuffer &&
-        currentMismatch >= -negativeMismatchBuffer) ||
-      currentSeverity === 0 ||
-      idealSeverity === 0
-    ) {
+    if (currentSeverity === 0 || idealSeverity === 0) {
       return currentMismatch;
     }
 
     // If the ideal severity is higher than the current severity, increase the amount of
     // activations.
     if (idealSeverity > currentSeverity) {
+      // If randomize is true, the ideal severity can be any value from actual ideal severity to
+      // current severity.
+      if (randomize) {
+        idealSeverity = randomInRange([currentSeverity, idealSeverity]);
+      }
+
       const newAmountOfActivations = Math.floor(
         (idealSeverity / currentSeverity) * currentAmountOfActivations,
       );
@@ -138,9 +137,8 @@ export abstract class Response {
     // If the ideal severity is lower than the current severity, increase the chance to activate.
     // For example, if the ideal severity is 5 and the current severity is 10, the chance to
     // activate will be 50%.
-    const newChanceToActivate = Math.floor(
-      (idealSeverity / currentSeverity) * currentChanceToActivate,
-    );
+    const newChanceToActivate =
+      (idealSeverity / currentSeverity) * currentChanceToActivate;
     this.setChanceToActivate(newChanceToActivate);
     return this.getSeverityMismatch(idealSeverity);
   }
@@ -258,13 +256,21 @@ export abstract class Response {
     return this;
   }
 
+  // Override the calculated Morality.
   setMorality(morality: Morality): this {
     this.mo = morality;
     return this;
   }
 
+  // Morality is positive if the Response has a positive severity, and negative if the Response has
+  // a negative severity.
   getMorality(): Morality {
-    return this.mo ?? DEFAULT_MORALITY;
+    const severity = this.getSeverity();
+    if (severity === 0) {
+      return DEFAULT_MORALITY;
+    }
+
+    return severity > 0 ? Morality.POSITIVE : Morality.NEGATIVE;
   }
 
   /** Returns true if the 'amountOfActivations' is either more than 1, or a Range. */
@@ -279,6 +285,11 @@ export abstract class Response {
    * @example "50% chance to spawn a spider" --> 50 chanceToActivate.
    */
   setChanceToActivate(percentage: Percentage): this {
+    // Round to 2 decimal places if it is under 1% or over 99%.
+    percentage =
+      percentage < 1 || percentage > 99
+        ? Math.round(percentage * 100) / 100
+        : Math.round(percentage);
     this.cta = createPercentage(percentage);
     return this;
   }
@@ -313,6 +324,14 @@ export abstract class Response {
    * are used to adjust the severity of the Response.
    */
   shuffle(): this {
+    if (rollPercentage(SHUFFLE_RESPONSE_CHANCE_FOR_CHANCE_TO_FIRE)) {
+      this.setChanceToActivate(randomInRange([0, 100]));
+    }
+
+    if (rollPercentage(SHUFFLE_RESPONSE_CHANCE_FOR_MULTIPLE_ACTIVATIONS)) {
+      this.setAmountOfActivations(randomInRange([1, 10]));
+    }
+
     return this;
   }
 

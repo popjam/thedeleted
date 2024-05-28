@@ -6,7 +6,11 @@ import type { PickupID } from "../../../enums/data/ID/PickupID";
 import type { EntityIDTypeUnion } from "../../../types/data/IDTypes";
 import type { PickupType } from "../../../enums/general/PickupType";
 import type { ModID } from "../../../types/compatibility/ModName";
-import type { SoundEffect } from "isaac-typescript-definitions";
+import type {
+  CollectibleType,
+  ItemPoolType,
+  SoundEffect,
+} from "isaac-typescript-definitions";
 
 /**
  * This feature is responsible for generating sets filled with EntityIDs for easy access (e.g for
@@ -57,6 +61,16 @@ const v = {
     soundIDToNameMap: new DefaultMap<SoundEffect, string>(
       "generic sound effect",
     ),
+
+    // Item Pools.
+    itemPoolTypeCollectibleTypeMap: new DefaultMap<
+      ItemPoolType,
+      Set<CollectibleType>
+    >(() => new Set<CollectibleType>()),
+    collectibleTypeToItemPoolTypesMap: new DefaultMap<
+      CollectibleType,
+      Set<ItemPoolType>
+    >(() => new Set<ItemPoolType>()),
   },
 };
 
@@ -269,4 +283,46 @@ export function _getSoundEffectIDToNameMapEditable(): DefaultMap<
   string
 > {
   return v.run.soundIDToNameMap;
+}
+
+/**
+ * Retrieves the collectibles from the item pool type.
+ *
+ * @param itemPoolType The item pool type.
+ * @returns A readonly set of collectible types.
+ */
+export function getCollectiblesFromItemPoolType(
+  itemPoolType: ItemPoolType,
+): ReadonlySet<CollectibleType> {
+  return v.run.itemPoolTypeCollectibleTypeMap.getAndSetDefault(itemPoolType);
+}
+
+export function _setCollectiblesSetForItemPoolType(
+  itemPoolType: ItemPoolType,
+  collectibles: Set<CollectibleType>,
+): void {
+  v.run.itemPoolTypeCollectibleTypeMap.set(itemPoolType, collectibles);
+}
+
+/**
+ * Retrieves the item pool types from the collectible type.
+ *
+ * @param collectibleType The collectible type.
+ * @returns A readonly set of item pool types.
+ */
+export function getCollectibleItemPoolTypes(
+  collectibleType: CollectibleType,
+): ReadonlySet<ItemPoolType> {
+  return v.run.collectibleTypeToItemPoolTypesMap.getAndSetDefault(
+    collectibleType,
+  );
+}
+
+export function _addItemPoolTypeToCollectibleType(
+  collectibleType: CollectibleType,
+  itemPoolType: ItemPoolType,
+): void {
+  v.run.collectibleTypeToItemPoolTypesMap
+    .getAndSetDefault(collectibleType)
+    .add(itemPoolType);
 }

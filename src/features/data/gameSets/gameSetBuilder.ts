@@ -4,6 +4,7 @@ import { EntityCategory } from "../../../enums/general/EntityCategory";
 import { getEntityCategoryFromEntityID } from "../../../helper/entityHelper/entityIDHelper";
 import { fprint } from "../../../helper/printHelper";
 import {
+  _addItemPoolTypeToCollectibleType,
   _getEntityIDSetEditable,
   _getEntityIDSetEditableFromCategory,
   _getMapOfCategoryToEntityIDSetFromMod,
@@ -18,6 +19,7 @@ import {
   _getPickupIDSetEditableOfPickupType,
   _getSoundEffectIDSetEditable,
   _getSoundEffectIDToNameMapEditable,
+  _setCollectiblesSetForItemPoolType,
   _setModNameForModID,
   getModSet,
 } from "./gameSets";
@@ -25,6 +27,7 @@ import { getPickupTypeFromPickupID } from "../../../helper/entityHelper/pickupID
 import type { PickupID } from "../../../enums/data/ID/PickupID";
 import { getEntityIDFromEntities2XMLDataEntry } from "../../../helper/xmlHelper";
 import type { ModID } from "../../../types/compatibility/ModName";
+import type { CollectibleType } from "isaac-typescript-definitions";
 import {
   EntityType,
   PickupVariant,
@@ -36,6 +39,8 @@ import type {
   ItemsXMLData,
   SoundsXMLData,
 } from "../../../interfaces/compatibility/RepentogonXMLData";
+import type { ItemPoolsXML } from "../../../interfaces/xml/itemPoolXML";
+import { itemPoolXMLNameToItemPoolType } from "../../../maps/data/name/itemPoolXMLNameToItemPoolTypeMap";
 
 // These entity IDs should not be added to the sets, as they represent all the entities of that
 // category.
@@ -69,6 +74,9 @@ export function populateGameSets(): void {
 
   // Add mods:
   populateModSets();
+
+  // Add item pools:
+  populateItemPoolSets();
 }
 
 function sourceIDToModID(sourceID: string): ModID | undefined {
@@ -120,7 +128,7 @@ function populateEntitySets() {
     }
 
     // Check if the entity is modded.
-    const modID = sourceIDToModID((entry as any).sourceid as string);
+    const modID = sourceIDToModID(entry.sourceid);
     const category = getEntityCategoryFromEntityID(entityID);
     const isPickup = category === EntityCategory.PICKUP;
 
@@ -160,7 +168,7 @@ function populateSoundSets() {
     const sfxName = entry.name;
     const sfxNameFixed = constantToNormalString(sfxName);
     const sfxID = Isaac.GetSoundIdByName(sfxName);
-    const modID = sourceIDToModID((entry as any).sourceid as string);
+    const modID = sourceIDToModID(entry.sourceid);
 
     // Add to sfx sets.
     _getSoundEffectIDSetEditable().add(sfxID);
@@ -194,7 +202,7 @@ function populateItemSets() {
 
     const entityID =
       `${EntityType.PICKUP}.${PickupVariant.COLLECTIBLE}.${id}` as EntityID;
-    const modID = sourceIDToModID((entry as any).sourceid as string);
+    const modID = sourceIDToModID(entry.sourceid);
     const category = EntityCategory.PICKUP;
 
     addEntityToSets(entityID, modID, category, true);
@@ -222,7 +230,7 @@ function populateTrinketSets() {
 
     const entityID =
       `${EntityType.PICKUP}.${PickupVariant.TRINKET}.${id}` as EntityID;
-    const modID = sourceIDToModID((entry as any).sourceid as string);
+    const modID = sourceIDToModID(entry.sourceid);
     const category = EntityCategory.PICKUP;
 
     addEntityToSets(entityID, modID, category, true);
@@ -279,6 +287,33 @@ function addEntityToSets(
       _getModdedPickupIDSetEditableOfPickupType(pickupType).add(
         entityID as PickupID,
       );
+    }
+  }
+}
+
+function populateItemPoolSets() {
+  const nodeType = XMLNode.ITEM_POOL;
+  const numEntries = XMLData.GetNumEntries(nodeType);
+
+  for (let i = 0; i < numEntries; i++) {
+    const entry = XMLData.GetEntryByOrder(nodeType, i) as
+      | ItemPoolsXML
+      | undefined;
+
+    if (entry === undefined) {
+      continue;
+    }
+
+    const itemPool = itemPoolXMLNameToItemPoolType(entry.name);
+    const collectibles = entry.item.map((item) => {
+      const itemIDString = item.id;
+      return Number.parseInt(itemIDString, 10) as CollectibleType;
+    });
+
+    _setCollectiblesSetForItemPoolType(itemPool, new Set(collectibles));
+
+    for (const collectible of collectibles) {
+      _addItemPoolTypeToCollectibleType(collectible, itemPool);
     }
   }
 }

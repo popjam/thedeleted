@@ -1,7 +1,6 @@
 import type { EntityType, NPCID } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
 import { copyColor, spawnEntityID } from "isaacscript-common";
-import { renderToWorldPosition, worldToRenderPosition } from "./renderHelper";
 
 /**
  * Copies a sprite into a new fresh sprite.
@@ -132,9 +131,12 @@ export function renderSprite(
  * layers, the largest dimensions will be returned.
  *
  * @param sprite The Sprite to get the dimensions of.
+ * @param accountForScale If true, the Sprite's Scale will be accounted for (default true). For
+ *                        example, if the Sprite is scaled to 2x, the returned dimensions will be
+ *                        double the original dimensions.
  * @returns The X and Y dimensions of the Sprite (Vector X is width, Y is height).
  */
-export function getSpriteSize(sprite: Sprite): Vector {
+export function getSpriteSize(sprite: Sprite, accountForScale = true): Vector {
   const currentFrame = sprite.GetFrame();
   const currentAnimation = sprite.GetCurrentAnimationData();
   const animationLayers = currentAnimation.GetAllLayers();
@@ -157,27 +159,14 @@ export function getSpriteSize(sprite: Sprite): Vector {
     }
   }
 
-  return Vector(width, height);
-}
+  // If accountForScale is true, multiply the width and height by the sprite's scale.
+  if (accountForScale) {
+    // Get the sprite's scale.
+    const scale = sprite.Scale;
 
-export function getPixelColorMap(sprite: Sprite): ReadonlyMap<Vector, KColor> {
-  const xMaxIterations = 600;
-  const yMaxIterations = 600;
-  const pixelColorMap = new Map<Vector, KColor>();
-  for (let x = 0; x < xMaxIterations; x++) {
-    for (let y = 0; y < yMaxIterations; y++) {
-      const pixelKColor = sprite.GetTexel(
-        Vector(x, y),
-        renderToWorldPosition(Vector(300, 100)),
-        1,
-        1,
-      );
-      const position = worldToRenderPosition(Vector(x, y));
-      if (pixelKColor.Alpha === 0) {
-        continue;
-      }
-      pixelColorMap.set(position, pixelKColor);
-    }
+    width *= scale.X;
+    height *= scale.Y;
   }
-  return pixelColorMap;
+
+  return Vector(width, height);
 }

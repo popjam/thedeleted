@@ -1,11 +1,11 @@
 import { EntityType, PickupVariant } from "isaac-typescript-definitions";
 import type { EntityID } from "isaacscript-common";
-import { VectorZero } from "isaacscript-common";
+import { VectorZero, getRandomEnumValue } from "isaacscript-common";
 import { ResponseType } from "../../../enums/corruption/responses/ResponseType";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import { Response } from "./Response";
 import type { PickupID } from "../../../enums/data/ID/PickupID";
-import type { PickupType } from "../../../enums/general/PickupType";
+import { PickupType } from "../../../enums/general/PickupType";
 import {
   getRandomPickupIDFromPickupType,
   getSoftRandomPickupIDFromPickupType,
@@ -27,6 +27,11 @@ import {
   getPickupIDSeverity,
   getPickupTypeSeverity,
 } from "../../../maps/data/pickups/pickupSeverityMap";
+import { rollPercentage } from "../../../types/general/Percentage";
+import {
+  SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP,
+  SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP_OR_PICKUP_TYPE,
+} from "../../../constants/corruptionConstants";
 
 const DEFAULT_PICKUP_ID =
   `${EntityType.PICKUP}.${PickupVariant.POOP}.0` as PickupID;
@@ -76,6 +81,28 @@ export class SpawnPickupResponse
     return this;
   }
 
+  override shuffle(): this {
+    if (
+      rollPercentage(SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP_OR_PICKUP_TYPE)
+    ) {
+      if (rollPercentage(SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP)) {
+        const moddedPickupSetting =
+          getIncludeModdedPickupsInGenerationSetting();
+        const pickupID = getRandomEntityIDFromCategory(
+          EntityCategory.PICKUP,
+          moddedPickupSetting ? undefined : false,
+        ) as PickupID;
+        this.setPickup(pickupID);
+      } else {
+        const randomPickupType = getRandomEnumValue(PickupType, undefined);
+        this.setPickup(randomPickupType);
+      }
+    }
+
+    super.shuffle();
+    return this;
+  }
+
   override getSeverity(): number {
     const pickup = this.getPickup();
     if (pickup === undefined) {
@@ -93,7 +120,7 @@ export class SpawnPickupResponse
     return this.p;
   }
 
-  setPickup(pickupID: PickupID | PickupType): this {
+  setPickup(pickupID?: PickupID | PickupType): this {
     this.p = pickupID;
     return this;
   }
@@ -218,7 +245,7 @@ export class SpawnPickupResponse
 
       if (isMultiple) {
         const amountOfActivationsText = this.getAmountOfActivationsText();
-        return `${amountOfActivationsText} ${addTheS(pickup, isMultiple)}`;
+        return `${amountOfActivationsText} ${addTheS(pickupName, isMultiple)}`;
       }
 
       return addArticle(pickupName);

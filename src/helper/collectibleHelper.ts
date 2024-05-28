@@ -1,5 +1,9 @@
-import type { TrinketType, ItemType } from "isaac-typescript-definitions";
+import type {
+  ItemConfigChargeType,
+  TrinketType,
+} from "isaac-typescript-definitions";
 import {
+  ItemType,
   ActiveSlot,
   CollectibleType,
   ItemPoolType,
@@ -16,7 +20,9 @@ import {
   getCollectibleTags,
   getPlayersWithCollectible,
   getRandomArrayElement,
+  getRandomFromWeightedArray,
   getRandomSeed,
+  getRandomSetElement,
   getRoomItemPoolType,
   isHiddenCollectible,
   isRNG,
@@ -28,10 +34,13 @@ import {
 import { SHOP_ITEM_RENDER_OFFSET } from "../constants/renderConstants";
 import { TemporaryEffectType } from "../enums/general/TemporaryEffectType";
 import { playerAddTemporaryCollectible } from "../features/general/temporaryItems";
-import type { CollectibleAttribute } from "../interfaces/general/CollectibleAttribute";
+import type {
+  ActiveCollectibleAttribute,
+  CollectibleAttribute,
+} from "../interfaces/general/CollectibleAttribute";
 import { mod } from "../mod";
 import type { Range } from "../types/general/Range";
-import { randomInRange } from "../types/general/Range";
+import { randomInRange, randomInRangeOrNumber } from "../types/general/Range";
 import { isInArrayOrEquals } from "./arrayHelper";
 import {
   bitFlagsContainsAllBitflags,
@@ -60,6 +69,20 @@ import {
   QUALITY_4_ITEM_SEVERITY,
 } from "../constants/severityConstants";
 import { OVERPOWERED_COLLECTIBLES } from "../constants/collectibleConstants";
+import {
+  RANDOM_COLLECTIBLE_ATTRIBUTE_DEFAULT_ATTRIBUTE_AMOUNT,
+  RANDOM_COLLECTIBLE_ATTRIBUTE_PLAYER_HAS_CHANCE_FOR_TRUE,
+  RANDOM_COLLECTIBLE_ATTRIBUTE_WEIGHTINGS,
+  RANDOM_ITEM_POOL_ATTRIBUTE_CHANCE_FOR_ROOM,
+} from "../constants/corruptionConstants";
+import { rollPercentage } from "../types/general/Percentage";
+import {
+  COLLECTIBLE_QUALITY_WEIGHTINGS,
+  ITEM_CONFIG_CHARGE_TYPE_WEIGHTINGS,
+  ITEM_CONFIG_TAG_WEIGHTINGS,
+  POOL_TYPE_WEIGHTINGS,
+} from "../constants/gameConstants";
+import { getCollectibleItemPoolTypes } from "../features/data/gameSets/gameSets";
 
 const CURRENT_ROOM_POOL_TEXT = "from the current room pool";
 
@@ -617,4 +640,163 @@ export function getCollectibleSeverity(collectible: CollectibleType): number {
   }
 
   return severity;
+}
+
+/**
+ * Returns a random quality for a collectible using ideal weightings.
+ *
+ * @returns A single item quality.
+ */
+export function getRandomQuality(): Quality {
+  return getRandomFromWeightedArray(COLLECTIBLE_QUALITY_WEIGHTINGS, undefined);
+}
+
+/**
+ * Returns a random pool type for a collectible using ideal weightings.
+ *
+ * @returns A single item pool type.
+ */
+export function getRandomPoolType(): ItemPoolType {
+  return getRandomFromWeightedArray(POOL_TYPE_WEIGHTINGS, undefined);
+}
+
+/**
+ * Returns a random charge type for a collectible using ideal weightings.
+ *
+ * @returns A single item charge type.
+ */
+export function getRandomChargeType(): ItemConfigChargeType {
+  return getRandomFromWeightedArray(
+    ITEM_CONFIG_CHARGE_TYPE_WEIGHTINGS,
+    undefined,
+  );
+}
+
+/**
+ * Generates a random CollectibleAttribute object. It does this by finding a random Collectible, and
+ * using that Collectible's properties as the CollectibleAttribute object.
+ *
+ * @param numberOfModifiers The amount of random attributes to generate. If a number, it will
+ *                          generate that amount. If a Range, it will generate a random amount
+ *                          within that range.
+ * @returns The generated CollectibleAttribute object.
+ */
+export function generateRandomCollectibleAttributes(
+  numberOfModifiers:
+    | number
+    | Range = RANDOM_COLLECTIBLE_ATTRIBUTE_DEFAULT_ATTRIBUTE_AMOUNT,
+): CollectibleAttribute {
+  const collectibleAttributes: CollectibleAttribute = {};
+  const amount = randomInRangeOrNumber(numberOfModifiers);
+  const baseCollectible = getRandomCollectibleType() ?? CollectibleType.POOP;
+
+  for (let i = 0; i < amount; i++) {
+    const randomAttribute = getRandomFromWeightedArray(
+      RANDOM_COLLECTIBLE_ATTRIBUTE_WEIGHTINGS,
+      undefined,
+    );
+
+    switch (randomAttribute) {
+      case "itemType": {
+        collectibleAttributes.itemType =
+          getCollectibleItemType(baseCollectible);
+        break;
+      }
+
+      case "poolType": {
+        if (rollPercentage(RANDOM_ITEM_POOL_ATTRIBUTE_CHANCE_FOR_ROOM)) {
+          collectibleAttributes.poolType = "room";
+        }
+
+        const itemPoolTypes = getCollectibleItemPoolTypes(baseCollectible);
+        if (itemPoolTypes.size === 0) {
+          collectibleAttributes.poolType = getRandomPoolType();
+        }
+
+        const randomPoolType = getRandomSetElement(itemPoolTypes, undefined);
+        collectibleAttributes.poolType = randomPoolType;
+        break;
+      }
+
+      case "quality": {
+        collectibleAttributes.quality = getCollectibleQuality(baseCollectible);
+        break;
+      }
+
+      case "chargeType": {
+        collectibleAttributes.chargeType =
+          getCollectibleChargeType(baseCollectible);
+        break;
+      }
+
+      case "maxCharges": {
+        collectibleAttributes.maxCharges =
+          getCollectibleMaxCharges(baseCollectible);
+        break;
+      }
+
+      case "playerHas": {
+        collectibleAttributes.playerHas = rollPercentage(
+          RANDOM_COLLECTIBLE_ATTRIBUTE_PLAYER_HAS_CHANCE_FOR_TRUE,
+        );
+        break;
+      }
+
+      case "startsWith": {
+        collectibleAttributes.startsWith = getCollectibleName(
+          baseCollectible,
+        ).slice(0, 1);
+        break;
+      }
+
+      case "endsWith": {
+        collectibleAttributes.endsWith =
+          getCollectibleName(baseCollectible).slice(-1);
+        break;
+      }
+
+      case "itemTagAll": {
+        const randomItemTag = getRandomFromWeightedArray(
+          ITEM_CONFIG_TAG_WEIGHTINGS,
+          undefined,
+        );
+        collectibleAttributes.itemTagAll = [randomItemTag];
+        break;
+      }
+
+      case "itemTagOne": {
+        const randomItemTag = getRandomFromWeightedArray(
+          ITEM_CONFIG_TAG_WEIGHTINGS,
+          undefined,
+        );
+        collectibleAttributes.itemTagOne = [randomItemTag];
+        break;
+      }
+
+      // eslint-disable-next-line isaacscript/require-break
+      default: {
+        error(`Unknown random attribute: ${randomAttribute}.`);
+      }
+    }
+  }
+
+  return collectibleAttributes;
+}
+
+/**
+ * Generates a random active collectible attribute.
+ *
+ * @param numberOfModifiers The number of modifiers for the attribute. Defaults to
+ *                          RANDOM_COLLECTIBLE_ATTRIBUTE_DEFAULT_ATTRIBUTE_AMOUNT.
+ * @returns The generated active collectible attribute.
+ */
+export function generateRandomActiveCollectibleAttribute(
+  numberOfModifiers:
+    | number
+    | Range = RANDOM_COLLECTIBLE_ATTRIBUTE_DEFAULT_ATTRIBUTE_AMOUNT,
+): ActiveCollectibleAttribute {
+  const collectibleAttributes =
+    generateRandomCollectibleAttributes(numberOfModifiers);
+  collectibleAttributes.itemType = ItemType.ACTIVE;
+  return collectibleAttributes as ActiveCollectibleAttribute;
 }

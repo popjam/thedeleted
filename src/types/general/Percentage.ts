@@ -1,4 +1,3 @@
-import { getRandomInt } from "isaacscript-common";
 import { getRandomInteger } from "../../helper/randomHelper";
 
 /** Number between 0 and 100. */

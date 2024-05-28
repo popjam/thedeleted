@@ -1,4 +1,7 @@
-import type { CollectibleType } from "isaac-typescript-definitions";
+import type {
+  CollectibleType,
+  ItemConfigChargeType,
+} from "isaac-typescript-definitions";
 import type { ActionType } from "../../../enums/corruption/actions/ActionType";
 import type { WeightedArray } from "isaacscript-common";
 import type { ResponseType } from "../../../enums/corruption/responses/ResponseType";
@@ -35,21 +38,18 @@ export interface ActionSetBuilderInput {
   /** The weights for the response types, given a negative effect. */
   negativeResponseWeightings?: WeightedArray<ResponseType>;
 
-  /**
-   * The acceptable positive mismatch between the ideal severity of the action and severity of the
-   * response. The higher this is, the weaker the effect can be.
-   */
-  positiveMismatchBuffer?: number;
-
-  /**
-   * The acceptable negative mismatch between the ideal severity of the action and severity of the
-   * response. The higher this is, the stronger the effect can be.
-   */
-  negativeMismatchBuffer?: number;
-
   /** The chance for the effect to be only a response, instead of an action. */
   chanceForResponse?: number;
 
   /** Should the generator adjust response's severity for balance. Default true. */
   shouldAdjustSeverity?: boolean;
+
+  /** True if the ActionSet is an ActiveActionSet, used when generating effects. */
+  isActive?: boolean;
+
+  /** The number of charges the item should have if it is an Active. */
+  numberOfCharges?: number;
+
+  /** The charge type of the item if it is an Active. */
+  chargeType?: ItemConfigChargeType;
 }

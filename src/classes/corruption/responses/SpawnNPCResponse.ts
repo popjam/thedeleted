@@ -214,7 +214,6 @@ export class SpawnNPCResponse
       addNPCFlags(spawnedNPC, ...flags);
     }
 
-    makeNPCNonMandatory(spawnedNPC);
     return spawnedNPC;
   }
 

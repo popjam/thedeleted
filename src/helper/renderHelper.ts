@@ -1,6 +1,11 @@
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { ActiveSlot, PocketItemSlot } from "isaac-typescript-definitions";
-import { game, getActivePocketItemSlot } from "isaacscript-common";
+import {
+  VectorZero,
+  game,
+  getActivePocketItemSlot,
+  getScreenCenterPos,
+} from "isaacscript-common";
 import { POCKET_SLOT_UNFOCUSSED_COLLECTIBLE_SPRITE_SCALE_PLAYER_1 } from "../constants/renderConstants";
 import { getCollectibleSpriteFromCache } from "../features/general/spriteCache";
 import { mod } from "../mod";
@@ -9,6 +14,8 @@ import {
   getActiveRenderSize,
   getPocketActiveRenderPosition,
 } from "./HUDHelper";
+import { getSpriteSize } from "./spriteHelper";
+import { fprint } from "./printHelper";
 
 /** Continuously fires a function every render frame. */
 export function renderConstantly(func: () => void): void {
@@ -86,4 +93,37 @@ export function renderCollectibleInSlot(
 
   // Render the sprite.
   collectibleSprite.Render(position, topLeftClamp, bottomRightClamp);
+}
+
+/** Render a given Sprite in the center of the screen. Will account for scale. */
+export function renderSpriteInCenterOfScreen(sprite: Sprite): Sprite {
+  const screenCenter = getScreenCenterPos();
+  const spriteSize = getSpriteSize(sprite);
+  const spriteSizeOffset = Vector(spriteSize.X / 2, spriteSize.Y / 2);
+  const screenCenterWithOffset = screenCenter.sub(spriteSizeOffset);
+
+  sprite.Render(screenCenterWithOffset);
+  return sprite;
+}
+
+export function getPixelColorMap(sprite: Sprite): ReadonlyMap<Vector, KColor> {
+  const xMaxIterations = 600;
+  const yMaxIterations = 600;
+  const pixelColorMap = new Map<Vector, KColor>();
+  for (let x = 0; x < xMaxIterations; x++) {
+    for (let y = 0; y < yMaxIterations; y++) {
+      const pixelKColor = sprite.GetTexel(
+        Vector(x, y),
+        renderToWorldPosition(Vector(300, 100)),
+        1,
+        1,
+      );
+      const position = worldToRenderPosition(Vector(x, y));
+      if (pixelKColor.Alpha === 0) {
+        continue;
+      }
+      pixelColorMap.set(position, pixelKColor);
+    }
+  }
+  return pixelColorMap;
 }

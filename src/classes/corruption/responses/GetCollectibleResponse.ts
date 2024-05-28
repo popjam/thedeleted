@@ -8,10 +8,8 @@ import {
   getRandomAssortmentOfCollectibles,
   getRandomCollectibleType,
 } from "../../../helper/collectibleHelper";
-import { numberToWords } from "../../../helper/numbers/numberToWords";
 import type { TriggerData } from "../../../interfaces/corruption/actions/TriggerData";
 import type { CollectibleAttribute } from "../../../interfaces/general/CollectibleAttribute";
-import { rangeToString } from "../../../types/general/Range";
 import { Response } from "./Response";
 import { getCollectibleNameWithEIDSetting } from "../../../helper/compatibility/EID/EIDHelper";
 import { QUALITY_2_ITEM_SEVERITY } from "../../../constants/severityConstants";
@@ -58,6 +56,10 @@ export class GetCollectibleResponse extends Response {
       this.aT = collectible;
     }
     return this;
+  }
+
+  override shuffle(): this {
+    return super.shuffle();
   }
 
   override getSeverity(): number {
@@ -121,17 +123,6 @@ export class GetCollectibleResponse extends Response {
     return this.mo ?? Morality.NEUTRAL;
   }
 
-  override getAmountOfActivationsText(): string {
-    const amountOfActivations = this.getAmountOfActivations();
-    if (typeof amountOfActivations === "number") {
-      if (amountOfActivations === 1) {
-        return "";
-      }
-      return `${numberToWords(amountOfActivations)}x`;
-    }
-    return `${rangeToString(amountOfActivations)}x`;
-  }
-
   getCollectibleText(eid: boolean): string {
     const collectible = this.getCollectible();
     if (typeof collectible === "object") {
@@ -153,9 +144,8 @@ export class GetCollectibleResponse extends Response {
    */
   override getNoun(eid: boolean): string {
     const collectible = this.getCollectible();
-    const amountOfActivationsText = this.getAmountOfActivationsText();
     const isMultiple = this.isMultiple();
-    let text = amountOfActivationsText;
+    let text = "";
 
     if (typeof collectible === "object") {
       text += ` ${collectibleAttributeToText(collectible, isMultiple)}`;

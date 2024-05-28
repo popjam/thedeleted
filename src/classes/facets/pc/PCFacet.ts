@@ -6,7 +6,6 @@ import {
   ModCallbackCustom,
   getPlayerFromIndex,
   getPlayerIndex,
-  getScreenTopLeftPos,
   getSlots,
   gridCoordinatesToWorldPosition,
   newSprite,
@@ -20,7 +19,8 @@ import { switchToNextModeOnCarousel } from "../../../helper/deletedSpecific/mode
 import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
-import { HUDPositionToRenderPosition } from "../../../helper/HUDHelper";
+import { renderSpriteInCenterOfScreen } from "../../../helper/renderHelper";
+import { getSpriteSize } from "../../../helper/spriteHelper";
 import { MainMenuType } from "isaac-typescript-definitions-repentogon";
 
 /**
@@ -48,6 +48,8 @@ const PC_VARIANT = Isaac.GetEntityVariantByName(
 /** The PC's SubType. */
 const PC_SUBTYPE = 0;
 
+let menuSprite: Sprite | undefined;
+
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
   run: {
@@ -62,6 +64,9 @@ const v = {
 
     /** Initial spawn tracker. */
     spawned: false,
+
+    /** Current main menu. */
+    menu: MainMenuType.TITLE,
   },
 };
 
@@ -87,8 +92,9 @@ class PCFacet extends Facet {
       return;
     }
 
-    /** If the PC is in Account mode (mode it is set up in), continuously check for user. */
+    /** If the PC is in Account mode (mode it is set up in). */
     if (state === PCState.ACCOUNT) {
+      /** Continuously check for user. */
       if (isPCBeingUsed()) {
         const currentPCUser = getCurrentPCUser();
         if (currentPCUser === undefined) {
@@ -108,11 +114,16 @@ class PCFacet extends Facet {
       return undefined;
     }
 
-    const mainMenuSprite = newSprite("gfx/ui/main menu/titlemenu.anm2");
-    mainMenuSprite.Scale = Vector(0.05, 0.05);
-    mainMenuSprite.Render(
-      HUDPositionToRenderPosition(getScreenTopLeftPos().add(Vector(42, 10))),
-    );
+    if (menuSprite === undefined) {
+      menuSprite = newSprite("gfx/ui/main menu/titlemenu.anm2");
+    }
+    menuSprite.Scale = Vector(0.5, 0.5);
+
+    /** Only update every two frames. */
+    if (Isaac.GetFrameCount() % 2 !== 0) {
+      menuSprite.Update();
+    }
+    renderSpriteInCenterOfScreen(menuSprite);
 
     /** User can't shoot. */
     player.SetShootingCooldown(1);
@@ -204,7 +215,7 @@ function isPlayerInPCRange(
   pc: EntitySlot | undefined = getPC(),
 ): boolean | undefined {
   if (pc === undefined) {
-    return;
+    return undefined;
   }
   return DETECTION_RADIUS > getDistanceBetweenEntities(pc, player);
 }

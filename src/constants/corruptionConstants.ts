@@ -9,16 +9,22 @@ import { ResponseType } from "../enums/corruption/responses/ResponseType";
 export const SHUFFLE_ACTION_CHANCE_FOR_FIRE_AFTER_THEN_REMOVE = 10;
 export const SHUFFLE_ACTION_CHANCE_FOR_INTERVAL = 20;
 export const SHUFFLE_ACTION_INTERVAL_CHANCE_FOR_RANGE = 20;
+export const SHUFFLE_RESPONSE_CHANCE_FOR_CHANCE_TO_FIRE = 25;
+export const SHUFFLE_RESPONSE_CHANCE_FOR_MULTIPLE_ACTIVATIONS = 25;
 
 // Specific Action constants.
 export const ON_ACTIVE_USE_SHUFFLE_CHANCE_FOR_COLLECTIBLE_PARAM = 10;
-export const ON_FLOOR_SHUFFLE_CHANCE_FOR_LEVEL_STAGE_PARAM = 5;
+export const ON_FLOOR_SHUFFLE_CHANCE_FOR_LEVEL_STAGE_PARAM = 2;
 
 // Specific Response constants.
 export const SPAWN_NPC_CHANCE_FOR_SPECIFIC_NPC = 90;
 export const SPAWN_NPC_CHANCE_FOR_CHAMPION = 2;
 export const SPAWN_NPC_CHANCE_FOR_NPC_FLAG = 5;
 export const SPAWN_SLOT_CHANCE_FOR_SPECIFIC_SLOT = 95;
+export const SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP_OR_PICKUP_TYPE = 95;
+export const SPAWN_PICKUP_CHANCE_FOR_SPECIFIC_PICKUP = 90;
+export const USE_ACTIVE_CHANCE_FOR_SPECIFIC_OR_ATTRIBUTE_ACTIVE = 99;
+export const USE_ACTIVE_CHANCE_FOR_ATTRIBUTE_ACTIVE = 10;
 
 export const DEFAULT_INVERTED_ITEM_ACTION_SET_BUILDER_REFERENCE: InvertedItemActionSetBuilderReference =
   InvertedItemActionSetBuilderReference.INVERTED_ITEM_ACTION_SET_DEFAULT;
@@ -77,24 +83,41 @@ export const DEFAULT_ACTION_WEIGHTS: WeightedArray<ActionType> = [
   // [ActionType.ON_FRIENDLY_FIRE, 1],
 ];
 
-export const DEFAULT_RESPONSE_WEIGHTS: WeightedArray<ResponseType> = [
+export const DEFAULT_POSITIVE_RESPONSE_WEIGHTS: WeightedArray<ResponseType> = [
   // [ResponseType.TRIGGER_RANDOM, 1], [ResponseType.WAIT_THEN_TRIGGER, 1],
   // [ResponseType.TRIGGER_OVER_TIME, 1], [ResponseType.TRIGGER_IN_SEQUENCE, 1],
   // [ResponseType.IF_THEN_TRIGGER, 1], [ResponseType.IF_THEN_ELSE_TRIGGER, 1],
-  // [ResponseType.TRIGGER_IN_QUEUE, 1], [ResponseType.USE_ACTIVE_ITEM, 1], [ResponseType.USE_CARD,
-  // 1], [ResponseType.USE_PILL, 1], [ResponseType.GET_COLLECTIBLE, 1], [ResponseType.GET_TRINKET,
-  // 1], [ResponseType.GET_CONSUMABLE, 1], [ResponseType.SPAWN_PICKUP, 1],
+  // [ResponseType.TRIGGER_IN_QUEUE, 1],
 
-  [ResponseType.SPAWN_NPC, 1],
+  [ResponseType.USE_ACTIVE_ITEM, 1],
+
+  // [ResponseType.USE_CARD, 1],
+
+  // [ResponseType.USE_PILL, 1],
+
+  // [ResponseType.GET_COLLECTIBLE, 1],
+
+  // [ResponseType.GET_TRINKET, 1],
+
+  // [ResponseType.GET_CONSUMABLE, 1],
+
+  // [ResponseType.SPAWN_PICKUP, 1],
 
   // [ResponseType.SPAWN_SLOT, 1],
 
-  // [ResponseType.SPAWN_TEAR, 1], [ResponseType.SPAWN_PROJECTILE, 1], [ResponseType.SPAWN_EFFECT,
-  // 1], [ResponseType.SPAWN_GRID, 1], [ResponseType.SPAWN_ENTITY, 1],
-  // [ResponseType.SPAWN_LIVE_BOMB, 1], [ResponseType.PLAY_SOUND, 1], [ResponseType.PLAY_MUSIC, 1],
-  // [ResponseType.GIVE_COSTUME, 1], [ResponseType.GIVE_STAT, 1], [ResponseType.TRANSFORM, 1],
-  // [ResponseType.EXECUTE_COMMAND, 1], [ResponseType.SHOW_FORTUNE, 1], [ResponseType.GIVE_CURSE,
-  // 1], [ResponseType.REMOVE_ENTITY, 1], [ResponseType.REMOVE_GRID, 1],
+  // [ResponseType.SPAWN_TEAR, 1],
+
+  // [ResponseType.SPAWN_EFFECT, 1],
+
+  // [ResponseType.SPAWN_GRID, 1],
+
+  // [ResponseType.SPAWN_ENTITY, 1],
+
+  // [ResponseType.PLAY_SOUND, 1],
+
+  // [ResponseType.PLAY_MUSIC, 1], [ResponseType.GIVE_COSTUME, 1], [ResponseType.GIVE_STAT, 1],
+  // [ResponseType.TRANSFORM, 1], [ResponseType.EXECUTE_COMMAND, 1], [ResponseType.SHOW_FORTUNE, 1],
+  // [ResponseType.GIVE_CURSE, 1], [ResponseType.REMOVE_ENTITY, 1], [ResponseType.REMOVE_GRID, 1],
   // [ResponseType.REMOVE_CORRUPTED_ITEM, 1], [ResponseType.REMOVE_COLLECTIBLE, 1],
   // [ResponseType.REMOVE_TRINKET, 1], [ResponseType.REMOVE_RULE, 1],
   // [ResponseType.REROLL_COLLECTIBLE, 1], [ResponseType.REROLL_TRINKET, 1],
@@ -107,11 +130,44 @@ export const DEFAULT_RESPONSE_WEIGHTS: WeightedArray<ResponseType> = [
   // 1], [ResponseType.ADD_RULE, 1], [ResponseType.REMOVE_ACTION, 1],
 ];
 
+export const DEFAULT_NEGATIVE_RESPONSE_WEIGHTS: WeightedArray<ResponseType> = [
+  [ResponseType.SPAWN_NPC, 1],
+  [ResponseType.SPAWN_PROJECTILE, 1],
+  [ResponseType.SPAWN_LIVE_BOMB, 1],
+];
+
+// When using an inverted active item, it will have these bitflags.
 export const USE_ACTIVE_ITEM_RESPONSE_BITFLAG_ARRAY: readonly UseFlag[] = [
   UseFlag.NO_ANIMATION,
   UseFlag.NO_ANNOUNCER_VOICE,
 ];
 
+// Default values for Hybrid NPC.
 export const HYBRID_NPC_MINIMUM_NPC_AMOUNT = 2;
 
+// Default values for Hybrid NPC.
 export const HYBRID_NPC_DEFAULT_NPC_AMOUNT = 2;
+
+// Corresponds to 'CollectibleAttribute' keys. When generating a random CollectibleAttribute object,
+// will use this WeightedArray.
+export const RANDOM_COLLECTIBLE_ATTRIBUTE_WEIGHTINGS: WeightedArray<string> = [
+  ["itemType", 10],
+  ["poolType", 10],
+  ["quality", 10],
+  ["chargeType", 10],
+  ["maxCharges", 10],
+  ["playerHas", 5],
+  ["startsWith", 5],
+  ["endsWith", 5],
+  ["itemTagAll", 5],
+];
+
+// Default amount of random attributes to generate for a random CollectibleAttribute object.
+export const RANDOM_COLLECTIBLE_ATTRIBUTE_DEFAULT_ATTRIBUTE_AMOUNT = 1;
+
+// When generating a random ItemPool for CollectibleAttribute, chance it's "room".
+export const RANDOM_ITEM_POOL_ATTRIBUTE_CHANCE_FOR_ROOM = 5;
+
+// When adding 'playerhas' attribute, chance for 'true' (player has) instead of 'false' (player must
+// not have).
+export const RANDOM_COLLECTIBLE_ATTRIBUTE_PLAYER_HAS_CHANCE_FOR_TRUE = 70;

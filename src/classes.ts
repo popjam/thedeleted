@@ -24,6 +24,7 @@ import { GetCollectibleResponse } from "./classes/corruption/responses/GetCollec
 import { GetTrinketResponse } from "./classes/corruption/responses/GetTrinketResponse";
 import { IfThenElseResponse } from "./classes/corruption/responses/IfThenElseResponse";
 import { IfThenResponse } from "./classes/corruption/responses/IfThenResponse";
+import { PlaySoundResponse } from "./classes/corruption/responses/PlaySoundResponse";
 import { RemoveActionResponse } from "./classes/corruption/responses/RemoveActionResponse";
 import { RemoveCollectibleResponse } from "./classes/corruption/responses/RemoveCollectibleResponse";
 import { RemoveEntityResponse } from "./classes/corruption/responses/RemoveEntityResponse";
@@ -99,5 +100,6 @@ export function initClasses(): void {
     OnSlotUseAction,
     OnSlotDestroyAction,
     OnPickupCollectAction,
+    PlaySoundResponse,
   );
 }
