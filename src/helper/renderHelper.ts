@@ -15,7 +15,6 @@ import {
   getPocketActiveRenderPosition,
 } from "./HUDHelper";
 import { getSpriteSize } from "./spriteHelper";
-import { fprint } from "./printHelper";
 
 /** Continuously fires a function every render frame. */
 export function renderConstantly(func: () => void): void {
@@ -96,9 +95,13 @@ export function renderCollectibleInSlot(
 }
 
 /** Render a given Sprite in the center of the screen. Will account for scale. */
-export function renderSpriteInCenterOfScreen(sprite: Sprite): Sprite {
-  const screenCenter = getScreenCenterPos();
-  const spriteSize = getSpriteSize(sprite);
+export function renderSpriteInCenterOfScreen(
+  sprite: Sprite,
+  overriddenSize?: Vector,
+  offset: Vector = VectorZero,
+): Sprite {
+  const screenCenter = getScreenCenterPos().add(offset);
+  const spriteSize = overriddenSize ?? getSpriteSize(sprite);
   const spriteSizeOffset = Vector(spriteSize.X / 2, spriteSize.Y / 2);
   const screenCenterWithOffset = screenCenter.sub(spriteSizeOffset);
 

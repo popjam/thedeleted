@@ -122,6 +122,18 @@ export enum World {
    *
    * - Get options, options?, there's options and duality for the floor.
    * - Every trapdoor leads to the same world.
+   *
+   * Trapdoor:
+   *
+   * - Instead of a single Trapdoor, when the trapdoor spawns, it consists of four neighboring
+   *   trapdoors. One has a red border and is square shaped, one has a blue border and is circle
+   *   shaped, one has a yellow border and is diamond shaped, the other is purple and arch shaped,
+   *   similar to the 'Card Reading' item.
+   * - Red leads to the boss room.
+   * - Yellow leads to the treasure room.
+   * - Blue leads to the secret room.
+   * - Purple leads to the shop.
+   * - See play school windows for reference.
    */
   LAND_OF_ONE_THOUSAND_AND_ONE_OPTIONS,
 

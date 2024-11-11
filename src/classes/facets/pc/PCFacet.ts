@@ -1,11 +1,17 @@
 import type { SlotVariant } from "isaac-typescript-definitions";
-import { ButtonAction, SoundEffect } from "isaac-typescript-definitions";
+import {
+  ButtonAction,
+  ModCallback,
+  SoundEffect,
+} from "isaac-typescript-definitions";
 import type { PlayerIndex } from "isaacscript-common";
 import {
+  Callback,
   CallbackCustom,
   ModCallbackCustom,
   getPlayerFromIndex,
   getPlayerIndex,
+  getScreenCenterPos,
   getSlots,
   gridCoordinatesToWorldPosition,
   newSprite,
@@ -15,13 +21,24 @@ import {
 import { SoundEffectCustom } from "../../../enums/general/SoundEffectCustom";
 import { PCAnimation } from "../../../enums/pc/PCAnimation";
 import { PCState } from "../../../enums/pc/PCStatus";
-import { switchToNextModeOnCarousel } from "../../../helper/deletedSpecific/modeHelper";
 import { getDistanceBetweenEntities } from "../../../helper/entityHelper";
 import { fprint } from "../../../helper/printHelper";
 import { Facet, initGenericFacet } from "../../Facet";
+import { PCTitleScreen } from "../../pc/PCTitleScreen";
+import { getPCMenuClass } from "../../../maps/pc/PCMenuToPCMenuClassMap";
+import type { PCMenuState } from "../../../interfaces/pc/PCMenuState";
+import { isGamePaused } from "../../../helper/gameHelper";
+import {
+  MENU_PAGE_SWITCH_SOUND,
+  PC_MENU_SCALE,
+} from "../../../constants/pcConstants";
+import {
+  MENU_OVERLAY_PNG,
+  MENU_SHADOW_ANM2_PATH,
+} from "../../../constants/menuConstants";
 import { renderSpriteInCenterOfScreen } from "../../../helper/renderHelper";
-import { getSpriteSize } from "../../../helper/spriteHelper";
-import { MainMenuType } from "isaac-typescript-definitions-repentogon";
+import type { PCMenu } from "../../../enums/pc/PCMenu";
+import { SaveFileType } from "../../../enums/progression/SaveFileType";
 
 /**
  * Handles everything to do with the physical spawn PC. PC only spawns when the first Deleted spawns
@@ -48,7 +65,7 @@ const PC_VARIANT = Isaac.GetEntityVariantByName(
 /** The PC's SubType. */
 const PC_SUBTYPE = 0;
 
-let menuSprite: Sprite | undefined;
+let menu = new PCTitleScreen() as PCMenuState;
 
 // eslint-disable-next-line isaacscript/require-v-registration
 const v = {
@@ -65,8 +82,7 @@ const v = {
     /** Initial spawn tracker. */
     spawned: false,
 
-    /** Current main menu. */
-    menu: MainMenuType.TITLE,
+    currentSave: SaveFileType.NORMAL as SaveFileType,
   },
 };
 
@@ -114,31 +130,63 @@ class PCFacet extends Facet {
       return undefined;
     }
 
-    if (menuSprite === undefined) {
-      menuSprite = newSprite("gfx/ui/main menu/titlemenu.anm2");
-    }
-    menuSprite.Scale = Vector(0.5, 0.5);
-
-    /** Only update every two frames. */
-    if (Isaac.GetFrameCount() % 2 !== 0) {
-      menuSprite.Update();
-    }
-    renderSpriteInCenterOfScreen(menuSprite);
-
     /** User can't shoot. */
     player.SetShootingCooldown(1);
+
+    /** Render every second frame. */
+    menu.render();
+
+    /** Render overlays. */
+    const menuOverlaySprite = newSprite(MENU_SHADOW_ANM2_PATH);
+    menuOverlaySprite.ReplaceSpritesheetEx(0, MENU_OVERLAY_PNG, true);
+    menuOverlaySprite.Play("Idle", true);
+    menuOverlaySprite.Scale = Vector(0.95, 0.95);
+    renderSpriteInCenterOfScreen(menuOverlaySprite);
+    // Test.
+
+    /** Listen for switch screen event. */
+    if (menu.switchScreen !== undefined) {
+      switchScreenEvent(menu.switchScreen);
+    }
+
+    /** Listen for boot user event. */
+    if (menu.bootUser) {
+      bootCurrentUserFromPC();
+      return undefined;
+    }
+
+    /** Inputs. */
+    if (isGamePaused()) {
+      return undefined;
+    }
+
     if (
       Input.IsActionTriggered(ButtonAction.SHOOT_RIGHT, player.ControllerIndex)
     ) {
-      fprint("PC: Switching to next mode on carousel.");
-      switchToNextModeOnCarousel(player);
+      menu.inputRightButton(player);
     } else if (
       Input.IsActionTriggered(ButtonAction.SHOOT_LEFT, player.ControllerIndex)
     ) {
-      fprint("PC: Switching to previous mode on carousel.");
-      switchToNextModeOnCarousel(player, false);
+      menu.inputLeftButton(player);
+    } else if (
+      Input.IsActionTriggered(ButtonAction.SHOOT_UP, player.ControllerIndex)
+    ) {
+      menu.inputUpButton(player);
+    } else if (
+      Input.IsActionTriggered(ButtonAction.SHOOT_DOWN, player.ControllerIndex)
+    ) {
+      menu.inputDownButton(player);
+    } else if (
+      Input.IsActionTriggered(ButtonAction.MENU_CONFIRM, player.ControllerIndex)
+    ) {
+      menu.inputMenuConfirmButton(player);
     }
     return undefined;
+  }
+
+  @Callback(ModCallback.PRE_GAME_EXIT)
+  preGameExit(): void {
+    resetPC();
   }
 }
 
@@ -204,9 +252,14 @@ export function getCurrentPCUser(): EntityPlayer | undefined {
 /** Removes the user by physically pushing them away. */
 // TODO: Physically boot user from PC and play 'boot' animation.
 export function bootCurrentUserFromPC(): void {
-  sfxManager.Play(DEACTIVATION_SFX);
-  playIdleOffAnimation();
-  v.run.user = null;
+  const currentUser = getCurrentPCUser();
+  if (currentUser === undefined) {
+    return;
+  }
+
+  fprint("Booting user from PC...");
+  resetPC();
+  currentUser.AddVelocity(Vector(0, 30));
 }
 
 /** Checks if player is in PC range, leave pc empty to manually get PC. */
@@ -242,6 +295,18 @@ export function isPlayerPCUser(player: EntityPlayer): boolean {
   return getPlayerIndex(currentPCUser) === getPlayerIndex(player);
 }
 
+function resetPC() {
+  if (!isPCBeingUsed()) {
+    return;
+  }
+
+  sfxManager.Play(DEACTIVATION_SFX);
+  playIdleOffAnimation();
+  v.run.user = null;
+  menu.destroy();
+  menu = new PCTitleScreen();
+}
+
 function playInitiateAnimation() {
   const pc = getPC();
   if (pc === undefined) {
@@ -264,4 +329,10 @@ function playIdleOnAnimation() {
     return;
   }
   pc.GetSprite().Play(PCAnimation.IDLE_ON, true);
+}
+
+function switchScreenEvent(screen: PCMenu) {
+  sfxManager.Play(MENU_PAGE_SWITCH_SOUND);
+  menu.destroy();
+  menu = getPCMenuClass(screen);
 }

@@ -9,6 +9,7 @@ import {
   getRoomGridIndex,
   getRoomAdjacentGridIndexes,
   getNPCs,
+  newSprite,
 } from "isaacscript-common";
 import {
   freezeAllNPCsInRoom,
@@ -28,6 +29,13 @@ import { OnCardUseAction } from "../../classes/corruption/actions/OnCardUseActio
 import { UseActiveItemResponse } from "../../classes/corruption/responses/UseActiveItemResponse";
 import { OnActiveUseAction } from "../../classes/corruption/actions/OnActiveUseAction";
 import { OnBombExplodeAction } from "../../classes/corruption/actions/OnBombExplodeAction";
+import { getSpriteSize } from "../../helper/spriteHelper";
+import {
+  renderConstantly,
+  renderSpriteInCenterOfScreen,
+} from "../../helper/renderHelper";
+import { getSaveFileData } from "../pc/progression/savefiles";
+import { SaveFileType } from "../../enums/progression/SaveFileType";
 
 /** Test player */
 const player = () => Isaac.GetPlayer(0);
@@ -62,13 +70,14 @@ export function addTestingCommands(): void {
 
 /** Test stuff as the developer with command 'del'. */
 export function testingFunction1(): void {
-  const npc = getRandomNPC();
-  if (npc === undefined) {
+  const saveFileData = getSaveFileData(SaveFileType.NORMAL);
+  const happy99Data = saveFileData.characterData.get(
+    PlayerTypeCustom.DELETED_HAPPY99,
+  );
+  if (happy99Data === undefined) {
     return;
   }
-
-  const spawnedNPC = spawnNPCID(npc, getQuickAccessiblePosition());
-  addNPCFlags(spawnedNPC, NPCFlag.BOLSTERED, NPCFlag.FRIENDLY);
+  fprint(`Happy99 completed marks: ${happy99Data.completedMarks.size}`);
 }
 
 /** Test stuff as the developer with command 'eted'. */

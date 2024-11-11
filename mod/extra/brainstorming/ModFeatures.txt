@@ -1,3 +1,41 @@
+  Subtleties
+- On title screen, pressing left or right keys will instantly take you to the character select screen
+  and change characters.
+- Save file
+
+  Title Screen
+- Each download will have a new name. E.g 'the binding of isaac kittenbirth',
+  with a random colour scheme. This can be changed in shop.
+
+  Save File Screen
+- SF1 - Starts at Dead God - Normal save file completion.
+- SF2 - Starts at Dead God - Hard save file,
+- SF3 - Starts at Dead God - Extreme save file, must complete without dying.
+
+  Main Screen
+- New Run -> Same as old
+- Shop ->
+- Generate ->
+
+  Character Screen
+- At start, only HAPPY99 and ILOVEYOU unlocked.
+- When pressing left/right, the character will change, unlike the default game.
+- Hovering over '?' will transform player to question mark player.
+
+  Save System
+- Starts at Infinity save file unlocks
+- As player 'progresses', completion marks removed & progression decreases.
+- Eventually UI / Menu begins corrupting.
+
+  What is progression?
+- For each mode:
+  - Completion marks (backwards).
+  - Secrets (at least 1).
+  - Win streak of 5.
+- Top right, where 'seed' page is, there are three sad faces. Completing the above tasks
+  will make them happy. Once all three are happy, the character is 'complete'.
+- up/down page is instead ...
+
   Rules
 Rules apply to all players.
 

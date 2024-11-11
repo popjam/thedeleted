@@ -25,6 +25,7 @@ class CantPickupFacet extends Facet {
       return undefined;
     }
 
+
     const playerIndex = getPlayerIndex(player);
     const pickups = v.run.player.get(playerIndex);
     if (pickups === undefined) {

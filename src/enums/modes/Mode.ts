@@ -108,7 +108,7 @@ export enum Mode {
    * - Stuck in the inverted world.
    * - Using clean on non-corrupted items turns them into holy water. Using clean on non-corrupted
    *   holy water turns it into 'holier water'. Using clean on 'holier water' turns it into 'holiest
-   *   water'.
+   *   water'. Test.
    */
   SPYWIPER,
 

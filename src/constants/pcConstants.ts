@@ -1,3 +1,4 @@
+import { SoundEffect } from "isaac-typescript-definitions";
 import { Mode } from "../enums/modes/Mode";
 
 /**
@@ -26,3 +27,11 @@ export const NormalModeCarousel = [
  */
 
 export const TaintedModeCarousel = [Mode.SOPHOS, Mode.BATTLEYE];
+
+export const MENU_PAGE_SWITCH_SOUND = SoundEffect.BOOK_PAGE_TURN_12;
+
+/** Scale of PC Menu compared to real menu. */
+export const PC_MENU_SCALE = 0.5;
+
+/** Size of the full-sized Menu sprite. */
+export const MENU_SPRITE_SIZE = Vector(480, 272);
